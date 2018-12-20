@@ -119,26 +119,24 @@
 
 (import
     [java.io DataInputStream IOException InputStream]
-    [java.lang.annotation Annotation]
     [java.lang.ref #_Reference]
-    [java.lang.reflect AnnotatedElement Constructor Field Method Modifier]
+    [java.lang.reflect Constructor Field Method Modifier]
     [java.nio ByteBuffer ByteOrder]
-    [java.util Arrays BitSet Comparator Iterator List ListIterator NoSuchElementException]
+    [java.util BitSet Iterator List ListIterator]
     [java.util.stream Stream Stream$Builder]
 
     [jdk.vm.ci.code CodeCacheProvider InstalledCode]
     [jdk.vm.ci.code.site ConstantReference DataPatch DataSectionReference Mark #_Reference Site]
     [jdk.vm.ci.hotspot
         HotSpotCompiledCode HotSpotConstantReflectionProvider HotSpotJVMCIRuntime
-        HotSpotMemoryAccessProvider HotSpotMetaspaceConstant HotSpotObjectConstant
-        HotSpotResolvedJavaField HotSpotResolvedJavaMethod HotSpotResolvedObjectType
-        HotSpotVMConfigAccess
+        HotSpotMemoryAccessProvider HotSpotResolvedJavaField HotSpotResolvedJavaMethod
+        HotSpotResolvedObjectType HotSpotVMConfigAccess
        
     ]
     [jdk.vm.ci.meta
         ConstantPool ConstantReflectionProvider DeoptimizationAction DeoptimizationReason
-        InvokeTarget JavaField JavaMethod JavaType MemoryAccessProvider MetaAccessProvider
-        ResolvedJavaField ResolvedJavaMethod ResolvedJavaType Signature
+        MemoryAccessProvider MetaAccessProvider ResolvedJavaField ResolvedJavaMethod ResolvedJavaType
+        Signature
     ]
     [jdk.vm.ci.runtime JVMCIBackend]
 
@@ -1925,6 +1923,7 @@ JavaConstant'forLong-1
 JavaConstant'forPrimitiveInt-2
 JavaConstant'forShort-1
 JavaConstant'isNull-1
+JavaField''getJavaKind-1
 JavaKind'SET
 JavaKind'fromPrimitiveOrVoidTypeChar-1
 JavaKind'getBitCount-1
@@ -1941,6 +1940,10 @@ JavaKind'isUnsigned-1
 JavaKind'needsTwoSlots-1
 JavaKind'toJavaClass-1
 JavaReadNode'new-5
+JavaType''getElementalType-1
+JavaType''isArray-1
+JavaType''toJavaName-1
+JavaType''toJavaName-2
 JavaWriteNode'new-6
 JsrScope''isEmpty-1
 JsrScope''isPrefixOf-2
@@ -3134,14 +3137,14 @@ VMConfigNode'logOfHeapRegionGrainBytes-0
 VMConfigNode'new-0
 VMConfigNode'new-2
 VMConstOp'new-3
-Value'ILLEGAL
+Value'ILLEGAL
 Value'new-1
 ValueAnchorNode''removeAnchoredNode-1
 ValueAnchorNode'new-1
 ValueCompareAndSwapNode'new-4
 ValueCompareAndSwapNode'new-5
 ValueFieldInfo'new-5
-ValueKind'Illegal
+ValueKind'Illegal
 ValueKind''changeSize-2
 ValueKind''getReferenceCount-1
 ValueKind''isCompressedReference-2
@@ -3976,12 +3979,12 @@ ZeroExtendNode'new-4
     (#_"boolean" Constant'''isDefaultForKind-1 [#_"Constant" this])
 )
 
-(defp ConstOp)
 (defp ConstantLoadOptimization)
 (defp ConstantNode)
 (defp ConstantTree)
 (defp ConstantTreeAnalyzer)
 (defp ConstantValue)
+(defp ConstOp)
 (defp ConsumerConstOp)
 (defp ConsumerOp)
 (defp ControlFlowAnchorNode)
@@ -4542,6 +4545,12 @@ ZeroExtendNode'new-4
 (defp IntrinsicScope)
 (defp InvokeKind)
 (defp InvokeNode)
+
+;;;
+ ; Represents the resolved target of an invocation.
+ ;;
+(defp InvokeTarget)
+
 (defp IsNullNode)
 (defp IterativeConditionalEliminationPhase)
 (defp JSRData)
@@ -4671,6 +4680,179 @@ ZeroExtendNode'new-4
             :JavaKind'Long    JavaConstant'LONG_0
             :JavaKind'Object  JavaConstant'NULL_POINTER
         )
+    )
+)
+
+;;;
+ ; Represents a reference to a Java field, either resolved or unresolved. Fields, like
+ ; methods and types, are resolved through {@link ConstantPool constant pools}.
+ ;;
+(defp JavaField
+    ;;;
+     ; Returns the name of this field.
+     ;;
+    (#_"String" JavaField'''getName-1 [#_"JavaField" this])
+    ;;;
+     ; Returns a {@link JavaType} object that identifies the declared type for this field.
+     ;;
+    (#_"JavaType" JavaField'''getType-1 [#_"JavaField" this])
+    ;;;
+     ; Returns the {@link JavaType} object representing the class or interface that declares this field.
+     ;;
+    (#_"JavaType" JavaField'''getDeclaringType-1 [#_"JavaField" this])
+)
+
+;;;
+ ; Represents a reference to a Java method, either resolved or unresolved. Methods, like
+ ; fields and types, are resolved through {@link ConstantPool constant pools}.
+ ;;
+(defp JavaMethod
+    ;;;
+     ; Returns the name of this method.
+     ;;
+    (#_"String" JavaMethod'''getName-1 [#_"JavaMethod" this])
+    ;;;
+     ; Returns the {@link JavaType} object representing the class or interface that declares this method.
+     ;;
+    (#_"JavaType" JavaMethod'''getDeclaringType-1 [#_"JavaMethod" this])
+    ;;;
+     ; Returns the signature of this method.
+     ;;
+    (#_"Signature" JavaMethod'''getSignature-1 [#_"JavaMethod" this])
+)
+
+;;;
+ ; Represents a resolved or unresolved type. Types include primitives, objects, {@code void}, and arrays thereof.
+ ;;
+(defp JavaType
+    ;;;
+     ; Returns the name of this type in internal form. The following are examples of strings
+     ; returned by this method:
+     ;
+     ; "Ljava/lang/Object;"
+     ; "I"
+     ; "[[B"
+     ;;
+    (#_"String" JavaType'''getName-1 [#_"JavaType" this])
+    ;;;
+     ; For array types, gets the type of the components, or {@code nil} if this is not an array
+     ; type. This method is analogous to {@link Class#getComponentType()}.
+     ;;
+    (#_"JavaType" JavaType'''getComponentType-1 [#_"JavaType" this])
+    ;;;
+     ; Gets the array class type representing an array with elements of this type.
+     ;;
+    (#_"JavaType" JavaType'''getArrayClass-1 [#_"JavaType" this])
+    ;;;
+     ; Gets the {@link JavaKind} of this type.
+     ;;
+    (#_"JavaKind" JavaType'''getJavaKind-1 [#_"JavaType" this])
+    ;;;
+     ; Resolves this type to a {@link ResolvedJavaType}.
+     ;
+     ; @param context the context of resolution (must not be nil)
+     ; @return the resolved Java type
+     ; @throws LinkageError if the resolution failed
+     ;;
+    (#_"ResolvedJavaType" JavaType'''resolve-2 [#_"JavaType" this, #_"ResolvedJavaType" context])
+)
+
+(value-ns JavaType
+    ;;;
+     ; Converts a type name in internal form to an external form.
+     ;
+     ; @param name the internal name to convert
+     ; @param qualified? whether the returned name should be qualified with the package name
+     ;;
+    (defn- #_"String" JavaType'internalNameToJava-2 [#_"String" name, #_"boolean" qualified?]
+        (case (#_"String" .charAt name, 0)
+            \L
+                (let [
+                    #_"String" s (-> name (#_"String" .substring 1, (dec (count name))) (#_"String" .replace \/, \.))
+                ]
+                    (when-not qualified? => s
+                        (let [
+                            #_"int" lastDot (#_"String" .lastIndexOf s, \.)
+                        ]
+                            (when-not (= lastDot -1) => s
+                                (#_"String" .substring s, (inc lastDot))
+                            )
+                        )
+                    )
+                )
+            \[
+                (str (JavaType'internalNameToJava-2 (#_"String" .substring name, 1), qualified?, false) "[]")
+            #_else
+                (when (= (count name) 1) => (throw! (str "Illegal internal name: " name))
+                    (JavaKind'getJavaName-1 (JavaKind'fromPrimitiveOrVoidTypeChar-1 (#_"String" .charAt name, 0)))
+                )
+        )
+    )
+
+    ;;;
+     ; Checks whether this type is an array class.
+     ;;
+    (defn #_"boolean" JavaType''isArray-1 [#_"JavaType" this]
+        (some? (JavaType'''getComponentType-1 this))
+    )
+
+    ;;;
+     ; Gets the elemental type for this given type. The elemental type is the corresponding zero
+     ; dimensional type of an array type. For example, the elemental type of {@code int[][][]} is
+     ; {@code int}. A non-array type is its own elemental type.
+     ;;
+    (defn #_"JavaType" JavaType''getElementalType-1 [#_"JavaType" this]
+        (loop-when-recur [#_"JavaType" t this] (some? (JavaType'''getComponentType-1 t)) [(JavaType'''getComponentType-1 t)] => t)
+    )
+
+    ;;;
+     ; Gets the Java programming language name for this type. The following are examples of strings
+     ; returned by this method:
+     ;
+     ; "java.lang.Object"
+     ; "int"
+     ; "boolean[][]"
+     ;;
+    (defn #_"String" JavaType''toJavaName-1 [#_"JavaType" this]
+        (JavaType'internalNameToJava-2 (JavaType'''getName-1 this), true)
+    )
+
+    ;;;
+     ; Gets the Java programming language name for this type. The following are examples of strings
+     ; returned by this method:
+     ;
+     ; qualified?
+     ;     "java.lang.Object"
+     ;     "int"
+     ;     "boolean[][]"
+     ;
+     ; (not qualified?)
+     ;     "Object"
+     ;     "int"
+     ;     "boolean[][]"
+     ;
+     ; @param qualified? specifies if the package prefix of this type should be included in the returned name
+     ;;
+    (defn #_"String" JavaType''toJavaName-2 [#_"JavaType" this, #_"boolean" qualified?]
+        (let [
+            #_"JavaKind" kind (JavaType'''getJavaKind-1 this)
+        ]
+            (if (= kind :JavaKind'Object)
+                (JavaType'internalNameToJava-2 (JavaType'''getName-1 this), qualified?)
+                (JavaKind'getJavaName-1 kind)
+            )
+        )
+    )
+)
+
+(value-ns JavaField
+    ;;;
+     ; Returns the kind of this field.
+     ;
+     ; The same as calling {@link #getType}.{@link JavaType#getJavaKind getJavaKind}.
+     ;;
+    (defn #_"JavaKind" JavaField''getJavaKind-1 [#_"JavaField" this]
+        (JavaType'''getJavaKind-1 (JavaField'''getType-1 this))
     )
 )
 
@@ -4941,6 +5123,10 @@ ZeroExtendNode'new-4
     (#_"this" MergeProcessor'''merge-2 [#_"MergeProcessor" this, #_"EffectsBlockState*" states])
 )
 
+(defp MetaspaceConstant #_[HotSpotConstant, VMConstant, Constant]
+    (#_"HotSpotResolvedObjectType" MetaspaceConstant'''asResolvedJavaType-1 [#_"MetaspaceConstant" this])
+)
+
 (defp MethodCallOp)
 (defp MethodCallTargetNode)
 (defp MethodInvocation)
@@ -5093,7 +5279,7 @@ ZeroExtendNode'new-4
     (#_"boolean" NodePlugin'''handleInvoke-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"[ValueNode]" args])
     ;;;
      ; Handle the parsing of a GETFIELD bytecode. If the method returns true, it must
-     ; push a value using the {@link ResolvedJavaField#getJavaKind() kind} of the field.
+     ; push a value using the {@link JavaField#getJavaKind() kind} of the field.
      ;
      ; @param object the receiver object for the field access
      ; @param field the accessed field
@@ -5102,7 +5288,7 @@ ZeroExtendNode'new-4
     (#_"boolean" NodePlugin'''handleLoadField-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field])
     ;;;
      ; Handle the parsing of a GETSTATIC bytecode. If the method returns true, it must
-     ; push a value using the {@link ResolvedJavaField#getJavaKind() kind} of the field.
+     ; push a value using the {@link JavaField#getJavaKind() kind} of the field.
      ;
      ; @param field the accessed field
      ; @return true if the plugin handles the field access, false otherwise
@@ -5189,6 +5375,37 @@ ZeroExtendNode'new-4
 (defp NullCheckOp)
 (defp NullCheckOptimizer)
 (defp NullConstant)
+
+;;;
+ ; Represents a constant non-{@code null} object reference, within the compiler and across
+ ; the compiler/runtime interface.
+ ;;
+(defp ObjectConstant #_[JavaConstant, HotSpotConstant, VMConstant, Constant]
+    ;;;
+     ; Gets the object represented by this constant represents if it is of a given type.
+     ;
+     ; @param type the expected type of the object represented by this constant. If the
+     ;            object is required to be of this type, then wrap the call to this method
+     ;            in {@link Objects#requireNonNull(Object)}.
+     ; @return the object value represented by this constant if it is an
+     ;         {@link ResolvedJavaType#isInstance(JavaConstant) instance of} {@code type}
+     ;         otherwise {@code null}
+     ;;
+    (#_"Object" ObjectConstant'''asObject-2c [#_"ObjectConstant" this, #_"Class" type])
+
+    ;;;
+     ; Gets the object represented by this constant represents if it is of a given type.
+     ;
+     ; @param type the expected type of the object represented by this constant. If the
+     ;            object is required to be of this type, then wrap the call to this method
+     ;            in {@link Objects#requireNonNull(Object)}.
+     ; @return the object value represented by this constant if it is an
+     ;         {@link ResolvedJavaType#isInstance(JavaConstant) instance of} {@code type}
+     ;         otherwise {@code null}
+     ;;
+    (#_"Object" ObjectConstant'''asObject-2t [#_"ObjectConstant" this, #_"ResolvedJavaType" type])
+)
+
 (defp ObjectEqualsNode)
 (defp ObjectEqualsOp)
 (defp ObjectStamp)
@@ -6397,7 +6614,7 @@ ZeroExtendNode'new-4
      ; Gets this register as a {@linkplain RegisterValue value} with no particular kind.
      ;;
     (defn #_"RegisterValue" Register''asValue-1 [#_"Register" this]
-        (Register''asValue-2 this, ValueKind'Illegal)
+        (Register''asValue-2 this, ValueKind'Illegal)
     )
 
     ;;;
@@ -6452,7 +6669,7 @@ ZeroExtendNode'new-4
                  ;;
                 #_"int" :stackSize stackSize
                 ;;;
-                 ; The location for the return value or {@link Value#ILLEGAL} if a void call.
+                 ; The location for the return value or {@link Value#ILLEGAL} if a void call.
                  ;;
                 #_"AllocatableValue" :returnLocation returnLocation
                 ;;;
@@ -6536,7 +6753,7 @@ ZeroExtendNode'new-4
             [#_"int" stackSize #_"[AllocatableValue]" locations]
                 (loop-when [stackSize 0 locations (vec (repeat (count parameterTypes) nil)) #_"int" i 0] (< i (count parameterTypes)) => [stackSize locations]
                     (let [
-                        #_"JavaKind" kind (JavaKind'getStackKind-1 (#_"JavaType" .getJavaKind (nth parameterTypes i)))
+                        #_"JavaKind" kind (JavaKind'getStackKind-1 (JavaType'''getJavaKind-1 (nth parameterTypes i)))
                         locations
                             (case kind
                                 (:JavaKind'Boolean :JavaKind'Byte :JavaKind'Short :JavaKind'Char :JavaKind'Int :JavaKind'Long :JavaKind'Object)
@@ -6560,9 +6777,9 @@ ZeroExtendNode'new-4
                 )
             #_"AllocatableValue" returnLocation
                 (let [
-                    #_"JavaKind" kind (if (some? returnType) (#_"JavaType" .getJavaKind returnType) :JavaKind'Void)
+                    #_"JavaKind" kind (if (some? returnType) (JavaType'''getJavaKind-1 returnType) :JavaKind'Void)
                 ]
-                    (when-not (= kind :JavaKind'Void) => Value'ILLEGAL
+                    (when-not (= kind :JavaKind'Void) => Value'ILLEGAL
                         (Register''asValue-2 RegisterConfig'returnRegister, (ValueKind'fromJavaKind-1 (JavaKind'getStackKind-1 kind)))
                     )
                 )
@@ -8070,9 +8287,9 @@ ZeroExtendNode'new-4
 
     (defn #_"boolean" ConstantFields'isStaticFieldConstant-1 [#_"ResolvedJavaField" field]
         (let [
-            #_"ResolvedJavaType" declaringClass (#_"ResolvedJavaField" .getDeclaringClass field)
+            #_"ResolvedJavaType" declaringClass (JavaField'''getDeclaringType-1 field)
         ]
-            (and (#_"ResolvedJavaType" .isInitialized declaringClass) (not (= (#_"ResolvedJavaType" .getName declaringClass) "Ljava/lang/System;")))
+            (and (#_"ResolvedJavaType" .isInitialized declaringClass) (not (= (JavaType'''getName-1 declaringClass) "Ljava/lang/System;")))
         )
     )
 
@@ -8110,7 +8327,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"int" ConstantFields'getArrayDimension-1 [#_"JavaType" type]
-        (loop-when-recur [#_"int" n 0 type (#_"JavaType" .getComponentType type)] (some? type) [(inc n) (#_"JavaType" .getComponentType type)] => n)
+        (loop-when-recur [#_"int" n 0 type (JavaType'''getComponentType-1 type)] (some? type) [(inc n) (JavaType'''getComponentType-1 type)] => n)
     )
 
     ;;;
@@ -8122,7 +8339,7 @@ ZeroExtendNode'new-4
                 #_"JavaConstant" value (#_"ConstantReflectionProvider" .readFieldValue HotSpot'constantReflection, field, receiver)
             ]
                 (when (and (some? value) (ConstantFields'isStableFieldValueConstant-3 field, value, receiver))
-                    (§ return (ConstantNode'forConstant-3c value, (ConstantFields'getArrayDimension-1 (#_"ResolvedJavaField" .getType field)), false))
+                    (§ return (ConstantNode'forConstant-3c value, (ConstantFields'getArrayDimension-1 (JavaField'''getType-1 field)), false))
                 )
             )
         )
@@ -8176,7 +8393,7 @@ ZeroExtendNode'new-4
     #_unused
     (defn #_"Object" SnippetReflection'asObject-2t [#_"ResolvedJavaType" type, #_"JavaConstant" constant]
         (when-not (JavaConstant'''isNull-1 constant)
-            (#_"HotSpotObjectConstant" .asObject constant, type)
+            (ObjectConstant'''asObject-2t constant, type)
         )
     )
 
@@ -8192,7 +8409,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"<T> T" SnippetReflection'asObject-2c [#_"Class<T>" type, #_"JavaConstant" constant]
         (when-not (JavaConstant'''isNull-1 constant)
-            (#_"HotSpotObjectConstant" .asObject constant, type)
+            (ObjectConstant'''asObject-2c constant, type)
         )
     )
 )
@@ -8748,12 +8965,12 @@ ZeroExtendNode'new-4
  ; Snippets used for implementing NEW, ANEWARRAY and NEWARRAY.
  ;;
 (value-ns NewObjectSnippets (§ implements Snippets)
-    (defn- #_"void" NewObjectSnippets'emitPrefetchAllocate-2 [#_"Word" address, #_"boolean" isArray]
+    (defn- #_"void" NewObjectSnippets'emitPrefetchAllocate-2 [#_"Word" address, #_"boolean" array?]
         (when (pos? HotSpot'allocatePrefetchStyle)
             ;; Insert a prefetch for each allocation only on the fast-path.
             ;; Generate several prefetch instructions.
             (let [
-                #_"int" lines (if isArray HotSpot'allocatePrefetchLines HotSpot'allocateInstancePrefetchLines)
+                #_"int" lines (if array? HotSpot'allocatePrefetchLines HotSpot'allocateInstancePrefetchLines)
                 #_"int" stepSize HotSpot'allocatePrefetchStepSize
                 #_"int" distance HotSpot'allocatePrefetchDistance
             ]
@@ -9176,7 +9393,7 @@ ZeroExtendNode'new-4
      ; Determines if a given method denotes a word operation.
      ;;
     (defn #_"boolean" WordTypes'isWordOperation-1 [#_"ResolvedJavaMethod" targetMethod]
-        (WordTypes'isWord-1j (#_"ResolvedJavaMethod" .getDeclaringClass targetMethod))
+        (WordTypes'isWord-1j (JavaMethod'''getDeclaringType-1 targetMethod))
     )
 
     ;;;
@@ -9185,7 +9402,7 @@ ZeroExtendNode'new-4
     (defn #_"JavaKind" WordTypes'asKind-1 [#_"JavaType" type]
         (if (or (= type WordTypes'klassPointer) (WordTypes'isWord-1j type))
             :JavaKind'Long
-            (#_"JavaType" .getJavaKind type)
+            (JavaType'''getJavaKind-1 type)
         )
     )
 
@@ -9657,7 +9874,7 @@ ZeroExtendNode'new-4
              ;;
             :OperandFlag'CONST
             ;;;
-             ; The value can be Value#ILLEGAL.
+             ; The value can be Value#ILLEGAL.
              ;;
             :OperandFlag'ILLEGAL
             ;;;
@@ -10404,7 +10621,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The types of (write/read) barriers attached to stores.
  ;;
-(value-ns BarrierType
+(value-ns BarrierType
     #_unused
     (def #_"ordered {BarrierType}" BarrierType'SET
         (ordered-set
@@ -11460,7 +11677,7 @@ ZeroExtendNode'new-4
                 BytecodeFrame'BEFORE_BCI
                     ;; This is an intrinsic. Deoptimizing within an intrinsic must re-execute the intrinsified invocation.
                     (let [
-                        #_"FrameState" beforeCall (FrameState''duplicateModifiedBeforeCall-5 atReturn, (:bci invoke), invokeReturnKind, (#_"Signature" .toParameterKinds (#_"ResolvedJavaMethod" .getSignature invokeTargetMethod), (not (#_"ResolvedJavaMethod" .isStatic invokeTargetMethod))), invokeArgs)
+                        #_"FrameState" beforeCall (FrameState''duplicateModifiedBeforeCall-5 atReturn, (:bci invoke), invokeReturnKind, (#_"Signature" .toParameterKinds (JavaMethod'''getSignature-1 invokeTargetMethod), (not (#_"ResolvedJavaMethod" .isStatic invokeTargetMethod))), invokeArgs)
                         _ (§ ass! frameState (Node''replaceAndDelete-2 frameState, beforeCall))
                     ]
                         beforeCall
@@ -11518,7 +11735,7 @@ ZeroExtendNode'new-4
                             (when (= (InvokeNode''getInvokeKind-1 invoke) :InvokeKind'Special) => newReceiver
                                 (let [
                                     #_"Stamp" paramStamp (:stamp newReceiver)
-                                    #_"Stamp" stamp (Stamp'''join-2 paramStamp, (StampFactory'object-1 (TypeReference'create-1 (#_"ResolvedJavaMethod" .getDeclaringClass (:targetMethod callTarget)))))
+                                    #_"Stamp" stamp (Stamp'''join-2 paramStamp, (StampFactory'object-1 (TypeReference'create-1 (JavaMethod'''getDeclaringType-1 (:targetMethod callTarget)))))
                                 ]
                                     (when-not (= stamp paramStamp) => newReceiver
                                         ;; The verifier and previous optimizations guarantee unconditionally that the
@@ -11976,7 +12193,13 @@ ZeroExtendNode'new-4
                 (let [
                     sorted (ß NodeBitMap''invert-1 sorted)
                     #_"MicroBlock" newBlock (MicroBlock'new-1 (:id block))
-                    #_"sorted {GuardNode}" guards (sorted-set (ß #_"Comparator" .thenComparingInt (#_"Comparator" .thenComparing (Comparator/comparing (§ ffun #_"Map" .get)), (ß GuardNode(§ ffun )StaticDeoptimizingNode''computePriority-1)), (§ ffun #_"Object" .hashCode)))
+                    #_"sorted {GuardNode}" guards
+                        (sorted-set
+                            (-> (ß Comparator/comparing #(get priorities %))
+                                (ß #_"Comparator" .thenComparing StaticDeoptimizingNode''computePriority-1)
+                                (ß #_"Comparator" .thenComparingInt #(#_"Object" .hashCode %))
+                            )
+                        )
                     #_"(Node)" stack
                         (loop-when-recur [stack nil #_"NodeEntry" e (:head block)]
                                         (some? e)
@@ -12130,14 +12353,14 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"BarrierType" Lowerer'fieldLoadBarrierType-1 [#_"ResolvedJavaField" field]
-        (if (and HotSpot'useG1GC (= (#_"HotSpotResolvedJavaField" .getJavaKind field) :JavaKind'Object) (= (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, java.lang.ref.Reference) (#_"HotSpotResolvedJavaField" .getDeclaringClass field)) (= (#_"HotSpotResolvedJavaField" .getName field) "referent"))
+        (if (and HotSpot'useG1GC (= (JavaField''getJavaKind-1 field) :JavaKind'Object) (= (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, java.lang.ref.Reference) (JavaField'''getDeclaringType-1 field)) (= (JavaField'''getName-1 field) "referent"))
             :BarrierType'PRECISE
             :BarrierType'NONE
         )
     )
 
     (defn #_"BarrierType" Lowerer'fieldStoreBarrierType-1 [#_"ResolvedJavaField" field]
-        (if (= (#_"ResolvedJavaField" .getJavaKind field) :JavaKind'Object) :BarrierType'IMPRECISE :BarrierType'NONE)
+        (if (= (JavaField''getJavaKind-1 field) :JavaKind'Object) :BarrierType'IMPRECISE :BarrierType'NONE)
     )
 
     (defn #_"BarrierType" Lowerer'arrayStoreBarrierType-1 [#_"JavaKind" elementKind]
@@ -12157,7 +12380,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp object))
             ]
-                (if (and (some? type) (not (#_"ResolvedJavaType" .isArray type))) :BarrierType'IMPRECISE :BarrierType'PRECISE)
+                (if (and (some? type) (not (JavaType''isArray-1 type))) :BarrierType'IMPRECISE :BarrierType'PRECISE)
             )
         )
     )
@@ -13181,8 +13404,8 @@ ZeroExtendNode'new-4
 
     (defn #_"void" NewObjectTemplates''lower-3a [#_"NewObjectTemplates" this, #_"NewArrayNode" node, #_"LoweringTool" lowerer]
         (let [
-            #_"HotSpotResolvedObjectType" arrayType (#_"ResolvedJavaType" .getArrayClass (:elementType node))
-            #_"JavaKind" elementKind (#_"ResolvedJavaType" .getJavaKind (:elementType node))
+            #_"HotSpotResolvedObjectType" arrayType (JavaType'''getArrayClass-1 (:elementType node))
+            #_"JavaKind" elementKind (JavaType'''getJavaKind-1 (:elementType node))
             #_"ValueNode" length (ArrayLengthProvider'''length-1 node)
             #_"Arguments" args
                 (Arguments'new-4* (:allocateArray this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
@@ -16329,7 +16552,7 @@ ZeroExtendNode'new-4
 
     (defm HotSpotSwitchClosure AMD64SwitchClosure
         (#_"this" AMD64SwitchClosure'''emitComparison-2 [#_"HotSpotSwitchClosure" this, #_"Constant" constant]
-            (when (instance? HotSpotMetaspaceConstant constant) => (AMD64SwitchClosure'''emitComparison-2 (§ super AMD64SwitchClosure'iface), constant)
+            (when (satisfies? MetaspaceConstant constant) => (AMD64SwitchClosure'''emitComparison-2 (§ super AMD64SwitchClosure'iface), constant)
                 (if (HotSpotConstant'''isCompressed-1 constant)
                     (let [
                         this (update this :asm Assembler''recordInlineDataInCode-2 constant)
@@ -18311,7 +18534,7 @@ ZeroExtendNode'new-4
             ]
                 false
             )
-            (PEReadEliminationClosure''processLoad-8 this, load, (:object load), (FieldLocationIdentity'new-1 (:field load)), -1, (#_"ResolvedJavaField" .getJavaKind (:field load)), state, effects)
+            (PEReadEliminationClosure''processLoad-8 this, load, (:object load), (FieldLocationIdentity'new-1 (:field load)), -1, (JavaField''getJavaKind-1 (:field load)), state, effects)
         )
     )
 
@@ -18340,7 +18563,7 @@ ZeroExtendNode'new-4
                 false
             )
             (let [
-                #_"JavaKind" kind (#_"ResolvedJavaField" .getJavaKind (:field store))
+                #_"JavaKind" kind (JavaField''getJavaKind-1 (:field store))
             ]
                 (PEReadEliminationClosure''processStore-10 this, store, (:object store), (FieldLocationIdentity'new-1 (:field store)), -1, kind, false, (:value store), state, effects)
             )
@@ -18351,8 +18574,8 @@ ZeroExtendNode'new-4
         (let [
             #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp array))
         ]
-            (when (and (some? type) (#_"ResolvedJavaType" .isArray type)) => :JavaKind'Illegal
-                (#_"ResolvedJavaType" .getJavaKind (#_"ResolvedJavaType" .getComponentType type))
+            (when (and (some? type) (JavaType''isArray-1 type)) => :JavaKind'Illegal
+                (JavaType'''getJavaKind-1 (JavaType'''getComponentType-1 type))
             )
         )
     )
@@ -18424,12 +18647,12 @@ ZeroExtendNode'new-4
             (let [
                 #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp (:object load)))
             ]
-                (and (some? type) (#_"ResolvedJavaType" .isArray type)
+                (and (some? type) (JavaType''isArray-1 type)
                     (let [
                         #_"JavaKind" accessKind (:accessKind load)
-                        #_"JavaKind" componentKind (#_"ResolvedJavaType" .getJavaKind (#_"ResolvedJavaType" .getComponentType type))
+                        #_"JavaKind" componentKind (JavaType'''getJavaKind-1 (JavaType'''getComponentType-1 type))
                         #_"long" offset (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:offset load)))
-                        #_"int" index (VirtualArrayNode'entryIndexForOffset-4 offset, accessKind, (#_"ResolvedJavaType" .getComponentType type), Integer/MAX_VALUE)
+                        #_"int" index (VirtualArrayNode'entryIndexForOffset-4 offset, accessKind, (JavaType'''getComponentType-1 type), Integer/MAX_VALUE)
                         #_"ValueNode" object (GraphUtil'unproxify-1n (:object load))
                         #_"LocationIdentity" location (NamedLocationIdentity'getArrayLocation-1 componentKind)
                         #_"ValueNode" cachedValue (PEReadEliminationBlockState''getReadCache-6 state, object, location, index, accessKind, this)
@@ -18464,17 +18687,17 @@ ZeroExtendNode'new-4
         (let [
             #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp (:object store)))
         ]
-            (if (and (some? type) (#_"ResolvedJavaType" .isArray type))
+            (if (and (some? type) (JavaType''isArray-1 type))
                 (let [
                     #_"JavaKind" accessKind (:accessKind store)
-                    #_"JavaKind" componentKind (#_"ResolvedJavaType" .getJavaKind (#_"ResolvedJavaType" .getComponentType type))
+                    #_"JavaKind" componentKind (JavaType'''getJavaKind-1 (JavaType'''getComponentType-1 type))
                     #_"LocationIdentity" location (NamedLocationIdentity'getArrayLocation-1 componentKind)
                 ]
                     (if (satisfies? ConstantNode (:offset store))
                         (let [
                             #_"long" offset (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:offset store)))
                             #_"boolean" overflowAccess (PEReadEliminationClosure'isOverflowAccess-2 accessKind, componentKind)
-                            #_"int" index (if overflowAccess -1 (VirtualArrayNode'entryIndexForOffset-4 offset, accessKind, (#_"ResolvedJavaType" .getComponentType type), Integer/MAX_VALUE))
+                            #_"int" index (if overflowAccess -1 (VirtualArrayNode'entryIndexForOffset-4 offset, accessKind, (JavaType'''getComponentType-1 type), Integer/MAX_VALUE))
                         ]
                             (PEReadEliminationClosure''processStore-10 this, store, (:object store), location, index, accessKind, overflowAccess, (:value store), state, effects)
                         )
@@ -18811,7 +19034,7 @@ ZeroExtendNode'new-4
                     (let [
                         #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp (:object node)))
                     ]
-                        (and (some? type) (not (#_"ResolvedJavaType" .isArray type))
+                        (and (some? type) (not (JavaType''isArray-1 type))
                             (if (satisfies? RawLoadNode node)
                                 (and (LocationIdentity''isSingle-1 (:locationIdentity node))
                                     (let [
@@ -19438,7 +19661,7 @@ ZeroExtendNode'new-4
     (defn- #_"boolean" BytecodeParser'callTargetIsResolved-1 [#_"JavaMethod" target]
         (and (instance? ResolvedJavaMethod target)
             (let [
-                #_"ResolvedJavaType" type (#_"ResolvedJavaMethod" .getDeclaringClass target)
+                #_"ResolvedJavaType" type (JavaMethod'''getDeclaringType-1 target)
             ]
                 (or (#_"ResolvedJavaType" .isInterface type) (#_"ResolvedJavaType" .isLinked type))
             )
@@ -19485,7 +19708,7 @@ ZeroExtendNode'new-4
         ]
             (when (instance? ResolvedJavaField result)
                 (let [
-                    #_"ResolvedJavaType" declaringClass (#_"ResolvedJavaField" .getDeclaringClass result)
+                    #_"ResolvedJavaType" declaringClass (JavaField'''getDeclaringType-1 result)
                 ]
                     (when-not (#_"ResolvedJavaType" .isInitialized declaringClass)
                         ;; even with eager initialization, superinterfaces are not always initialized (see StaticInterfaceFieldTest)
@@ -19517,7 +19740,7 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"[ValueNode]" BytecodeParser''emitCheckForInvokeSuperSpecial-2 [#_"BytecodeParser" this, #_"[ValueNode]" args]
         (let [
-            #_"ResolvedJavaType" callingClass (#_"ResolvedJavaMethod" .getDeclaringClass (:method this))
+            #_"ResolvedJavaType" callingClass (JavaMethod'''getDeclaringType-1 (:method this))
             callingClass
                 (when (some? (#_"ResolvedJavaType" .getHostClass callingClass)) => callingClass
                     (#_"ResolvedJavaType" .getHostClass callingClass)
@@ -19596,7 +19819,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"this" BytecodeParser''parseAndInlineCallee-4 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" targetMethod, #_"[ValueNode]" args, #_"IntrinsicContext" calleeIntrinsicContext]
-        (try (§ with [#_"IntrinsicScope" _ (when (and (some? calleeIntrinsicContext) (not (BytecodeParser''parsingIntrinsic-1 this))) (IntrinsicScope'new-3 this, (#_"Signature" .toParameterKinds (#_"ResolvedJavaMethod" .getSignature targetMethod), (not (#_"ResolvedJavaMethod" .isStatic targetMethod))), args))])
+        (try (§ with [#_"IntrinsicScope" _ (when (and (some? calleeIntrinsicContext) (not (BytecodeParser''parsingIntrinsic-1 this))) (IntrinsicScope'new-3 this, (#_"Signature" .toParameterKinds (JavaMethod'''getSignature-1 targetMethod), (not (#_"ResolvedJavaMethod" .isStatic targetMethod))), args))])
             (let [
                 #_"BytecodeParser" parser (BytecodeParser'new-5 (:graphBuilderInstance this), (:graph this), this, targetMethod, calleeIntrinsicContext)
                 #_"FrameStateBuilder" startFrameState (FrameStateBuilder'new-3c parser, (:bytecode parser), (:graph this))
@@ -19628,7 +19851,7 @@ ZeroExtendNode'new-4
                                 )
                             this
                                 (when (some? calleeReturnValue) => this
-                                    (update this :frameState FrameStateBuilder''push-3 (JavaKind'getStackKind-1 (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature targetMethod))), calleeReturnValue)
+                                    (update this :frameState FrameStateBuilder''push-3 (JavaKind'getStackKind-1 (#_"Signature" .getReturnKind (JavaMethod'''getSignature-1 targetMethod))), calleeReturnValue)
                                 )
                         ]
                             (when (some? merge) => this
@@ -19754,7 +19977,7 @@ ZeroExtendNode'new-4
             [#_"ResolvedJavaMethod" targetMethod #_"InvokeKind" invokeKind]
                 (when (InvokeKind''isIndirect-1 initialInvokeKind) => [initialTargetMethod initialInvokeKind]
                     (let [
-                        #_"ResolvedJavaType" contextType (#_"ResolvedJavaMethod" .getDeclaringClass (FrameStateBuilder''getMethod-1 (:frameState this)))
+                        #_"ResolvedJavaType" contextType (JavaMethod'''getDeclaringType-1 (FrameStateBuilder''getMethod-1 (:frameState this)))
                         #_"ResolvedJavaMethod" specialCallTarget (MethodCallTargetNode'findSpecialCallTarget-4 initialInvokeKind, (nth args 0), initialTargetMethod, contextType)
                     ]
                         (when (some? specialCallTarget) => [initialTargetMethod initialInvokeKind]
@@ -19762,9 +19985,9 @@ ZeroExtendNode'new-4
                         )
                     )
                 )
-            #_"JavaKind" resultType (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature targetMethod))
-            #_"JavaType" returnType (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature targetMethod), (#_"ResolvedJavaMethod" .getDeclaringClass (:method this)))
-            returnType (#_"JavaType" .resolve returnType, (#_"ResolvedJavaMethod" .getDeclaringClass targetMethod))
+            #_"JavaKind" resultType (#_"Signature" .getReturnKind (JavaMethod'''getSignature-1 targetMethod))
+            #_"JavaType" returnType (#_"Signature" .getReturnType (JavaMethod'''getSignature-1 targetMethod), (JavaMethod'''getDeclaringType-1 (:method this)))
+            returnType (JavaType'''resolve-2 returnType, (JavaMethod'''getDeclaringType-1 targetMethod))
             _
                 (when (and (= initialInvokeKind :InvokeKind'Special) (not (#_"ResolvedJavaMethod" .isConstructor targetMethod)))
                     (§ ass! args (BytecodeParser''emitCheckForInvokeSuperSpecial-2 this, args))
@@ -19815,8 +20038,8 @@ ZeroExtendNode'new-4
                                     ;; otherwise we wouldn't be here.
                                     (§ ass invokeKind :InvokeKind'Special)
                                 )
-                            #_"Signature" sig (#_"ResolvedJavaMethod" .getSignature originalMethod)
-                            _ (§ ass returnType (#_"Signature" .getReturnType sig, (#_"ResolvedJavaMethod" .getDeclaringClass (:method this))))
+                            #_"Signature" sig (JavaMethod'''getSignature-1 originalMethod)
+                            _ (§ ass returnType (#_"Signature" .getReturnType sig, (JavaMethod'''getDeclaringType-1 (:method this))))
                             _ (§ ass resultType (#_"Signature" .getReturnKind sig))
                             _ (§ ass targetMethod originalMethod)
                         ]
@@ -19836,9 +20059,9 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"this" BytecodeParser''genInvokeStatic-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
-        (if (and (BytecodeParser'callTargetIsResolved-1 target) (or (#_"ResolvedJavaType" .isInitialized (#_"ResolvedJavaMethod" .getDeclaringClass target)) (not GraalOptions'resolveClassBeforeStaticInvoke)))
+        (if (and (BytecodeParser'callTargetIsResolved-1 target) (or (#_"ResolvedJavaType" .isInitialized (JavaMethod'''getDeclaringType-1 target)) (not GraalOptions'resolveClassBeforeStaticInvoke)))
             (let [
-                #_"InvokeNode" invoke (BytecodeParser''appendInvoke-4 this, :InvokeKind'Static, target, (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature target), false)))
+                #_"InvokeNode" invoke (BytecodeParser''appendInvoke-4 this, :InvokeKind'Static, target, (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (JavaMethod'''getSignature-1 target), false)))
                 _
                     (when (some? invoke)
                         (§ ass! invoke (InvokeNode''setClassInit-2 invoke, nil))
@@ -19856,7 +20079,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" BytecodeParser''genInvokeInterface-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
         (when (BytecodeParser'callTargetIsResolved-1 target) => (BytecodeParser''handleUnresolvedInvoke-3 this, target, :InvokeKind'Interface)
-            (BytecodeParser''appendInvoke-4 this, :InvokeKind'Interface, target, (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (#_"JavaMethod" .getSignature target), true)))
+            (BytecodeParser''appendInvoke-4 this, :InvokeKind'Interface, target, (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (JavaMethod'''getSignature-1 target), true)))
             this
         )
     )
@@ -19873,7 +20096,7 @@ ZeroExtendNode'new-4
                     (§ ass! this (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (ConstantNode'forConstant-2c appendix, (:graph this))))
                 )
             #_"boolean" hasReceiver (and (not= opcode Bytecodes'INVOKEDYNAMIC) (not (#_"ResolvedJavaMethod" .isStatic target)))
-            #_"[ValueNode]" args (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature target), hasReceiver))
+            #_"[ValueNode]" args (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (JavaMethod'''getSignature-1 target), hasReceiver))
             _ (BytecodeParser''appendInvoke-4 this, (if hasReceiver :InvokeKind'Virtual :InvokeKind'Static), target, args)
         ]
             true
@@ -19897,7 +20120,7 @@ ZeroExtendNode'new-4
             ]
                 (or (BytecodeParser''genDynamicInvokeHelper-4 this, target, cpi, Bytecodes'INVOKEVIRTUAL)
                     (let [
-                        #_"[ValueNode]" args (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (#_"JavaMethod" .getSignature target), true))
+                        #_"[ValueNode]" args (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (JavaMethod'''getSignature-1 target), true))
                     ]
                         (BytecodeParser''appendInvoke-4 this, :InvokeKind'Virtual, target, args)
                         true
@@ -19919,7 +20142,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" BytecodeParser''genInvokeSpecial-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
         (when (BytecodeParser'callTargetIsResolved-1 target) => (BytecodeParser''handleUnresolvedInvoke-3 this, target, :InvokeKind'Special)
-            (BytecodeParser''appendInvoke-4 this, :InvokeKind'Special, target, (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (#_"JavaMethod" .getSignature target), true)))
+            (BytecodeParser''appendInvoke-4 this, :InvokeKind'Special, target, (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (JavaMethod'''getSignature-1 target), true)))
             this
         )
     )
@@ -19985,7 +20208,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"ValueNode" BytecodeParser''genLoadField-3 [#_"BytecodeParser" this, #_"ValueNode" receiver, #_"ResolvedJavaField" field]
         (let [
-            #_"Stamp" stamp (Plugins''getOverridingStamp-4 HotSpot'plugins, this, (#_"ResolvedJavaField" .getType field), false)
+            #_"Stamp" stamp (Plugins''getOverridingStamp-4 HotSpot'plugins, this, (JavaField'''getType-1 field), false)
         ]
             (if (some? stamp)
                 (LoadFieldNode'createOverrideStamp-5 stamp, receiver, field, false, false)
@@ -20004,10 +20227,10 @@ ZeroExtendNode'new-4
             (let [
                 #_"ValueNode" fieldRead (BytecodeParser''append-2 this, (BytecodeParser''genLoadField-3 this, receiver, resolvedField))
                 _
-                    (when (and (= (#_"ResolvedJavaType" .getName (#_"ResolvedJavaField" .getDeclaringClass resolvedField)) "Ljava/lang/ref/Reference;") (= (#_"ResolvedJavaField" .getName resolvedField) "referent"))
+                    (when (and (= (JavaType'''getName-1 (JavaField'''getDeclaringType-1 resolvedField)) "Ljava/lang/ref/Reference;") (= (JavaField'''getName-1 resolvedField) "referent"))
                         (BytecodeParser''append-2 this, (MembarNode'new-2 0, (FieldLocationIdentity'new-1 resolvedField)))
                     )
-                #_"JavaKind" fieldKind (#_"ResolvedJavaField" .getJavaKind resolvedField)
+                #_"JavaKind" fieldKind (JavaField''getJavaKind-1 resolvedField)
             ]
                 (if (and (#_"ResolvedJavaField" .isVolatile resolvedField) (satisfies? LoadFieldNode fieldRead))
                     (let [
@@ -20039,7 +20262,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"ValueNode" BytecodeParser''processReturnValue-3 [#_"BytecodeParser" this, #_"ValueNode" value, #_"JavaKind" kind]
         (let [
-            #_"JavaKind" returnKind (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature (:method this)))
+            #_"JavaKind" returnKind (#_"Signature" .getReturnKind (JavaMethod'''getSignature-1 (:method this)))
         ]
             (when-not (= kind returnKind) => value
                 ;; sub-word integer
@@ -20301,7 +20524,7 @@ ZeroExtendNode'new-4
                 )
         ]
             (if genReturn
-                (BytecodeParser''genReturn-3 this, conditionalNode, (JavaKind'getStackKind-1 (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature (:method this)))))
+                (BytecodeParser''genReturn-3 this, conditionalNode, (JavaKind'getStackKind-1 (#_"Signature" .getReturnKind (JavaMethod'''getSignature-1 (:method this)))))
                 (let [
                     this (update this :frameState FrameStateBuilder''push-3 :JavaKind'Int, conditionalNode)
                     this (BytecodeParser''appendGoto-2 this, (BciBlock''getSuccessor-2 trueBlock, 0))
@@ -20470,12 +20693,12 @@ ZeroExtendNode'new-4
         (let [
             #_"Object" constant (BytecodeParser''lookupConstant-3 this, cpi, opcode)
         ]
-            (condp instance? constant
+            (condp satisfies? constant
                 JavaType ;; this is a load of class constant which might be unresolved
                     (when (instance? ResolvedJavaType constant) => (BytecodeParser''handleUnresolvedLoadConstant-2 this, constant)
                         (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (ConstantNode'forConstant-2c (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, constant), (:graph this)))
                     )
-                JavaConstant'iface
+                JavaConstant
                     (update this :frameState FrameStateBuilder''push-3 (JavaConstant'''getJavaKind-1 constant), (ConstantNode'forConstant-2c constant, (:graph this)))
             )
         )
@@ -20830,7 +21053,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"this" BytecodeParser''genPutField-2 [#_"BytecodeParser" this, #_"JavaField" field]
-        (BytecodeParser''genPutField-3f this, field, (FrameStateBuilder''pop-2 (:frameState this), (#_"JavaField" .getJavaKind field)))
+        (BytecodeParser''genPutField-3f this, field, (FrameStateBuilder''pop-2 (:frameState this), (JavaField''getJavaKind-1 field)))
     )
 
     (defn- #_"this" BytecodeParser''genPutField-3i [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
@@ -20839,14 +21062,14 @@ ZeroExtendNode'new-4
 
     (defn- #_"ResolvedJavaField" BytecodeParser''resolveStaticFieldAccess-3 [#_"BytecodeParser" this, #_"JavaField" field, #_"ValueNode" value]
         (when (instance? ResolvedJavaField field)
-            (when (#_"ResolvedJavaType" .isInitialized (#_"ResolvedJavaField" .getDeclaringClass field))
+            (when (#_"ResolvedJavaType" .isInitialized (JavaField'''getDeclaringType-1 field))
                 (§ return field)
             )
             ;; Static fields have initialization semantics but may be safely accessed under certain
             ;; conditions while the class is being initialized. Executing in the clinit or init of
             ;; classes which are subtypes of the field holder are sure to be running in a context
             ;; where the access is safe.
-            (when (and (#_"ResolvedJavaType" .isAssignableFrom (#_"ResolvedJavaField" .getDeclaringClass field), (#_"ResolvedJavaMethod" .getDeclaringClass (:method this))) (or (#_"ResolvedJavaMethod" .isClassInitializer (:method this)) (#_"ResolvedJavaMethod" .isConstructor (:method this))))
+            (when (and (#_"ResolvedJavaType" .isAssignableFrom (JavaField'''getDeclaringType-1 field), (JavaMethod'''getDeclaringType-1 (:method this))) (or (#_"ResolvedJavaMethod" .isClassInitializer (:method this)) (#_"ResolvedJavaMethod" .isConstructor (:method this))))
                 (§ return field)
             )
         )
@@ -20865,15 +21088,15 @@ ZeroExtendNode'new-4
                 (or
                     ;; Javac does not allow the use of "$assertionsDisabled" for a field name as Eclipse does.
                     ;; In this case a suffix is added to the generated field.
-                    (when (and (#_"ResolvedJavaField" .isSynthetic resolvedField) (#_"String" .startsWith (#_"ResolvedJavaField" .getName resolvedField), "$assertionsDisabled"))
-                        (update this :frameState FrameStateBuilder''push-3 (#_"JavaField" .getJavaKind field), (ConstantNode'forBoolean-2 true, (:graph this)))
+                    (when (and (#_"ResolvedJavaField" .isSynthetic resolvedField) (#_"String" .startsWith (JavaField'''getName-1 resolvedField), "$assertionsDisabled"))
+                        (update this :frameState FrameStateBuilder''push-3 (JavaField''getJavaKind-1 field), (ConstantNode'forBoolean-2 true, (:graph this)))
                     )
                     (loop-when [#_"seq" s (seq (:nodePlugins HotSpot'plugins))] (some? s)
                         (when (NodePlugin'''handleLoadStaticField-3 (first s), this, resolvedField) => (recur (next s))
                             this
                         )
                     )
-                    (update this :frameState FrameStateBuilder''push-3 (#_"JavaField" .getJavaKind field), (BytecodeParser''append-2 this, (BytecodeParser''genLoadField-3 this, nil, resolvedField)))
+                    (update this :frameState FrameStateBuilder''push-3 (JavaField''getJavaKind-1 field), (BytecodeParser''append-2 this, (BytecodeParser''genLoadField-3 this, nil, resolvedField)))
                 )
             )
         )
@@ -20885,7 +21108,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" BytecodeParser''genPutStatic-2 [#_"BytecodeParser" this, #_"JavaField" field]
         (let [
-            #_"ValueNode" value (FrameStateBuilder''pop-2 (:frameState this), (#_"JavaField" .getJavaKind field))
+            #_"ValueNode" value (FrameStateBuilder''pop-2 (:frameState this), (JavaField''getJavaKind-1 field))
             #_"ResolvedJavaField" resolvedField (BytecodeParser''resolveStaticFieldAccess-3 this, field, value)
         ]
             (when (some? resolvedField) => this
@@ -21265,7 +21488,7 @@ ZeroExtendNode'new-4
                     (if (or (= (count (:locals (:frameState this))) m) (#_"ResolvedJavaMethod" .isNative o'method))
                         (map f'local (range m))
                         (let [
-                            #_"int" n (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature o'method), (not (#_"ResolvedJavaMethod" .isStatic o'method)))
+                            #_"int" n (#_"Signature" .getParameterCount (JavaMethod'''getSignature-1 o'method), (not (#_"ResolvedJavaMethod" .isStatic o'method)))
                         ]
                             (concat (map f'local (range n)) (repeat (- m n) nil))
                         )
@@ -21278,7 +21501,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"ValueNode" BytecodeParser''synchronizedObject-3 [#_"BytecodeParser" this, #_"FrameStateBuilder" state, #_"ResolvedJavaMethod" target]
         (if (#_"ResolvedJavaMethod" .isStatic target)
-            (ConstantNode'forConstant-2c (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (#_"ResolvedJavaMethod" .getDeclaringClass target)), (:graph this))
+            (ConstantNode'forConstant-2c (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (JavaMethod'''getDeclaringType-1 target)), (:graph this))
             (nth (:locals state) 0)
         )
     )
@@ -22607,12 +22830,12 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"ClassfileBytecode" Classfile''getCode-3 [#_"Classfile" this, #_"String" name, #_"String" descriptor]
-        (loop-when [#_"seq" s (seq (:codeAttributes this))] (some? s) => (throw! (str "NoSuchMethodError: " (#_"ResolvedJavaType" .toJavaName (:type this)) "." name descriptor))
+        (loop-when [#_"seq" s (seq (:codeAttributes this))] (some? s) => (throw! (str "NoSuchMethodError: " (JavaType''toJavaName-1 (:type this)) "." name descriptor))
             (let [
                 #_"ClassfileBytecode" code (first s)
                 #_"ResolvedJavaMethod" method (Bytecode'''getMethod-1 code)
             ]
-                (when (and (= (#_"ResolvedJavaMethod" .getName method) name) (= (#_"Signature" .toMethodDescriptor (#_"ResolvedJavaMethod" .getSignature method)) descriptor)) => (recur (next s))
+                (when (and (= (JavaMethod'''getName-1 method) name) (= (#_"Signature" .toMethodDescriptor (JavaMethod'''getSignature-1 method)) descriptor)) => (recur (next s))
                     code
                 )
             )
@@ -22773,9 +22996,9 @@ ZeroExtendNode'new-4
     (defm ClassfileBytecodeProvider BytecodeProvider
         (#_"Bytecode" BytecodeProvider'''getBytecode-2 [#_"ClassfileBytecodeProvider" this, #_"ResolvedJavaMethod" method]
             (let [
-                #_"Classfile" classfile (ClassfileBytecodeProvider''getClassfile-2 this, (ClassfileBytecodeProvider''resolveToClass-2 this, (#_"ResolvedJavaType" .getName (#_"ResolvedJavaMethod" .getDeclaringClass method))))
+                #_"Classfile" classfile (ClassfileBytecodeProvider''getClassfile-2 this, (ClassfileBytecodeProvider''resolveToClass-2 this, (JavaType'''getName-1 (JavaMethod'''getDeclaringType-1 method))))
             ]
-                (Classfile''getCode-3 classfile, (#_"ResolvedJavaMethod" .getName method), (#_"Signature" .toMethodDescriptor (#_"ResolvedJavaMethod" .getSignature method)))
+                (Classfile''getCode-3 classfile, (JavaMethod'''getName-1 method), (#_"Signature" .toMethodDescriptor (JavaMethod'''getSignature-1 method)))
             )
         )
     )
@@ -22959,9 +23182,9 @@ ZeroExtendNode'new-4
                             _ (§ ass! this (assoc this :method (ClassfileConstant'resolveMethod-5 (:context cp), cls, name, type, false)))
                         ]
                             (when (nil? (:method this))
-                                (throw! (str "NoSuchMethodError: " (#_"ResolvedJavaType" .toJavaName cls) "." name type))
+                                (throw! (str "NoSuchMethodError: " (JavaType''toJavaName-1 cls) "." name type))
                             )
-                            (when (or (not (#_"ResolvedJavaMethod" .isPublic (:method this))) (not (or (#_"ResolvedJavaType" .isInterface (#_"ResolvedJavaMethod" .getDeclaringClass (:method this))) (#_"ResolvedJavaType" .isJavaLangObject (#_"ResolvedJavaMethod" .getDeclaringClass (:method this))))))
+                            (when (or (not (#_"ResolvedJavaMethod" .isPublic (:method this))) (not (or (#_"ResolvedJavaType" .isInterface (JavaMethod'''getDeclaringType-1 (:method this))) (#_"ResolvedJavaType" .isJavaLangObject (JavaMethod'''getDeclaringType-1 (:method this))))))
                                 (throw! (str "IncompatibleClassChangeError: cannot invokeinterface " (:method this)))
                             )
                         )
@@ -22970,7 +23193,7 @@ ZeroExtendNode'new-4
                             _ (§ ass! this (assoc this :method (ClassfileConstant'resolveMethod-5 (:context cp), cls, name, type, false)))
                         ]
                             (when (nil? (:method this))
-                                (throw! (str "NoSuchMethodError: " (#_"ResolvedJavaType" .toJavaName cls) "." name type))
+                                (throw! (str "NoSuchMethodError: " (JavaType''toJavaName-1 cls) "." name type))
                             )
                         )
                     :else
@@ -22978,7 +23201,7 @@ ZeroExtendNode'new-4
                             _ (§ ass! this (assoc this :method (ClassfileConstant'resolveMethod-5 (:context cp), cls, name, type, true)))
                         ]
                             (when (nil? (:method this))
-                                (throw! (str "NoSuchMethodError: " (#_"ResolvedJavaType" .toJavaName cls) "." name type))
+                                (throw! (str "NoSuchMethodError: " (JavaType''toJavaName-1 cls) "." name type))
                             )
                         )
                 )
@@ -23019,7 +23242,7 @@ ZeroExtendNode'new-4
                 _ (§ ass! this (assoc this :field (ClassfileConstant'resolveField-5 (:context cp), cls, name, type, (any = opcode Bytecodes'GETSTATIC Bytecodes'PUTSTATIC))))
             ]
                 (when (nil? (:field this))
-                    (throw! (str "NoSuchFieldError: " (#_"ResolvedJavaType" .toJavaName cls) "." name " " type))
+                    (throw! (str "NoSuchFieldError: " (JavaType''toJavaName-1 cls) "." name " " type))
                 )
             )
         )
@@ -23252,7 +23475,7 @@ ZeroExtendNode'new-4
     (defn- #_"this" CodeBuffer''ensureSize-2 [#_"CodeBuffer" this, #_"int" n]
         (when (<= (#_"ByteBuffer" .limit (:data this)) n) => this
             (let [
-                #_"ByteBuffer" data (ByteBuffer/wrap (Arrays/copyOf (#_"ByteBuffer" .array (:data this)), (* n 4)))
+                #_"ByteBuffer" data (ByteBuffer/wrap (ß Arrays/copyOf (#_"ByteBuffer" .array (:data this)), (* n 4)))
             ]
                 (#_"ByteBuffer" .order data, (#_"ByteBuffer" .order (:data this)))
                 (#_"ByteBuffer" .position data, (#_"ByteBuffer" .position (:data this)))
@@ -24073,7 +24296,7 @@ ZeroExtendNode'new-4
                 #_"ResolvedJavaType" type (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, constant)
             ]
                 (if (and (some? type) (satisfies? GetClassNode node))
-                    (if (and (not (#_"ResolvedJavaType" .isPrimitive type)) (or (#_"ResolvedJavaType" .isConcrete type) (#_"ResolvedJavaType" .isArray type)))
+                    (if (and (not (#_"ResolvedJavaType" .isPrimitive type)) (or (#_"ResolvedJavaType" .isConcrete type) (JavaType''isArray-1 type)))
                         (InstanceOfNode'create-2 (TypeReference'createExactTrusted-1 type), (:object node))
                         (LogicConstantNode'forBoolean-1 false)
                     )
@@ -28452,7 +28675,7 @@ ZeroExtendNode'new-4
             (when (satisfies? VirtualInstanceNode virtual) => this
                 (dotimes [#_"int" i (VirtualObjectNode'''entryCount-1 virtual)]
                     (let [
-                        #_"JavaKind" declaredKind (#_"ResolvedJavaField" .getJavaKind (VirtualInstanceNode''field-2 virtual, i))
+                        #_"JavaKind" declaredKind (JavaField''getJavaKind-1 (VirtualInstanceNode''field-2 virtual, i))
                     ]
                         (when (= declaredKind (PEReadEliminationBlockState'stampToJavaKind-1 (:stamp (nth values i))))
                             ;; We won't cache unaligned field writes upon instantiation unless we add
@@ -29955,7 +30178,7 @@ ZeroExtendNode'new-4
     (defn- #_"{FieldKey ResolvedJavaField}" FieldsCache'createFieldMap-1 [#_"ResolvedJavaField*" fields]
         (into {}
             (for [#_"ResolvedJavaField" f fields]
-                [(FieldKey'new-2 (#_"ResolvedJavaField" .getName f), (#_"JavaType" .getName (#_"ResolvedJavaField" .getType f))) f]
+                [(FieldKey'new-2 (JavaField'''getName-1 f), (JavaType'''getName-1 (JavaField'''getType-1 f))) f]
             )
         )
     )
@@ -29988,7 +30211,7 @@ ZeroExtendNode'new-4
     (defn #_"LIRFieldsScanner" LIRFieldsScanner'new-0 []
         (merge (LIRFieldsScanner'class.)
             (hash-map
-                #_"{Class<Annotation> OperandModeAnnotation}" :valueAnnotations (into {} (map #(vector % (OperandModeAnnotation'new-0)) [ Use Alive Temp Def ]))
+                #_"{Class<Annotation> OperandModeAnnotation}" :valueAnnotations (into {} (map #(vector % (OperandModeAnnotation'new-0)) [ Use Alive Temp Def ]))
             )
         )
     )
@@ -29999,7 +30222,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"{OperandFlag}" LIRFieldsScanner'getFlags-1 [#_"Field" field]
         (hash-set
-            (#_"Annotation" .value (#_"Field" .getAnnotation field, (some #(when (#_"Field" .isAnnotationPresent field, %) %) [ Use Alive Temp Def ])))
+            (#_"Annotation" .value (#_"Field" .getAnnotation field, (some #(when (#_"Field" .isAnnotationPresent field, %) %) [ Use Alive Temp Def ])))
         )
     )
 
@@ -30592,7 +30815,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The runtime specific details of a foreign call.
  ;;
-(class-ns ForeignCallLinkage [#_"InvokeTarget"]
+(class-ns ForeignCallLinkage [InvokeTarget]
     (defn #_"ForeignCallLinkage" ForeignCallLinkage'new-8* [#_"ForeignCallDescriptor" descriptor, #_"long" address, #_"RegisterEffect" effect, #_"Transition" transition, #_"CallingConvention" outgoingCallingConvention, #_"CallingConvention" incomingCallingConvention, #_"boolean" reexecutable & #_"LocationIdentity..." killedLocations]
         (merge (ForeignCallLinkage'class.)
             (hash-map
@@ -31260,7 +31483,7 @@ ZeroExtendNode'new-4
                     ;; set the receiver
                     [(update this :locals assoc' 0 (nth arguments 0)) 1 1]
                 )
-            #_"Signature" sig (#_"ResolvedJavaMethod" .getSignature method)
+            #_"Signature" sig (JavaMethod'''getSignature-1 method)
         ]
             (loop-when [this this i i j j #_"int" k 0] (< k (#_"Signature" .getParameterCount sig, false)) => this
                 (let [
@@ -31280,7 +31503,7 @@ ZeroExtendNode'new-4
     (defn #_"this" FrameStateBuilder''initializeForMethodStart-1 [#_"FrameStateBuilder" this]
         (let [
             #_"ResolvedJavaMethod" method (FrameStateBuilder''getMethod-1 this)
-            #_"ResolvedJavaType" originalType (#_"ResolvedJavaMethod" .getDeclaringClass method)
+            #_"ResolvedJavaType" originalType (JavaMethod'''getDeclaringType-1 method)
             [this #_"int" i #_"int" j]
                 (when-not (#_"ResolvedJavaMethod" .isStatic method) => [this 0 0]
                     (let [
@@ -31293,12 +31516,12 @@ ZeroExtendNode'new-4
                         [this 1 1]
                     )
                 )
-            #_"Signature" sig (#_"ResolvedJavaMethod" .getSignature method)
+            #_"Signature" sig (JavaMethod'''getSignature-1 method)
         ]
             (loop-when [this this i i j j #_"int" k 0] (< k (#_"Signature" .getParameterCount sig, false)) => this
                 (let [
-                    #_"JavaType" type (#_"JavaType" .resolve (#_"Signature" .getParameterType sig, k, originalType), originalType)
-                    #_"JavaKind" kind (#_"JavaType" .getJavaKind type)
+                    #_"JavaType" type (JavaType'''resolve-2 (#_"Signature" .getParameterType sig, k, originalType), originalType)
+                    #_"JavaKind" kind (JavaType'''getJavaKind-1 type)
                     #_"Stamp" stamp
                         (or (Plugins''getOverridingStamp-4 HotSpot'plugins, (:parser this), type, false)
                             (StampFactory'forDeclaredType-2 type, false)
@@ -31538,7 +31761,7 @@ ZeroExtendNode'new-4
     (defn #_"this" FrameStateBuilder''clearNonLiveLocals-4 [#_"FrameStateBuilder" this, #_"BciBlock" block, #_"LocalLiveness" liveness, #_"boolean" liveIn]
         ;; If somebody is tempted to remove/disable this clearing code: it's possible to remove it for normal compilations,
         ;; but not for OSR, as dead object slots at the OSR entry aren't cleared then. It is also not enough to rely on
-        ;; PiNodes with Kind.Illegal, because the conflicting branch might not have been parsed.
+        ;; PiNodes with Kind.Illegal, because the conflicting branch might not have been parsed.
         (when GraalOptions'optClearNonLiveLocals => this
             (let [
                 f'localIsLive (if liveIn LocalLiveness''localIsLiveIn-3 LocalLiveness''localIsLiveOut-3)
@@ -32263,7 +32486,7 @@ ZeroExtendNode'new-4
         ]
             (and (some? constant)
                 (let [
-                    _ (§ ass! parser (BytecodeParser''push-3 parser, (#_"ResolvedJavaField" .getJavaKind field), (Graph''add-2 (:graph parser), constant)))
+                    _ (§ ass! parser (BytecodeParser''push-3 parser, (JavaField''getJavaKind-1 field), (Graph''add-2 (:graph parser), constant)))
                 ]
                     true
                 )
@@ -32759,7 +32982,7 @@ ZeroExtendNode'new-4
 
     (defm InlineDuringParsingPlugin InlineInvokePlugin
         (#_"InlineInvokeInfo" InlineInvokePlugin'''shouldInlineInvoke-4 [#_"InlineDuringParsingPlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode*" args]
-            (when (and (#_"ResolvedJavaMethod" .hasBytecodes method) (#_"ResolvedJavaType" .isLinked (#_"ResolvedJavaMethod" .getDeclaringClass method)) (#_"ResolvedJavaMethod" .canBeInlined method))
+            (when (and (#_"ResolvedJavaMethod" .hasBytecodes method) (#_"ResolvedJavaType" .isLinked (JavaMethod'''getDeclaringType-1 method)) (#_"ResolvedJavaMethod" .canBeInlined method))
                 ;; test force inlining first
                 (cond
                     (#_"ResolvedJavaMethod" .shouldBeInlined method)
@@ -33004,7 +33227,7 @@ ZeroExtendNode'new-4
                 "it is a non-intrinsic native method"
             (#_"ResolvedJavaMethod" .isAbstract method)
                 "it is an abstract method"
-            (not (#_"ResolvedJavaType" .isInitialized (#_"ResolvedJavaMethod" .getDeclaringClass method)))
+            (not (#_"ResolvedJavaType" .isInitialized (JavaMethod'''getDeclaringType-1 method)))
                 "the method's class is not initialized"
             (not (#_"ResolvedJavaMethod" .canBeInlined method))
                 "it is marked non-inlinable"
@@ -33047,7 +33270,7 @@ ZeroExtendNode'new-4
                             (when-not (:always-nil? receiverStamp) ;; => don't inline if receiver is known to be nil
                                 (let [
                                     #_"ResolvedJavaType" contextType (InvokeNode''getContextType-1 invoke)
-                                    #_"ResolvedJavaType" holder (#_"ResolvedJavaMethod" .getDeclaringClass targetMethod)
+                                    #_"ResolvedJavaType" holder (JavaMethod'''getDeclaringType-1 targetMethod)
                                     holder
                                         (when (some? (:type receiverStamp)) => holder
                                             ;; the invoke target might be more specific than the holder (happens after inlining:
@@ -33074,7 +33297,7 @@ ZeroExtendNode'new-4
                                             )
                                         )
                                 ]
-                                    (when (#_"ResolvedJavaType" .isArray holder)
+                                    (when (JavaType''isArray-1 holder)
                                         ;; arrays can be treated as objects
                                         (let [
                                             #_"ResolvedJavaMethod" resolvedMethod (#_"ResolvedJavaType" .resolveConcreteMethod holder, targetMethod, contextType)
@@ -33597,7 +33820,7 @@ ZeroExtendNode'new-4
                         #_"int" :operandNumber operandNumber
                         ;;;
                          ; The register or spill slot assigned to this interval.
-                         ; In case of a spilled interval which is re-materialized this is Value#ILLEGAL.
+                         ; In case of a spilled interval which is re-materialized this is Value#ILLEGAL.
                          ;;
                         #_"AllocatableValue" :location (when (satisfies? RegisterValue operand) operand)
                         ;;;
@@ -33607,7 +33830,7 @@ ZeroExtendNode'new-4
                         ;;;
                          ; The kind of this interval.
                          ;;
-                        #_"ValueKind" :kind ValueKind'Illegal
+                        #_"ValueKind" :kind ValueKind'Illegal
                         ;;;
                          ; The head of the list of ranges describing this interval. This list is sorted by
                          ; {@linkplain LIRInstruction#id instruction ids}.
@@ -33676,7 +33899,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"this" Interval''assignLocation-2 [#_"Interval" this, #_"AllocatableValue" newLocation]
-        (assoc this :location (if (and (satisfies? RegisterValue newLocation) (= (:valueKind newLocation) ValueKind'Illegal) (not (= (:kind this) ValueKind'Illegal))) (Register''asValue-2 (:reg newLocation), (:kind this)) newLocation))
+        (assoc this :location (if (and (satisfies? RegisterValue newLocation) (= (:valueKind newLocation) ValueKind'Illegal) (not (= (:kind this) ValueKind'Illegal))) (Register''asValue-2 (:reg newLocation), (:kind this)) newLocation))
     )
 
     ;;;
@@ -35403,7 +35626,7 @@ ZeroExtendNode'new-4
                                                         [this invalid?]
                                                     )
                                                     (let [
-                                                        #_"JavaKind" returnKind (#_"JavaType" .getJavaKind (BytecodeParser''getInvokeReturnType-1 (:parser this)))
+                                                        #_"JavaKind" returnKind (JavaType'''getJavaKind-1 (BytecodeParser''getInvokeReturnType-1 (:parser this)))
                                                         #_"FrameStateBuilder" frameStateBuilder (:frameState (:parser this))
                                                     ]
                                                         (cond
@@ -35463,7 +35686,7 @@ ZeroExtendNode'new-4
         ]
             (when invalid? => this
                 (let [
-                    #_"JavaKind" returnKind (#_"JavaType" .getJavaKind (BytecodeParser''getInvokeReturnType-1 (:parser this)))
+                    #_"JavaKind" returnKind (JavaType'''getJavaKind-1 (BytecodeParser''getInvokeReturnType-1 (:parser this)))
                     #_"ValueNode" returnValue (FrameStateBuilder''pop-2 (:frameState (:parser this)), returnKind)
                     #_"StateSplitProxyNode" proxy (Graph''add-2 graph, (StateSplitProxyNode'new-1 returnValue))
                     this (update-in this [:parser :lastInstr] FixedWithNextNode''setNext-2 proxy)
@@ -36153,7 +36376,7 @@ ZeroExtendNode'new-4
                     DirectCallTargetNode (LIRBuilder''emitDirectCall-5 this, callTarget, result, parameters, [])
                 )
             this
-                (when-not (= result Value'ILLEGAL) => this
+                (when-not (= result Value'ILLEGAL) => this
                     (LIRBuilder''setResult-3 this, invoke, (LIRGenerator''emitMove-2 (:gen this), result))
                 )
         ]
@@ -36504,7 +36727,7 @@ ZeroExtendNode'new-4
     (defn #_"this" LIRGenerator''emitReturn-2 [#_"LIRGenerator" this, #_"Value" value]
         (let [
             [this #_"AllocatableValue" operand]
-                (when (some? value) => [this Value'ILLEGAL]
+                (when (some? value) => [this Value'ILLEGAL]
                     (let [
                         operand (LIRGenerator'resultOperandFor-1 (:valueKind value))
                     ]
@@ -36695,7 +36918,7 @@ ZeroExtendNode'new-4
             _ (§ ass! this (assoc-in this [:res :hasForeignCall] true))
             _ (§ ass! this (LIRGenerator''emitForeignCallOp-5 this, linkage, retLocation, argLocations, (§ snap (:temporaries linkage))))
         ]
-            (when-not (= retLocation Value'ILLEGAL)
+            (when-not (= retLocation Value'ILLEGAL)
                 (LIRGenerator''emitMove-2 this, retLocation)
             )
         )
@@ -36715,7 +36938,7 @@ ZeroExtendNode'new-4
 
     (defn #_"this" LIRGenerator''emitStrategySwitch-5 [#_"LIRGenerator" this, #_"SwitchStrategy" strategy, #_"Variable" key, #_"[LabelRef]" targets, #_"LabelRef" default]
         ;; a temp is needed for loading object constants
-        (LIRGenerator''append-2 this, (AMD64HotSpotStrategySwitchOp'new-5 strategy, targets, default, key, (if-not (ValueKind'isValue-1v key) (LIRGenerator''newVariable-2 this, (:valueKind key)) Value'ILLEGAL)))
+        (LIRGenerator''append-2 this, (AMD64HotSpotStrategySwitchOp'new-5 strategy, targets, default, key, (if-not (ValueKind'isValue-1v key) (LIRGenerator''newVariable-2 this, (:valueKind key)) Value'ILLEGAL)))
     )
 
     (defn #_"this" LIRGenerator''emitTableSwitch-5 [#_"LIRGenerator" this, #_"int" lowKey, #_"LabelRef" default, #_"[LabelRef]" targets, #_"Value" key]
@@ -36764,9 +36987,9 @@ ZeroExtendNode'new-4
     #_unused
     (defn #_"ValueKind" LIRGenerator'getAddressKind-3 [#_"Value" base, #_"long" displacement, #_"Value" index]
         (cond
-            (and (ValueKind'isValue-1v base) (or (= index Value'ILLEGAL) (ValueKind'isValue-1v index)))
+            (and (ValueKind'isValue-1v base) (or (= index Value'ILLEGAL) (ValueKind'isValue-1v index)))
                 (ValueKind'value-1 AMD64'wordSize)
-            (and (ValueKind''isReference-2 (:valueKind base), 0) (zero? displacement) (= index Value'ILLEGAL))
+            (and (ValueKind''isReference-2 (:valueKind base), 0) (zero? displacement) (= index Value'ILLEGAL))
                 (ValueKind'reference-1 AMD64'wordSize)
             :else
                 (ValueKind'unknownReference-1 AMD64'wordSize)
@@ -36807,7 +37030,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"Variable" result (LIRGenerator''newVariable-2 this, (ValueKindTool'getNarrowPointerKind-0))
                     #_"AllocatableValue" base
-                        (when (CompressEncoding''hasBase-1 encoding) => Value'ILLEGAL
+                        (when (CompressEncoding''hasBase-1 encoding) => Value'ILLEGAL
                             (LIRGenerator''emitLoadConstant-3 this, (ValueKindTool'getWordKind-0), (JavaConstant'forLong-1 (:base encoding)))
                         )
                     _ (§ ass! this (LIRGenerator''append-2 this, (CompressPointerOp'new-5 result, (LIRGenerator''asAllocatable-2 this, pointer), base, encoding, never-nil?)))
@@ -36835,7 +37058,7 @@ ZeroExtendNode'new-4
                     #_"ValueKind" uncompressedKind (ValueKindTool'getWordKind-0)
                     #_"Variable" result (LIRGenerator''newVariable-2 this, uncompressedKind)
                     #_"AllocatableValue" base
-                        (when (CompressEncoding''hasBase-1 encoding) => Value'ILLEGAL
+                        (when (CompressEncoding''hasBase-1 encoding) => Value'ILLEGAL
                             (LIRGenerator''emitLoadConstant-3 this, uncompressedKind, (JavaConstant'forLong-1 (:base encoding)))
                         )
                     _ (§ ass! this (LIRGenerator''append-2 this, (UncompressPointerOp'new-5 result, (LIRGenerator''asAllocatable-2 this, pointer), base, encoding, never-nil?)))
@@ -36868,7 +37091,7 @@ ZeroExtendNode'new-4
                     #_"long" displacement (JavaConstant'''asLong-1 address)
                 ]
                     (when (NumUtil'isInt-1 displacement)
-                        (§ return (AMD64AddressValue'new-3 (:valueKind address), Value'ILLEGAL, (int displacement)))
+                        (§ return (AMD64AddressValue'new-3 (:valueKind address), Value'ILLEGAL, (int displacement)))
                     )
                 )
             )
@@ -37957,7 +38180,7 @@ ZeroExtendNode'new-4
  ;;
 (class-ns AMD64MulDivOp [LIRInstruction]
     (defn #_"AMD64MulDivOp" AMD64MulDivOp'new-5 [#_"AMD64MOp" opcode, #_"WordSize" size, #_"ValueKind" resultKind, #_"AllocatableValue" x, #_"AllocatableValue" y]
-        (AMD64MulDivOp'new-6 opcode, size, resultKind, Value'ILLEGAL, x, y)
+        (AMD64MulDivOp'new-6 opcode, size, resultKind, Value'ILLEGAL, x, y)
     )
 
     (defn #_"AMD64MulDivOp" AMD64MulDivOp'new-6 [#_"AMD64MOp" opcode, #_"WordSize" size, #_"ValueKind" resultKind, #_"AllocatableValue" highX, #_"AllocatableValue" lowX, #_"AllocatableValue" y]
@@ -39224,12 +39447,12 @@ ZeroExtendNode'new-4
 )
 
 (class-ns LoadMetaspaceConstantOp [LIRInstruction, LoadConstantOp, MoveOp]
-    (defn #_"LoadMetaspaceConstantOp" LoadMetaspaceConstantOp'new-2 [#_"AllocatableValue" result, #_"HotSpotMetaspaceConstant" input]
+    (defn #_"LoadMetaspaceConstantOp" LoadMetaspaceConstantOp'new-2 [#_"AllocatableValue" result, #_"MetaspaceConstant" input]
         (merge (LoadMetaspaceConstantOp'class.) (LIRInstruction'new-0)
             (hash-map
                 ; @OperandMode'DEF({OperandFlag'REG, OperandFlag'STACK})
                 #_"AllocatableValue" :result result
-                #_"HotSpotMetaspaceConstant" :input input
+                #_"MetaspaceConstant" :input input
             )
         )
     )
@@ -39277,12 +39500,12 @@ ZeroExtendNode'new-4
 )
 
 (class-ns LoadObjectConstantOp [LIRInstruction, LoadConstantOp, MoveOp]
-    (defn #_"LoadObjectConstantOp" LoadObjectConstantOp'new-2 [#_"AllocatableValue" result, #_"HotSpotObjectConstant" input]
+    (defn #_"LoadObjectConstantOp" LoadObjectConstantOp'new-2 [#_"AllocatableValue" result, #_"ObjectConstant" input]
         (merge (LoadObjectConstantOp'class.) (LIRInstruction'new-0)
             (hash-map
                 ; @OperandMode'DEF({OperandFlag'REG, OperandFlag'STACK})
                 #_"AllocatableValue" :result result
-                #_"HotSpotObjectConstant" :input input
+                #_"ObjectConstant" :input input
             )
         )
     )
@@ -39950,7 +40173,7 @@ ZeroExtendNode'new-4
         (merge (SafepointOp'class.) (LIRInstruction'new-0)
             (hash-map
                 ; @OperandMode'TEMP({OperandFlag'REG, OperandFlag'ILLEGAL})
-                #_"AllocatableValue" :temp (if (or HotSpot'threadLocalHandshakes (SafepointOp'isPollingPageFar-0)) (LIRGenerator''newVariable-2 (:gen builder), (ValueKind'value-1 AMD64'wordSize)) Value'ILLEGAL) ;; => don't waste a register if it's unneeded
+                #_"AllocatableValue" :temp (if (or HotSpot'threadLocalHandshakes (SafepointOp'isPollingPageFar-0)) (LIRGenerator''newVariable-2 (:gen builder), (ValueKind'value-1 AMD64'wordSize)) Value'ILLEGAL) ;; => don't waste a register if it's unneeded
                 #_"Register" :thread thread
             )
         )
@@ -40355,7 +40578,7 @@ ZeroExtendNode'new-4
                     (LinearScan''splitChildAtOpId-4 allocator, interval, opId, mode)
                 )
         ]
-            (when (and (= (:location interval) Value'ILLEGAL) (Interval''canMaterialize-1 interval)) => (:location interval)
+            (when (and (= (:location interval) Value'ILLEGAL) (Interval''canMaterialize-1 interval)) => (:location interval)
                 (ConstantValue'new-2 (:kind interval), (Interval''getMaterializedValue-1 interval))
             )
         )
@@ -40738,7 +40961,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"Interval" interval (LinearScan''getOrCreateInterval-2 allocator, operand)
                 _
-                    (when-not (= kind ValueKind'Illegal)
+                    (when-not (= kind ValueKind'Illegal)
                         (§ ass! interval (Interval''setKind-2 interval, kind))
                     )
                 _ (§ ass! interval (Interval''addRange-3 interval, from, to))
@@ -40755,7 +40978,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"Interval" interval (LinearScan''getOrCreateInterval-2 allocator, operand)
                 _
-                    (when-not (= kind ValueKind'Illegal)
+                    (when-not (= kind ValueKind'Illegal)
                         (§ ass! interval (Interval''setKind-2 interval, kind))
                     )
                 _ (§ ass! interval (Interval''addRange-3 interval, tempPos, (inc tempPos)))
@@ -40817,7 +41040,7 @@ ZeroExtendNode'new-4
                 #_"int" defPos (:id op)
                 #_"Interval" interval (LinearScan''getOrCreateInterval-2 allocator, operand)
                 _
-                    (when-not (= kind ValueKind'Illegal)
+                    (when-not (= kind ValueKind'Illegal)
                         (§ ass! interval (Interval''setKind-2 interval, kind))
                     )
                 #_"Range" r (:first interval)
@@ -41023,7 +41246,7 @@ ZeroExtendNode'new-4
                         (let [
                             #_"AllocatableValue" operand (:operand (LinearScan''intervalFor-2i allocator, operandNum))
                         ]
-                            (LSLifetimeAnalysisPhase'addUse-6 allocator, operand, blockFrom, (+ blockTo 2), :RegisterPriority'None, ValueKind'Illegal)
+                            (LSLifetimeAnalysisPhase'addUse-6 allocator, operand, blockFrom, (+ blockTo 2), :RegisterPriority'None, ValueKind'Illegal)
 
                             ;; Add special use positions for loop-end blocks when the interval is used anywhere inside this loop.
                             ;; It's possible that the block was part of a non-natural loop, so it might have an invalid loop index.
@@ -41046,7 +41269,7 @@ ZeroExtendNode'new-4
                             ;; Add a temp range for each register if operation destroys caller-save registers.
                             (when (LIRInstruction'''destroysCallerSavedRegisters-1 op)
                                 (doseq [#_"Register" r RegisterConfig'callerSaveRegisters :when (contains? RegisterConfig'allocatableRegisters r)]
-                                    (LSLifetimeAnalysisPhase'addTemp-5 allocator, (Register''asValue-1 r), opId, :RegisterPriority'None, ValueKind'Illegal)
+                                    (LSLifetimeAnalysisPhase'addTemp-5 allocator, (Register''asValue-1 r), opId, :RegisterPriority'None, ValueKind'Illegal)
                                 )
                             )
 
@@ -41431,7 +41654,7 @@ ZeroExtendNode'new-4
                     )
                 )
             this (assoc this :firstVariableNumber (count (:registers this)))
-            this (assoc this :intervalEndMarker (Interval'new-4 Value'ILLEGAL, Interval'END_MARKER_OPERAND_NUMBER, nil, (:rangeEndMarker this)))
+            this (assoc this :intervalEndMarker (Interval'new-4 Value'ILLEGAL, Interval'END_MARKER_OPERAND_NUMBER, nil, (:rangeEndMarker this)))
             _ (§ ass! (:next (:intervalEndMarker this)) (:intervalEndMarker this))
         ]
             this
@@ -41488,7 +41711,7 @@ ZeroExtendNode'new-4
         ;; or allocate a new spill slot.
         (cond
             (Interval''canMaterialize-1 interval)
-                (Interval''assignLocation-2 interval, Value'ILLEGAL)
+                (Interval''assignLocation-2 interval, Value'ILLEGAL)
             (some? (Interval''spillSlot-1 interval))
                 (Interval''assignLocation-2 interval, (Interval''spillSlot-1 interval))
             :else
@@ -41695,7 +41918,7 @@ ZeroExtendNode'new-4
                     (LinearScan''splitChildAtOpId-4 this, interval, opId, mode)
                 )
         ]
-            (and (= (:location interval) Value'ILLEGAL) (Interval''canMaterialize-1 interval))
+            (and (= (:location interval) Value'ILLEGAL) (Interval''canMaterialize-1 interval))
         )
     )
 
@@ -45440,7 +45663,7 @@ ZeroExtendNode'new-4
     (defn- #_"{MethodKey ResolvedJavaMethod}" MethodsCache'createMethodMap-1 [#_"ResolvedJavaMethod*" methods]
         (into {}
             (for [#_"ResolvedJavaMethod" m methods]
-                [(MethodKey'new-2 (#_"ResolvedJavaMethod" .getName m), (#_"Signature" .toMethodDescriptor (#_"ResolvedJavaMethod" .getSignature m))) m]
+                [(MethodKey'new-2 (JavaMethod'''getName-1 m), (#_"Signature" .toMethodDescriptor (JavaMethod'''getSignature-1 m))) m]
             )
         )
     )
@@ -45576,10 +45799,10 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"boolean" MoveFactory'canInlineConstant-1 [#_"Constant" constant]
         (or (= constant JavaConstant'COMPRESSED_NULL)
-            (condp instance? constant
-                HotSpotObjectConstant    (KlassPointerStamp''isCompressed-1 constant)
-                HotSpotMetaspaceConstant (KlassPointerStamp''isCompressed-1 constant)
-                JavaConstant'iface
+            (condp satisfies? constant
+                ObjectConstant    (KlassPointerStamp''isCompressed-1 constant)
+                MetaspaceConstant (KlassPointerStamp''isCompressed-1 constant)
+                JavaConstant
                     (case (JavaConstant'''getJavaKind-1 constant)
                         :JavaKind'Long   (NumUtil'isInt-1 (JavaConstant'''asLong-1 constant))
                         :JavaKind'Object (JavaConstant'''isNull-1 constant)
@@ -45632,10 +45855,10 @@ ZeroExtendNode'new-4
 
     (defn #_"LIRInstruction" MoveFactory'createLoad-2 [#_"AllocatableValue" dst, #_"Constant" src]
         (when-not (= src JavaConstant'COMPRESSED_NULL) => (MoveFactory'createLoad-2 dst, JavaConstant'INT_0)
-            (condp instance? src
-                HotSpotObjectConstant    (LoadObjectConstantOp'new-2 dst, src)
-                HotSpotMetaspaceConstant (LoadMetaspaceConstantOp'new-2 dst, src)
-                                         (MoveFactory'createLoad-2 dst, src)
+            (condp satisfies? src
+                ObjectConstant    (LoadObjectConstantOp'new-2 dst, src)
+                MetaspaceConstant (LoadMetaspaceConstantOp'new-2 dst, src)
+                                  (MoveFactory'createLoad-2 dst, src)
             )
         )
     )
@@ -45648,10 +45871,10 @@ ZeroExtendNode'new-4
 
     (defn #_"LIRInstruction" MoveFactory'createStackLoad-2 [#_"AllocatableValue" dst, #_"Constant" src]
         (when-not (= src JavaConstant'COMPRESSED_NULL) => (MoveFactory'createStackLoad-2 dst, JavaConstant'INT_0)
-            (condp instance? src
-                HotSpotObjectConstant    (LoadObjectConstantOp'new-2 dst, src)
-                HotSpotMetaspaceConstant (LoadMetaspaceConstantOp'new-2 dst, src)
-                                         (MoveFactory'createStackLoad-2 dst, src)
+            (condp satisfies? src
+                ObjectConstant    (LoadObjectConstantOp'new-2 dst, src)
+                MetaspaceConstant (LoadMetaspaceConstantOp'new-2 dst, src)
+                                  (MoveFactory'createStackLoad-2 dst, src)
             )
         )
     )
@@ -46062,8 +46285,8 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"this" MoveResolver''addMapping-3i [#_"MoveResolver" this, #_"Interval" fromInterval, #_"Interval" toInterval]
-        (when-not (and (= (:location toInterval) Value'ILLEGAL) (Interval''canMaterialize-1 toInterval)) => this
-            (if (and (= (:location fromInterval) Value'ILLEGAL) (Interval''canMaterialize-1 fromInterval))
+        (when-not (and (= (:location toInterval) Value'ILLEGAL) (Interval''canMaterialize-1 toInterval)) => this
+            (if (and (= (:location fromInterval) Value'ILLEGAL) (Interval''canMaterialize-1 fromInterval))
                 ;; instead of a reload, re-materialize the value
                 (MoveResolver''addMapping-3c this, (Interval''getMaterializedValue-1 fromInterval), toInterval)
                 (-> this
@@ -46940,7 +47163,7 @@ ZeroExtendNode'new-4
 
     #_unused
     (defn #_"JavaKind" MethodCallTargetNode''returnKind-1 [#_"MethodCallTargetNode" this]
-        (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature (:targetMethod this)))
+        (#_"Signature" .getReturnKind (JavaMethod'''getSignature-1 (:targetMethod this)))
     )
 
     (defn #_"InvokeNode" MethodCallTargetNode''invoke-1 [#_"MethodCallTargetNode" this]
@@ -46962,7 +47185,7 @@ ZeroExtendNode'new-4
                 (or (StampTool'typeReferenceOrNull-1 receiverStamp)
                     (when (= invokeKind :InvokeKind'Virtual)
                         ;; For virtual calls, we are guaranteed to receive a correct receiver type.
-                        (TypeReference'createTrusted-1 (#_"ResolvedJavaMethod" .getDeclaringClass targetMethod))
+                        (TypeReference'createTrusted-1 (JavaMethod'''getDeclaringType-1 targetMethod))
                     )
                 )
         ]
@@ -46971,7 +47194,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"ResolvedJavaMethod" resolvedMethod (#_"ResolvedJavaType" .resolveConcreteMethod (:type type), targetMethod, contextType)
                 ]
-                    (when (and (some? resolvedMethod) (or (#_"ResolvedJavaMethod" .canBeStaticallyBound resolvedMethod) (:exactReference type) (#_"ResolvedJavaType" .isArray (:type type))))
+                    (when (and (some? resolvedMethod) (or (#_"ResolvedJavaMethod" .canBeStaticallyBound resolvedMethod) (:exactReference type) (JavaType''isArray-1 (:type type))))
                         resolvedMethod
                     )
                 )
@@ -50318,7 +50541,7 @@ ZeroExtendNode'new-4
             #_"ResolvedJavaMethod" contextMethod (InvokeNode''getContextMethod-1 this)
         ]
             (when (some? contextMethod)
-                (#_"ResolvedJavaMethod" .getDeclaringClass contextMethod)
+                (JavaMethod'''getDeclaringType-1 contextMethod)
             )
         )
     )
@@ -50335,7 +50558,7 @@ ZeroExtendNode'new-4
 
     (defn #_"ResolvedJavaType" InvokeNode''getReceiverType-1 [#_"InvokeNode" this]
         (or (StampTool'typeOrNull-1 (:stamp (InvokeNode''getReceiver-1 this)))
-            (#_"ResolvedJavaMethod" .getDeclaringClass (:targetMethod (:callTarget this)))
+            (JavaMethod'''getDeclaringType-1 (:targetMethod (:callTarget this)))
         )
     )
 
@@ -50376,7 +50599,7 @@ ZeroExtendNode'new-4
                                 receiver
                             )
                         )
-                    #_"[JavaType]" signature (#_"Signature" .toParameterTypes (#_"ResolvedJavaMethod" .getSignature (:targetMethod callTarget)), (when-not (MethodCallTargetNode''isStatic-1 callTarget) (#_"ResolvedJavaMethod" .getDeclaringClass (:targetMethod callTarget))))
+                    #_"[JavaType]" signature (#_"Signature" .toParameterTypes (JavaMethod'''getSignature-1 (:targetMethod callTarget)), (when-not (MethodCallTargetNode''isStatic-1 callTarget) (JavaMethod'''getDeclaringType-1 (:targetMethod callTarget))))
                     #_"LoweredCallTargetNode" loweredCallTarget (Graph''add-2 (:graph this), (HotSpotDirectCallTargetNode'new-6 parameters, (:returnStamp callTarget), signature, (:targetMethod callTarget), :CallingConventionType'JavaCall, (:invokeKind callTarget)))
                     _ (§ ass! callTarget (Node''replaceAndDelete-2 callTarget, loweredCallTarget))
                 ]
@@ -50582,7 +50805,7 @@ ZeroExtendNode'new-4
                     ]
                         (if (and (some? arrayType) (:exactReference arrayType))
                             (let [
-                                #_"ResolvedJavaType" elementType (#_"ResolvedJavaType" .getComponentType (:type arrayType))
+                                #_"ResolvedJavaType" elementType (JavaType'''getComponentType-1 (:type arrayType))
                             ]
                                 (when-not (#_"ResolvedJavaType" .isJavaLangObject elementType)
                                     (let [
@@ -50637,7 +50860,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"ResolvedJavaType" type (:type (:stamp array))
             ]
-                (when (and (some? type) (#_"ResolvedJavaType" .isArray type) (some? (#_"ResolvedJavaType" .getComponentType type)) (= (#_"ResolvedJavaType" .getJavaKind (#_"ResolvedJavaType" .getComponentType type)) :JavaKind'Boolean)) => kind
+                (when (and (some? type) (JavaType''isArray-1 type) (some? (JavaType'''getComponentType-1 type)) (= (JavaType'''getJavaKind-1 (JavaType'''getComponentType-1 type)) :JavaKind'Boolean)) => kind
                     :JavaKind'Boolean
                 )
             )
@@ -50648,8 +50871,8 @@ ZeroExtendNode'new-4
         (let [
             #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp array))
         ]
-            (if (and (= kind :JavaKind'Object) (some? type) (#_"ResolvedJavaType" .isArray type))
-                (StampFactory'object-1 (TypeReference'createTrusted-1 (#_"ResolvedJavaType" .getComponentType type)))
+            (if (and (= kind :JavaKind'Object) (some? type) (JavaType''isArray-1 type))
+                (StampFactory'object-1 (TypeReference'createTrusted-1 (JavaType'''getComponentType-1 type)))
                 (StampFactory'forKind-1 (LoadIndexedNode'determinePreciseArrayElementType-2 array, kind))
             )
         )
@@ -50780,7 +51003,7 @@ ZeroExtendNode'new-4
                     ]
                         (when (< -1 i (VirtualObjectNode'''entryCount-1 array)) => tool
                             (let [
-                                #_"ResolvedJavaType" componentType (#_"ResolvedJavaType" .getComponentType (VirtualObjectNode'''type-1 array))
+                                #_"ResolvedJavaType" componentType (JavaType'''getComponentType-1 (VirtualObjectNode'''type-1 array))
                             ]
                                 (when (or (#_"ResolvedJavaType" .isPrimitive componentType) (StampTool'isPointerAlwaysNull-1 (:stamp (:value this))) (nil? (#_"ResolvedJavaType" .getSuperclass componentType)) (and (some? (StampTool'typeReferenceOrNull-1 (:stamp (:value this)))) (#_"ResolvedJavaType" .isAssignableFrom componentType, (StampTool'typeOrNull-1 (:stamp (:value this)))))) => tool
                                     (let [
@@ -50825,17 +51048,17 @@ ZeroExtendNode'new-4
     (defn #_"boolean" AccessFieldNode''isVolatile-1 [#_"AccessFieldNode" this] (#_"ResolvedJavaField" .isVolatile (:field this)))
 
     (defn- #_"ValueNode" AccessFieldNode'staticFieldBase-2 [#_"Graph" graph, #_"ResolvedJavaField" field]
-        (ConstantNode'forConstant-2c (#_"HotSpotConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (#_"HotSpotResolvedJavaField" .getDeclaringClass field)), graph)
+        (ConstantNode'forConstant-2c (#_"HotSpotConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (JavaField'''getDeclaringType-1 field)), graph)
     )
 
     (defn- #_"this" AccessFieldNode''lowerLoadFieldNode-2 [#_"LoadFieldNode" this, #_"LoweringTool" lowerer]
         (let [
             #_"ValueNode" object (if (AccessFieldNode''isStatic-1 this) (AccessFieldNode'staticFieldBase-2 (:graph this), (:field this)) (:object this))
             object (Lowerer'createNullCheckedValue-3 object, this, lowerer)
-            #_"Stamp" loadStamp (Lowerer'loadStamp-3 (:stamp this), (#_"ResolvedJavaField" .getJavaKind (:field this)), true)
+            #_"Stamp" loadStamp (Lowerer'loadStamp-3 (:stamp this), (JavaField''getJavaKind-1 (:field this)), true)
             #_"AddressNode" address (Lowerer'createFieldAddress-3 (:graph this), object, (:field this))
             #_"ReadNode" memoryRead (Graph''add-2 (:graph this), (ReadNode'new-4 address, (FieldLocationIdentity'new-1 (:field this)), loadStamp, (Lowerer'fieldLoadBarrierType-1 (:field this))))
-            #_"ValueNode" readValue (Lowerer'implicitLoadConvert-3 (:graph this), (#_"ResolvedJavaField" .getJavaKind (:field this)), memoryRead)
+            #_"ValueNode" readValue (Lowerer'implicitLoadConvert-3 (:graph this), (JavaField''getJavaKind-1 (:field this)), memoryRead)
             this (Node''replaceAtUsages-2 this, readValue)
             this (update this :graph Graph''replaceFixed-3 this, memoryRead)
         ]
@@ -50851,7 +51074,7 @@ ZeroExtendNode'new-4
         (let [
             #_"ValueNode" object (if (AccessFieldNode''isStatic-1 this) (AccessFieldNode'staticFieldBase-2 (:graph this), (:field this)) (:object this))
             object (Lowerer'createNullCheckedValue-3 object, this, lowerer)
-            #_"ValueNode" value (Lowerer'implicitStoreConvert-3 (:graph this), (#_"ResolvedJavaField" .getJavaKind (:field this)), (:value this))
+            #_"ValueNode" value (Lowerer'implicitStoreConvert-3 (:graph this), (JavaField''getJavaKind-1 (:field this)), (:value this))
             #_"AddressNode" address (Lowerer'createFieldAddress-3 (:graph this), object, (:field this))
             #_"WriteNode" memoryWrite (Graph''add-2 (:graph this), (WriteNode'new-4 address, (FieldLocationIdentity'new-1 (:field this)), value, (Lowerer'fieldStoreBarrierType-1 (:field this))))
             memoryWrite (StateSplit'''setStateAfter-2 memoryWrite, (:stateAfter this))
@@ -50884,7 +51107,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"LoadFieldNode" LoadFieldNode'create-2 [#_"ValueNode" object, #_"ResolvedJavaField" field]
-        (LoadFieldNode'new-3 (StampFactory'forDeclaredType-2 (#_"ResolvedJavaField" .getType field), false), object, field)
+        (LoadFieldNode'new-3 (StampFactory'forDeclaredType-2 (JavaField'''getType-1 field), false), object, field)
     )
 
     (defn #_"LoadFieldNode" LoadFieldNode'createOverrideStamp-3 [#_"Stamp" stamp, #_"ValueNode" object, #_"ResolvedJavaField" field]
@@ -50932,7 +51155,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"ValueNode" LoadFieldNode'create-4 [#_"ValueNode" object, #_"ResolvedJavaField" field, #_"boolean" canonicalizeReads, #_"boolean" allUsagesAvailable]
-        (LoadFieldNode'canonical-6 nil, (StampFactory'forDeclaredType-2 (#_"ResolvedJavaField" .getType field), false), object, field, canonicalizeReads, allUsagesAvailable)
+        (LoadFieldNode'canonical-6 nil, (StampFactory'forDeclaredType-2 (JavaField'''getType-1 field), false), object, field, canonicalizeReads, allUsagesAvailable)
     )
 
     (defn #_"ValueNode" LoadFieldNode'createOverrideStamp-5 [#_"Stamp" stamp, #_"ValueNode" object, #_"ResolvedJavaField" field, #_"boolean" canonicalizeReads, #_"boolean" allUsagesAvailable]
@@ -51353,7 +51576,7 @@ ZeroExtendNode'new-4
                     )
                 )
         ]
-            (throw! (str "instance of type " (#_"ResolvedJavaType" .getName (StampTool'typeOrNull-1 stamp)) " should not be materialized" additionalReason))
+            (throw! (str "instance of type " (JavaType'''getName-1 (StampTool'typeOrNull-1 stamp)) " should not be materialized" additionalReason))
         )
         nil
     )
@@ -51898,7 +52121,7 @@ ZeroExtendNode'new-4
  ;;
 (class-ns NewArrayNode [AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, ArrayLengthProvider, VirtualizableAllocation, Virtualizable, Simplifiable]
     (defn #_"NewArrayNode" NewArrayNode'new-2 [#_"ResolvedJavaType" elementType, #_"ValueNode" length]
-        (merge (NewArrayNode'class.) (AbstractNewObjectNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 (#_"ResolvedJavaType" .getArrayClass elementType))))
+        (merge (NewArrayNode'class.) (AbstractNewObjectNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 (JavaType'''getArrayClass-1 elementType))))
             (hash-map
                 ; @Input
                 #_"ValueNode" :length length
@@ -51955,7 +52178,7 @@ ZeroExtendNode'new-4
 
     ;; Factored out in a separate method so that subclasses can override it.
     (defn #_"ConstantNode" NewArrayNode''defaultElementValue-1 [#_"NewArrayNode" this]
-        (ConstantNode'defaultForKind-2 (#_"ResolvedJavaType" .getJavaKind (:elementType this)), (:graph this))
+        (ConstantNode'defaultForKind-2 (JavaType'''getJavaKind-1 (:elementType this)), (:graph this))
     )
 
     (defm NewArrayNode Simplifiable
@@ -52033,7 +52256,7 @@ ZeroExtendNode'new-4
 
     ;; Factored out in a separate method so that subclasses can override it.
     (defn #_"ConstantNode" NewInstanceNode''defaultFieldValue-2 [#_"NewInstanceNode" this, #_"ResolvedJavaField" field]
-        (ConstantNode'defaultForKind-2 (#_"JavaType" .getJavaKind (#_"ResolvedJavaField" .getType field)), (:graph this))
+        (ConstantNode'defaultForKind-2 (JavaType'''getJavaKind-1 (JavaField'''getType-1 field)), (:graph this))
     )
 )
 
@@ -53193,7 +53416,7 @@ ZeroExtendNode'new-4
                 (if (< 1 n)
                     (when-not (#_"HotSpotResolvedJavaMethod" .ignoredBySecurityStackWalk method)
                         ;; We have reached the desired frame: return the holder class.
-                        (§ return (ConstantNode'forConstant-1 (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (#_"HotSpotResolvedJavaMethod" .getDeclaringClass method))))
+                        (§ return (ConstantNode'forConstant-1 (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (JavaMethod'''getDeclaringType-1 method))))
                     )
                     ;; Frame 0 and 1 must be caller sensitive (see JVM_GetCallerClass).
                     (when-not (#_"HotSpotResolvedJavaMethod" .isCallerSensitive method)
@@ -53573,7 +53796,7 @@ ZeroExtendNode'new-4
                                 ;; No need for checking that the receiver is non-nil. The field access includes
                                 ;; the nil-check and if a field is found, the offset is so small that this is
                                 ;; never a valid access of an arbitrary address.
-                                (when (and (some? field) (= (#_"JavaType" .getJavaKind field) (:accessKind this)))
+                                (when (and (some? field) (= (JavaType'''getJavaKind-1 field) (:accessKind this)))
                                     (§ return (UnsafeAccessNode'''cloneAsFieldAccess-2 this, field))
                                 )
                             )
@@ -53584,8 +53807,8 @@ ZeroExtendNode'new-4
                     #_"ResolvedJavaType" receiverType (StampTool'typeOrNull-1 (:stamp (:object this)))
                 ]
                     ;; Try to build a better location identity.
-                    (when (and (some? receiverType) (#_"ResolvedJavaType" .isArray receiverType)) => this
-                        (UnsafeAccessNode'''cloneAsArrayAccess-3 this, (:offset this), (NamedLocationIdentity'getArrayLocation-1 (#_"JavaType" .getJavaKind (#_"ResolvedJavaType" .getComponentType receiverType))))
+                    (when (and (some? receiverType) (JavaType''isArray-1 receiverType)) => this
+                        (UnsafeAccessNode'''cloneAsArrayAccess-3 this, (:offset this), (NamedLocationIdentity'getArrayLocation-1 (JavaType'''getJavaKind-1 (JavaType'''getComponentType-1 receiverType))))
                     )
                 )
             )
@@ -53620,7 +53843,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp (:object this)))
             ]
-                (and (some? type) (not (#_"ResolvedJavaType" .isArray type)))
+                (and (some? type) (not (JavaType''isArray-1 type)))
             )
         )
     )
@@ -53717,7 +53940,7 @@ ZeroExtendNode'new-4
                             (let [
                                 #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp object))
                             ]
-                                (when (and (some? type) (#_"ResolvedJavaType" .isArray type))
+                                (when (and (some? type) (JavaType''isArray-1 type))
                                     (let [
                                         #_"JavaConstant" array (ValueNode''asJavaConstant-1 object)
                                     ]
@@ -54172,15 +54395,15 @@ ZeroExtendNode'new-4
     (defm AMD64AddressNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"AMD64AddressNode" this, #_"LIRBuilder" builder]
             (let [
-                #_"AllocatableValue" baseValue (if (some? (:base this)) (LIRGenerator''asAllocatable-2 (:gen builder), (LIRBuilder''operand-2 builder, (:base this))) Value'ILLEGAL)
-                #_"AllocatableValue" indexValue (if (some? (:index this)) (LIRGenerator''asAllocatable-2 (:gen builder), (LIRBuilder''operand-2 builder, (:index this))) Value'ILLEGAL)
+                #_"AllocatableValue" baseValue (if (some? (:base this)) (LIRGenerator''asAllocatable-2 (:gen builder), (LIRBuilder''operand-2 builder, (:base this))) Value'ILLEGAL)
+                #_"AllocatableValue" indexValue (if (some? (:index this)) (LIRGenerator''asAllocatable-2 (:gen builder), (LIRBuilder''operand-2 builder, (:index this))) Value'ILLEGAL)
                 #_"AllocatableValue" baseReference (ValueKind'derivedBaseFromValue-1 baseValue)
                 #_"AllocatableValue" indexReference
                     (cond
                         (nil? (:index this))              nil
                         (= (:scale this) Scale'Times1)    (ValueKind'derivedBaseFromValue-1 indexValue)
                         (ValueKind'isValue-1v indexValue) nil
-                        :else                             Value'ILLEGAL
+                        :else                             Value'ILLEGAL
                     )
                 #_"ValueKind" kind (ValueKind'combineDerived-3 (Stamp'''getValueKind-1 (:stamp this)), baseReference, indexReference)
             ]
@@ -59765,7 +59988,7 @@ ZeroExtendNode'new-4
 
 (class-ns VirtualArrayNode [VirtualObjectNode, ValueNode, Node, LIRLowerable, ArrayLengthProvider]
     (defn #_"VirtualArrayNode" VirtualArrayNode'new-2 [#_"ResolvedJavaType" componentType, #_"int" length]
-        (merge (VirtualArrayNode'class.) (VirtualObjectNode'new-2 (#_"ResolvedJavaType" .getArrayClass componentType), true)
+        (merge (VirtualArrayNode'class.) (VirtualObjectNode'new-2 (JavaType'''getArrayClass-1 componentType), true)
             (hash-map
                 #_"ResolvedJavaType" :componentType componentType
                 #_"int" :length length
@@ -59775,7 +59998,7 @@ ZeroExtendNode'new-4
 
     (defm VirtualArrayNode VirtualObjectNode
         (#_"ResolvedJavaType" VirtualObjectNode'''type-1 [#_"VirtualArrayNode" this]
-            (#_"ResolvedJavaType" .getArrayClass (:componentType this))
+            (JavaType'''getArrayClass-1 (:componentType this))
         )
 
         (#_"int" VirtualObjectNode'''entryCount-1 [#_"VirtualArrayNode" this]
@@ -59798,13 +60021,13 @@ ZeroExtendNode'new-4
 
     (defn #_"int" VirtualArrayNode'entryIndexForOffset-4 [#_"long" constantOffset, #_"JavaKind" expectedEntryKind, #_"ResolvedJavaType" componentType, #_"int" length]
         (let [
-            #_"int" baseOffset (HotSpot'arrayBaseOffset-1 (#_"ResolvedJavaType" .getJavaKind componentType))
-            #_"int" indexScale (HotSpot'arrayIndexScale-1 (#_"ResolvedJavaType" .getJavaKind componentType))
+            #_"int" baseOffset (HotSpot'arrayBaseOffset-1 (JavaType'''getJavaKind-1 componentType))
+            #_"int" indexScale (HotSpot'arrayIndexScale-1 (JavaType'''getJavaKind-1 componentType))
             #_"long" offset
                 (when (and (= (ByteOrder/nativeOrder) ByteOrder/BIG_ENDIAN) (#_"ResolvedJavaType" .isPrimitive componentType)) => constantOffset
                     ;; on big endian, we expect the value to be correctly aligned in memory
                     (let [
-                        #_"int" componentByteCount (JavaKind'getByteCount-1 (#_"ResolvedJavaType" .getJavaKind componentType))
+                        #_"int" componentByteCount (JavaKind'getByteCount-1 (JavaType'''getJavaKind-1 componentType))
                     ]
                         (- constantOffset (- componentByteCount (min componentByteCount (+ 4 (JavaKind'getByteCount-1 expectedEntryKind)))))
                     )
@@ -59825,7 +60048,7 @@ ZeroExtendNode'new-4
 
     (defm VirtualArrayNode VirtualObjectNode
         (#_"JavaKind" VirtualObjectNode'''entryKind-2 [#_"VirtualArrayNode" this, #_"int" index]
-            (#_"ResolvedJavaType" .getJavaKind (:componentType this))
+            (JavaType'''getJavaKind-1 (:componentType this))
         )
 
         (#_"VirtualArrayNode" VirtualObjectNode'''duplicate-1 [#_"VirtualArrayNode" this]
@@ -59892,7 +60115,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"JavaKind" VirtualObjectNode'''entryKind-2 [#_"VirtualInstanceNode" this, #_"int" index]
-            (#_"ResolvedJavaField" .getJavaKind (nth (:fields this) index))
+            (JavaField''getJavaKind-1 (nth (:fields this) index))
         )
 
         (#_"VirtualInstanceNode" VirtualObjectNode'''duplicate-1 [#_"VirtualInstanceNode" this]
@@ -62145,7 +62368,7 @@ ZeroExtendNode'new-4
         (let [
             #_"Node" _next (:nextValue this)
         ]
-            (when (some? _next) => (or (RawEdgesIterator''forward-1 this) (throw (NoSuchElementException.)))
+            (when (some? _next) => (or (RawEdgesIterator''forward-1 this) (throw! "NoSuchElementException"))
                 (§ ass! this (assoc this :nextValue nil))
                 _next
             )
@@ -63645,7 +63868,7 @@ ZeroExtendNode'new-4
             this
                 (assoc this :parameters
                     (vec
-                        (for [#_"int" i (range (#_"Signature" .getParameterCount (#_"ResolvedJavaMethod" .getSignature method), false))]
+                        (for [#_"int" i (range (#_"Signature" .getParameterCount (JavaMethod'''getSignature-1 method), false))]
                             (or (Graph''getParameter-2 snippet, i) "UNUSED_PARAMETER") ;; parameter value was eliminated
                         )
                     )
@@ -64399,7 +64622,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"boolean" AbstractObjectStamp'isInterfaceOrArrayOfInterface-1 [#_"ResolvedJavaType" t]
-        (or (#_"ResolvedJavaType" .isInterface t) (and (#_"ResolvedJavaType" .isArray t) (#_"ResolvedJavaType" .isInterface (#_"ResolvedJavaType" .getElementalType t))))
+        (or (#_"ResolvedJavaType" .isInterface t) (and (JavaType''isArray-1 t) (#_"ResolvedJavaType" .isInterface (JavaType''getElementalType-1 t))))
     )
 
     (defn- #_"Stamp" AbstractObjectStamp''join0-3 [#_"AbstractObjectStamp" this, #_"Stamp" that, #_"boolean" improve?]
@@ -64498,14 +64721,14 @@ ZeroExtendNode'new-4
                 ;; same order. We establish the order by first comparing the hash-codes for
                 ;; performance reasons, and then comparing the internal names of the types.
                 (let [
-                    #_"int" hashA (#_"Object" .hashCode (#_"ResolvedJavaType" .getName a))
-                    #_"int" hashB (#_"Object" .hashCode (#_"ResolvedJavaType" .getName b))
+                    #_"int" hashA (#_"Object" .hashCode (JavaType'''getName-1 a))
+                    #_"int" hashB (#_"Object" .hashCode (JavaType'''getName-1 b))
                 ]
                     (cond
                         (< hashA hashB) (AbstractObjectStamp'meetOrderedNonNullTypes-2 a, b)
                         (< hashB hashA) (AbstractObjectStamp'meetOrderedNonNullTypes-2 b, a)
                         :else
-                            (if (<= (#_"String" .compareTo (#_"ResolvedJavaType" .getName a), (#_"ResolvedJavaType" .getName b)) 0)
+                            (if (<= (#_"String" .compareTo (JavaType'''getName-1 a), (JavaType'''getName-1 b)) 0)
                                 (AbstractObjectStamp'meetOrderedNonNullTypes-2 a, b)
                                 (AbstractObjectStamp'meetOrderedNonNullTypes-2 b, a)
                             )
@@ -64586,7 +64809,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" AbstractObjectStamp'isConcreteType-1 [#_"ResolvedJavaType" type]
-        (not (and (#_"ResolvedJavaType" .isAbstract type) (not (#_"ResolvedJavaType" .isArray type))))
+        (not (and (#_"ResolvedJavaType" .isAbstract type) (not (JavaType''isArray-1 type))))
     )
 
     (§ override #_"boolean" #_"Object." equals [#_"AbstractObjectStamp" this, #_"Object" that]
@@ -64653,7 +64876,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"boolean" Stamp'''isCompatible-2c [#_"NarrowOopStamp" this, #_"Constant" other]
-            (if (instance? HotSpotObjectConstant other)
+            (if (satisfies? ObjectConstant other)
                 (HotSpotConstant'''isCompressed-1 other)
                 true
             )
@@ -64791,8 +65014,8 @@ ZeroExtendNode'new-4
         )
 
         (#_"boolean" Stamp'''isCompatible-2c [#_"KlassPointerStamp" this, #_"Constant" constant]
-            (if (instance? HotSpotMetaspaceConstant constant)
-                (some? (#_"HotSpotMetaspaceConstant" .asResolvedJavaType constant))
+            (if (satisfies? MetaspaceConstant constant)
+                (some? (MetaspaceConstant'''asResolvedJavaType-1 constant))
                 (Constant'''isDefaultForKind-1 constant)
             )
         )
@@ -66862,11 +67085,11 @@ ZeroExtendNode'new-4
 
     (defn- #_"ResolvedJavaType" TypeReference'filterInterfaceTypesOut-1 [#_"ResolvedJavaType" type]
         (when (some? type)
-            (if (#_"ResolvedJavaType" .isArray type)
+            (if (JavaType''isArray-1 type)
                 (let [
-                    #_"ResolvedJavaType" componentType (TypeReference'filterInterfaceTypesOut-1 (#_"ResolvedJavaType" .getComponentType type))
+                    #_"ResolvedJavaType" componentType (TypeReference'filterInterfaceTypesOut-1 (JavaType'''getComponentType-1 type))
                 ]
-                    (#_"ResolvedJavaType" .getArrayClass (or componentType (#_"ResolvedJavaType" .getSuperclass type))) ;; returns Object[].class
+                    (JavaType'''getArrayClass-1 (or componentType (#_"ResolvedJavaType" .getSuperclass type))) ;; returns Object[].class
                 )
                 (when-not (#_"ResolvedJavaType" .isInterface type)
                     type
@@ -67238,7 +67461,7 @@ ZeroExtendNode'new-4
     (def- #_"{OperandFlag}" AMD64AddressValue'flags #{ :OperandFlag'REG, :OperandFlag'ILLEGAL })
 
     (defn #_"AMD64AddressValue" AMD64AddressValue'new-3 [#_"ValueKind" kind, #_"AllocatableValue" base, #_"int" displacement]
-        (AMD64AddressValue'new-5 kind, base, Value'ILLEGAL, Scale'Times1, displacement)
+        (AMD64AddressValue'new-5 kind, base, Value'ILLEGAL, Scale'Times1, displacement)
     )
 
     (defn #_"AMD64AddressValue" AMD64AddressValue'new-5 [#_"ValueKind" kind, #_"AllocatableValue" base, #_"AllocatableValue" index, #_"Scale" scale, #_"int" displacement]
@@ -67273,7 +67496,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"Register" AMD64AddressValue'toRegister-1 [#_"AllocatableValue" value]
-        (when-not (= value Value'ILLEGAL) (:reg value))
+        (when-not (= value Value'ILLEGAL) (:reg value))
     )
 
     (defn #_"AMD64Address" AMD64AddressValue''toAddress-1 [#_"AMD64AddressValue" this]
@@ -67281,7 +67504,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" AMD64AddressValue''isValidImplicitNullCheckFor-3 [#_"AMD64AddressValue" this, #_"Value" value, #_"int" implicitNullCheckLimit]
-        (and (= value (:base this)) (= (:index this) Value'ILLEGAL) (< -1 (:displacement this) implicitNullCheckLimit))
+        (and (= value (:base this)) (= (:index this) Value'ILLEGAL) (< -1 (:displacement this) implicitNullCheckLimit))
     )
 )
 
@@ -67332,7 +67555,7 @@ ZeroExtendNode'new-4
 (class-ns ValueKind []
     (def- #_"int" ValueKind'UNKNOWN_REFERENCE -1)
 
-    (§ def #_"ValueKind" ValueKind'Illegal (ValueKind'unknownReference-1 (:wordSize ValueKind'Illegal)))
+    (§ def #_"ValueKind" ValueKind'Illegal (ValueKind'unknownReference-1 (:wordSize ValueKind'Illegal)))
 
     (defn- #_"ValueKind" ValueKind'new-4 [#_"WordSize" wordSize, #_"int" referenceMask, #_"int" referenceCompressionMask, #_"AllocatableValue" derivedReferenceBase]
         (merge (ValueKind'class.)
@@ -67420,7 +67643,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"ValueKind" ValueKind''makeDerivedReference-2 [#_"ValueKind" this, #_"AllocatableValue" base]
         (cond
-            (= base Value'ILLEGAL)      (ValueKind''makeUnknownReference-1 this)
+            (= base Value'ILLEGAL)      (ValueKind''makeUnknownReference-1 this)
             (ValueKind''isValue-1 this) (ValueKind'derivedReference-3 (:wordSize this), base, false)
             :else                       (ValueKind'new-4 (:wordSize this), (:referenceMask this), (:referenceCompressionMask this), base)
         )
@@ -67449,7 +67672,7 @@ ZeroExtendNode'new-4
 
     ;;;
      ; Helper method to construct derived reference kinds. Returns the base value of a reference or
-     ; derived reference. For values it returns nil, and for unknown references it returns Value#ILLEGAL.
+     ; derived reference. For values it returns nil, and for unknown references it returns Value#ILLEGAL.
      ;;
     (defn #_"AllocatableValue" ValueKind'derivedBaseFromValue-1 [#_"AllocatableValue" value]
         (let [
@@ -67458,7 +67681,7 @@ ZeroExtendNode'new-4
             (cond
                 (ValueKind''isValue-1 kind)            nil
                 (ValueKind''isDerivedReference-1 kind) (:derivedReferenceBase kind)
-                (ValueKind''isUnknownReference-1 kind) Value'ILLEGAL
+                (ValueKind''isUnknownReference-1 kind) Value'ILLEGAL
                 :else                                  value ;; kind is a reference
             )
         )
@@ -68662,7 +68885,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" WordOperationPlugin'processMetaspaceOperation-4 [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode*" args, #_"MetaspaceOperation" operation]
         (let [
-            #_"JavaKind" returnKind (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature method))
+            #_"JavaKind" returnKind (#_"Signature" .getReturnKind (JavaMethod'''getSignature-1 method))
         ]
             (condp =? (MetaspaceOperation''opcode-1 operation)
                [:MetaspaceOpcode'POINTER_EQ :MetaspaceOpcode'POINTER_NE]
@@ -68762,7 +68985,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" WordOperationPlugin'processWordOperation-3 [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode*" args]
         (let [
-            #_"JavaKind" returnKind (#_"Signature" .getReturnKind (#_"ResolvedJavaMethod" .getSignature method))
+            #_"JavaKind" returnKind (#_"Signature" .getReturnKind (JavaMethod'''getSignature-1 method))
             #_"WordFactoryOperation" factoryOperation (#_"ResolvedJavaMethod" .getAnnotation method, WordFactoryOperation)
         ]
             (or
@@ -68811,7 +69034,7 @@ ZeroExtendNode'new-4
                             (BytecodeParser''addPush-3 parser, returnKind, (XorNode'new-2 (nth args 0), (BytecodeParser''add-2 parser, (ConstantNode'forIntegerKind-2 :JavaKind'Long, -1))))
                        [:WordOpcode'READ_POINTER :WordOpcode'READ_OBJECT :WordOpcode'READ_BARRIERED]
                             (let [
-                                #_"JavaKind" readKind (WordTypes'asKind-1 (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature method), (#_"ResolvedJavaMethod" .getDeclaringClass method)))
+                                #_"JavaKind" readKind (WordTypes'asKind-1 (#_"Signature" .getReturnType (JavaMethod'''getSignature-1 method), (JavaMethod'''getDeclaringType-1 method)))
                                 #_"AddressNode" address (WordOperationPlugin'makeAddress-3 parser, (nth args 0), (nth args 1))
                                 #_"LocationIdentity" location
                                     (if (= (count args) 2)
@@ -68823,7 +69046,7 @@ ZeroExtendNode'new-4
                             )
                         :WordOpcode'READ_HEAP
                             (let [
-                                #_"JavaKind" readKind (WordTypes'asKind-1 (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature method), (#_"ResolvedJavaMethod" .getDeclaringClass method)))
+                                #_"JavaKind" readKind (WordTypes'asKind-1 (#_"Signature" .getReturnType (JavaMethod'''getSignature-1 method), (JavaMethod'''getDeclaringType-1 method)))
                                 #_"AddressNode" address (WordOperationPlugin'makeAddress-3 parser, (nth args 0), (nth args 1))
                                 #_"BarrierType" barrierType (SnippetReflection'asObject-2c BarrierType, (ValueNode''asJavaConstant-1 (nth args 2)))
                             ]
@@ -68831,7 +69054,7 @@ ZeroExtendNode'new-4
                             )
                        [:WordOpcode'WRITE_POINTER :WordOpcode'WRITE_OBJECT :WordOpcode'WRITE_BARRIERED :WordOpcode'INITIALIZE]
                             (let [
-                                #_"JavaKind" writeKind (WordTypes'asKind-1 (#_"Signature" .getParameterType (#_"ResolvedJavaMethod" .getSignature method), (if (#_"ResolvedJavaMethod" .isStatic method) 2 1), (#_"ResolvedJavaMethod" .getDeclaringClass method)))
+                                #_"JavaKind" writeKind (WordTypes'asKind-1 (#_"Signature" .getParameterType (JavaMethod'''getSignature-1 method), (if (#_"ResolvedJavaMethod" .isStatic method) 2 1), (JavaMethod'''getDeclaringType-1 method)))
                                 #_"AddressNode" address (WordOperationPlugin'makeAddress-3 parser, (nth args 0), (nth args 1))
                                 #_"LocationIdentity" location
                                     (if (= (count args) 3)
@@ -68870,9 +69093,9 @@ ZeroExtendNode'new-4
                         :WordOpcode'CAS_POINTER
                             (let [
                                 #_"AddressNode" address (WordOperationPlugin'makeAddress-3 parser, (nth args 0), (nth args 1))
-                                #_"JavaKind" valueKind (WordTypes'asKind-1 (#_"Signature" .getParameterType (#_"ResolvedJavaMethod" .getSignature method), 1, (#_"ResolvedJavaMethod" .getDeclaringClass method)))
+                                #_"JavaKind" valueKind (WordTypes'asKind-1 (#_"Signature" .getParameterType (JavaMethod'''getSignature-1 method), 1, (JavaMethod'''getDeclaringType-1 method)))
                                 #_"LocationIdentity" location (SnippetReflection'asObject-2c LocationIdentity'iface, (ValueNode''asJavaConstant-1 (nth args 4)))
-                                #_"JavaType" returnType (#_"Signature" .getReturnType (#_"ResolvedJavaMethod" .getSignature method), (#_"ResolvedJavaMethod" .getDeclaringClass method))
+                                #_"JavaType" returnType (#_"Signature" .getReturnType (JavaMethod'''getSignature-1 method), (JavaMethod'''getDeclaringType-1 method))
                             ]
                                 (BytecodeParser''addPush-3 parser, returnKind, (WordOperationPlugin'casOp-6 valueKind, (WordTypes'asKind-1 returnType), address, location, (nth args 2), (nth args 3)))
                             )
@@ -68911,7 +69134,7 @@ ZeroExtendNode'new-4
                 (cond
                     (WordTypes'isWord-1j type)
                         (WordTypes'getWordStamp-1 type)
-                    (and (#_"ResolvedJavaType" .isArray type) (WordTypes'isWord-1j (#_"ResolvedJavaType" .getElementalType type)))
+                    (and (JavaType''isArray-1 type) (WordTypes'isWord-1j (JavaType''getElementalType-1 type)))
                         (StampFactory'object-2 (TypeReference'createTrusted-1 type), never-nil?)
                 )
             )
@@ -68930,11 +69153,11 @@ ZeroExtendNode'new-4
     (defm WordOperationPlugin NodePlugin
         (#_"boolean" NodePlugin'''handleLoadField-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" receiver, #_"ResolvedJavaField" field]
             (let [
-                #_"Stamp" wordStamp (TypePlugin'''interceptType-4 this, parser, (#_"ResolvedJavaField" .getType field), false)
+                #_"Stamp" wordStamp (TypePlugin'''interceptType-4 this, parser, (JavaField'''getType-1 field), false)
             ]
                 (and (some? wordStamp)
                     (do
-                        (BytecodeParser''addPush-3 parser, (#_"ResolvedJavaField" .getJavaKind field), (LoadFieldNode'createOverrideStamp-3 wordStamp, receiver, field))
+                        (BytecodeParser''addPush-3 parser, (JavaField''getJavaKind-1 field), (LoadFieldNode'createOverrideStamp-3 wordStamp, receiver, field))
                         true
                     )
                 )
@@ -68949,7 +69172,7 @@ ZeroExtendNode'new-4
     (defn- #_"LoadIndexedNode" WordOperationPlugin'createLoadIndexedNode-2 [#_"ValueNode" array, #_"ValueNode" index]
         (let [
             #_"ResolvedJavaType" arrayType (StampTool'typeOrNull-1 (:stamp array))
-            #_"Stamp" componentStamp (WordTypes'getWordStamp-1 (#_"ResolvedJavaType" .getComponentType arrayType))
+            #_"Stamp" componentStamp (WordTypes'getWordStamp-1 (JavaType'''getComponentType-1 arrayType))
         ]
             (if (satisfies? KlassPointerStamp componentStamp)
                 (LoadIndexedPointerNode'new-3 componentStamp, array, index)
@@ -68969,7 +69192,7 @@ ZeroExtendNode'new-4
             ]
                 ;; There are cases where the array does not have a known type yet, i.e. the type is nil.
                 ;; In that case we assume it is not a word type.
-                (and (some? arrayType) (WordTypes'isWord-1j (#_"ResolvedJavaType" .getComponentType arrayType))
+                (and (some? arrayType) (WordTypes'isWord-1j (JavaType'''getComponentType-1 arrayType))
                     (do
                         (BytecodeParser''addPush-3 parser, elementKind, (WordOperationPlugin'createLoadIndexedNode-2 array, index))
                         true
@@ -68979,9 +69202,9 @@ ZeroExtendNode'new-4
         )
 
         (#_"boolean" NodePlugin'''handleStoreField-5 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field, #_"ValueNode" value]
-            (and (= (#_"ResolvedJavaField" .getJavaKind field) :JavaKind'Object)
+            (and (= (JavaField''getJavaKind-1 field) :JavaKind'Object)
                 (let [
-                    #_"boolean" isWordField (WordTypes'isWord-1j (#_"ResolvedJavaField" .getType field))
+                    #_"boolean" isWordField (WordTypes'isWord-1j (JavaField'''getType-1 field))
                     #_"boolean" isWordValue (= (ValueNode''getStackKind-1 value) :JavaKind'Long)
                 ]
                     (cond
@@ -69004,17 +69227,17 @@ ZeroExtendNode'new-4
             (let [
                 #_"ResolvedJavaType" arrayType (StampTool'typeOrNull-1 (:stamp array))
             ]
-                (if (and (some? arrayType) (WordTypes'isWord-1j (#_"ResolvedJavaType" .getComponentType arrayType)))
+                (if (and (some? arrayType) (WordTypes'isWord-1j (JavaType'''getComponentType-1 arrayType)))
                     (do
                         (when-not (= (ValueNode''getStackKind-1 value) :JavaKind'Long)
-                            (throw! (str "cannot store a non-word value into a word array: " (#_"ResolvedJavaType" .toJavaName arrayType, true)))
+                            (throw! (str "cannot store a non-word value into a word array: " (JavaType''toJavaName-2 arrayType, true)))
                         )
                         (BytecodeParser''add-2 parser, (WordOperationPlugin'createStoreIndexedNode-3 array, index, value))
                         true
                     )
                     (do
                         (when (and (= elementKind :JavaKind'Object) (= (ValueNode''getStackKind-1 value) :JavaKind'Long))
-                            (throw! (str "cannot store a word value into a non-word array: " (#_"ResolvedJavaType" .toJavaName arrayType, true)))
+                            (throw! (str "cannot store a word value into a non-word array: " (JavaType''toJavaName-2 arrayType, true)))
                         )
                         false
                     )
@@ -69024,11 +69247,11 @@ ZeroExtendNode'new-4
 
         (#_"boolean" NodePlugin'''handleCheckCast-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
             (if (WordTypes'isWord-1j type)
-                (when (= (ValueNode''getStackKind-1 object) :JavaKind'Long) => (throw! (str "cannot cast a non-word value to a word type: " (#_"ResolvedJavaType" .toJavaName type, true)))
+                (when (= (ValueNode''getStackKind-1 object) :JavaKind'Long) => (throw! (str "cannot cast a non-word value to a word type: " (JavaType''toJavaName-2 type, true)))
                     (§ ass! parser (BytecodeParser''push-3 parser, :JavaKind'Object, object))
                     true
                 )
-                (when (= (ValueNode''getStackKind-1 object) :JavaKind'Object) => (throw! (str "cannot cast a word value to a non-word type: " (#_"ResolvedJavaType" .toJavaName type, true)))
+                (when (= (ValueNode''getStackKind-1 object) :JavaKind'Object) => (throw! (str "cannot cast a word value to a non-word type: " (JavaType''toJavaName-2 type, true)))
                     false
                 )
             )
@@ -69037,9 +69260,9 @@ ZeroExtendNode'new-4
         (#_"boolean" NodePlugin'''handleInstanceOf-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
             (cond
                 (WordTypes'isWord-1j type)
-                    (throw! (str "cannot use instanceof for word a type: " (#_"ResolvedJavaType" .toJavaName type, true)))
+                    (throw! (str "cannot use instanceof for word a type: " (JavaType''toJavaName-2 type, true)))
                 (not= (ValueNode''getStackKind-1 object) :JavaKind'Object)
-                    (throw! (str "cannot use instanceof on a word value: " (#_"ResolvedJavaType" .toJavaName type, true)))
+                    (throw! (str "cannot use instanceof on a word value: " (JavaType''toJavaName-2 type, true)))
                 :else
                     false
             )
@@ -69305,9 +69528,9 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"Stamp" StampFactory'forDeclaredType-2 [#_"JavaType" type, #_"boolean" never-nil?]
-        (if (and (= (#_"JavaType" .getJavaKind type) :JavaKind'Object) (instance? ResolvedJavaType type))
+        (if (and (= (JavaType'''getJavaKind-1 type) :JavaKind'Object) (instance? ResolvedJavaType type))
             (StampFactory'object-2 (TypeReference'create-1 type), never-nil?)
-            (StampFactory'forKind-1 (#_"JavaType" .getJavaKind type))
+            (StampFactory'forKind-1 (JavaType'''getJavaKind-1 type))
         )
     )
 
@@ -69402,12 +69625,12 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"CallingConvention" Compiler'getCallingConvention-2 [#_"CallingConventionType" type, #_"ResolvedJavaMethod" method]
         (let [
-            #_"Signature" sig (#_"ResolvedJavaMethod" .getSignature method)
+            #_"Signature" sig (JavaMethod'''getSignature-1 method)
             #_"JavaType" returnType (#_"Signature" .getReturnType sig, nil)
             #_"JavaType*" parameterTypes (map #(#_"Signature" .getParameterType sig, %, nil) (range (#_"Signature" .getParameterCount sig, false)))
             parameterTypes
                 (when-not (#_"ResolvedJavaMethod" .isStatic method) => parameterTypes
-                    (cons (#_"ResolvedJavaMethod" .getDeclaringClass method) parameterTypes)
+                    (cons (JavaMethod'''getDeclaringType-1 method) parameterTypes)
                 )
         ]
             (RegisterConfig'getCallingConvention-3 type, returnType, parameterTypes)
@@ -69696,9 +69919,9 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
         (§
             return true
         )
-        else if (x instanceof HotSpotObjectConstantImpl)
+        else if (x instanceof ObjectConstantImpl)
         (§
-            return y instanceof HotSpotObjectConstantImpl && ((HotSpotObjectConstantImpl) x).object() == ((HotSpotObjectConstantImpl) y).object()
+            return y instanceof ObjectConstantImpl && ((ObjectConstantImpl) x).object() == ((ObjectConstantImpl) y).object()
         )
         else
         (§
@@ -69714,7 +69937,7 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
             return null
         )
 
-        #_"Object" arrayObject = ((HotSpotObjectConstantImpl) array).object()
+        #_"Object" arrayObject = ((ObjectConstantImpl) array).object()
         if (!arrayObject.getClass().isArray())
         (§
             return null
@@ -69729,7 +69952,7 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
         (§
             return null
         )
-        #_"Object" a = ((HotSpotObjectConstantImpl) array).object()
+        #_"Object" a = ((ObjectConstantImpl) array).object()
 
         if (!a.getClass().isArray() || index < 0 || index >= Array.getLength(a))
         (§
@@ -69739,7 +69962,7 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
         if (a instanceof Object[])
         (§
             Object #_"element" = ((Object[]) a)[index]
-            return HotSpotObjectConstantImpl.forObject(element)
+            return ObjectConstantImpl.forObject(element)
         )
         else
         (§
@@ -69749,23 +69972,23 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
 
     public #_"JavaConstant" forObject(#_"Object" value)
     (§
-        return HotSpotObjectConstantImpl.forObject(value)
+        return ObjectConstantImpl.forObject(value)
     )
 
     @Override
     public #_"ResolvedJavaType" asJavaType(#_"Constant" constant)
     (§
-        if (constant instanceof HotSpotObjectConstant)
+        if (satisfies? ObjectConstant constant)
         (§
-            #_"Object" obj = ((HotSpotObjectConstantImpl) constant).object()
+            #_"Object" obj = ((ObjectConstantImpl) constant).object()
             if (obj instanceof Class)
             (§
                 return runtime.getHostJVMCIBackend().getMetaAccess().lookupJavaType((Class<?>) obj)
             )
         )
-        if (constant instanceof HotSpotMetaspaceConstant)
+        if (satisfies? MetaspaceConstant constant)
         (§
-            #_"MetaspaceWrapperObject" obj = HotSpotMetaspaceConstantImpl.getMetaspaceObject(constant)
+            #_"MetaspaceWrapperObject" obj = MetaspaceConstantImpl.getMetaspaceObject(constant)
             if (obj instanceof HotSpotResolvedObjectTypeImpl)
             (§
                 return (ResolvedJavaType) obj
@@ -69779,7 +70002,7 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
         #_"HotSpotResolvedJavaField" hotspotField = (HotSpotResolvedJavaField) field
         if (hotspotField.isStatic())
         (§
-            #_"HotSpotResolvedJavaType" holder = (HotSpotResolvedJavaType) hotspotField.getDeclaringClass()
+            #_"HotSpotResolvedJavaType" holder = (HotSpotResolvedJavaType) hotspotField.JavaField'''getDeclaringType-1()
             if (holder.isInitialized())
             (§
                 return memoryAccess.readFieldValue(hotspotField, holder.mirror())
@@ -69789,7 +70012,7 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
         (§
             if (receiver.JavaConstant''isNonNull-1())
             (§
-                #_"Object" object = ((HotSpotObjectConstantImpl) receiver).object()
+                #_"Object" object = ((ObjectConstantImpl) receiver).object()
                 if (hotspotField.isInObject(object))
                 (§
                     return memoryAccess.readFieldValue(hotspotField, object)
@@ -69802,7 +70025,7 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
     @Override
     public #_"JavaConstant" asJavaClass(#_"ResolvedJavaType" type)
     (§
-        return HotSpotObjectConstantImpl.forObject(((HotSpotResolvedJavaType) type).mirror())
+        return ObjectConstantImpl.forObject(((HotSpotResolvedJavaType) type).mirror())
     )
 
     @Override
@@ -69845,81 +70068,6 @@ public interface HotSpotMemoryAccessProvider extends MemoryAccessProvider
 
 (§ package jdk.vm.ci.hotspot
 
-public interface HotSpotMetaspaceConstant extends HotSpotConstant, VMConstant, Constant
-(§
-    #_"HotSpotResolvedObjectType" asResolvedJavaType()
-
-    #_"HotSpotResolvedJavaMethod" asResolvedJavaMethod()
-)
-)
-
-(§ package jdk.vm.ci.hotspot
-
-import jdk.vm.ci.meta.ResolvedJavaType
-
-;;;
- ; Represents a constant non-{@code null} object reference, within the compiler and across the
- ; compiler/runtime interface.
- ;;
-public interface HotSpotObjectConstant extends JavaConstant, HotSpotConstant, VMConstant, Constant
-(§
-    ;;;
-     ; Gets the resolved Java type of the object represented by this constant.
-     ;;
-    #_"HotSpotResolvedObjectType" getType()
-
-    ;;;
-     ; Gets the result of {@link Class#getClassLoader()} for the {@link Class} object represented by
-     ; this constant.
-     ;
-     ; @return {@code null} if this constant does not represent a {@link Class} object
-     ;;
-    #_"JavaConstant" getClassLoader()
-
-    ;;;
-     ; Gets the result of {@link Class#getComponentType()} for the {@link Class} object represented
-     ; by this constant.
-     ;
-     ; @return {@code null} if this constant does not represent a {@link Class} object
-     ;;
-    #_"JavaConstant" getComponentType()
-
-    ;;;
-     ; Gets the result of {@link Class#getSuperclass()} for the {@link Class} object represented by
-     ; this constant.
-     ;
-     ; @return {@code null} if this constant does not represent a {@link Class} object
-     ;;
-    #_"JavaConstant" getSuperclass()
-
-    ;;;
-     ; Gets the object represented by this constant represents if it is of a given type.
-     ;
-     ; @param type the expected type of the object represented by this constant. If the object is
-     ;            required to be of this type, then wrap the call to this method in
-     ;            {@link Objects#requireNonNull(Object)}.
-     ; @return the object value represented by this constant if it is an
-     ;         {@link ResolvedJavaType#isInstance(JavaConstant) instance of} {@code type} otherwise
-     ;         {@code null}
-     ;;
-    #_"<T> T" asObject(#_"Class<T>" type)
-
-    ;;;
-     ; Gets the object represented by this constant represents if it is of a given type.
-     ;
-     ; @param type the expected type of the object represented by this constant. If the object is
-     ;            required to be of this type, then wrap the call to this method in
-     ;            {@link Objects#requireNonNull(Object)}.
-     ; @return the object value represented by this constant if it is an
-     ;         {@link ResolvedJavaType#isInstance(JavaConstant) instance of} {@code type} otherwise
-     ;         {@code null}
-     ;;
-    #_"Object" asObject(#_"ResolvedJavaType" type)
-)
-)
-
-(§ package jdk.vm.ci.hotspot
-
 import jdk.vm.ci.meta.ResolvedJavaField
 
 ;;;
@@ -69948,7 +70096,6 @@ public interface HotSpotResolvedJavaField extends ResolvedJavaField
 
 import java.lang.reflect.Modifier
 
-import jdk.vm.ci.meta.JavaMethod
 import jdk.vm.ci.meta.ResolvedJavaMethod
 import jdk.vm.ci.meta.ResolvedJavaType
 
@@ -69964,7 +70111,7 @@ public interface HotSpotResolvedJavaMethod extends ResolvedJavaMethod
      ;;
     #_"boolean" isCallerSensitive()
 
-    #_"HotSpotResolvedObjectType" getDeclaringClass()
+    #_"HotSpotResolvedObjectType" JavaMethod'''getDeclaringType-1()
 
     ;;;
      ; Returns true if this method is one of the special methods that is ignored by security stack walks.
@@ -69978,7 +70125,6 @@ public interface HotSpotResolvedJavaMethod extends ResolvedJavaMethod
 (§ package jdk.vm.ci.hotspot
 
 import jdk.vm.ci.meta.ConstantPool
-import jdk.vm.ci.meta.JavaType
 import jdk.vm.ci.meta.ResolvedJavaMethod
 import jdk.vm.ci.meta.ResolvedJavaType
 
@@ -69997,9 +70143,9 @@ public interface HotSpotResolvedObjectType extends ResolvedJavaType
         return HotSpotResolvedObjectTypeImpl.fromObjectClass(javaClass)
     )
 
-    #_"HotSpotResolvedObjectType" getArrayClass()
+    #_"HotSpotResolvedObjectType" JavaType'''getArrayClass-1()
 
-    #_"ResolvedJavaType" getComponentType()
+    #_"ResolvedJavaType" JavaType'''getComponentType-1()
 
     #_"HotSpotResolvedObjectType" getSuperclass()
 
@@ -70014,7 +70160,7 @@ public interface HotSpotResolvedObjectType extends ResolvedJavaType
         return false
     )
 
-    default #_"JavaKind" getJavaKind()
+    default #_"JavaKind" JavaType'''getJavaKind-1()
     (§
         return :JavaKind'Object
     )
@@ -70655,196 +70801,6 @@ public enum DeoptimizationReason
 (§ package jdk.vm.ci.meta
 
 ;;;
- ; Represents the resolved target of an invocation.
- ;;
-public interface InvokeTarget
-(§
-)
-)
-
-(§ package jdk.vm.ci.meta
-
-;;;
- ; Represents a reference to a Java field, either resolved or unresolved fields. Fields, like
- ; methods and types, are resolved through {@link ConstantPool constant pools}.
- ;;
-public interface JavaField
-(§
-    ;;;
-     ; Returns the name of this field.
-     ;;
-    #_"String" getName()
-
-    ;;;
-     ; Returns a {@link JavaType} object that identifies the declared type for this field.
-     ;;
-    #_"JavaType" getType()
-
-    ;;;
-     ; Returns the kind of this field. This is the same as calling {@link #getType}.
-     ; {@link JavaType#getJavaKind getJavaKind}.
-     ;;
-    default #_"JavaKind" getJavaKind()
-    (§
-        return getType().getJavaKind()
-    )
-
-    ;;;
-     ; Returns the {@link JavaType} object representing the class or interface that declares this field.
-     ;;
-    #_"JavaType" getDeclaringClass()
-)
-)
-
-(§ package jdk.vm.ci.meta
-
-;;;
- ; Represents a reference to a Java method, either resolved or unresolved. Methods, like fields and
- ; types, are resolved through {@link ConstantPool constant pools}.
- ;;
-public interface JavaMethod
-(§
-    ;;;
-     ; Returns the name of this method.
-     ;;
-    #_"String" getName()
-
-    ;;;
-     ; Returns the {@link JavaType} object representing the class or interface that declares this method.
-     ;;
-    #_"JavaType" getDeclaringClass()
-
-    ;;;
-     ; Returns the signature of this method.
-     ;;
-    #_"Signature" getSignature()
-)
-)
-
-(§ package jdk.vm.ci.meta
-
-import static jdk.vm.ci.meta.MetaUtil.internalNameToJava
-
-;;;
- ; Represents a resolved or unresolved type. Types include primitives, objects, {@code void}, and
- ; arrays thereof.
- ;;
-public interface JavaType
-(§
-    ;;;
-     ; Returns the name of this type in internal form. The following are examples of strings
-     ; returned by this method:
-     ;
-     ; <pre>
-     ;     "Ljava/lang/Object;"
-     ;     "I"
-     ;     "[[B"
-     ; </pre>
-     ;;
-    #_"String" getName()
-
-    ;;;
-     ; Checks whether this type is an array class.
-     ;
-     ; @return {@code true} if this type is an array class
-     ;;
-    default #_"boolean" isArray()
-    (§
-        return getComponentType() != null
-    )
-
-    ;;;
-     ; For array types, gets the type of the components, or {@code null} if this is not an array
-     ; type. This method is analogous to {@link Class#getComponentType()}.
-     ;;
-    #_"JavaType" getComponentType()
-
-    ;;;
-     ; Gets the elemental type for this given type. The elemental type is the corresponding zero
-     ; dimensional type of an array type. For example, the elemental type of {@code int[][][]} is
-     ; {@code int}. A non-array type is its own elemental type.
-     ;;
-    default #_"JavaType" getElementalType()
-    (§
-        #_"JavaType" t = this
-        while (t.getComponentType() != null)
-        (§
-            t = t.getComponentType()
-        )
-        return t
-    )
-
-    ;;;
-     ; Gets the array class type representing an array with elements of this type.
-     ;;
-    #_"JavaType" getArrayClass()
-
-    ;;;
-     ; Gets the {@link JavaKind} of this type.
-     ;;
-    #_"JavaKind" getJavaKind()
-
-    ;;;
-     ; Resolves this type to a {@link ResolvedJavaType}.
-     ;
-     ; @param accessingClass the context of resolution (must not be null)
-     ; @return the resolved Java type
-     ; @throws LinkageError if the resolution failed
-     ; @throws NullPointerException if {@code accessingClass} is {@code null}
-     ;;
-    #_"ResolvedJavaType" resolve(#_"ResolvedJavaType" accessingClass)
-
-    ;;;
-     ; Gets the Java programming language name for this type. The following are examples of strings
-     ; returned by this method:
-     ;
-     ; <pre>
-     ;      java.lang.Object
-     ;      int
-     ;      boolean[][]
-     ; </pre>
-     ;
-     ; @return the Java name corresponding to this type
-     ;;
-    default #_"String" toJavaName()
-    (§
-        return internalNameToJava(getName(), true, false)
-    )
-
-    ;;;
-     ; Gets the Java programming language name for this type. The following are examples of strings
-     ; returned by this method:
-     ;
-     ; <pre>
-     ;     qualified == true:
-     ;         java.lang.Object
-     ;         int
-     ;         boolean[][]
-     ;     qualified == false:
-     ;         Object
-     ;         int
-     ;         boolean[][]
-     ; </pre>
-     ;
-     ; @param qualified specifies if the package prefix of this type should be included in the
-     ;            returned name
-     ; @return the Java name corresponding to this type
-     ;;
-    default #_"String" toJavaName(#_"boolean" qualified)
-    (§
-        #_"JavaKind" kind = this.getJavaKind()
-        if (kind == :JavaKind'Object)
-        (§
-            return internalNameToJava(getName(), qualified, false)
-        )
-        return kind.getJavaName()
-    )
-)
-)
-
-(§ package jdk.vm.ci.meta
-
-;;;
  ; Provides memory access operations for the target VM.
  ;;
 public interface MemoryAccessProvider
@@ -70961,7 +70917,7 @@ public interface ResolvedJavaField extends JavaField, ModifiersProvider
      ; Returns the {@link ResolvedJavaType} object representing the class or interface that declares
      ; this field.
      ;;
-    #_"ResolvedJavaType" getDeclaringClass()
+    #_"ResolvedJavaType" JavaField'''getDeclaringType-1()
 )
 )
 
@@ -70998,7 +70954,7 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
      ; Returns the {@link ResolvedJavaType} object representing the class or interface that declares
      ; this method.
      ;;
-    #_"ResolvedJavaType" getDeclaringClass()
+    #_"ResolvedJavaType" JavaMethod'''getDeclaringType-1()
 
     ;;;
      ; Returns the maximum number of locals used in this method's bytecodes.
@@ -71113,7 +71069,7 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
          ;;
         public #_"JavaKind" getKind()
         (§
-            return method.getSignature().getParameterKind(index)
+            return method.JavaMethod'''getSignature-1().getParameterKind(index)
         )
 
         ;;;
@@ -71121,7 +71077,7 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
          ;;
         public #_"JavaType" getType()
         (§
-            return method.getSignature().getParameterType(index, method.getDeclaringClass())
+            return method.JavaMethod'''getSignature-1().getParameterType(index, method.JavaMethod'''getDeclaringType-1())
         )
     )
 
@@ -71148,8 +71104,8 @@ public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersP
 
     default #_"JavaType[]" toParameterTypes()
     (§
-        #_"JavaType" receiver = isStatic() || isConstructor() ? null (§ colon ) getDeclaringClass()
-        return getSignature().toParameterTypes(receiver)
+        #_"JavaType" receiver = isStatic() || isConstructor() ? null (§ colon ) this.JavaMethod'''getDeclaringType-1()
+        return this.JavaMethod'''getSignature-1().toParameterTypes(receiver)
     )
 
     ;;;
@@ -71193,7 +71149,7 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider
      ;;
     default #_"boolean" isLeaf()
     (§
-        return getElementalType().isFinalFlagSet()
+        return this.JavaType''getElementalType-1().isFinalFlagSet()
     )
 
     ;;;
@@ -71237,7 +71193,7 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider
     default #_"boolean" isJavaLangObject()
     (§
         ;; Removed assertion due to https://bugs.eclipse.org/bugs/show_bug.cgi?id=434442
-        return getSuperclass() == null && !isInterface() && getJavaKind() == :JavaKind'Object
+        return getSuperclass() == null && !isInterface() && this.JavaType'''getJavaKind-1() == :JavaKind'Object
     )
 
     ;;;
@@ -71270,20 +71226,6 @@ public interface ResolvedJavaType extends JavaType, ModifiersProvider
      ;         {@code null} if primitive types are involved.
      ;;
     #_"ResolvedJavaType" findLeastCommonAncestor(ResolvedJavaType otherType)
-
-    #_"ResolvedJavaType" getComponentType()
-
-    default #_"ResolvedJavaType" getElementalType()
-    (§
-        #_"ResolvedJavaType" t = this
-        while (t.isArray())
-        (§
-            t = t.getComponentType()
-        )
-        return t
-    )
-
-    #_"ResolvedJavaType" getArrayClass()
 
     ;;;
      ; Resolves the method implementation for virtual dispatches on objects of this dynamic type.
@@ -71401,14 +71343,14 @@ public interface Signature
 
     ;;;
      ; Gets the parameter kind at the specified position. This is the same as calling
-     ; {@link #getParameterType}. {@link JavaType#getJavaKind getJavaKind}.
+     ; {@link #getParameterType}.{@link JavaType#getJavaKind getJavaKind}.
      ;
      ; @param index the index into the parameters, with {@code 0} indicating the first parameter
      ; @return the kind of the parameter at the specified position
      ;;
     default #_"JavaKind" getParameterKind(#_"int" index)
     (§
-        return getParameterType(index, null).getJavaKind()
+        return getParameterType(index, null).JavaType'''getJavaKind-1()
     )
 
     ;;;
@@ -71424,12 +71366,12 @@ public interface Signature
     #_"JavaType" getReturnType(#_"ResolvedJavaType" accessingClass)
 
     ;;;
-     ; Gets the return kind of this signature. This is the same as calling {@link #getReturnType}.
-     ; {@link JavaType#getJavaKind getJavaKind}.
+     ; Gets the return kind of this signature. This is the same as calling
+     ; {@link #getReturnType}.{@link JavaType#getJavaKind getJavaKind}.
      ;;
     default #_"JavaKind" getReturnKind()
     (§
-        return getReturnType(null).getJavaKind()
+        return getReturnType(null).JavaType'''getJavaKind-1()
     )
 
     ;;;
@@ -71448,9 +71390,9 @@ public interface Signature
         #_"StringBuilder" sb = new StringBuilder("(")
         for (int i = 0(§ semi ) i < getParameterCount(false)(§ semi ) ++i)
         (§
-            sb.append(getParameterType(i, null).getName())
+            sb.append(getParameterType(i, null).JavaType'''getName-1())
         )
-        sb.append((§ char ")")).append(getReturnType(null).getName())
+        sb.append((§ char ")")).append(getReturnType(null).JavaType'''getName-1())
         return sb.toString()
     )
 
