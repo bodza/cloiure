@@ -120,24 +120,15 @@
 (import
     [java.io DataInputStream IOException InputStream]
     [java.lang.ref #_Reference]
-    [java.lang.reflect Constructor Field Method Modifier]
+    [java.lang.reflect Constructor Executable Field Method Modifier]
     [java.nio ByteBuffer ByteOrder]
     [java.util BitSet Iterator List ListIterator]
     [java.util.stream Stream Stream$Builder]
 
     [jdk.vm.ci.code CodeCacheProvider InstalledCode]
     [jdk.vm.ci.code.site ConstantReference DataPatch DataSectionReference Mark #_Reference Site]
-    [jdk.vm.ci.hotspot
-        HotSpotCompiledCode HotSpotConstantReflectionProvider HotSpotJVMCIRuntime
-        HotSpotMemoryAccessProvider HotSpotResolvedJavaField HotSpotResolvedJavaMethod
-        HotSpotResolvedObjectType HotSpotVMConfigAccess
-       
-    ]
-    [jdk.vm.ci.meta
-        ConstantPool ConstantReflectionProvider DeoptimizationAction DeoptimizationReason
-        MemoryAccessProvider MetaAccessProvider ResolvedJavaField ResolvedJavaMethod ResolvedJavaType
-        Signature
-    ]
+    [jdk.vm.ci.hotspot HotSpotCompiledCode HotSpotConstantReflectionProvider HotSpotJVMCIRuntime HotSpotVMConfigAccess]
+    [jdk.vm.ci.meta ConstantPool DeoptimizationAction DeoptimizationReason]
     [jdk.vm.ci.runtime JVMCIBackend]
 
     [sun.misc Unsafe]
@@ -2896,8 +2887,23 @@ ReplacementsUtil'readTlabTop-1
 ReplacementsUtil'registerAsWord-1
 ReplacementsUtil'writePendingDeoptimization-2
 ReplacementsUtil'writeTlabTop-2
+ResolvedJavaField''isFinal-1
+ResolvedJavaField''isStatic-1
+ResolvedJavaField''isVolatile-1
+ResolvedJavaMethod''hasBytecodes-1
+ResolvedJavaMethod''isAbstract-1
+ResolvedJavaMethod''isFinal-1
+ResolvedJavaMethod''isNative-1
+ResolvedJavaMethod''isPublic-1
+ResolvedJavaMethod''isStatic-1
+ResolvedJavaMethod''isSynchronized-1
 ResolvedJavaMethodBytecode'new-1
 ResolvedJavaMethodBytecodeProvider'INSTANCE
+ResolvedJavaType''isAbstract-1
+ResolvedJavaType''isInterface-1
+ResolvedJavaType''isJavaLangObject-1
+ResolvedJavaType''isLeaf-1
+ResolvedJavaType''resolveConcreteMethod-3
 ReturnNode''setMemoryMap-2
 ReturnNode'new-1
 ReturnNode'new-2
@@ -2945,6 +2951,11 @@ Shl'new-0
 ShortCircuitOrNode''canonicalizeNegation-3
 ShortCircuitOrNode'new-5
 Shr'new-0
+Signature''getParameterKind-2
+Signature''getReturnKind-1
+Signature''toMethodDescriptor-1
+Signature''toParameterKinds-2
+Signature''toParameterTypes-2
 SignExtend'new-0
 SignExtendNode'create-2
 SignExtendNode'create-3
@@ -3981,6 +3992,66 @@ ZeroExtendNode'new-4
 
 (defp ConstantLoadOptimization)
 (defp ConstantNode)
+
+;;;
+ ; Reflection operations on values represented as {@linkplain JavaConstant constants}. All methods
+ ; in this interface require the VM to access the actual object encapsulated in
+ ; {@link JavaKind#Object object} constants. This access is not always possible, depending on kind
+ ; of VM and the state that the VM is in. Therefore, all methods can return {@code nil} at any
+ ; time, to indicate that the result is not available at this point. The caller is responsible to
+ ; check for {@code nil} results and handle them properly, e.g. not perform an optimization.
+ ;;
+(defp ConstantReflectionProvider
+    ;;;
+     ; Compares two constants for equality. The equality relationship is symmetric. Returns
+     ; {@link Boolean#TRUE true} if the two constants represent the same run time value,
+     ; {@link Boolean#FALSE false} if they are different. Returns {@code nil} if the constants
+     ; cannot be compared at this point.
+     ;;
+    (#_"Boolean" ConstantReflectionProvider'''constantEquals-3 [#_"ConstantReflectionProvider" this, #_"Constant" x, #_"Constant" y])
+    ;;;
+     ; Returns the length of the array constant. Returns {@code nil} if the constant is not an
+     ; array, or if the array length is not available at this point.
+     ;;
+    (#_"Integer" ConstantReflectionProvider'''readArrayLength-2 [#_"ConstantReflectionProvider" this, #_"JavaConstant" array])
+    ;;;
+     ; Reads a value from the given array at the given index. Returns {@code nil} if the constant is
+     ; not an array, if the index is out of bounds, or if the value is not available at this point.
+     ;;
+    (#_"JavaConstant" ConstantReflectionProvider'''readArrayElement-3 [#_"ConstantReflectionProvider" this, #_"JavaConstant" array, #_"int" index])
+    ;;;
+     ; Gets the current value of this field for a given object, if available.
+     ;
+     ; There is no guarantee that the same value will be returned by this method for a field unless
+     ; the field is considered to be constant by the runtime.
+     ;
+     ; @param receiver object from which this field's value is to be read. This value is ignored if
+     ;            this field is static.
+     ; @return the value of this field or {@code nil} if the value is not available (e.g. because
+     ;         the field holder is not yet initialized).
+     ;;
+    (#_"JavaConstant" ConstantReflectionProvider'''readFieldValue-3 [#_"ConstantReflectionProvider" this, #_"ResolvedJavaField" field, #_"JavaConstant" receiver])
+    ;;;
+     ; Returns the {@link ResolvedJavaType} for a {@link Class} object (or any other object regarded
+     ; as a class by the VM) encapsulated in the given constant. Returns {@code nil} if the
+     ; constant does not encapsulate a class, or if the type is not available at this point.
+     ;;
+    (#_"ResolvedJavaType" ConstantReflectionProvider'''asJavaType-2 [#_"ConstantReflectionProvider" this, #_"Constant" constant])
+    ;;;
+     ; Gets raw memory access.
+     ;;
+    (#_"MemoryAccessProvider" ConstantReflectionProvider'''getMemoryAccessProvider-1 [#_"ConstantReflectionProvider" this])
+    ;;;
+     ; Gets the runtime representation of the {@link Class} object of this type.
+     ;;
+    (#_"JavaConstant" ConstantReflectionProvider'''asJavaClass-2 [#_"ConstantReflectionProvider" this, #_"ResolvedJavaType" type])
+    ;;;
+     ; Gets the runtime representation of the "hub" of this type -- that is, the closest part of
+     ; the type representation which is typically stored in the object header.
+     ;;
+    (#_"Constant" ConstantReflectionProvider'''asObjectHub-2 [#_"ConstantReflectionProvider" this, #_"ResolvedJavaType" type])
+)
+
 (defp ConstantTree)
 (defp ConstantTreeAnalyzer)
 (defp ConstantValue)
@@ -4303,7 +4374,78 @@ ZeroExtendNode'new-4
 )
 
 (defp HotSpotDirectCallTargetNode)
+
+;;;
+ ; HotSpot specific extension of {@link MemoryAccessProvider}.
+ ;;
+(defp HotSpotMemoryAccessProvider #_[MemoryAccessProvider]
+    ;;;
+     ; @throws IllegalArgumentException if the address computed from {@code base} and
+     ;             {@code displacement} does not denote a location holding a narrow oop
+     ;;
+    (#_"JavaConstant" HotSpotMemoryAccessProvider'''readNarrowOopConstant-3 [#_"HotSpotMemoryAccessProvider" this, #_"Constant" base, #_"long" displacement])
+    (#_"Constant" HotSpotMemoryAccessProvider'''readKlassPointerConstant-3 [#_"HotSpotMemoryAccessProvider" this, #_"Constant" base, #_"long" displacement])
+    (#_"Constant" HotSpotMemoryAccessProvider'''readNarrowKlassPointerConstant-3 [#_"HotSpotMemoryAccessProvider" this, #_"Constant" base, #_"long" displacement])
+)
+
 (defp HotSpotNodePlugin)
+
+;;;
+ ; Represents a field in a HotSpot type.
+ ;;
+(defp HotSpotResolvedJavaField #_[ResolvedJavaField]
+    ;;;
+     ; Determines if a given object contains this field.
+     ;
+     ; @return true iff this is a non-static field and its declaring class is assignable from {@code object}'s class
+     ;;
+    (#_"boolean" HotSpotResolvedJavaField'''isInObject-2 [#_"HotSpotResolvedJavaField" this, #_"Object" object])
+    (#_"int" HotSpotResolvedJavaField'''offset-1 [#_"HotSpotResolvedJavaField" this])
+    ;;;
+     ; Determines if this field should be treated as a constant.
+     ;;
+    (#_"boolean" HotSpotResolvedJavaField'''isStable-1 [#_"HotSpotResolvedJavaField" this])
+)
+
+;;;
+ ; Implementation of {@link JavaMethod} for resolved HotSpot methods.
+ ;;
+(defp HotSpotResolvedJavaMethod #_[ResolvedJavaMethod]
+    ;;;
+     ; Returns true if this method has a {@code CallerSensitive} annotation.
+     ;;
+    (#_"boolean" HotSpotResolvedJavaMethod'''isCallerSensitive-1 [#_"HotSpotResolvedJavaMethod" this])
+    ;;;
+     ; Returns true if this method is one of the special methods that is ignored by security stack walks.
+     ;;
+    (#_"boolean" HotSpotResolvedJavaMethod'''ignoredBySecurityStackWalk-1 [#_"HotSpotResolvedJavaMethod" this])
+)
+
+;;;
+ ; Implementation of {@link JavaType} for resolved non-primitive HotSpot classes.
+ ;;
+(defp HotSpotResolvedObjectType #_[ResolvedJavaType]
+  #_(§ default #_"boolean" ResolvedJavaType'''isPrimitive-1 [#_"HotSpotResolvedObjectType" this]
+        false
+    )
+  #_(§ default #_"JavaKind" JavaType'''getJavaKind-1 [#_"HotSpotResolvedObjectType" this]
+        :JavaKind'Object
+    )
+    ;;;
+     ; Gets the instance size of this type. If an instance of this type cannot be fast path
+     ; allocated, then the returned value is negative (its absolute value gives the size).
+     ; Must not be called if this is an array or interface type.
+     ;;
+    (#_"int" HotSpotResolvedObjectType'''instanceSize-1 [#_"HotSpotResolvedObjectType" this])
+    ;;;
+     ; Gets the metaspace Klass boxed in a {@link JavaConstant}.
+     ;;
+    (#_"Constant" HotSpotResolvedObjectType'''klass-1 [#_"HotSpotResolvedObjectType" this])
+    (#_"boolean" HotSpotResolvedObjectType'''isPrimaryType-1 [#_"HotSpotResolvedObjectType" this])
+    (#_"int" HotSpotResolvedObjectType'''superCheckOffset-1 [#_"HotSpotResolvedObjectType" this])
+    (#_"long" HotSpotResolvedObjectType'''prototypeMarkWord-1 [#_"HotSpotResolvedObjectType" this])
+)
+
 (defp HotSpotSwitchClosure)
 (defp HubGetClassNode)
 (defp IfNode)
@@ -5073,6 +5215,35 @@ ZeroExtendNode'new-4
     (#_"this" MemoryAccess'''setLastLocationAccess-2 [#_"MemoryAccess" this, #_"MemoryNode" lla])
 )
 
+;;;
+ ; Provides memory access operations for the target VM.
+ ;;
+(defp MemoryAccessProvider
+    ;;;
+     ; Reads a primitive value using a base address and a displacement.
+     ;
+     ; @param kind the {@link JavaKind} of the returned {@link JavaConstant} object
+     ; @param base the base address from which the value is read
+     ; @param displacement the displacement within the object in bytes
+     ; @param bits the number of bits to read from memory
+     ; @return the read value encapsulated in a {@link JavaConstant} object of {@link JavaKind} kind
+     ; @throws IllegalArgumentException if the read is out of bounds of the object or {@code kind}
+     ;             is {@link JavaKind#Void} or not {@linkplain JavaKind#isPrimitive() primitive}
+     ;             kind or {@code bits} is not 8, 16, 32 or 64
+     ;;
+    (#_"JavaConstant" MemoryAccessProvider'''readPrimitiveConstant-5 [#_"MemoryAccessProvider" this, #_"JavaKind" kind, #_"Constant" base, #_"long" displacement, #_"int" bits])
+    ;;;
+     ; Reads a Java {@link Object} value using a base address and a displacement.
+     ;
+     ; @param base the base address from which the value is read
+     ; @param displacement the displacement within the object in bytes
+     ; @return the read value encapsulated in a {@link Constant} object
+     ; @throws IllegalArgumentException if the address computed from {@code base} and
+     ;             {@code displacement} does not denote a location holding an {@code Object} value
+     ;;
+    (#_"JavaConstant" MemoryAccessProvider'''readObjectConstant-3 [#_"MemoryAccessProvider" this, #_"Constant" base, #_"long" displacement])
+)
+
 (defp MemoryAnchorNode)
 
 ;;;
@@ -5121,6 +5292,44 @@ ZeroExtendNode'new-4
  ;;
 (defp MergeProcessor
     (#_"this" MergeProcessor'''merge-2 [#_"MergeProcessor" this, #_"EffectsBlockState*" states])
+)
+
+;;;
+ ; Provides access to the metadata of a class typically provided in a class file.
+ ;;
+(defp MetaAccessProvider
+    ;;;
+     ; Returns the resolved Java type representing a given Java class.
+     ;;
+    (#_"ResolvedJavaType" MetaAccessProvider'''lookupJavaType-2c [#_"MetaAccessProvider" this, #_"Class" clazz])
+    ;;;
+     ; Provides the {@link ResolvedJavaMethod} for a {@link Method} or {@link Constructor} obtained
+     ; via reflection.
+     ;;
+    (#_"ResolvedJavaMethod" MetaAccessProvider'''lookupJavaMethod-2 [#_"MetaAccessProvider" this, #_"Executable" reflectionMethod])
+    ;;;
+     ; Provides the {@link ResolvedJavaField} for a {@link Field} obtained via reflection.
+     ;;
+    (#_"ResolvedJavaField" MetaAccessProvider'''lookupJavaField-2 [#_"MetaAccessProvider" this, #_"Field" reflectionField])
+    ;;;
+     ; Returns the resolved Java type of the given {@link JavaConstant} object.
+     ;
+     ; @return {@code nil} if {@code constant.isNull() || !constant.kind.isObject()}
+     ;;
+    (#_"ResolvedJavaType" MetaAccessProvider'''lookupJavaType-2j [#_"MetaAccessProvider" this, #_"JavaConstant" constant])
+    ;;;
+     ; Encodes a deoptimization action and a deoptimization reason in an integer value.
+     ;
+     ; @param debugId an integer that can be used to track the origin of a deoptimization at
+     ;            runtime. There is no guarantee that the runtime will use this value. The runtime
+     ;            may even keep fewer than 32 bits.
+     ;
+     ; @return the encoded value as an integer
+     ;;
+    (#_"JavaConstant" MetaAccessProvider'''encodeDeoptActionAndReason-4 [#_"MetaAccessProvider" this, #_"DeoptimizationAction" action, #_"DeoptimizationReason" reason, #_"int" debugId])
+    (#_"DeoptimizationReason" MetaAccessProvider'''decodeDeoptReason-2 [#_"MetaAccessProvider" this, #_"JavaConstant" constant])
+    (#_"DeoptimizationAction" MetaAccessProvider'''decodeDeoptAction-2 [#_"MetaAccessProvider" this, #_"JavaConstant" constant])
+    (#_"int" MetaAccessProvider'''decodeDebugId-2 [#_"MetaAccessProvider" this, #_"JavaConstant" constant])
 )
 
 (defp MetaspaceConstant #_[HotSpotConstant, VMConstant, Constant]
@@ -5541,8 +5750,303 @@ ZeroExtendNode'new-4
 (defp RemNode)
 (defp RemoveValueProxyPhase)
 (defp Replacements)
+
+;;;
+ ; Represents a reference to a resolved Java field. Fields, like methods and types, are resolved
+ ; through {@link ConstantPool constant pools}.
+ ;;
+(defp ResolvedJavaField #_[JavaField]
+    ;;;
+     ; Only the {@linkplain Modifier#fieldModifiers() field flags} specified in the JVM
+     ; specification will be included in the returned mask.
+     ;;
+    (#_"int" ResolvedJavaField'''getModifiers-1 [#_"ResolvedJavaField" this])
+    ;;;
+     ; Determines if this field is a synthetic field as defined by the Java Language Specification.
+     ;;
+    (#_"boolean" ResolvedJavaField'''isSynthetic-1 [#_"ResolvedJavaField" this])
+)
+
+(value-ns ResolvedJavaField
+    (defn #_"boolean" ResolvedJavaField''isFinal-1 [#_"ResolvedJavaField" this]
+        (Modifier/isFinal (ResolvedJavaField'''getModifiers-1 this))
+    )
+
+    (defn #_"boolean" ResolvedJavaField''isStatic-1 [#_"ResolvedJavaField" this]
+        (Modifier/isStatic (ResolvedJavaField'''getModifiers-1 this))
+    )
+
+    (defn #_"boolean" ResolvedJavaField''isVolatile-1 [#_"ResolvedJavaField" this]
+        (Modifier/isVolatile (ResolvedJavaField'''getModifiers-1 this))
+    )
+)
+
+;;;
+ ; Represents a resolved Java method. Methods, like fields and types, are resolved through
+ ; {@link ConstantPool constant pools}.
+ ;;
+(defp ResolvedJavaMethod #_[JavaMethod, InvokeTarget]
+    (#_"int" ResolvedJavaMethod'''getModifiers-1 [#_"ResolvedJavaMethod" this])
+    ;;;
+     ; Returns the bytecode of this method, if the method has code. The returned byte array does not
+     ; contain breakpoints or non-Java bytecodes. This may return nil if the
+     ; {@link #getDeclaringClass() holder} is not {@link ResolvedJavaType#isLinked() linked}.
+     ;
+     ; The contained constant pool indices may not be the ones found in the original class file, but
+     ; they can be used with the JVMCI API (e.g. methods in {@link ConstantPool}).
+     ;
+     ; @return the bytecode of the method, or {@code nil} if {@code getCodeSize() == 0} or if the
+     ;         code is not ready
+     ;;
+    (#_"byte[]" ResolvedJavaMethod'''getCode-1 [#_"ResolvedJavaMethod" this])
+    ;;;
+     ; Returns the size of the bytecode of this method, if the method has code. This is equivalent
+     ; to {@link #getCode()}.{@code length} if the method has code.
+     ;
+     ; @return the size of the bytecode in bytes, or 0 if no bytecode is available
+     ;;
+    (#_"int" ResolvedJavaMethod'''getCodeSize-1 [#_"ResolvedJavaMethod" this])
+    ;;;
+     ; Returns the maximum number of locals used in this method's bytecodes.
+     ;;
+    (#_"int" ResolvedJavaMethod'''getMaxLocals-1 [#_"ResolvedJavaMethod" this])
+    ;;;
+     ; Determines if this method is a synthetic method as defined by the Java Language Specification.
+     ;;
+    #_unused
+    (#_"boolean" ResolvedJavaMethod'''isSynthetic-1 [#_"ResolvedJavaMethod" this])
+    ;;;
+     ; Checks whether this method is a class initializer.
+     ;;
+    (#_"boolean" ResolvedJavaMethod'''isClassInitializer-1 [#_"ResolvedJavaMethod" this])
+    ;;;
+     ; Checks whether this method is a constructor.
+     ;;
+    (#_"boolean" ResolvedJavaMethod'''isConstructor-1 [#_"ResolvedJavaMethod" this])
+    ;;;
+     ; Checks whether this method can be statically bound (usually, that means it is final or
+     ; private or static, but not abstract, or the declaring class is final).
+     ;;
+    (#_"boolean" ResolvedJavaMethod'''canBeStaticallyBound-1 [#_"ResolvedJavaMethod" this])
+    ;;;
+     ; Returns the constant pool of this method.
+     ;;
+    (#_"ConstantPool" ResolvedJavaMethod'''getConstantPool-1 [#_"ResolvedJavaMethod" this])
+    ;;;
+     ; Returns {@code true} if this method is not excluded from inlining and has associated Java
+     ; bytecodes (@see {@link ResolvedJavaMethod#hasBytecodes()}).
+     ;;
+    (#_"boolean" ResolvedJavaMethod'''canBeInlined-1 [#_"ResolvedJavaMethod" this])
+    ;;;
+     ; Returns {@code true} if the inlining of this method should be forced.
+     ;;
+    (#_"boolean" ResolvedJavaMethod'''shouldBeInlined-1 [#_"ResolvedJavaMethod" this])
+)
+
+(value-ns ResolvedJavaMethod
+    (defn #_"boolean" ResolvedJavaMethod''isAbstract-1 [#_"ResolvedJavaMethod" this]
+        (Modifier/isAbstract (ResolvedJavaMethod'''getModifiers-1 this))
+    )
+
+    (defn #_"boolean" ResolvedJavaMethod''isFinal-1 [#_"ResolvedJavaMethod" this]
+        (Modifier/isFinal (ResolvedJavaMethod'''getModifiers-1 this))
+    )
+
+    (defn #_"boolean" ResolvedJavaMethod''isNative-1 [#_"ResolvedJavaMethod" this]
+        (Modifier/isNative (ResolvedJavaMethod'''getModifiers-1 this))
+    )
+
+    (defn #_"boolean" ResolvedJavaMethod''isPublic-1 [#_"ResolvedJavaMethod" this]
+        (Modifier/isPublic (ResolvedJavaMethod'''getModifiers-1 this))
+    )
+
+    (defn #_"boolean" ResolvedJavaMethod''isStatic-1 [#_"ResolvedJavaMethod" this]
+        (Modifier/isStatic (ResolvedJavaMethod'''getModifiers-1 this))
+    )
+
+    (defn #_"boolean" ResolvedJavaMethod''isSynchronized-1 [#_"ResolvedJavaMethod" this]
+        (Modifier/isSynchronized (ResolvedJavaMethod'''getModifiers-1 this))
+    )
+
+    ;;;
+     ; Checks whether the method has bytecodes associated with it. Methods without bytecodes are
+     ; either abstract or native methods.
+     ;;
+    (defn #_"boolean" ResolvedJavaMethod''hasBytecodes-1 [#_"ResolvedJavaMethod" this]
+        (and (not (ResolvedJavaMethod''isAbstract-1 this)) (not (ResolvedJavaMethod''isNative-1 this)))
+    )
+)
+
 (defp ResolvedJavaMethodBytecode)
 (defp ResolvedJavaMethodBytecodeProvider)
+
+;;;
+ ; Represents a resolved Java type. Types include primitives, objects, {@code void}, and arrays thereof.
+ ; Types, like fields and methods, are resolved through {@link ConstantPool constant pools}.
+ ;;
+(defp ResolvedJavaType #_[JavaType]
+    (#_"int" ResolvedJavaType'''getModifiers-1 [#_"ResolvedJavaType" this])
+    ;;;
+     ; Checks whether this type is primitive.
+     ;;
+    (#_"boolean" ResolvedJavaType'''isPrimitive-1 [#_"ResolvedJavaType" this])
+    ;;;
+     ; Checks whether this type is initialized. If a type is initialized, it implies that it was
+     ; {@link #isLinked() linked} and that the static initializer has run.
+     ;;
+    (#_"boolean" ResolvedJavaType'''isInitialized-1 [#_"ResolvedJavaType" this])
+    ;;;
+     ; Initializes this type.
+     ;;
+    (#_"void" ResolvedJavaType'''initialize-1 [#_"ResolvedJavaType" this])
+    ;;;
+     ; Checks whether this type is linked and verified. When a type is linked the static initializer
+     ; has not necessarily run. An {@link #isInitialized() initialized} type is always linked.
+     ;;
+    (#_"boolean" ResolvedJavaType'''isLinked-1 [#_"ResolvedJavaType" this])
+    ;;;
+     ; Determines if this type is either the same as, or is a superclass or superinterface of, the
+     ; type represented by the specified parameter. This method is identical to
+     ; {@link Class#isAssignableFrom(Class)} in terms of the value return for this type.
+     ;;
+    (#_"boolean" ResolvedJavaType'''isAssignableFrom-2 [#_"ResolvedJavaType" this, #_"ResolvedJavaType" other])
+    ;;;
+     ; Returns the {@link ResolvedJavaType} object representing the host class of this VM anonymous
+     ; class (as opposed to the unrelated concept specified by {@link Class#isAnonymousClass()}) or
+     ; {@code nil} if this object does not represent a VM anonymous class.
+     ;;
+    (#_"ResolvedJavaType" ResolvedJavaType'''getHostClass-1 [#_"ResolvedJavaType" this])
+    ;;;
+     ; Checks whether the specified object is an instance of this type.
+     ;
+     ; @param object the object to test
+     ; @return {@code true} if the object is an instance of this type
+     ;;
+    (#_"boolean" ResolvedJavaType'''isInstance-2 [#_"ResolvedJavaType" this, #_"JavaConstant" object])
+    ;;;
+     ; Gets the super class of this type. If this type represents either the {@code Object} class,
+     ; an interface, a primitive type, or void, then nil is returned. If this object represents an
+     ; array class then the type object representing the {@code Object} class is returned.
+     ;;
+    (#_"ResolvedJavaType" ResolvedJavaType'''getSuperclass-1 [#_"ResolvedJavaType" this])
+    ;;;
+     ; Gets the interfaces implemented or extended by this type. This method is analogous to
+     ; {@link Class#getInterfaces()} and as such, only returns the interfaces directly implemented
+     ; or extended by this type.
+     ;;
+    (#_"ResolvedJavaType*" ResolvedJavaType'''getInterfaces-1 [#_"ResolvedJavaType" this])
+    ;;;
+     ; Walks the class hierarchy upwards and returns the least common class that is a superclass of
+     ; both the current and the given type.
+     ;
+     ; @return the least common type that is a super type of both the current and the given type, or
+     ;         {@code nil} if primitive types are involved
+     ;;
+    (#_"ResolvedJavaType" ResolvedJavaType'''findLeastCommonAncestor-2 [#_"ResolvedJavaType" this, #_"ResolvedJavaType" that])
+    ;;;
+     ; Resolves the method implementation for virtual dispatches on objects of this dynamic type.
+     ; This resolution process only searches "up" the class hierarchy of this type. A broader search
+     ; that also walks "down" the hierarchy is implemented by
+     ; {@link #findUniqueConcreteMethod(ResolvedJavaMethod)}. For interface types it returns nil
+     ; since no concrete object can be an interface.
+     ;
+     ; @param method the method to select the implementation of
+     ; @param context the caller or context type used to perform access checks
+     ; @return the link-time resolved method (might be abstract) or {@code nil} if it is either a
+     ;         signature polymorphic method or can not be linked
+     ;;
+    (#_"ResolvedJavaMethod" ResolvedJavaType'''resolveMethod-3 [#_"ResolvedJavaType" this, #_"ResolvedJavaMethod" method, #_"ResolvedJavaType" context])
+    ;;;
+     ; Returns the instance fields of this class, including
+     ; {@linkplain ResolvedJavaField#isInternal() internal} fields. A zero-length array is returned
+     ; for array and primitive types. The order of fields returned by this method is stable. That
+     ; is, for a single JVM execution the same order is returned each time this method is called. It
+     ; is also the "natural" order, which means that the JVM would expect the fields in this order
+     ; if no specific order is given.
+     ;
+     ; @param includeSuperclasses if true, then instance fields for the complete hierarchy of this
+     ;            type are included in the result
+     ; @return an array of instance fields
+     ;;
+    (#_"ResolvedJavaField*" ResolvedJavaType'''getInstanceFields-2 [#_"ResolvedJavaType" this, #_"boolean" includeSuperclasses])
+    ;;;
+     ; Returns the static fields of this class, including {@linkplain ResolvedJavaField#isInternal()
+     ; internal} fields. A zero-length array is returned for array and primitive types. The order of
+     ; fields returned by this method is stable. That is, for a single JVM execution the same order
+     ; is returned each time this method is called.
+     ;;
+    (#_"ResolvedJavaField*" ResolvedJavaType'''getStaticFields-1 [#_"ResolvedJavaType" this])
+    ;;;
+     ; Returns the instance field of this class (or one of its super classes) at the given offset,
+     ; or {@code nil} if there is no such field.
+     ;
+     ; @param offset the offset of the field to look for
+     ; @return the field with the given offset, or {@code nil} if there is no such field
+     ;;
+    (#_"ResolvedJavaField" ResolvedJavaType'''findInstanceFieldWithOffset-3 [#_"ResolvedJavaType" this, #_"long" offset, #_"JavaKind" expectedKind])
+    ;;;
+     ; Returns an array reflecting all the constructors declared by this type. This method is
+     ; similar to {@link Class#getDeclaredConstructors()} in terms of returned constructors.
+     ;;
+    (#_"ResolvedJavaMethod*" ResolvedJavaType'''getDeclaredConstructors-1 [#_"ResolvedJavaType" this])
+    ;;;
+     ; Returns an array reflecting all the methods declared by this type. This method is similar to
+     ; {@link Class#getDeclaredMethods()} in terms of returned methods.
+     ;;
+    (#_"ResolvedJavaMethod*" ResolvedJavaType'''getDeclaredMethods-1 [#_"ResolvedJavaType" this])
+    ;;;
+     ; Returns the {@code <clinit>} method for this class if there is one.
+     ;;
+    (#_"ResolvedJavaMethod" ResolvedJavaType'''getClassInitializer-1 [#_"ResolvedJavaType" this])
+)
+
+(value-ns ResolvedJavaType
+    (defn #_"boolean" ResolvedJavaType''isAbstract-1 [#_"ResolvedJavaType" this]
+        (Modifier/isAbstract (ResolvedJavaType'''getModifiers-1 this))
+    )
+
+    ;;;
+     ; Checks whether this type is an interface.
+     ;;
+    (defn #_"boolean" ResolvedJavaType''isInterface-1 [#_"ResolvedJavaType" this]
+        (Modifier/isInterface (ResolvedJavaType'''getModifiers-1 this))
+    )
+
+    ;;
+     ; The setting of the final bit for types is a bit confusing since arrays are marked as final.
+     ; This method provides a semantically equivalent test that appropriate for types.
+     ;;
+    (defn #_"boolean" ResolvedJavaType''isLeaf-1 [#_"ResolvedJavaType" this]
+        (Modifier/isFinal (ResolvedJavaType'''getModifiers-1 (JavaType''getElementalType-1 this)))
+    )
+
+    ;;;
+     ; Returns true if this type is exactly the type {@link java.lang.Object}.
+     ;;
+    (defn #_"boolean" ResolvedJavaType''isJavaLangObject-1 [#_"ResolvedJavaType" this]
+        (and (nil? (ResolvedJavaType'''getSuperclass-1 this)) (not (ResolvedJavaType''isInterface-1 this)) (= (JavaType'''getJavaKind-1 this) :JavaKind'Object))
+    )
+
+    ;;;
+     ; A convenience wrapper for {@link #resolveMethod(ResolvedJavaMethod, ResolvedJavaType)} that
+     ; only returns non-abstract methods.
+     ;
+     ; @param method the method to select the implementation of
+     ; @param context the caller or context type used to perform access checks
+     ; @return the concrete method that would be selected at runtime, or {@code nil} if there is no
+     ;         concrete implementation of {@code method} in this type or any of its superclasses
+     ;;
+    (defn #_"ResolvedJavaMethod" ResolvedJavaType''resolveConcreteMethod-3 [#_"ResolvedJavaType" this, #_"ResolvedJavaMethod" method, #_"ResolvedJavaType" context]
+        (let [
+            #_"ResolvedJavaMethod" resolvedMethod (ResolvedJavaType'''resolveMethod-3 this, method, context)
+        ]
+            (when (and (some? resolvedMethod) (not (ResolvedJavaMethod''isAbstract-1 resolvedMethod)))
+                resolvedMethod
+            )
+        )
+    )
+)
+
 (defp ReturnNode)
 (defp ReturnOp)
 (defp ReturnToCallerData)
@@ -5604,6 +6108,99 @@ ZeroExtendNode'new-4
      ; Records a side effect for the current program point.
      ;;
     (#_"this" SideEffectsState'''addSideEffect-2 [#_"SideEffectsState" this, #_"StateSplit" sideEffect])
+)
+
+;;;
+ ; Represents a method signature provided by the runtime.
+ ;
+ ; @see <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.3.3">Method Descriptors</a>
+ ;;
+(defp Signature
+    ;;;
+     ; Returns the number of parameters in this signature, adding 1 for a receiver if requested.
+     ;
+     ; @param receiver true if 1 is to be added to the result for a receiver
+     ; @return the number of parameters; + 1 iff {@code receiver == true}
+     ;;
+    (#_"int" Signature'''getParameterCount-2 [#_"Signature" this, #_"boolean" receiver])
+    ;;;
+     ; Gets the parameter type at the specified position.
+     ;
+     ; @param index the index into the parameters, with {@code 0} indicating the first parameter
+     ; @param context the context of the type lookup. If non-null, its class loader is used
+     ;            for resolving the type. If {@code nil}, then the type returned is either
+     ;            unresolved or a resolved type whose resolution is context free (e.g. a primitive
+     ;            type or a type in a java.* package).
+     ; @return the {@code index}'th parameter type
+     ; @throws LinkageError if {@code context != nil} and resolution fails
+     ;;
+    (#_"JavaType" Signature'''getParameterType-3 [#_"Signature" this, #_"int" index, #_"ResolvedJavaType" context])
+    ;;;
+     ; Gets the return type of this signature.
+     ;
+     ; @param context the context of the type lookup. If non-null, its class loader is used
+     ;            for resolving the type. If {@code null}, then the type returned is either
+     ;            unresolved or a resolved type whose resolution is context free (e.g. a primitive
+     ;            type or a type in a java.* package).
+     ; @return the return type
+     ; @throws LinkageError if {@code context != nil} and resolution fails
+     ;;
+    (#_"JavaType" Signature'''getReturnType-2 [#_"Signature" this, #_"ResolvedJavaType" context])
+)
+
+(value-ns Signature
+    ;;;
+     ; Gets the parameter kind at the specified position. This is the same as calling
+     ; {@link #getParameterType}.{@link JavaType#getJavaKind getJavaKind}.
+     ;
+     ; @param index the index into the parameters, with {@code 0} indicating the first parameter
+     ; @return the kind of the parameter at the specified position
+     ;;
+    (defn #_"JavaKind" Signature''getParameterKind-2 [#_"Signature" this, #_"int" index]
+        (JavaType'''getJavaKind-1 (Signature'''getParameterType-3 this, index, nil))
+    )
+
+    ;;;
+     ; Gets the return kind of this signature. This is the same as calling
+     ; {@link #getReturnType}.{@link JavaType#getJavaKind getJavaKind}.
+     ;;
+    (defn #_"JavaKind" Signature''getReturnKind-1 [#_"Signature" this]
+        (JavaType'''getJavaKind-1 (Signature'''getReturnType-2 this, nil))
+    )
+
+    ;;;
+     ; Gets the
+     ; <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.3.3">method descriptor</a>
+     ; corresponding to this signature. For example:
+     ;
+     ; "(ILjava/lang/String;D)V"
+     ;;
+    (defn #_"String" Signature''toMethodDescriptor-1 [#_"Signature" this]
+        (let [
+            #_"String*" s
+                (for [#_"int" i (range (Signature'''getParameterCount-2 this, false))]
+                    (JavaType'''getName-1 (Signature'''getParameterType-3 this, i, nil))
+                )
+        ]
+            (str \( s \) (JavaType'''getName-1 (Signature'''getReturnType-2 this, nil)))
+        )
+    )
+
+    (defn #_"[JavaType]" Signature''toParameterTypes-2 [#_"Signature" this, #_"JavaType" receiver]
+        (into' (if (some? receiver) [ receiver ] [])
+            (for [#_"int" i (range (Signature'''getParameterCount-2 this, false))]
+                (Signature'''getParameterType-3 this, i, nil)
+            )
+        )
+    )
+
+    (defn #_"[JavaKind]" Signature''toParameterKinds-2 [#_"Signature" this, #_"boolean" receiver?]
+        (into' (if receiver? [ :JavaKind'Object ] [])
+            (for [#_"int" i (range (Signature'''getParameterCount-2 this, false))]
+                (Signature''getParameterKind-2 this, i)
+            )
+        )
+    )
 )
 
 (defp SignExtend)
@@ -8279,26 +8876,26 @@ ZeroExtendNode'new-4
  ; Implements the logic that decides whether a field read should be constant folded.
  ;;
 (value-ns ConstantFields
-    (def- #_"ResolvedJavaField" ConstantFields'stringValueField (#_"MetaAccessProvider" .lookupJavaField HotSpot'metaAccess, (#_"Class" .getDeclaredField String, "value")))
-    (def- #_"ResolvedJavaField" ConstantFields'stringHashField  (#_"MetaAccessProvider" .lookupJavaField HotSpot'metaAccess, (#_"Class" .getDeclaredField String, "hash")))
+    (def- #_"ResolvedJavaField" ConstantFields'stringValueField (§ soon MetaAccessProvider'''lookupJavaField-2 HotSpot'metaAccess, (#_"Class" .getDeclaredField String, "value")))
+    (def- #_"ResolvedJavaField" ConstantFields'stringHashField  (§ soon MetaAccessProvider'''lookupJavaField-2 HotSpot'metaAccess, (#_"Class" .getDeclaredField String, "hash")))
 
-    (def- #_"ResolvedJavaType" ConstantFields'hotSpotType   (§ soon #_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (ß HotSpot)))
-    (def- #_"ResolvedJavaType" ConstantFields'nodeClassType (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, NodeClass'iface))
+    (def- #_"ResolvedJavaType" ConstantFields'hotSpotType   (§ soon MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, (ß HotSpot)))
+    (def- #_"ResolvedJavaType" ConstantFields'nodeClassType (§ soon MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, NodeClass'iface))
 
     (defn #_"boolean" ConstantFields'isStaticFieldConstant-1 [#_"ResolvedJavaField" field]
         (let [
             #_"ResolvedJavaType" declaringClass (JavaField'''getDeclaringType-1 field)
         ]
-            (and (#_"ResolvedJavaType" .isInitialized declaringClass) (not (= (JavaType'''getName-1 declaringClass) "Ljava/lang/System;")))
+            (and (ResolvedJavaType'''isInitialized-1 declaringClass) (not (= (JavaType'''getName-1 declaringClass) "Ljava/lang/System;")))
         )
     )
 
     (defn #_"boolean" ConstantFields'isStableField-1 [#_"ResolvedJavaField" field]
         (and HotSpot'foldStableValues
-             (or (not (#_"ResolvedJavaField" .isStatic field))
+             (or (not (ResolvedJavaField''isStatic-1 field))
                  (ConstantFields'isStaticFieldConstant-1 field)
              )
-             (or (#_"HotSpotResolvedJavaField" .isStable field)
+             (or (HotSpotResolvedJavaField'''isStable-1 field)
                  (any = field ConstantFields'stringValueField ConstantFields'stringHashField)
              )
         )
@@ -8306,22 +8903,22 @@ ZeroExtendNode'new-4
 
     (defn #_"boolean" ConstantFields'isStableFieldValueConstant-3 [#_"ResolvedJavaField" field, #_"JavaConstant" value, #_"JavaConstant" receiver]
         (or (not (Constant'''isDefaultForKind-1 value))
-            (and (not (#_"ResolvedJavaField" .isStatic field))
-                (#_"ResolvedJavaType" .isInstance ConstantFields'hotSpotType, receiver)
+            (and (not (ResolvedJavaField''isStatic-1 field))
+                (ResolvedJavaType'''isInstance-2 ConstantFields'hotSpotType, receiver)
             )
         )
     )
 
     (defn #_"boolean" ConstantFields'isFinalField-1 [#_"ResolvedJavaField" field]
-        (and (#_"ResolvedJavaField" .isFinal field)
-            (or (not (#_"ResolvedJavaField" .isStatic field)) (ConstantFields'isStaticFieldConstant-1 field))
+        (and (ResolvedJavaField''isFinal-1 field)
+            (or (not (ResolvedJavaField''isStatic-1 field)) (ConstantFields'isStaticFieldConstant-1 field))
         )
     )
 
     (defn #_"boolean" ConstantFields'isFinalFieldValueConstant-3 [#_"ResolvedJavaField" field, #_"JavaConstant" value, #_"JavaConstant" receiver]
         (or GraalOptions'trustFinalDefaultFields (not (Constant'''isDefaultForKind-1 value))
-            (and (not (#_"ResolvedJavaField" .isStatic field))
-                (#_"ResolvedJavaType" .isInstance ConstantFields'nodeClassType, receiver)
+            (and (not (ResolvedJavaField''isStatic-1 field))
+                (ResolvedJavaType'''isInstance-2 ConstantFields'nodeClassType, receiver)
             )
         )
     )
@@ -8336,7 +8933,7 @@ ZeroExtendNode'new-4
     (defn #_"ConstantNode" ConstantFields'readConstantField-2 [#_"ResolvedJavaField" field, #_"JavaConstant" receiver]
         (when (ConstantFields'isStableField-1 field)
             (let [
-                #_"JavaConstant" value (#_"ConstantReflectionProvider" .readFieldValue HotSpot'constantReflection, field, receiver)
+                #_"JavaConstant" value (ConstantReflectionProvider'''readFieldValue-3 HotSpot'constantReflection, field, receiver)
             ]
                 (when (and (some? value) (ConstantFields'isStableFieldValueConstant-3 field, value, receiver))
                     (§ return (ConstantNode'forConstant-3c value, (ConstantFields'getArrayDimension-1 (JavaField'''getType-1 field)), false))
@@ -8345,7 +8942,7 @@ ZeroExtendNode'new-4
         )
         (when (ConstantFields'isFinalField-1 field)
             (let [
-                #_"JavaConstant" value (#_"ConstantReflectionProvider" .readFieldValue HotSpot'constantReflection, field, receiver)
+                #_"JavaConstant" value (ConstantReflectionProvider'''readFieldValue-3 HotSpot'constantReflection, field, receiver)
             ]
                 (when (and (some? value) (ConstantFields'isFinalFieldValueConstant-3 field, value, receiver))
                     (§ return (ConstantNode'forConstant-1 value))
@@ -8356,7 +8953,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"ConstantNode" ConstantFields'tryConstantFold-2 [#_"ResolvedJavaField" field, #_"JavaConstant" receiver]
-        (when (or (#_"ResolvedJavaField" .isStatic field) (and (some? receiver) (not (JavaConstant'''isNull-1 receiver))))
+        (when (or (ResolvedJavaField''isStatic-1 field) (and (some? receiver) (not (JavaConstant'''isNull-1 receiver))))
             (ConstantFields'readConstantField-2 field, receiver)
         )
     )
@@ -9367,17 +9964,17 @@ ZeroExtendNode'new-4
 )
 
 (value-ns WordTypes
-    (def #_"ResolvedJavaType" WordTypes'word         (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Word'iface))
-    (def #_"ResolvedJavaType" WordTypes'klassPointer (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, #_"KlassPointer" Word'iface))
+    (def #_"ResolvedJavaType" WordTypes'word         (§ soon MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, Word'iface))
+    (def #_"ResolvedJavaType" WordTypes'klassPointer (§ soon MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, #_"KlassPointer" Word'iface))
 
     ;;;
      ; Determines if a given type is a word type.
      ;;
     (defn #_"boolean" WordTypes'isWord-1j [#_"JavaType" type]
-        (and (instance? ResolvedJavaType type)
+        (and (satisfies? ResolvedJavaType type)
             (or
-                (#_"ResolvedJavaType" .isAssignableFrom WordTypes'klassPointer, type)
-                (#_"ResolvedJavaType" .isAssignableFrom WordTypes'word, type)
+                (ResolvedJavaType'''isAssignableFrom-2 WordTypes'klassPointer, type)
+                (ResolvedJavaType'''isAssignableFrom-2 WordTypes'word, type)
             )
         )
     )
@@ -10880,7 +11477,7 @@ ZeroExtendNode'new-4
     (defn #_"ResolvedJavaType" StampTool'objectTypeOrNull-1 [#_"Stamp" stamp]
         (when (and (satisfies? AbstractObjectStamp stamp) (Stamp'''hasValues-1 stamp))
             (or (:type stamp)
-                (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Object)
+                (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, Object)
             )
         )
     )
@@ -11677,7 +12274,7 @@ ZeroExtendNode'new-4
                 BytecodeFrame'BEFORE_BCI
                     ;; This is an intrinsic. Deoptimizing within an intrinsic must re-execute the intrinsified invocation.
                     (let [
-                        #_"FrameState" beforeCall (FrameState''duplicateModifiedBeforeCall-5 atReturn, (:bci invoke), invokeReturnKind, (#_"Signature" .toParameterKinds (JavaMethod'''getSignature-1 invokeTargetMethod), (not (#_"ResolvedJavaMethod" .isStatic invokeTargetMethod))), invokeArgs)
+                        #_"FrameState" beforeCall (FrameState''duplicateModifiedBeforeCall-5 atReturn, (:bci invoke), invokeReturnKind, (Signature''toParameterKinds-2 (JavaMethod'''getSignature-1 invokeTargetMethod), (not (ResolvedJavaMethod''isStatic-1 invokeTargetMethod))), invokeArgs)
                         _ (§ ass! frameState (Node''replaceAndDelete-2 frameState, beforeCall))
                     ]
                         beforeCall
@@ -12322,7 +12919,7 @@ ZeroExtendNode'new-4
 
     (defn #_"AddressNode" Lowerer'createFieldAddress-3 [#_"Graph" graph, #_"ValueNode" object, #_"ResolvedJavaField" field]
         (let [
-            #_"int" offset (#_"HotSpotResolvedJavaField" .offset field)
+            #_"int" offset (HotSpotResolvedJavaField'''offset-1 field)
         ]
             (when (<= 0 offset) (Lowerer'createOffsetAddress-3 graph, object, offset))
         )
@@ -12353,7 +12950,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"BarrierType" Lowerer'fieldLoadBarrierType-1 [#_"ResolvedJavaField" field]
-        (if (and HotSpot'useG1GC (= (JavaField''getJavaKind-1 field) :JavaKind'Object) (= (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, java.lang.ref.Reference) (JavaField'''getDeclaringType-1 field)) (= (JavaField'''getName-1 field) "referent"))
+        (if (and HotSpot'useG1GC (= (JavaField''getJavaKind-1 field) :JavaKind'Object) (= (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, java.lang.ref.Reference) (JavaField'''getDeclaringType-1 field)) (= (JavaField'''getName-1 field) "referent"))
             :BarrierType'PRECISE
             :BarrierType'NONE
         )
@@ -13107,7 +13704,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"boolean" InlineInfo'''shouldInline-1 [#_"ExactInlineInfo" this]
-            (#_"ResolvedJavaMethod" .shouldBeInlined (:concrete this))
+            (ResolvedJavaMethod'''shouldBeInlined-1 (:concrete this))
         )
     )
 )
@@ -13184,7 +13781,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"SnippetInfo" AbstractTemplates'snippet-3* [#_"Class<Snippets>" declaringClass, #_"String" methodName & #_"LocationIdentity..." privateLocations]
         (let [
-            #_"ResolvedJavaMethod" method (#_"MetaAccessProvider" .lookupJavaMethod HotSpot'metaAccess, (AbstractTemplates'findMethod-3 declaringClass, methodName))
+            #_"ResolvedJavaMethod" method (MetaAccessProvider'''lookupJavaMethod-2 HotSpot'metaAccess, (AbstractTemplates'findMethod-3 declaringClass, methodName))
         ]
             (SnippetInfo'new-2 method, privateLocations)
         )
@@ -13285,22 +13882,22 @@ ZeroExtendNode'new-4
                     ;; If non-nil, this is the only type that could pass the type check, because the target of the type check is a final
                     ;; class or has been speculated to be a final class and this value is the only concrete subclass of the target type.
                     #_"ResolvedJavaType" exact (when (and (some? targetType) (:exactReference targetType)) type)
-                    #_"ConstantNode" hub (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass type), (:graph instanceOf))
+                    #_"ConstantNode" hub (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (HotSpotResolvedObjectType'''klass-1 type), (:graph instanceOf))
                     #_"Graph" graph (:graph instanceOf)
                 ]
                     (cond
                         (some? exact)
                             (Arguments'new-4* (:instanceofExact this), (:guardsStage graph), (:loweringStage (:phase lowerer)),
                                 object,
-                                (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass exact), graph),
+                                (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (HotSpotResolvedObjectType'''klass-1 exact), graph),
                                 (:trueValue replacer),
                                 (:falseValue replacer)
                             )
-                        (#_"HotSpotResolvedObjectType" .isPrimaryType type)
+                        (HotSpotResolvedObjectType'''isPrimaryType-1 type)
                             (Arguments'new-4* (:instanceofPrimary this), (:guardsStage graph), (:loweringStage (:phase lowerer)),
                                 hub,
                                 object,
-                                (#_"HotSpotResolvedObjectType" .superCheckOffset type),
+                                (HotSpotResolvedObjectType'''superCheckOffset-1 type),
                                 (:trueValue replacer),
                                 (:falseValue replacer)
                             )
@@ -13392,9 +13989,9 @@ ZeroExtendNode'new-4
             #_"HotSpotResolvedObjectType" type (:instanceClass node)
             #_"Arguments" args
                 (Arguments'new-4* (:allocateInstance this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
-                    (#_"HotSpotResolvedObjectType" .instanceSize type),
-                    (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass type), (:graph node)),
-                    (#_"HotSpotResolvedObjectType" .prototypeMarkWord type)
+                    (HotSpotResolvedObjectType'''instanceSize-1 type),
+                    (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (HotSpotResolvedObjectType'''klass-1 type), (:graph node)),
+                    (HotSpotResolvedObjectType'''prototypeMarkWord-1 type)
                 )
         ]
             (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, node), node, args)
@@ -13409,9 +14006,9 @@ ZeroExtendNode'new-4
             #_"ValueNode" length (ArrayLengthProvider'''length-1 node)
             #_"Arguments" args
                 (Arguments'new-4* (:allocateArray this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
-                    (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (#_"HotSpotResolvedObjectType" .klass arrayType), (:graph node)),
+                    (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (HotSpotResolvedObjectType'''klass-1 arrayType), (:graph node)),
                     (if (Node''isAlive-1 length) length (Graph''addOrUniqueWithInputs-2 (:graph node), length)),
-                    (#_"HotSpotResolvedObjectType" .prototypeMarkWord arrayType),
+                    (HotSpotResolvedObjectType'''prototypeMarkWord-1 arrayType),
                     (HotSpot'arrayBaseOffset-1 elementKind),
                     (NumUtil'log2-1 (HotSpot'arrayIndexScale-1 elementKind)),
                     (satisfies? ConstantNode length)
@@ -19659,11 +20256,11 @@ ZeroExtendNode'new-4
      ; @return true if the declared holder is an interface or is linked
      ;;
     (defn- #_"boolean" BytecodeParser'callTargetIsResolved-1 [#_"JavaMethod" target]
-        (and (instance? ResolvedJavaMethod target)
+        (and (satisfies? ResolvedJavaMethod target)
             (let [
                 #_"ResolvedJavaType" type (JavaMethod'''getDeclaringType-1 target)
             ]
-                (or (#_"ResolvedJavaType" .isInterface type) (#_"ResolvedJavaType" .isLinked type))
+                (or (ResolvedJavaType''isInterface-1 type) (ResolvedJavaType'''isLinked-1 type))
             )
         )
     )
@@ -19696,7 +20293,7 @@ ZeroExtendNode'new-4
         ;; to mitigate the potential for class initialization related deadlock being caused by
         ;; the compiler (e.g. https://github.com/graalvm/graal-core/pull/232/files#r90788550).
         (locking BytecodeParser'iface
-            (#_"ResolvedJavaType" .initialize resolvedType)
+            (ResolvedJavaType'''initialize-1 resolvedType)
         )
         nil
     )
@@ -19706,11 +20303,11 @@ ZeroExtendNode'new-4
         (let [
             #_"JavaField" result (#_"ConstantPool" .lookupField (:constantPool this), cpi, (:method this), opcode)
         ]
-            (when (instance? ResolvedJavaField result)
+            (when (satisfies? ResolvedJavaField result)
                 (let [
                     #_"ResolvedJavaType" declaringClass (JavaField'''getDeclaringType-1 result)
                 ]
-                    (when-not (#_"ResolvedJavaType" .isInitialized declaringClass)
+                    (when-not (ResolvedJavaType'''isInitialized-1 declaringClass)
                         ;; even with eager initialization, superinterfaces are not always initialized (see StaticInterfaceFieldTest)
                         (BytecodeParser'initialize-1 declaringClass)
                     )
@@ -19742,11 +20339,11 @@ ZeroExtendNode'new-4
         (let [
             #_"ResolvedJavaType" callingClass (JavaMethod'''getDeclaringType-1 (:method this))
             callingClass
-                (when (some? (#_"ResolvedJavaType" .getHostClass callingClass)) => callingClass
-                    (#_"ResolvedJavaType" .getHostClass callingClass)
+                (when (some? (ResolvedJavaType'''getHostClass-1 callingClass)) => callingClass
+                    (ResolvedJavaType'''getHostClass-1 callingClass)
                 )
         ]
-            (when (#_"ResolvedJavaType" .isInterface callingClass) => args
+            (when (ResolvedJavaType''isInterface-1 callingClass) => args
                 (let [
                     #_"ValueNode" receiver (nth args 0)
                     #_"TypeReference" checkedType (TypeReference'createTrusted-1 callingClass)
@@ -19791,7 +20388,7 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"boolean" BytecodeParser''tryFastInlineAccessor-3 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" targetMethod, #_"[ValueNode]" args]
         (let [
-            #_"[byte]" code (vec (#_"ResolvedJavaMethod" .getCode targetMethod))
+            #_"[byte]" code (vec (ResolvedJavaMethod'''getCode-1 targetMethod))
         ]
             (and (some? code) (= (count code) BytecodeParser'ACCESSOR_BYTECODE_LENGTH) (= (Bytes'beU1-2 code, 0) Bytecodes'ALOAD_0) (= (Bytes'beU1-2 code, 1) Bytecodes'GETFIELD)
                 (let [
@@ -19800,9 +20397,9 @@ ZeroExtendNode'new-4
                     (and (<= Bytecodes'IRETURN b4 Bytecodes'ARETURN)
                         (let [
                             #_"int" cpi (Bytes'beU2-2 code, 2)
-                            #_"JavaField" field (#_"ConstantPool" .lookupField (#_"ResolvedJavaMethod" .getConstantPool targetMethod), cpi, targetMethod, Bytecodes'GETFIELD)
+                            #_"JavaField" field (#_"ConstantPool" .lookupField (ResolvedJavaMethod'''getConstantPool-1 targetMethod), cpi, targetMethod, Bytecodes'GETFIELD)
                         ]
-                            (and (instance? ResolvedJavaField field)
+                            (and (satisfies? ResolvedJavaField field)
                                 (let [
                                     _ (§ ass! this (BytecodeParser''genGetField-3r this, field, (BytecodeParser''getReceiver-3 this, args, true)))
                                 ]
@@ -19819,12 +20416,12 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"this" BytecodeParser''parseAndInlineCallee-4 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" targetMethod, #_"[ValueNode]" args, #_"IntrinsicContext" calleeIntrinsicContext]
-        (try (§ with [#_"IntrinsicScope" _ (when (and (some? calleeIntrinsicContext) (not (BytecodeParser''parsingIntrinsic-1 this))) (IntrinsicScope'new-3 this, (#_"Signature" .toParameterKinds (JavaMethod'''getSignature-1 targetMethod), (not (#_"ResolvedJavaMethod" .isStatic targetMethod))), args))])
+        (try (§ with [#_"IntrinsicScope" _ (when (and (some? calleeIntrinsicContext) (not (BytecodeParser''parsingIntrinsic-1 this))) (IntrinsicScope'new-3 this, (Signature''toParameterKinds-2 (JavaMethod'''getSignature-1 targetMethod), (not (ResolvedJavaMethod''isStatic-1 targetMethod))), args))])
             (let [
                 #_"BytecodeParser" parser (BytecodeParser'new-5 (:graphBuilderInstance this), (:graph this), this, targetMethod, calleeIntrinsicContext)
                 #_"FrameStateBuilder" startFrameState (FrameStateBuilder'new-3c parser, (:bytecode parser), (:graph this))
                 _
-                    (when-not (#_"ResolvedJavaMethod" .isStatic targetMethod)
+                    (when-not (ResolvedJavaMethod''isStatic-1 targetMethod)
                         (§ ass! args (update' args 0 #(BytecodeParser''nullCheckedValue-2 this, %)))
                     )
                 startFrameState (FrameStateBuilder''initializeFromArgumentsArray-2 startFrameState, args)
@@ -19851,7 +20448,7 @@ ZeroExtendNode'new-4
                                 )
                             this
                                 (when (some? calleeReturnValue) => this
-                                    (update this :frameState FrameStateBuilder''push-3 (JavaKind'getStackKind-1 (#_"Signature" .getReturnKind (JavaMethod'''getSignature-1 targetMethod))), calleeReturnValue)
+                                    (update this :frameState FrameStateBuilder''push-3 (JavaKind'getStackKind-1 (Signature''getReturnKind-1 (JavaMethod'''getSignature-1 targetMethod))), calleeReturnValue)
                                 )
                         ]
                             (when (some? merge) => this
@@ -19873,7 +20470,7 @@ ZeroExtendNode'new-4
         (let [
             #_"IntrinsicContext" intrinsic (:intrinsicContext this)
         ]
-            (or (and (nil? intrinsic) (= targetMethod inlinedMethod) (zero? (& (#_"ResolvedJavaMethod" .getModifiers targetMethod) (| Modifier/STATIC Modifier/SYNCHRONIZED))) (BytecodeParser''tryFastInlineAccessor-3 this, targetMethod, args))
+            (or (and (nil? intrinsic) (= targetMethod inlinedMethod) (zero? (& (ResolvedJavaMethod'''getModifiers-1 targetMethod) (| Modifier/STATIC Modifier/SYNCHRONIZED))) (BytecodeParser''tryFastInlineAccessor-3 this, targetMethod, args))
                 (if (and (some? intrinsic) (IntrinsicContext''isCallToOriginal-2 intrinsic, targetMethod))
                     (if (IntrinsicContext''isCompilationRoot-1 intrinsic)
                         (do
@@ -19882,7 +20479,7 @@ ZeroExtendNode'new-4
                             (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/RuntimeConstraint))
                             true
                         )
-                        (and (not (#_"ResolvedJavaMethod" .isNative (:originalMethod intrinsic))) GraalOptions'inlinePartialIntrinsicExitDuringParsing
+                        (and (not (ResolvedJavaMethod''isNative-1 (:originalMethod intrinsic))) GraalOptions'inlinePartialIntrinsicExitDuringParsing
                             (do
                                 ;; Otherwise inline the original method. Any frame state created during the inlining
                                 ;; will exclude frame(s) in the intrinsic method (see FrameStateBuilder.create(int bci)).
@@ -19899,7 +20496,7 @@ ZeroExtendNode'new-4
                                 (IntrinsicContext'new-4 targetMethod, inlinedMethod, intrinsicBytecodeProvider, :CompilationContext'INLINE_DURING_PARSING)
                             )
                     ]
-                        (and (#_"ResolvedJavaMethod" .hasBytecodes inlinedMethod)
+                        (and (ResolvedJavaMethod''hasBytecodes-1 inlinedMethod)
                             (do
                                 (BytecodeParser'notifyBeforeInline-1 inlinedMethod)
                                 (§ ass! this (BytecodeParser''parseAndInlineCallee-4 this, inlinedMethod, args, intrinsic))
@@ -19921,7 +20518,7 @@ ZeroExtendNode'new-4
      ; or nil if there is no InlineInvokeInfo for this method.
      ;;
     (defn- #_"InlineInvokeInfo" BytecodeParser''tryInline-3 [#_"BytecodeParser" this, #_"[ValueNode]" args, #_"ResolvedJavaMethod" targetMethod]
-        (when (or (BytecodeParser''parsingIntrinsic-1 this) (#_"ResolvedJavaMethod" .canBeInlined targetMethod))
+        (when (or (BytecodeParser''parsingIntrinsic-1 this) (ResolvedJavaMethod'''canBeInlined-1 targetMethod))
             (loop [#_"seq" s (seq (:inlineInvokePlugins HotSpot'plugins))]
                 (if (some? s)
                     (let [
@@ -19985,11 +20582,11 @@ ZeroExtendNode'new-4
                         )
                     )
                 )
-            #_"JavaKind" resultType (#_"Signature" .getReturnKind (JavaMethod'''getSignature-1 targetMethod))
-            #_"JavaType" returnType (#_"Signature" .getReturnType (JavaMethod'''getSignature-1 targetMethod), (JavaMethod'''getDeclaringType-1 (:method this)))
+            #_"JavaKind" resultType (Signature''getReturnKind-1 (JavaMethod'''getSignature-1 targetMethod))
+            #_"JavaType" returnType (Signature'''getReturnType-2 (JavaMethod'''getSignature-1 targetMethod), (JavaMethod'''getDeclaringType-1 (:method this)))
             returnType (JavaType'''resolve-2 returnType, (JavaMethod'''getDeclaringType-1 targetMethod))
             _
-                (when (and (= initialInvokeKind :InvokeKind'Special) (not (#_"ResolvedJavaMethod" .isConstructor targetMethod)))
+                (when (and (= initialInvokeKind :InvokeKind'Special) (not (ResolvedJavaMethod'''isConstructor-1 targetMethod)))
                     (§ ass! args (BytecodeParser''emitCheckForInvokeSuperSpecial-2 this, args))
                 )
         ]
@@ -20032,15 +20629,15 @@ ZeroExtendNode'new-4
                                     (§ ass invokeBci BytecodeFrame'UNKNOWN_BCI)
                                 )
                             _
-                                (if (#_"ResolvedJavaMethod" .isStatic originalMethod)
+                                (if (ResolvedJavaMethod''isStatic-1 originalMethod)
                                     (§ ass invokeKind :InvokeKind'Static)
                                     ;; The original call to the intrinsic must have been devirtualized,
                                     ;; otherwise we wouldn't be here.
                                     (§ ass invokeKind :InvokeKind'Special)
                                 )
                             #_"Signature" sig (JavaMethod'''getSignature-1 originalMethod)
-                            _ (§ ass returnType (#_"Signature" .getReturnType sig, (JavaMethod'''getDeclaringType-1 (:method this))))
-                            _ (§ ass resultType (#_"Signature" .getReturnKind sig))
+                            _ (§ ass returnType (Signature'''getReturnType-2 sig, (JavaMethod'''getDeclaringType-1 (:method this))))
+                            _ (§ ass resultType (Signature''getReturnKind-1 sig))
                             _ (§ ass targetMethod originalMethod)
                         ]
                             true
@@ -20059,9 +20656,9 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"this" BytecodeParser''genInvokeStatic-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
-        (if (and (BytecodeParser'callTargetIsResolved-1 target) (or (#_"ResolvedJavaType" .isInitialized (JavaMethod'''getDeclaringType-1 target)) (not GraalOptions'resolveClassBeforeStaticInvoke)))
+        (if (and (BytecodeParser'callTargetIsResolved-1 target) (or (ResolvedJavaType'''isInitialized-1 (JavaMethod'''getDeclaringType-1 target)) (not GraalOptions'resolveClassBeforeStaticInvoke)))
             (let [
-                #_"InvokeNode" invoke (BytecodeParser''appendInvoke-4 this, :InvokeKind'Static, target, (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (JavaMethod'''getSignature-1 target), false)))
+                #_"InvokeNode" invoke (BytecodeParser''appendInvoke-4 this, :InvokeKind'Static, target, (FrameStateBuilder''popArguments-2 (:frameState this), (Signature'''getParameterCount-2 (JavaMethod'''getSignature-1 target), false)))
                 _
                     (when (some? invoke)
                         (§ ass! invoke (InvokeNode''setClassInit-2 invoke, nil))
@@ -20079,7 +20676,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" BytecodeParser''genInvokeInterface-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
         (when (BytecodeParser'callTargetIsResolved-1 target) => (BytecodeParser''handleUnresolvedInvoke-3 this, target, :InvokeKind'Interface)
-            (BytecodeParser''appendInvoke-4 this, :InvokeKind'Interface, target, (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (JavaMethod'''getSignature-1 target), true)))
+            (BytecodeParser''appendInvoke-4 this, :InvokeKind'Interface, target, (FrameStateBuilder''popArguments-2 (:frameState this), (Signature'''getParameterCount-2 (JavaMethod'''getSignature-1 target), true)))
             this
         )
     )
@@ -20095,8 +20692,8 @@ ZeroExtendNode'new-4
                 (when (some? appendix)
                     (§ ass! this (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (ConstantNode'forConstant-2c appendix, (:graph this))))
                 )
-            #_"boolean" hasReceiver (and (not= opcode Bytecodes'INVOKEDYNAMIC) (not (#_"ResolvedJavaMethod" .isStatic target)))
-            #_"[ValueNode]" args (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (JavaMethod'''getSignature-1 target), hasReceiver))
+            #_"boolean" hasReceiver (and (not= opcode Bytecodes'INVOKEDYNAMIC) (not (ResolvedJavaMethod''isStatic-1 target)))
+            #_"[ValueNode]" args (FrameStateBuilder''popArguments-2 (:frameState this), (Signature'''getParameterCount-2 (JavaMethod'''getSignature-1 target), hasReceiver))
             _ (BytecodeParser''appendInvoke-4 this, (if hasReceiver :InvokeKind'Virtual :InvokeKind'Static), target, args)
         ]
             true
@@ -20104,7 +20701,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"this" BytecodeParser''genInvokeDynamic-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
-        (when-not (and (instance? ResolvedJavaMethod target) (BytecodeParser''genDynamicInvokeHelper-4 this, target, (BytecodeStream''readCPI4-1 (:stream this)), Bytecodes'INVOKEDYNAMIC)) => this
+        (when-not (and (satisfies? ResolvedJavaMethod target) (BytecodeParser''genDynamicInvokeHelper-4 this, target, (BytecodeStream''readCPI4-1 (:stream this)), Bytecodes'INVOKEDYNAMIC)) => this
             (BytecodeParser''handleUnresolvedInvoke-3 this, target, :InvokeKind'Static)
         )
     )
@@ -20120,7 +20717,7 @@ ZeroExtendNode'new-4
             ]
                 (or (BytecodeParser''genDynamicInvokeHelper-4 this, target, cpi, Bytecodes'INVOKEVIRTUAL)
                     (let [
-                        #_"[ValueNode]" args (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (JavaMethod'''getSignature-1 target), true))
+                        #_"[ValueNode]" args (FrameStateBuilder''popArguments-2 (:frameState this), (Signature'''getParameterCount-2 (JavaMethod'''getSignature-1 target), true))
                     ]
                         (BytecodeParser''appendInvoke-4 this, :InvokeKind'Virtual, target, args)
                         true
@@ -20142,7 +20739,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" BytecodeParser''genInvokeSpecial-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
         (when (BytecodeParser'callTargetIsResolved-1 target) => (BytecodeParser''handleUnresolvedInvoke-3 this, target, :InvokeKind'Special)
-            (BytecodeParser''appendInvoke-4 this, :InvokeKind'Special, target, (FrameStateBuilder''popArguments-2 (:frameState this), (#_"Signature" .getParameterCount (JavaMethod'''getSignature-1 target), true)))
+            (BytecodeParser''appendInvoke-4 this, :InvokeKind'Special, target, (FrameStateBuilder''popArguments-2 (:frameState this), (Signature'''getParameterCount-2 (JavaMethod'''getSignature-1 target), true)))
             this
         )
     )
@@ -20232,7 +20829,7 @@ ZeroExtendNode'new-4
                     )
                 #_"JavaKind" fieldKind (JavaField''getJavaKind-1 resolvedField)
             ]
-                (if (and (#_"ResolvedJavaField" .isVolatile resolvedField) (satisfies? LoadFieldNode fieldRead))
+                (if (and (ResolvedJavaField''isVolatile-1 resolvedField) (satisfies? LoadFieldNode fieldRead))
                     (let [
                         #_"StateSplitProxyNode" readProxy (BytecodeParser''append-2 this, (StateSplitProxyNode'new-1 fieldRead))
                         this (update this :frameState FrameStateBuilder''push-3 fieldKind, readProxy)
@@ -20247,7 +20844,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"this" BytecodeParser''genGetField-3f [#_"BytecodeParser" this, #_"JavaField" field, #_"ValueNode" receiver]
-        (when (instance? ResolvedJavaField field) => (BytecodeParser''handleUnresolvedLoadField-3 this, field, receiver)
+        (when (satisfies? ResolvedJavaField field) => (BytecodeParser''handleUnresolvedLoadField-3 this, field, receiver)
             (BytecodeParser''genGetField-3r this, field, receiver)
         )
     )
@@ -20262,7 +20859,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"ValueNode" BytecodeParser''processReturnValue-3 [#_"BytecodeParser" this, #_"ValueNode" value, #_"JavaKind" kind]
         (let [
-            #_"JavaKind" returnKind (#_"Signature" .getReturnKind (JavaMethod'''getSignature-1 (:method this)))
+            #_"JavaKind" returnKind (Signature''getReturnKind-1 (JavaMethod'''getSignature-1 (:method this)))
         ]
             (when-not (= kind returnKind) => value
                 ;; sub-word integer
@@ -20318,7 +20915,7 @@ ZeroExtendNode'new-4
     (defn- #_"this" BytecodeParser''synchronizedEpilogue-4 [#_"BytecodeParser" this, #_"int" bci, #_"ValueNode" currentReturnValue, #_"JavaKind" currentReturnValueKind]
         (let [
             this
-                (when (#_"ResolvedJavaMethod" .isSynchronized (:method this)) => this
+                (when (ResolvedJavaMethod''isSynchronized-1 (:method this)) => this
                     (let [
                         this
                             (when (some? currentReturnValue) => this
@@ -20524,7 +21121,7 @@ ZeroExtendNode'new-4
                 )
         ]
             (if genReturn
-                (BytecodeParser''genReturn-3 this, conditionalNode, (JavaKind'getStackKind-1 (#_"Signature" .getReturnKind (JavaMethod'''getSignature-1 (:method this)))))
+                (BytecodeParser''genReturn-3 this, conditionalNode, (JavaKind'getStackKind-1 (Signature''getReturnKind-1 (JavaMethod'''getSignature-1 (:method this)))))
                 (let [
                     this (update this :frameState FrameStateBuilder''push-3 :JavaKind'Int, conditionalNode)
                     this (BytecodeParser''appendGoto-2 this, (BciBlock''getSuccessor-2 trueBlock, 0))
@@ -20695,8 +21292,8 @@ ZeroExtendNode'new-4
         ]
             (condp satisfies? constant
                 JavaType ;; this is a load of class constant which might be unresolved
-                    (when (instance? ResolvedJavaType constant) => (BytecodeParser''handleUnresolvedLoadConstant-2 this, constant)
-                        (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (ConstantNode'forConstant-2c (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, constant), (:graph this)))
+                    (when (satisfies? ResolvedJavaType constant) => (BytecodeParser''handleUnresolvedLoadConstant-2 this, constant)
+                        (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (ConstantNode'forConstant-2c (ConstantReflectionProvider'''asJavaClass-2 HotSpot'constantReflection, constant), (:graph this)))
                     )
                 JavaConstant
                     (update this :frameState FrameStateBuilder''push-3 (JavaConstant'''getJavaKind-1 constant), (ConstantNode'forConstant-2c constant, (:graph this)))
@@ -20892,7 +21489,7 @@ ZeroExtendNode'new-4
             #_"JavaType" type (BytecodeParser''lookupType-3 this, cpi, Bytecodes'CHECKCAST)
             #_"ValueNode" object (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Object)
         ]
-            (when (instance? ResolvedJavaType type) => (BytecodeParser''handleUnresolvedCheckCast-3 this, type, object)
+            (when (satisfies? ResolvedJavaType type) => (BytecodeParser''handleUnresolvedCheckCast-3 this, type, object)
                 (let [
                     #_"TypeReference" checkedType (TypeReference'createTrusted-1 type)
                 ]
@@ -20927,7 +21524,7 @@ ZeroExtendNode'new-4
             #_"JavaType" type (BytecodeParser''lookupType-3 this, cpi, Bytecodes'INSTANCEOF)
             #_"ValueNode" object (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Object)
         ]
-            (when (instance? ResolvedJavaType type) => (BytecodeParser''handleUnresolvedInstanceOf-3 this, type, object)
+            (when (satisfies? ResolvedJavaType type) => (BytecodeParser''handleUnresolvedInstanceOf-3 this, type, object)
                 (let [
                     #_"TypeReference" resolvedType (TypeReference'createTrusted-1 type)
                 ]
@@ -20970,7 +21567,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"this" BytecodeParser''genNewInstance-2t [#_"BytecodeParser" this, #_"JavaType" type]
-        (when (and (instance? ResolvedJavaType type) (#_"ResolvedJavaType" .isInitialized type)) => (BytecodeParser''handleUnresolvedNewInstance-2 this, type)
+        (when (and (satisfies? ResolvedJavaType type) (ResolvedJavaType'''isInitialized-1 type)) => (BytecodeParser''handleUnresolvedNewInstance-2 this, type)
             (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (BytecodeParser''append-2 this, (NewInstanceNode'new-1 type)))
         )
     )
@@ -21000,7 +21597,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" BytecodeParser''genNewPrimitiveArray-2 [#_"BytecodeParser" this, #_"int" typeCode]
         (let [
-            #_"ResolvedJavaType" elementType (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (BytecodeParser'arrayTypeCodeToClass-1 typeCode))
+            #_"ResolvedJavaType" elementType (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, (BytecodeParser'arrayTypeCodeToClass-1 typeCode))
             #_"ValueNode" length (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Int)
         ]
             (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (BytecodeParser''append-2 this, (NewArrayNode'new-2 elementType, length)))
@@ -21012,7 +21609,7 @@ ZeroExtendNode'new-4
             #_"JavaType" type (BytecodeParser''lookupType-3 this, cpi, Bytecodes'ANEWARRAY)
             #_"ValueNode" length (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Int)
         ]
-            (when (instance? ResolvedJavaType type) => (BytecodeParser''handleUnresolvedNewObjectArray-3 this, type, length)
+            (when (satisfies? ResolvedJavaType type) => (BytecodeParser''handleUnresolvedNewObjectArray-3 this, type, length)
                 (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (BytecodeParser''append-2 this, (NewArrayNode'new-2 type, length)))
             )
         )
@@ -21032,7 +21629,7 @@ ZeroExtendNode'new-4
         (let [
             #_"ValueNode" receiver (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Object)
         ]
-            (when (instance? ResolvedJavaField field) => (BytecodeParser''handleUnresolvedStoreField-4 this, field, value, receiver)
+            (when (satisfies? ResolvedJavaField field) => (BytecodeParser''handleUnresolvedStoreField-4 this, field, value, receiver)
                 (or
                     (loop-when [#_"seq" s (seq (:nodePlugins HotSpot'plugins))] (some? s)
                         (when (NodePlugin'''handleStoreField-5 (first s), this, receiver, field, value) => (recur (next s))
@@ -21041,7 +21638,7 @@ ZeroExtendNode'new-4
                     )
                     (let [
                         this
-                            (when (and (#_"ResolvedJavaField" .isFinal field) (#_"ResolvedJavaMethod" .isConstructor (:method this))) => this
+                            (when (and (ResolvedJavaField''isFinal-1 field) (ResolvedJavaMethod'''isConstructor-1 (:method this))) => this
                                 (assoc this :finalBarrierRequired true)
                             )
                     ]
@@ -21061,15 +21658,15 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"ResolvedJavaField" BytecodeParser''resolveStaticFieldAccess-3 [#_"BytecodeParser" this, #_"JavaField" field, #_"ValueNode" value]
-        (when (instance? ResolvedJavaField field)
-            (when (#_"ResolvedJavaType" .isInitialized (JavaField'''getDeclaringType-1 field))
+        (when (satisfies? ResolvedJavaField field)
+            (when (ResolvedJavaType'''isInitialized-1 (JavaField'''getDeclaringType-1 field))
                 (§ return field)
             )
             ;; Static fields have initialization semantics but may be safely accessed under certain
             ;; conditions while the class is being initialized. Executing in the clinit or init of
             ;; classes which are subtypes of the field holder are sure to be running in a context
             ;; where the access is safe.
-            (when (and (#_"ResolvedJavaType" .isAssignableFrom (JavaField'''getDeclaringType-1 field), (JavaMethod'''getDeclaringType-1 (:method this))) (or (#_"ResolvedJavaMethod" .isClassInitializer (:method this)) (#_"ResolvedJavaMethod" .isConstructor (:method this))))
+            (when (and (ResolvedJavaType'''isAssignableFrom-2 (JavaField'''getDeclaringType-1 field), (JavaMethod'''getDeclaringType-1 (:method this))) (or (ResolvedJavaMethod'''isClassInitializer-1 (:method this)) (ResolvedJavaMethod'''isConstructor-1 (:method this))))
                 (§ return field)
             )
         )
@@ -21088,7 +21685,7 @@ ZeroExtendNode'new-4
                 (or
                     ;; Javac does not allow the use of "$assertionsDisabled" for a field name as Eclipse does.
                     ;; In this case a suffix is added to the generated field.
-                    (when (and (#_"ResolvedJavaField" .isSynthetic resolvedField) (#_"String" .startsWith (JavaField'''getName-1 resolvedField), "$assertionsDisabled"))
+                    (when (and (ResolvedJavaField'''isSynthetic-1 resolvedField) (#_"String" .startsWith (JavaField'''getName-1 resolvedField), "$assertionsDisabled"))
                         (update this :frameState FrameStateBuilder''push-3 (JavaField''getJavaKind-1 field), (ConstantNode'forBoolean-2 true, (:graph this)))
                     )
                     (loop-when [#_"seq" s (seq (:nodePlugins HotSpot'plugins))] (some? s)
@@ -21483,12 +22080,12 @@ ZeroExtendNode'new-4
             (let [
                 f'local #(let [#_"ValueNode" node (nth (:locals (:frameState this)) %)] (when-not (= node :FrameState'TWO_SLOT_MARKER) node))
                 #_"ResolvedJavaMethod" o'method (:originalMethod (:intrinsicContext this))
-                #_"int" m (#_"ResolvedJavaMethod" .getMaxLocals o'method)
+                #_"int" m (ResolvedJavaMethod'''getMaxLocals-1 o'method)
                 #_"ValueNode*" locals
-                    (if (or (= (count (:locals (:frameState this))) m) (#_"ResolvedJavaMethod" .isNative o'method))
+                    (if (or (= (count (:locals (:frameState this))) m) (ResolvedJavaMethod''isNative-1 o'method))
                         (map f'local (range m))
                         (let [
-                            #_"int" n (#_"Signature" .getParameterCount (JavaMethod'''getSignature-1 o'method), (not (#_"ResolvedJavaMethod" .isStatic o'method)))
+                            #_"int" n (Signature'''getParameterCount-2 (JavaMethod'''getSignature-1 o'method), (not (ResolvedJavaMethod''isStatic-1 o'method)))
                         ]
                             (concat (map f'local (range n)) (repeat (- m n) nil))
                         )
@@ -21500,8 +22097,8 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"ValueNode" BytecodeParser''synchronizedObject-3 [#_"BytecodeParser" this, #_"FrameStateBuilder" state, #_"ResolvedJavaMethod" target]
-        (if (#_"ResolvedJavaMethod" .isStatic target)
-            (ConstantNode'forConstant-2c (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (JavaMethod'''getDeclaringType-1 target)), (:graph this))
+        (if (ResolvedJavaMethod''isStatic-1 target)
+            (ConstantNode'forConstant-2c (ConstantReflectionProvider'''asJavaClass-2 HotSpot'constantReflection, (JavaMethod'''getDeclaringType-1 target)), (:graph this))
             (nth (:locals state) 0)
         )
     )
@@ -21513,10 +22110,10 @@ ZeroExtendNode'new-4
             this (assoc this :firstInstructions {})
             this (assoc this :entryStates {})
             this
-                (when-not (#_"ResolvedJavaMethod" .isStatic (:method this)) => this
+                (when-not (ResolvedJavaMethod''isStatic-1 (:method this)) => this
                     (assoc this :originalReceiver (nth (:locals startFrameState) 0))
                 )
-            this (assoc this :liveness (LocalLiveness'compute-4 (:stream this), (:blocks (:blockMap this)), (#_"ResolvedJavaMethod" .getMaxLocals (:method this)), (:nextLoop (:blockMap this))))
+            this (assoc this :liveness (LocalLiveness'compute-4 (:stream this), (:blocks (:blockMap this)), (ResolvedJavaMethod'''getMaxLocals-1 (:method this)), (:nextLoop (:blockMap this))))
             this (assoc this :lastInstr startInstruction)
             this (assoc this :frameState startFrameState)
             this (update this :stream BytecodeStream''setBCI-2 0)
@@ -21527,7 +22124,7 @@ ZeroExtendNode'new-4
                         #_"StartNode" startNode (:start (:graph this))
                     ]
                         (cond
-                            (#_"ResolvedJavaMethod" .isSynchronized (:method this))
+                            (ResolvedJavaMethod''isSynchronized-1 (:method this))
                                 (let [
                                     _ (§ ass! startNode (StateSplit'''setStateAfter-2 startNode, (BytecodeParser''createFrameState-3 this, BytecodeFrame'BEFORE_BCI, startNode)))
                                 ]
@@ -21552,7 +22149,7 @@ ZeroExtendNode'new-4
                     )
                 )
             this
-                (when (#_"ResolvedJavaMethod" .isSynchronized (:method this)) => this
+                (when (ResolvedJavaMethod''isSynchronized-1 (:method this)) => this
                     ;; add a monitor enter to the start block
                     (let [
                         this (assoc this :methodSynchronizedObject (BytecodeParser''synchronizedObject-3 this, (:frameState this), (:method this)))
@@ -22835,7 +23432,7 @@ ZeroExtendNode'new-4
                 #_"ClassfileBytecode" code (first s)
                 #_"ResolvedJavaMethod" method (Bytecode'''getMethod-1 code)
             ]
-                (when (and (= (JavaMethod'''getName-1 method) name) (= (#_"Signature" .toMethodDescriptor (JavaMethod'''getSignature-1 method)) descriptor)) => (recur (next s))
+                (when (and (= (JavaMethod'''getName-1 method) name) (= (Signature''toMethodDescriptor-1 (JavaMethod'''getSignature-1 method)) descriptor)) => (recur (next s))
                     code
                 )
             )
@@ -22955,7 +23552,7 @@ ZeroExtendNode'new-4
         (locking this
             (or (get (:classfiles this) c)
                 (let [
-                    #_"ResolvedJavaType" type (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, c)
+                    #_"ResolvedJavaType" type (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, c)
                     #_"InputStream" in (ClassfileBytecodeProvider'getClassfileAsStream-1 c)
                 ]
                     (when (some? in) => (throw! (str "NoClassDefFoundError: " (#_"Class" .getName c)))
@@ -22998,7 +23595,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"Classfile" classfile (ClassfileBytecodeProvider''getClassfile-2 this, (ClassfileBytecodeProvider''resolveToClass-2 this, (JavaType'''getName-1 (JavaMethod'''getDeclaringType-1 method))))
             ]
-                (Classfile''getCode-3 classfile, (JavaMethod'''getName-1 method), (#_"Signature" .toMethodDescriptor (JavaMethod'''getSignature-1 method)))
+                (Classfile''getCode-3 classfile, (JavaMethod'''getName-1 method), (Signature''toMethodDescriptor-1 (JavaMethod'''getSignature-1 method)))
             )
         )
     )
@@ -23051,7 +23648,7 @@ ZeroExtendNode'new-4
         (let [
             #_"ResolvedJavaMethod" method (MethodsCache''lookup-4 (ClassfileBytecodeProvider''getMethods-2 this, type), type, name, descriptor)
         ]
-            (when (and (some? method) (= (#_"ResolvedJavaMethod" .isStatic method) static?))
+            (when (and (some? method) (= (ResolvedJavaMethod''isStatic-1 method) static?))
                 method
             )
         )
@@ -23091,10 +23688,10 @@ ZeroExtendNode'new-4
 
     (defn #_"ResolvedJavaMethod" ClassfileConstant'resolveMethod-5 [#_"ClassfileBytecodeProvider" context, #_"ResolvedJavaType" type, #_"String" name, #_"String" descriptor, #_"boolean" static?]
         (or (ClassfileBytecodeProvider''findMethod-5 context, type, name, descriptor, static?)
-            (when-not (or (#_"ResolvedJavaType" .isJavaLangObject type) (#_"ResolvedJavaType" .isInterface type))
-                (ClassfileConstant'resolveMethod-5 context, (#_"ResolvedJavaType" .getSuperclass type), name, descriptor, static?)
+            (when-not (or (ResolvedJavaType''isJavaLangObject-1 type) (ResolvedJavaType''isInterface-1 type))
+                (ClassfileConstant'resolveMethod-5 context, (ResolvedJavaType'''getSuperclass-1 type), name, descriptor, static?)
             )
-            (loop-when [#_"seq" s (seq (#_"ResolvedJavaType" .getInterfaces type))] (some? s)
+            (loop-when [#_"seq" s (seq (ResolvedJavaType'''getInterfaces-1 type))] (some? s)
                 (or (ClassfileConstant'resolveMethod-5 context, (first s), name, descriptor, static?)
                     (recur (next s))
                 )
@@ -23104,10 +23701,10 @@ ZeroExtendNode'new-4
 
     (defn #_"ResolvedJavaField" ClassfileConstant'resolveField-5 [#_"ClassfileBytecodeProvider" context, #_"ResolvedJavaType" type, #_"String" name, #_"String" fieldType, #_"boolean" static?]
         (or (ClassfileBytecodeProvider''findField-5 context, type, name, fieldType, static?)
-            (when-not (or (#_"ResolvedJavaType" .isJavaLangObject type) (#_"ResolvedJavaType" .isInterface type))
-                (ClassfileConstant'resolveField-5 context, (#_"ResolvedJavaType" .getSuperclass type), name, fieldType, static?)
+            (when-not (or (ResolvedJavaType''isJavaLangObject-1 type) (ResolvedJavaType''isInterface-1 type))
+                (ClassfileConstant'resolveField-5 context, (ResolvedJavaType'''getSuperclass-1 type), name, fieldType, static?)
             )
-            (loop-when [#_"seq" s (seq (#_"ResolvedJavaType" .getInterfaces type))] (some? s)
+            (loop-when [#_"seq" s (seq (ResolvedJavaType'''getInterfaces-1 type))] (some? s)
                 (or (ClassfileConstant'resolveField-5 context, (first s), name, fieldType, static?)
                     (recur (next s))
                 )
@@ -23135,7 +23732,7 @@ ZeroExtendNode'new-4
 
     (defn #_"ResolvedJavaType" ClassRef''resolve-2 [#_"ClassRef" this, #_"ClassfileConstantPool" cp]
         (when (nil? (:type this))
-            (§ ass! this (assoc this :type (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (ClassfileBytecodeProvider''resolveToClass-2 (:context cp), (:value (ClassfileConstantPool''get-3 cp, Utf8'iface, (:nameIndex this)))))))
+            (§ ass! this (assoc this :type (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, (ClassfileBytecodeProvider''resolveToClass-2 (:context cp), (:value (ClassfileConstantPool''get-3 cp, Utf8'iface, (:nameIndex this)))))))
         )
         (:type this)
     )
@@ -23184,7 +23781,7 @@ ZeroExtendNode'new-4
                             (when (nil? (:method this))
                                 (throw! (str "NoSuchMethodError: " (JavaType''toJavaName-1 cls) "." name type))
                             )
-                            (when (or (not (#_"ResolvedJavaMethod" .isPublic (:method this))) (not (or (#_"ResolvedJavaType" .isInterface (JavaMethod'''getDeclaringType-1 (:method this))) (#_"ResolvedJavaType" .isJavaLangObject (JavaMethod'''getDeclaringType-1 (:method this))))))
+                            (when (or (not (ResolvedJavaMethod''isPublic-1 (:method this))) (not (or (ResolvedJavaType''isInterface-1 (JavaMethod'''getDeclaringType-1 (:method this))) (ResolvedJavaType''isJavaLangObject-1 (JavaMethod'''getDeclaringType-1 (:method this))))))
                                 (throw! (str "IncompatibleClassChangeError: cannot invokeinterface " (:method this)))
                             )
                         )
@@ -24293,10 +24890,10 @@ ZeroExtendNode'new-4
     (defm ObjectEqualsOp CompareOp
         (#_"LogicNode" CompareOp'''canonicalizeSymmetricConstant-6 [#_"ObjectEqualsOp" this, #_"Integer" smallestCompareWidth, #_"CanonicalCondition" condition, #_"Constant" constant, #_"ValueNode" node, #_"boolean" mirrored?]
             (let [
-                #_"ResolvedJavaType" type (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, constant)
+                #_"ResolvedJavaType" type (ConstantReflectionProvider'''asJavaType-2 HotSpot'constantReflection, constant)
             ]
                 (if (and (some? type) (satisfies? GetClassNode node))
-                    (if (and (not (#_"ResolvedJavaType" .isPrimitive type)) (or (#_"ResolvedJavaType" .isConcrete type) (JavaType''isArray-1 type)))
+                    (if (and (not (ResolvedJavaType'''isPrimitive-1 type)) (not (and (ResolvedJavaType''isAbstract-1 type) (not (JavaType''isArray-1 type)))))
                         (InstanceOfNode'create-2 (TypeReference'createExactTrusted-1 type), (:object node))
                         (LogicConstantNode'forBoolean-1 false)
                     )
@@ -24827,7 +25424,7 @@ ZeroExtendNode'new-4
         (if (satisfies? PrimitiveConstant lt)
             (Condition''foldCondition-3p this, lt, rt)
             (let [
-                #_"Boolean" equal (#_"ConstantReflectionProvider" .constantEquals HotSpot'constantReflection, lt, rt)
+                #_"Boolean" equal (ConstantReflectionProvider'''constantEquals-3 HotSpot'constantReflection, lt, rt)
             ]
                 (when (some? equal) => (throw! (str "could not fold " lt " " this " " rt))
                     (condp = this
@@ -30191,14 +30788,14 @@ ZeroExtendNode'new-4
                 (do
                     (when (nil? (:staticFields this))
                         ;; racy initialization is safe since staticFields is volatile
-                        (§ ass! this (assoc this :staticFields (FieldsCache'createFieldMap-1 (#_"ResolvedJavaType" .getStaticFields type))))
+                        (§ ass! this (assoc this :staticFields (FieldsCache'createFieldMap-1 (ResolvedJavaType'''getStaticFields-1 type))))
                     )
                     (get (:staticFields this) key)
                 )
                 (do
                     (when (nil? (:instanceFields this))
                         ;; racy initialization is safe since instanceFields is volatile
-                        (§ ass! this (assoc this :instanceFields (FieldsCache'createFieldMap-1 (#_"ResolvedJavaType" .getInstanceFields type, false))))
+                        (§ ass! this (assoc this :instanceFields (FieldsCache'createFieldMap-1 (ResolvedJavaType'''getInstanceFields-2 type, false))))
                     )
                     (get (:instanceFields this) key)
                 )
@@ -30876,10 +31473,10 @@ ZeroExtendNode'new-4
 
     (defn- #_"JavaType" ForeignCallLinkage'asJavaType-1 [#_"Class" type]
         (let [
-            #_"ResolvedJavaType" javaType (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, type)
+            #_"ResolvedJavaType" javaType (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, type)
         ]
             (when (WordTypes'isWord-1j javaType) => javaType
-                (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, (JavaKind'toJavaClass-1 :JavaKind'Long))
+                (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, (JavaKind'toJavaClass-1 :JavaKind'Long))
             )
         )
     )
@@ -31479,18 +32076,18 @@ ZeroExtendNode'new-4
         (let [
             #_"ResolvedJavaMethod" method (FrameStateBuilder''getMethod-1 this)
             [this #_"int" i #_"int" j]
-                (when-not (#_"ResolvedJavaMethod" .isStatic method) => [this 0 0]
+                (when-not (ResolvedJavaMethod''isStatic-1 method) => [this 0 0]
                     ;; set the receiver
                     [(update this :locals assoc' 0 (nth arguments 0)) 1 1]
                 )
             #_"Signature" sig (JavaMethod'''getSignature-1 method)
         ]
-            (loop-when [this this i i j j #_"int" k 0] (< k (#_"Signature" .getParameterCount sig, false)) => this
+            (loop-when [this this i i j j #_"int" k 0] (< k (Signature'''getParameterCount-2 sig, false)) => this
                 (let [
                     this (update this :locals assoc' j (nth arguments i))
                     j (inc j)
                     [this j]
-                        (when (JavaKind'needsTwoSlots-1 (#_"Signature" .getParameterKind sig, k)) => [this j]
+                        (when (JavaKind'needsTwoSlots-1 (Signature''getParameterKind-2 sig, k)) => [this j]
                             [(update this :locals assoc' j :FrameState'TWO_SLOT_MARKER) (inc j)]
                         )
                 ]
@@ -31505,7 +32102,7 @@ ZeroExtendNode'new-4
             #_"ResolvedJavaMethod" method (FrameStateBuilder''getMethod-1 this)
             #_"ResolvedJavaType" originalType (JavaMethod'''getDeclaringType-1 method)
             [this #_"int" i #_"int" j]
-                (when-not (#_"ResolvedJavaMethod" .isStatic method) => [this 0 0]
+                (when-not (ResolvedJavaMethod''isStatic-1 method) => [this 0 0]
                     (let [
                         #_"Stamp" receiverStamp
                             (or (Plugins''getOverridingStamp-4 HotSpot'plugins, (:parser this), originalType, true)
@@ -31518,9 +32115,9 @@ ZeroExtendNode'new-4
                 )
             #_"Signature" sig (JavaMethod'''getSignature-1 method)
         ]
-            (loop-when [this this i i j j #_"int" k 0] (< k (#_"Signature" .getParameterCount sig, false)) => this
+            (loop-when [this this i i j j #_"int" k 0] (< k (Signature'''getParameterCount-2 sig, false)) => this
                 (let [
-                    #_"JavaType" type (JavaType'''resolve-2 (#_"Signature" .getParameterType sig, k, originalType), originalType)
+                    #_"JavaType" type (JavaType'''resolve-2 (Signature'''getParameterType-3 sig, k, originalType), originalType)
                     #_"JavaKind" kind (JavaType'''getJavaKind-1 type)
                     #_"Stamp" stamp
                         (or (Plugins''getOverridingStamp-4 HotSpot'plugins, (:parser this), type, false)
@@ -32955,7 +33552,7 @@ ZeroExtendNode'new-4
         (let [
             #_"int" n (loop-when-recur [n 1 #_"seq" s (seq args)] (some? s) [(if (satisfies? ConstantNode (first s)) (inc n) n) (next s)] => n)
         ]
-            (<= (count (#_"ResolvedJavaMethod" .getCode method)) (* n GraalOptions'trivialInliningSize))
+            (<= (count (ResolvedJavaMethod'''getCode-1 method)) (* n GraalOptions'trivialInliningSize))
         )
     )
 
@@ -32982,12 +33579,12 @@ ZeroExtendNode'new-4
 
     (defm InlineDuringParsingPlugin InlineInvokePlugin
         (#_"InlineInvokeInfo" InlineInvokePlugin'''shouldInlineInvoke-4 [#_"InlineDuringParsingPlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode*" args]
-            (when (and (#_"ResolvedJavaMethod" .hasBytecodes method) (#_"ResolvedJavaType" .isLinked (JavaMethod'''getDeclaringType-1 method)) (#_"ResolvedJavaMethod" .canBeInlined method))
+            (when (and (ResolvedJavaMethod''hasBytecodes-1 method) (ResolvedJavaType'''isLinked-1 (JavaMethod'''getDeclaringType-1 method)) (ResolvedJavaMethod'''canBeInlined-1 method))
                 ;; test force inlining first
                 (cond
-                    (#_"ResolvedJavaMethod" .shouldBeInlined method)
+                    (ResolvedJavaMethod'''shouldBeInlined-1 method)
                         (InlineInvokeInfo'createStandardInlineInfo-1 method)
-                    (and (not (#_"ResolvedJavaMethod" .isSynchronized method))
+                    (and (not (ResolvedJavaMethod''isSynchronized-1 method))
                         (InlineDuringParsingPlugin'checkSize-3 method, args, (:graph parser))
                         (InlineDuringParsingPlugin'checkInliningDepth-1 parser)
                     )
@@ -33223,13 +33820,13 @@ ZeroExtendNode'new-4
         (cond
             (nil? method)
                 "the method is not resolved"
-            (#_"ResolvedJavaMethod" .isNative method)
+            (ResolvedJavaMethod''isNative-1 method)
                 "it is a non-intrinsic native method"
-            (#_"ResolvedJavaMethod" .isAbstract method)
+            (ResolvedJavaMethod''isAbstract-1 method)
                 "it is an abstract method"
-            (not (#_"ResolvedJavaType" .isInitialized (JavaMethod'''getDeclaringType-1 method)))
+            (not (ResolvedJavaType'''isInitialized-1 (JavaMethod'''getDeclaringType-1 method)))
                 "the method's class is not initialized"
-            (not (#_"ResolvedJavaMethod" .canBeInlined method))
+            (not (ResolvedJavaMethod'''canBeInlined-1 method))
                 "it is marked non-inlinable"
             (< GraalOptions'maximumRecursiveInlining (InliningData''countRecursiveInlining-2 this, method))
                 "it exceeds the maximum recursive inlining depth"
@@ -33261,7 +33858,7 @@ ZeroExtendNode'new-4
                 #_"ResolvedJavaMethod" targetMethod (:targetMethod callTarget)
             ]
                 (cond
-                    (or (= (:invokeKind callTarget) :InvokeKind'Special) (#_"ResolvedJavaMethod" .canBeStaticallyBound targetMethod))
+                    (or (= (:invokeKind callTarget) :InvokeKind'Special) (ResolvedJavaMethod'''canBeStaticallyBound-1 targetMethod))
                         (InliningData''getExactInlineInfo-3 this, invoke, targetMethod)
                     (satisfies? ObjectStamp (:stamp (MethodCallTargetNode''receiver-1 callTarget)))
                         (let [
@@ -33278,13 +33875,13 @@ ZeroExtendNode'new-4
                                             (let [
                                                 #_"ResolvedJavaType" receiverType (:type receiverStamp)
                                             ]
-                                                (when (and (some? receiverType) (#_"ResolvedJavaType" .isAssignableFrom holder, receiverType)) => holder
+                                                (when (and (some? receiverType) (ResolvedJavaType'''isAssignableFrom-2 holder, receiverType)) => holder
                                                     (let [
                                                         holder receiverType
                                                     ]
                                                         (when (AbstractObjectStamp''isExactType-1 receiverStamp)
                                                             (let [
-                                                                #_"ResolvedJavaMethod" resolvedMethod (#_"ResolvedJavaType" .resolveConcreteMethod holder, targetMethod, contextType)
+                                                                #_"ResolvedJavaMethod" resolvedMethod (ResolvedJavaType''resolveConcreteMethod-3 holder, targetMethod, contextType)
                                                             ]
                                                                 (when (some? resolvedMethod)
                                                                     (§ return (InliningData''getExactInlineInfo-3 this, invoke, resolvedMethod))
@@ -33300,7 +33897,7 @@ ZeroExtendNode'new-4
                                     (when (JavaType''isArray-1 holder)
                                         ;; arrays can be treated as objects
                                         (let [
-                                            #_"ResolvedJavaMethod" resolvedMethod (#_"ResolvedJavaType" .resolveConcreteMethod holder, targetMethod, contextType)
+                                            #_"ResolvedJavaMethod" resolvedMethod (ResolvedJavaType''resolveConcreteMethod-3 holder, targetMethod, contextType)
                                         ]
                                             (when (some? resolvedMethod)
                                                 (InliningData''getExactInlineInfo-3 this, invoke, resolvedMethod)
@@ -36699,7 +37296,7 @@ ZeroExtendNode'new-4
 
     (defn #_"this" LIRGenerator''emitDeoptimizeCaller-3 [#_"LIRGenerator" this, #_"DeoptimizationAction" action, #_"DeoptimizationReason" reason]
         (let [
-            #_"Value" actionAndReason (LIRGenerator''emitJavaConstant-2 this, (#_"MetaAccessProvider" .encodeDeoptActionAndReason HotSpot'metaAccess, action, reason, 0))
+            #_"Value" actionAndReason (LIRGenerator''emitJavaConstant-2 this, (MetaAccessProvider'''encodeDeoptActionAndReason-4 HotSpot'metaAccess, action, reason, 0))
             #_"Value" nullValue (LIRGenerator''emitConstant-3 this, (ValueKind'reference-1 :WordSize'64bits), JavaConstant'NULL_POINTER)
             this (LIRGenerator''moveDeoptValuesToThread-3 this, actionAndReason, nullValue)
         ]
@@ -42301,7 +42898,7 @@ ZeroExtendNode'new-4
                     #_"TypeReference" constantType (StampTool'typeReferenceOrNull-1 (:stamp object))
                 ]
                     (when (and (some? constantType) (:exactReference constantType)) => read
-                        (ConstantNode'forConstant-2s (:stamp read), (#_"ConstantReflectionProvider" .asObjectHub HotSpot'constantReflection, (:type constantType)))
+                        (ConstantNode'forConstant-2s (:stamp read), (ConstantReflectionProvider'''asObjectHub-2 HotSpot'constantReflection, (:type constantType)))
                     )
                 )
             )
@@ -42315,7 +42912,7 @@ ZeroExtendNode'new-4
                     #_"TypeReference" constantType (StampTool'typeReferenceOrNull-1 (:stamp object))
                 ]
                     (when (and (some? constantType) (:exactReference constantType)) => read
-                        (ConstantNode'forConstant-2s (:stamp read), (HotSpotConstant'''compress-1 (#_"ConstantReflectionProvider" .asObjectHub HotSpot'constantReflection, (:type constantType))))
+                        (ConstantNode'forConstant-2s (:stamp read), (HotSpotConstant'''compress-1 (ConstantReflectionProvider'''asObjectHub-2 HotSpot'constantReflection, (:type constantType))))
                     )
                 )
             )
@@ -45663,7 +46260,7 @@ ZeroExtendNode'new-4
     (defn- #_"{MethodKey ResolvedJavaMethod}" MethodsCache'createMethodMap-1 [#_"ResolvedJavaMethod*" methods]
         (into {}
             (for [#_"ResolvedJavaMethod" m methods]
-                [(MethodKey'new-2 (JavaMethod'''getName-1 m), (#_"Signature" .toMethodDescriptor (JavaMethod'''getSignature-1 m))) m]
+                [(MethodKey'new-2 (JavaMethod'''getName-1 m), (Signature''toMethodDescriptor-1 (JavaMethod'''getSignature-1 m))) m]
             )
         )
     )
@@ -45675,19 +46272,19 @@ ZeroExtendNode'new-4
             (case name
                 "<clinit>"
                     ;; no need to cache <clinit> as it will be looked up at most once
-                    (#_"ResolvedJavaType" .getClassInitializer type)
+                    (ResolvedJavaType'''getClassInitializer-1 type)
                 "<init>"
                     (do
                         (when (nil? (:constructors this))
                             ;; racy initialization is safe since instanceFields is volatile
-                            (§ ass! this (assoc this :constructors (MethodsCache'createMethodMap-1 (#_"ResolvedJavaType" .getDeclaredConstructors type))))
+                            (§ ass! this (assoc this :constructors (MethodsCache'createMethodMap-1 (ResolvedJavaType'''getDeclaredConstructors-1 type))))
                         )
                         (get (:constructors this) key)
                     )
                 (do
                     (when (nil? (:methods this))
                         ;; racy initialization is safe since 'methods' is volatile
-                        (§ ass! this (assoc this :methods (MethodsCache'createMethodMap-1 (#_"ResolvedJavaType" .getDeclaredMethods type))))
+                        (§ ass! this (assoc this :methods (MethodsCache'createMethodMap-1 (ResolvedJavaType'''getDeclaredMethods-1 type))))
                     )
                     (get (:methods this) key)
                 )
@@ -47163,7 +47760,7 @@ ZeroExtendNode'new-4
 
     #_unused
     (defn #_"JavaKind" MethodCallTargetNode''returnKind-1 [#_"MethodCallTargetNode" this]
-        (#_"Signature" .getReturnKind (JavaMethod'''getSignature-1 (:targetMethod this)))
+        (Signature''getReturnKind-1 (JavaMethod'''getSignature-1 (:targetMethod this)))
     )
 
     (defn #_"InvokeNode" MethodCallTargetNode''invoke-1 [#_"MethodCallTargetNode" this]
@@ -47174,7 +47771,7 @@ ZeroExtendNode'new-4
         (cond
             (:direct invokeKind) nil
             ;; check for trivial cases (e.g. final methods, nonvirtual methods)
-            (#_"ResolvedJavaMethod" .canBeStaticallyBound targetMethod) targetMethod
+            (ResolvedJavaMethod'''canBeStaticallyBound-1 targetMethod) targetMethod
             :else (MethodCallTargetNode'devirtualizeCall-4 invokeKind, targetMethod, contextType, (:stamp receiver))
         )
     )
@@ -47192,9 +47789,9 @@ ZeroExtendNode'new-4
             (when (some? type)
                 ;; either the holder class is exact, or the receiver object has an exact type, or it's an array type
                 (let [
-                    #_"ResolvedJavaMethod" resolvedMethod (#_"ResolvedJavaType" .resolveConcreteMethod (:type type), targetMethod, contextType)
+                    #_"ResolvedJavaMethod" resolvedMethod (ResolvedJavaType''resolveConcreteMethod-3 (:type type), targetMethod, contextType)
                 ]
-                    (when (and (some? resolvedMethod) (or (#_"ResolvedJavaMethod" .canBeStaticallyBound resolvedMethod) (:exactReference type) (JavaType''isArray-1 (:type type))))
+                    (when (and (some? resolvedMethod) (or (ResolvedJavaMethod'''canBeStaticallyBound-1 resolvedMethod) (:exactReference type) (JavaType''isArray-1 (:type type))))
                         resolvedMethod
                     )
                 )
@@ -47429,7 +48026,7 @@ ZeroExtendNode'new-4
     (defm DeoptimizeNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"DeoptimizeNode" this, #_"LIRBuilder" builder]
             (let [
-                #_"Value" actionAndReason (LIRGenerator''emitJavaConstant-2 (:gen builder), (#_"MetaAccessProvider" .encodeDeoptActionAndReason HotSpot'metaAccess, (:action this), (:reason this), (:debugId this)))
+                #_"Value" actionAndReason (LIRGenerator''emitJavaConstant-2 (:gen builder), (MetaAccessProvider'''encodeDeoptActionAndReason-4 HotSpot'metaAccess, (:action this), (:reason this), (:debugId this)))
                 #_"Value" speculationValue (LIRGenerator''emitJavaConstant-2 (:gen builder), (:speculation this))
             ]
                 (update builder :gen LIRGenerator''emitDeoptimize-3 actionAndReason, speculationValue)
@@ -47439,7 +48036,7 @@ ZeroExtendNode'new-4
 
     (defm DeoptimizeNode AbstractDeoptimizeNode
         (#_"ValueNode" AbstractDeoptimizeNode'''getActionAndReason-1 [#_"DeoptimizeNode" this]
-            (ConstantNode'forConstant-2c (#_"MetaAccessProvider" .encodeDeoptActionAndReason HotSpot'metaAccess, (:action this), (:reason this), (:debugId this)), (:graph this))
+            (ConstantNode'forConstant-2c (MetaAccessProvider'''encodeDeoptActionAndReason-4 HotSpot'metaAccess, (:action this), (:reason this), (:debugId this)), (:graph this))
         )
 
         (#_"ValueNode" AbstractDeoptimizeNode'''getSpeculation-1 [#_"DeoptimizeNode" this]
@@ -47488,7 +48085,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"JavaConstant" constant (ValueNode''asJavaConstant-1 (:actionAndReason this))
                 ]
-                    (DeoptimizeNode'new-5 (#_"MetaAccessProvider" .decodeDeoptAction HotSpot'metaAccess, constant), (#_"MetaAccessProvider" .decodeDeoptReason HotSpot'metaAccess, constant), (#_"MetaAccessProvider" .decodeDebugId HotSpot'metaAccess, constant), (ValueNode''asJavaConstant-1 (:speculation this)), (:stateBefore this))
+                    (DeoptimizeNode'new-5 (MetaAccessProvider'''decodeDeoptAction-2 HotSpot'metaAccess, constant), (MetaAccessProvider'''decodeDeoptReason-2 HotSpot'metaAccess, constant), (MetaAccessProvider'''decodeDebugId-2 HotSpot'metaAccess, constant), (ValueNode''asJavaConstant-1 (:speculation this)), (:stateBefore this))
                 )
             )
         )
@@ -48510,7 +49107,7 @@ ZeroExtendNode'new-4
     (defn- #_"boolean" IfNode'valuesDistinct-3 [#_"SimplifierTool" tool, #_"ValueNode" a, #_"ValueNode" b]
         (when (and (satisfies? ConstantNode a) (satisfies? ConstantNode b))
             (let [
-                #_"Boolean" equal (#_"ConstantReflectionProvider" .constantEquals HotSpot'constantReflection, (:value a), (:value b))
+                #_"Boolean" equal (ConstantReflectionProvider'''constantEquals-3 HotSpot'constantReflection, (:value a), (:value b))
             ]
                 (when (some? equal)
                     (§ return (not (#_"Boolean" .booleanValue equal)))
@@ -48530,10 +49127,10 @@ ZeroExtendNode'new-4
                     InstanceOfNode
                         ;; Two instanceof on the same value with mutually exclusive types.
                         (and (= (Unary'''getValue-1 a) (Unary'''getValue-1 b))
-                             (not (#_"ResolvedJavaType" .isInterface (:type (InstanceOfNode''type-1 a))))
-                             (not (#_"ResolvedJavaType" .isInterface (:type (InstanceOfNode''type-1 b))))
-                             (not (#_"ResolvedJavaType" .isAssignableFrom (:type (InstanceOfNode''type-1 a)), (:type (InstanceOfNode''type-1 b))))
-                             (not (#_"ResolvedJavaType" .isAssignableFrom (:type (InstanceOfNode''type-1 b)), (:type (InstanceOfNode''type-1 a))))
+                             (not (ResolvedJavaType''isInterface-1 (:type (InstanceOfNode''type-1 a))))
+                             (not (ResolvedJavaType''isInterface-1 (:type (InstanceOfNode''type-1 b))))
+                             (not (ResolvedJavaType'''isAssignableFrom-2 (:type (InstanceOfNode''type-1 a)), (:type (InstanceOfNode''type-1 b))))
+                             (not (ResolvedJavaType'''isAssignableFrom-2 (:type (InstanceOfNode''type-1 b)), (:type (InstanceOfNode''type-1 a))))
                         )
                     false
                 )
@@ -49119,7 +49716,7 @@ ZeroExtendNode'new-4
                             (= (:stableDimension (:array loadIndexed)) 1)
                             (:isDefaultStable (:array loadIndexed))
                             (let [
-                                #_"Integer" optionalArrayLength (#_"ConstantReflectionProvider" .readArrayLength HotSpot'constantReflection, arrayConstant)
+                                #_"Integer" optionalArrayLength (ConstantReflectionProvider'''readArrayLength-2 HotSpot'constantReflection, arrayConstant)
                             ]
                                 ;; => Loading a constant value can be denied by the VM.
                                 (and (some? optionalArrayLength)
@@ -49130,7 +49727,7 @@ ZeroExtendNode'new-4
                                         (and
                                             (loop-when [#_"int" i 0] (< i arrayLength) => true
                                                 (let [
-                                                    #_"JavaConstant" elementConstant (#_"ConstantReflectionProvider" .readArrayElement HotSpot'constantReflection, arrayConstant, i)
+                                                    #_"JavaConstant" elementConstant (ConstantReflectionProvider'''readArrayElement-3 HotSpot'constantReflection, arrayConstant, i)
                                                 ]
                                                     ;; => Loading a constant value can be denied by the VM.
                                                     (and (some? elementConstant) (= (JavaConstant'''getJavaKind-1 elementConstant) :JavaKind'Int)
@@ -50599,7 +51196,7 @@ ZeroExtendNode'new-4
                                 receiver
                             )
                         )
-                    #_"[JavaType]" signature (#_"Signature" .toParameterTypes (JavaMethod'''getSignature-1 (:targetMethod callTarget)), (when-not (MethodCallTargetNode''isStatic-1 callTarget) (JavaMethod'''getDeclaringType-1 (:targetMethod callTarget))))
+                    #_"[JavaType]" signature (Signature''toParameterTypes-2 (JavaMethod'''getSignature-1 (:targetMethod callTarget)), (when-not (MethodCallTargetNode''isStatic-1 callTarget) (JavaMethod'''getDeclaringType-1 (:targetMethod callTarget))))
                     #_"LoweredCallTargetNode" loweredCallTarget (Graph''add-2 (:graph this), (HotSpotDirectCallTargetNode'new-6 parameters, (:returnStamp callTarget), signature, (:targetMethod callTarget), :CallingConventionType'JavaCall, (:invokeKind callTarget)))
                     _ (§ ass! callTarget (Node''replaceAndDelete-2 callTarget, loweredCallTarget))
                 ]
@@ -50807,7 +51404,7 @@ ZeroExtendNode'new-4
                             (let [
                                 #_"ResolvedJavaType" elementType (JavaType'''getComponentType-1 (:type arrayType))
                             ]
-                                (when-not (#_"ResolvedJavaType" .isJavaLangObject elementType)
+                                (when-not (ResolvedJavaType''isJavaLangObject-1 elementType)
                                     (let [
                                         #_"LogicNode" typeTest (Graph''addOrUniqueWithInputs-2 (:graph this), (InstanceOfNode'create-2 (TypeReference'createTrusted-1 elementType), (:value this)))
                                     ]
@@ -50896,7 +51493,7 @@ ZeroExtendNode'new-4
             ]
                 (when (and (some? arrayConstant) (pos? (:stableDimension array)))
                     (let [
-                        #_"JavaConstant" constant (#_"ConstantReflectionProvider" .readArrayElement HotSpot'constantReflection, arrayConstant, (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 index)))
+                        #_"JavaConstant" constant (ConstantReflectionProvider'''readArrayElement-3 HotSpot'constantReflection, arrayConstant, (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 index)))
                     ]
                         (when (and (some? constant) (or (:isDefaultStable array) (not (Constant'''isDefaultForKind-1 constant))))
                             (ConstantNode'forConstant-3c constant, (dec (:stableDimension array)), (:isDefaultStable array))
@@ -51005,7 +51602,7 @@ ZeroExtendNode'new-4
                             (let [
                                 #_"ResolvedJavaType" componentType (JavaType'''getComponentType-1 (VirtualObjectNode'''type-1 array))
                             ]
-                                (when (or (#_"ResolvedJavaType" .isPrimitive componentType) (StampTool'isPointerAlwaysNull-1 (:stamp (:value this))) (nil? (#_"ResolvedJavaType" .getSuperclass componentType)) (and (some? (StampTool'typeReferenceOrNull-1 (:stamp (:value this)))) (#_"ResolvedJavaType" .isAssignableFrom componentType, (StampTool'typeOrNull-1 (:stamp (:value this)))))) => tool
+                                (when (or (ResolvedJavaType'''isPrimitive-1 componentType) (StampTool'isPointerAlwaysNull-1 (:stamp (:value this))) (nil? (ResolvedJavaType'''getSuperclass-1 componentType)) (and (some? (StampTool'typeReferenceOrNull-1 (:stamp (:value this)))) (ResolvedJavaType'''isAssignableFrom-2 componentType, (StampTool'typeOrNull-1 (:stamp (:value this)))))) => tool
                                     (let [
                                         tool (VirtualizerTool'''setVirtualEntry-4 tool, array, i, (:value this))
                                     ]
@@ -51044,11 +51641,11 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"boolean" AccessFieldNode''isStatic-1   [#_"AccessFieldNode" this] (#_"ResolvedJavaField" .isStatic   (:field this)))
-    (defn #_"boolean" AccessFieldNode''isVolatile-1 [#_"AccessFieldNode" this] (#_"ResolvedJavaField" .isVolatile (:field this)))
+    (defn #_"boolean" AccessFieldNode''isStatic-1   [#_"AccessFieldNode" this] (ResolvedJavaField''isStatic-1   (:field this)))
+    (defn #_"boolean" AccessFieldNode''isVolatile-1 [#_"AccessFieldNode" this] (ResolvedJavaField''isVolatile-1 (:field this)))
 
     (defn- #_"ValueNode" AccessFieldNode'staticFieldBase-2 [#_"Graph" graph, #_"ResolvedJavaField" field]
-        (ConstantNode'forConstant-2c (#_"HotSpotConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (JavaField'''getDeclaringType-1 field)), graph)
+        (ConstantNode'forConstant-2c (ConstantReflectionProvider'''asJavaClass-2 HotSpot'constantReflection, (JavaField'''getDeclaringType-1 field)), graph)
     )
 
     (defn- #_"this" AccessFieldNode''lowerLoadFieldNode-2 [#_"LoadFieldNode" this, #_"LoweringTool" lowerer]
@@ -51116,7 +51713,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"ConstantNode" LoadFieldNode'asConstant-2 [#_"ValueNode" forObject, #_"ResolvedJavaField" field]
         (cond
-            (#_"ResolvedJavaField" .isStatic field)
+            (ResolvedJavaField''isStatic-1 field)
                 (ConstantFields'tryConstantFold-2 field, nil)
             (and (satisfies? ConstantNode forObject) (not (ValueNode''isNullConstant-1 forObject)))
                 (ConstantFields'tryConstantFold-2 field, (ValueNode''asJavaConstant-1 forObject))
@@ -51124,7 +51721,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"PhiNode" LoadFieldNode'asPhi-3 [#_"ValueNode" object, #_"ResolvedJavaField" field, #_"Stamp" stamp]
-        (when (and (not (#_"ResolvedJavaField" .isStatic field)) (#_"ResolvedJavaField" .isFinal field) (satisfies? ValuePhiNode object) (empty? (remove #(satisfies? ConstantNode %) (:phiValues object))))
+        (when (and (not (ResolvedJavaField''isStatic-1 field)) (ResolvedJavaField''isFinal-1 field) (satisfies? ValuePhiNode object) (empty? (remove #(satisfies? ConstantNode %) (:phiValues object))))
             (loop-when [#_"[ConstantNode]" constants [] #_"seq" s (seq (:phiValues object))] (some? s) => (ValuePhiNode'new-3 stamp, (:merge object), constants)
                 (let [
                     #_"ConstantNode" constant (ConstantFields'tryConstantFold-2 field, (ValueNode''asJavaConstant-1 (first s)))
@@ -51147,7 +51744,7 @@ ZeroExtendNode'new-4
                     )
                 )
             )
-            (if (and (some? self) (not (#_"ResolvedJavaField" .isStatic field)) (ValueNode''isNullConstant-1 forObject))
+            (if (and (some? self) (not (ResolvedJavaField''isStatic-1 field)) (ValueNode''isNullConstant-1 forObject))
                 (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateReprofile, DeoptimizationReason/NullCheckException)
                 (or self (LoadFieldNode'new-3 stamp, forObject, field))
             )
@@ -51306,7 +51903,7 @@ ZeroExtendNode'new-4
                 ]
                     (when (and (some? constantValue) (JavaConstant''isNonNull-1 constantValue))
                         (let [
-                            #_"Integer" constantLength (#_"ConstantReflectionProvider" .readArrayLength HotSpot'constantReflection, constantValue)
+                            #_"Integer" constantLength (ConstantReflectionProvider'''readArrayLength-2 HotSpot'constantReflection, constantValue)
                         ]
                             (when (some? constantLength)
                                 (ConstantNode'forInt-1 constantLength)
@@ -51488,9 +52085,9 @@ ZeroExtendNode'new-4
             #_"boolean" final?
                 (loop-when [#_"seq" s (seq (:virtualObjects this))] (some? s) => false
                     (or
-                        (loop-when [#_"seq" s (seq (#_"ResolvedJavaType" .getInstanceFields (VirtualObjectNode'''type-1 (first s)), true))] (some? s) => false
+                        (loop-when [#_"seq" s (seq (ResolvedJavaType'''getInstanceFields-2 (VirtualObjectNode'''type-1 (first s)), true))] (some? s) => false
                             (or
-                                (#_"ResolvedJavaField" .isFinal (first s))
+                                (ResolvedJavaField''isFinal-1 (first s))
                                 (recur (next s))
                             )
                         )
@@ -51625,7 +52222,7 @@ ZeroExtendNode'new-4
                                                         [#_"AddressNode" address #_"BarrierType" barrierType]
                                                             (if (satisfies? VirtualInstanceNode virtual)
                                                                 (let [
-                                                                    #_"long" offset (#_"HotSpotResolvedJavaField" .offset (VirtualInstanceNode''field-2 virtual, i))
+                                                                    #_"long" offset (HotSpotResolvedJavaField'''offset-1 (VirtualInstanceNode''field-2 virtual, i))
                                                                 ]
                                                                     (when (<= 0 offset)
                                                                         [(Lowerer'createOffsetAddress-3 (:graph this), newObject, offset) (Lowerer'fieldInitializationBarrier-1 entryKind)]
@@ -52236,7 +52833,7 @@ ZeroExtendNode'new-4
     (defm NewInstanceNode Virtualizable
         (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"NewInstanceNode" this, #_"VirtualizerTool" tool]
             ;; Reference objects can escape into their ReferenceQueue at any safepoint, therefore they're excluded from escape analysis.
-            (when-not (#_"ResolvedJavaType" .isAssignableFrom (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, java.lang.ref.Reference), (:instanceClass this)) => tool
+            (when-not (ResolvedJavaType'''isAssignableFrom-2 (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, java.lang.ref.Reference), (:instanceClass this)) => tool
                 (let [
                     #_"VirtualInstanceNode" virtualObject (NewInstanceNode''createVirtualInstanceNode-2 this, true)
                     #_"[ValueNode]" state (vec (map #(NewInstanceNode''defaultFieldValue-2 this, %) (VirtualInstanceNode''getFields-1 virtualObject)))
@@ -52591,7 +53188,7 @@ ZeroExtendNode'new-4
                     ]
                         (when (or (:immutable location) (pos? stableDimension))
                             (let [
-                                #_"Constant" constant (Stamp'''readConstant-4 (:stamp read), (#_"ConstantReflectionProvider" .getMemoryAccessProvider HotSpot'constantReflection), (:value object), displacement)
+                                #_"Constant" constant (Stamp'''readConstant-4 (:stamp read), (ConstantReflectionProvider'''getMemoryAccessProvider-1 HotSpot'constantReflection), (:value object), displacement)
                                 #_"boolean" isDefaultStable (or (:immutable location) (:isDefaultStable object))
                             ]
                                 (when (and (some? constant) (or isDefaultStable (not (Constant'''isDefaultForKind-1 constant))))
@@ -53414,12 +54011,12 @@ ZeroExtendNode'new-4
                 #_"HotSpotResolvedJavaMethod" method (FrameState''getMethod-1 state)
             ]
                 (if (< 1 n)
-                    (when-not (#_"HotSpotResolvedJavaMethod" .ignoredBySecurityStackWalk method)
+                    (when-not (HotSpotResolvedJavaMethod'''ignoredBySecurityStackWalk-1 method)
                         ;; We have reached the desired frame: return the holder class.
-                        (§ return (ConstantNode'forConstant-1 (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (JavaMethod'''getDeclaringType-1 method))))
+                        (§ return (ConstantNode'forConstant-1 (ConstantReflectionProvider'''asJavaClass-2 HotSpot'constantReflection, (JavaMethod'''getDeclaringType-1 method))))
                     )
                     ;; Frame 0 and 1 must be caller sensitive (see JVM_GetCallerClass).
-                    (when-not (#_"HotSpotResolvedJavaMethod" .isCallerSensitive method)
+                    (when-not (HotSpotResolvedJavaMethod'''isCallerSensitive-1 method)
                         (§ return nil) ;; let JVM_GetCallerClass do the work
                     )
                 )
@@ -53791,7 +54388,7 @@ ZeroExtendNode'new-4
                     ]
                         (when (some? receiverType)
                             (let [
-                                #_"ResolvedJavaField" field (#_"ResolvedJavaType" .findInstanceFieldWithOffset receiverType, constantOffset, (:accessKind this))
+                                #_"ResolvedJavaField" field (ResolvedJavaType'''findInstanceFieldWithOffset-3 receiverType, constantOffset, (:accessKind this))
                             ]
                                 ;; No need for checking that the receiver is non-nil. The field access includes
                                 ;; the nil-check and if a field is found, the offset is so small that this is
@@ -53951,7 +54548,7 @@ ZeroExtendNode'new-4
                                                 (when (pos? stableDimension)
                                                     (let [
                                                         #_"long" offset (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:offset this)))
-                                                        #_"Constant" constant (Stamp'''readConstant-4 (:stamp this), (#_"ConstantReflectionProvider" .getMemoryAccessProvider HotSpot'constantReflection), array, offset)
+                                                        #_"Constant" constant (Stamp'''readConstant-4 (:stamp this), (ConstantReflectionProvider'''getMemoryAccessProvider-1 HotSpot'constantReflection), array, offset)
                                                         #_"boolean" isDefaultStable (:isDefaultStable object)
                                                     ]
                                                         (when (and (some? constant) (or isDefaultStable (not (Constant'''isDefaultForKind-1 constant))))
@@ -56116,9 +56713,9 @@ ZeroExtendNode'new-4
             (condp satisfies? clazz
                 ConstantNode
                     (let [
-                        #_"ResolvedJavaType" exact (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, (ValueNode''asJavaConstant-1 clazz))
+                        #_"ResolvedJavaType" exact (ConstantReflectionProvider'''asJavaType-2 HotSpot'constantReflection, (ValueNode''asJavaConstant-1 clazz))
                     ]
-                        (ConstantNode'forConstant-2s stamp, (if (#_"ResolvedJavaType" .isPrimitive exact) JavaConstant'NULL_POINTER (#_"ConstantReflectionProvider" .asObjectHub HotSpot'constantReflection, exact)))
+                        (ConstantNode'forConstant-2s stamp, (if (ResolvedJavaType'''isPrimitive-1 exact) JavaConstant'NULL_POINTER (ConstantReflectionProvider'''asObjectHub-2 HotSpot'constantReflection, exact)))
                     )
                 GetClassNode
                     (LoadHubNode'new-2 KlassPointerStamp'KLASS_NON_NULL, (:object clazz))
@@ -56165,14 +56762,14 @@ ZeroExtendNode'new-4
 
         (#_"Constant" ConvertNode'''convert-2 [#_"ClassGetHubNode" this, #_"Constant" constant]
             (let [
-                #_"ResolvedJavaType" exact (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, constant)
+                #_"ResolvedJavaType" exact (ConstantReflectionProvider'''asJavaType-2 HotSpot'constantReflection, constant)
             ]
-                (if (#_"ResolvedJavaType" .isPrimitive exact) JavaConstant'NULL_POINTER (#_"ConstantReflectionProvider" .asObjectHub HotSpot'constantReflection, exact))
+                (if (ResolvedJavaType'''isPrimitive-1 exact) JavaConstant'NULL_POINTER (ConstantReflectionProvider'''asObjectHub-2 HotSpot'constantReflection, exact))
             )
         )
 
         (#_"Constant" ConvertNode'''reverse-2 [#_"ClassGetHubNode" this, #_"Constant" constant]
-            (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, constant))
+            (ConstantReflectionProvider'''asJavaClass-2 HotSpot'constantReflection, (ConstantReflectionProvider'''asJavaType-2 HotSpot'constantReflection, constant))
         )
 
         (#_"boolean" ConvertNode'''isLossless-1 [#_"ClassGetHubNode" this]
@@ -56193,7 +56790,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"boolean" ConvertNode'''preservesOrder-3 [#_"ClassGetHubNode" this, #_"CanonicalCondition" op, #_"Constant" value]
-            (not (#_"ResolvedJavaType" .isPrimitive (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, value)))
+            (not (ResolvedJavaType'''isPrimitive-1 (ConstantReflectionProvider'''asJavaType-2 HotSpot'constantReflection, value)))
         )
     )
 )
@@ -56982,7 +57579,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"ValueNode" object (VirtualizerTool'''getAlias-2 tool, (:object this))
             ]
-                (when (and (satisfies? VirtualObjectNode object) (some? (StampTool'typeOrNull-1 (:stamp this))) (#_"ResolvedJavaType" .isAssignableFrom (StampTool'typeOrNull-1 (:stamp this)), (VirtualObjectNode'''type-1 object))) => tool
+                (when (and (satisfies? VirtualObjectNode object) (some? (StampTool'typeOrNull-1 (:stamp this))) (ResolvedJavaType'''isAssignableFrom-2 (StampTool'typeOrNull-1 (:stamp this)), (VirtualObjectNode'''type-1 object))) => tool
                     (VirtualizerTool'''replaceWithVirtual-2 tool, object)
                 )
             )
@@ -57143,7 +57740,7 @@ ZeroExtendNode'new-4
 
     (defn #_"ValueNode" GetClassNode'tryFold-1 [#_"ValueNode" object]
         (when (and (some? object) (satisfies? ObjectStamp (:stamp object)) (AbstractObjectStamp''isExactType-1 (:stamp object)))
-            (ConstantNode'forConstant-1 (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (:type (:stamp object))))
+            (ConstantNode'forConstant-1 (ConstantReflectionProvider'''asJavaClass-2 HotSpot'constantReflection, (:type (:stamp object))))
         )
     )
 
@@ -57161,7 +57758,7 @@ ZeroExtendNode'new-4
                 #_"ValueNode" alias (VirtualizerTool'''getAlias-2 tool, (:object this))
             ]
                 (when (satisfies? VirtualObjectNode alias) => tool
-                    (VirtualizerTool'''replaceWithValue-2 tool, (ConstantNode'forConstant-3s (:stamp this), (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (VirtualObjectNode'''type-1 alias)), (:graph this)))
+                    (VirtualizerTool'''replaceWithValue-2 tool, (ConstantNode'forConstant-3s (:stamp this), (ConstantReflectionProvider'''asJavaClass-2 HotSpot'constantReflection, (VirtualObjectNode'''type-1 alias)), (:graph this)))
                 )
             )
         )
@@ -57190,7 +57787,7 @@ ZeroExtendNode'new-4
  ;;
 (class-ns HubGetClassNode [FloatingNode, ValueNode, Node, Lowerable, Canonicalizable, ConvertNode]
     (defn #_"HubGetClassNode" HubGetClassNode'new-1 [#_"ValueNode" hub]
-        (merge (HubGetClassNode'class.) (FloatingNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'create-1 (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Class))))
+        (merge (HubGetClassNode'class.) (FloatingNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'create-1 (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, Class))))
             (hash-map
                 ; @Input
                 #_"ValueNode" :hub hub
@@ -57203,10 +57800,10 @@ ZeroExtendNode'new-4
             (when-not (and (CanonicalizerTool'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
                 (when (satisfies? ConstantNode (:hub this)) => this
                     (let [
-                        #_"ResolvedJavaType" exact (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, (:value (:hub this)))
+                        #_"ResolvedJavaType" exact (ConstantReflectionProvider'''asJavaType-2 HotSpot'constantReflection, (:value (:hub this)))
                     ]
                         (when (some? exact) => this
-                            (ConstantNode'forConstant-1 (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, exact))
+                            (ConstantNode'forConstant-1 (ConstantReflectionProvider'''asJavaClass-2 HotSpot'constantReflection, exact))
                         )
                     )
                 )
@@ -57238,7 +57835,7 @@ ZeroExtendNode'new-4
         (#_"Constant" ConvertNode'''convert-2 [#_"HubGetClassNode" this, #_"Constant" constant]
             (if (= JavaConstant'NULL_POINTER constant)
                 constant
-                (#_"ConstantReflectionProvider" .asJavaClass HotSpot'constantReflection, (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, constant))
+                (ConstantReflectionProvider'''asJavaClass-2 HotSpot'constantReflection, (ConstantReflectionProvider'''asJavaType-2 HotSpot'constantReflection, constant))
             )
         )
 
@@ -57246,11 +57843,11 @@ ZeroExtendNode'new-4
             (if (= JavaConstant'NULL_POINTER constant)
                 constant
                 (let [
-                    #_"ResolvedJavaType" type (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, constant)
+                    #_"ResolvedJavaType" type (ConstantReflectionProvider'''asJavaType-2 HotSpot'constantReflection, constant)
                 ]
-                    (if (#_"ResolvedJavaType" .isPrimitive type)
+                    (if (ResolvedJavaType'''isPrimitive-1 type)
                         JavaConstant'NULL_POINTER
-                        (#_"ConstantReflectionProvider" .asObjectHub HotSpot'constantReflection, type)
+                        (ConstantReflectionProvider'''asObjectHub-2 HotSpot'constantReflection, type)
                     )
                 )
             )
@@ -57330,7 +57927,7 @@ ZeroExtendNode'new-4
             #_"TypeReference" type (StampTool'typeReferenceOrNull-1 (:stamp curValue))
         ]
             (when (and (some? type) (:exactReference type))
-                (ConstantNode'forConstant-2s stamp, (#_"ConstantReflectionProvider" .asObjectHub HotSpot'constantReflection, (:type type)))
+                (ConstantNode'forConstant-2s stamp, (ConstantReflectionProvider'''asObjectHub-2 HotSpot'constantReflection, (:type type)))
             )
         )
     )
@@ -57341,7 +57938,7 @@ ZeroExtendNode'new-4
                 #_"TypeReference" type (StampTool'typeReferenceOrNull-1 (:stamp (VirtualizerTool'''getAlias-2 tool, (:value this))))
             ]
                 (when (and (some? type) (:exactReference type)) => tool
-                    (VirtualizerTool'''replaceWithValue-2 tool, (ConstantNode'forConstant-3s (:stamp this), (#_"ConstantReflectionProvider" .asObjectHub HotSpot'constantReflection, (:type type)), (:graph this)))
+                    (VirtualizerTool'''replaceWithValue-2 tool, (ConstantNode'forConstant-3s (:stamp this), (ConstantReflectionProvider'''asObjectHub-2 HotSpot'constantReflection, (:type type)), (:graph this)))
                 )
             )
         )
@@ -57839,7 +58436,7 @@ ZeroExtendNode'new-4
                                 (let [
                                     #_"ResolvedJavaType" type (VirtualObjectNode'''type-1 xVirtual)
                                 ]
-                                    (when (and (= type (VirtualObjectNode'''type-1 yVirtual)) (any = type (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Integer) (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Long))) => tool
+                                    (when (and (= type (VirtualObjectNode'''type-1 yVirtual)) (any = type (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, Integer) (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, Long))) => tool
                                         ;; both are virtual without identity: check contents
                                         (let [
                                             #_"IntegerEqualsNode" equals (IntegerEqualsNode'new-2 (VirtualizerTool'''getEntry-3 tool, xVirtual, 0), (VirtualizerTool'''getEntry-3 tool, yVirtual, 0))
@@ -57880,10 +58477,10 @@ ZeroExtendNode'new-4
     (defn- #_"LogicNode" InstanceOfDynamicNode'findSynonym-4 [#_"ValueNode" forMirror, #_"ValueNode" forObject, #_"boolean" allow-nil?, #_"boolean" exact?]
         (when (satisfies? ConstantNode forMirror)
             (let [
-                #_"ResolvedJavaType" t (#_"ConstantReflectionProvider" .asJavaType HotSpot'constantReflection, (:value forMirror))
+                #_"ResolvedJavaType" t (ConstantReflectionProvider'''asJavaType-2 HotSpot'constantReflection, (:value forMirror))
             ]
                 (when (some? t)
-                    (if (#_"ResolvedJavaType" .isPrimitive t)
+                    (if (ResolvedJavaType'''isPrimitive-1 t)
                         (if allow-nil?
                             (IsNullNode'create-1 forObject)
                             (LogicConstantNode'contradiction-0)
@@ -60024,7 +60621,7 @@ ZeroExtendNode'new-4
             #_"int" baseOffset (HotSpot'arrayBaseOffset-1 (JavaType'''getJavaKind-1 componentType))
             #_"int" indexScale (HotSpot'arrayIndexScale-1 (JavaType'''getJavaKind-1 componentType))
             #_"long" offset
-                (when (and (= (ByteOrder/nativeOrder) ByteOrder/BIG_ENDIAN) (#_"ResolvedJavaType" .isPrimitive componentType)) => constantOffset
+                (when (and (= (ByteOrder/nativeOrder) ByteOrder/BIG_ENDIAN) (ResolvedJavaType'''isPrimitive-1 componentType)) => constantOffset
                     ;; on big endian, we expect the value to be correctly aligned in memory
                     (let [
                         #_"int" componentByteCount (JavaKind'getByteCount-1 (JavaType'''getJavaKind-1 componentType))
@@ -60068,17 +60665,17 @@ ZeroExtendNode'new-4
 )
 
 (class-ns VirtualInstanceNode [VirtualObjectNode, ValueNode, Node, LIRLowerable]
-    (defn #_"VirtualInstanceNode" VirtualInstanceNode'new-3 [#_"ResolvedJavaType" type, #_"[ResolvedJavaField]" fields, #_"boolean" hasIdentity]
+    (defn #_"VirtualInstanceNode" VirtualInstanceNode'new-3 [#_"ResolvedJavaType" type, #_"ResolvedJavaField*" fields, #_"boolean" hasIdentity]
         (merge (VirtualInstanceNode'class.) (VirtualObjectNode'new-2 type, hasIdentity)
             (hash-map
                 #_"ResolvedJavaType" :type type
-                #_"[ResolvedJavaField]" :fields fields
+                #_"[ResolvedJavaField]" :fields (vec fields)
             )
         )
     )
 
     (defn #_"VirtualInstanceNode" VirtualInstanceNode'new-2 [#_"ResolvedJavaType" type, #_"boolean" hasIdentity]
-        (VirtualInstanceNode'new-3 type, (#_"ResolvedJavaType" .getInstanceFields type, true), hasIdentity)
+        (VirtualInstanceNode'new-3 type, (ResolvedJavaType'''getInstanceFields-2 type, true), hasIdentity)
     )
 
     (defm VirtualInstanceNode VirtualObjectNode
@@ -60111,7 +60708,7 @@ ZeroExtendNode'new-4
 
     (defm VirtualInstanceNode VirtualObjectNode
         (#_"int" VirtualObjectNode'''entryIndexForOffset-3 [#_"VirtualInstanceNode" this, #_"long" constantOffset, #_"JavaKind" expectedEntryKind]
-            (VirtualInstanceNode''fieldIndex-2 this, (#_"ResolvedJavaType" .findInstanceFieldWithOffset (:type this), constantOffset, expectedEntryKind))
+            (VirtualInstanceNode''fieldIndex-2 this, (ResolvedJavaType'''findInstanceFieldWithOffset-3 (:type this), constantOffset, expectedEntryKind))
         )
 
         (#_"JavaKind" VirtualObjectNode'''entryKind-2 [#_"VirtualInstanceNode" this, #_"int" index]
@@ -62705,19 +63302,19 @@ ZeroExtendNode'new-4
         )
 
         (#_"[byte]" Bytecode'''getCode-1 [#_"ResolvedJavaMethodBytecode" this]
-            (vec (#_"ResolvedJavaMethod" .getCode (:method this)))
+            (vec (ResolvedJavaMethod'''getCode-1 (:method this)))
         )
 
         (#_"int" Bytecode'''getCodeSize-1 [#_"ResolvedJavaMethodBytecode" this]
-            (#_"ResolvedJavaMethod" .getCodeSize (:method this))
+            (ResolvedJavaMethod'''getCodeSize-1 (:method this))
         )
 
         (#_"int" Bytecode'''getMaxLocals-1 [#_"ResolvedJavaMethodBytecode" this]
-            (#_"ResolvedJavaMethod" .getMaxLocals (:method this))
+            (ResolvedJavaMethod'''getMaxLocals-1 (:method this))
         )
 
         (#_"ConstantPool" Bytecode'''getConstantPool-1 [#_"ResolvedJavaMethodBytecode" this]
-            (#_"ResolvedJavaMethod" .getConstantPool (:method this))
+            (ResolvedJavaMethod'''getConstantPool-1 (:method this))
         )
     )
 )
@@ -63868,7 +64465,7 @@ ZeroExtendNode'new-4
             this
                 (assoc this :parameters
                     (vec
-                        (for [#_"int" i (range (#_"Signature" .getParameterCount (JavaMethod'''getSignature-1 method), false))]
+                        (for [#_"int" i (range (Signature'''getParameterCount-2 (JavaMethod'''getSignature-1 method), false))]
                             (or (Graph''getParameter-2 snippet, i) "UNUSED_PARAMETER") ;; parameter value was eliminated
                         )
                     )
@@ -64598,7 +65195,7 @@ ZeroExtendNode'new-4
 
         (#_"Stamp" Stamp'''constant-2 [#_"AbstractObjectStamp" this, #_"Constant" c]
             (let [
-                #_"ResolvedJavaType" constType (when-not (JavaConstant'''isNull-1 c) (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, c))
+                #_"ResolvedJavaType" constType (when-not (JavaConstant'''isNull-1 c) (MetaAccessProvider'''lookupJavaType-2j HotSpot'metaAccess, c))
             ]
                 (AbstractObjectStamp'''copyWith-5 this, constType, (JavaConstant''isNonNull-1 c), (JavaConstant''isNonNull-1 c), (JavaConstant'''isNull-1 c))
             )
@@ -64613,7 +65210,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"ResolvedJavaType" Stamp'''javaType-1 [#_"AbstractObjectStamp" this]
-            (or (:type this) (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, Object))
+            (or (:type this) (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, Object))
         )
     )
 
@@ -64622,7 +65219,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"boolean" AbstractObjectStamp'isInterfaceOrArrayOfInterface-1 [#_"ResolvedJavaType" t]
-        (or (#_"ResolvedJavaType" .isInterface t) (and (JavaType''isArray-1 t) (#_"ResolvedJavaType" .isInterface (JavaType''getElementalType-1 t))))
+        (or (ResolvedJavaType''isInterface-1 t) (and (JavaType''isArray-1 t) (ResolvedJavaType''isInterface-1 (JavaType''getElementalType-1 t))))
     )
 
     (defn- #_"Stamp" AbstractObjectStamp''join0-3 [#_"AbstractObjectStamp" this, #_"Stamp" that, #_"boolean" improve?]
@@ -64642,11 +65239,11 @@ ZeroExtendNode'new-4
                             #_"boolean" exact-type? (or (:exact-type? a) (:exact-type? b))
                             [#_"ResolvedJavaType" type exact-type? always-nil?]
                                 (cond
-                                    (= (:type a) (:type b))                                       [(:type a) exact-type? always-nil?]
-                                    (nil? (:type a))                                              [(:type b) exact-type? always-nil?]
-                                    (nil? (:type b))                                              [(:type a) exact-type? always-nil?]
-                                    (#_"ResolvedJavaType" .isAssignableFrom (:type a), (:type b)) [(:type b) exact-type? (or (:exact-type? a) always-nil?)]
-                                    (#_"ResolvedJavaType" .isAssignableFrom (:type b), (:type a)) [(:type a) exact-type? (or (:exact-type? b) always-nil?)]
+                                    (= (:type a) (:type b))                                      [(:type a) exact-type? always-nil?]
+                                    (nil? (:type a))                                             [(:type b) exact-type? always-nil?]
+                                    (nil? (:type b))                                             [(:type a) exact-type? always-nil?]
+                                    (ResolvedJavaType'''isAssignableFrom-2 (:type a), (:type b)) [(:type b) exact-type? (or (:exact-type? a) always-nil?)]
+                                    (ResolvedJavaType'''isAssignableFrom-2 (:type b), (:type a)) [(:type a) exact-type? (or (:exact-type? b) always-nil?)]
                                     :else
                                         (let [
                                             [type exact-type?] (if improve? [(:type a) (:exact-type? a)] [nil exact-type?])
@@ -64684,13 +65281,13 @@ ZeroExtendNode'new-4
 
     (defn- #_"ResolvedJavaType" AbstractObjectStamp'meetOrderedNonNullTypes-2 [#_"ResolvedJavaType" a, #_"ResolvedJavaType" b]
         (let [
-            #_"ResolvedJavaType" type (#_"ResolvedJavaType" .findLeastCommonAncestor a, b)
+            #_"ResolvedJavaType" type (ResolvedJavaType'''findLeastCommonAncestor-2 a, b)
         ]
-            (when (and (#_"ResolvedJavaType" .isJavaLangObject type) (#_"ResolvedJavaType" .isInterface a) (#_"ResolvedJavaType" .isInterface b)) => type
+            (when (and (ResolvedJavaType''isJavaLangObject-1 type) (ResolvedJavaType''isInterface-1 a) (ResolvedJavaType''isInterface-1 b)) => type
                 ;; Both types are incompatible interfaces => search for first possible common ancestor match among super interfaces.
                 (let [
-                    #_"ResolvedJavaType*" a* (#_"ResolvedJavaType" .getInterfaces a)
-                    #_"ResolvedJavaType*" b* (#_"ResolvedJavaType" .getInterfaces b)
+                    #_"ResolvedJavaType*" a* (ResolvedJavaType'''getInterfaces-1 a)
+                    #_"ResolvedJavaType*" b* (ResolvedJavaType'''getInterfaces-1 b)
                 ]
                     (loop-when [#_"int" i 0] (< i (count a*)) => type
                         (or
@@ -64698,7 +65295,7 @@ ZeroExtendNode'new-4
                                 (let [
                                     #_"ResolvedJavaType" leastCommon (AbstractObjectStamp'meetTypes-2 (nth a* i), (nth b* j))
                                 ]
-                                    (when (#_"ResolvedJavaType" .isInterface leastCommon) => (recur (inc j))
+                                    (when (ResolvedJavaType''isInterface-1 leastCommon) => (recur (inc j))
                                         leastCommon
                                     )
                                 )
@@ -64809,7 +65406,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" AbstractObjectStamp'isConcreteType-1 [#_"ResolvedJavaType" type]
-        (not (and (#_"ResolvedJavaType" .isAbstract type) (not (JavaType''isArray-1 type))))
+        (not (and (ResolvedJavaType''isAbstract-1 type) (not (JavaType''isArray-1 type))))
     )
 
     (§ override #_"boolean" #_"Object." equals [#_"AbstractObjectStamp" this, #_"Object" that]
@@ -64822,8 +65419,8 @@ ZeroExtendNode'new-4
                     (and (= (:exact-type? a) (:exact-type? b))
                         ;; nil == java.lang.Object
                         (cond
-                            (nil? (:type a)) (or (nil? (:type b)) (#_"ResolvedJavaType" .isJavaLangObject (:type b)))
-                            (nil? (:type b)) (or (nil? (:type a)) (#_"ResolvedJavaType" .isJavaLangObject (:type a)))
+                            (nil? (:type a)) (or (nil? (:type b)) (ResolvedJavaType''isJavaLangObject-1 (:type b)))
+                            (nil? (:type b)) (or (nil? (:type a)) (ResolvedJavaType''isJavaLangObject-1 (:type a)))
                             :else                                 (= (:type a) (:type b))
                         )
                         (= (§ super #_"AbstractPointerStamp") b)
@@ -64864,7 +65461,7 @@ ZeroExtendNode'new-4
 
         (#_"Constant" Stamp'''readConstant-4 [#_"NarrowOopStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
             (try
-                (#_"HotSpotMemoryAccessProvider" .readNarrowOopConstant provider, base, displacement)
+                (HotSpotMemoryAccessProvider'''readNarrowOopConstant-3 provider, base, displacement)
                 (catch IllegalArgumentException _
                     nil
                 )
@@ -64939,7 +65536,7 @@ ZeroExtendNode'new-4
 
         (#_"Constant" Stamp'''readConstant-4 [#_"ObjectStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
             (try
-                (#_"MemoryAccessProvider" .readObjectConstant provider, base, displacement)
+                (MemoryAccessProvider'''readObjectConstant-3 provider, base, displacement)
                 (catch IllegalArgumentException _
                     nil ;; it's possible that the base and displacement aren't valid together, so simply return nil
                 )
@@ -65067,8 +65664,8 @@ ZeroExtendNode'new-4
     (defm KlassPointerStamp Stamp
         (#_"Constant" Stamp'''readConstant-4 [#_"KlassPointerStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
             (if (KlassPointerStamp''isCompressed-1 this)
-                (#_"HotSpotMemoryAccessProvider" .readNarrowKlassPointerConstant provider, base, displacement)
-                (#_"HotSpotMemoryAccessProvider" .readKlassPointerConstant provider, base, displacement)
+                (HotSpotMemoryAccessProvider'''readNarrowKlassPointerConstant-3 provider, base, displacement)
+                (HotSpotMemoryAccessProvider'''readKlassPointerConstant-3 provider, base, displacement)
             )
         )
     )
@@ -65187,7 +65784,7 @@ ZeroExtendNode'new-4
     (defm PrimitiveStamp Stamp
         (#_"Constant" Stamp'''readConstant-4 [#_"PrimitiveStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
             (try
-                (#_"MemoryAccessProvider" .readPrimitiveConstant provider, (Stamp'''getStackKind-1 this), base, displacement, (:bits this))
+                (MemoryAccessProvider'''readPrimitiveConstant-5 provider, (Stamp'''getStackKind-1 this), base, displacement, (:bits this))
                 (catch IllegalArgumentException _
                     nil ;; it's possible that the base and displacement aren't valid together, so simply return nil
                 )
@@ -65327,7 +65924,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"ResolvedJavaType" Stamp'''javaType-1 [#_"IntegerStamp" this]
-            (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess,
+            (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess,
                 (case (:bits this) 1 boolean'class 8 byte'class 16 short'class 32 int'class 64 long'class)
             )
         )
@@ -66559,7 +67156,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"ResolvedJavaType" Stamp'''javaType-1 [#_"VoidStamp" this]
-            (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, void'class)
+            (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, void'class)
         )
 
         (#_"boolean" Stamp'''alwaysDistinct-2 [#_"VoidStamp" this, #_"Stamp" other]
@@ -67089,9 +67686,9 @@ ZeroExtendNode'new-4
                 (let [
                     #_"ResolvedJavaType" componentType (TypeReference'filterInterfaceTypesOut-1 (JavaType'''getComponentType-1 type))
                 ]
-                    (JavaType'''getArrayClass-1 (or componentType (#_"ResolvedJavaType" .getSuperclass type))) ;; returns Object[].class
+                    (JavaType'''getArrayClass-1 (or componentType (ResolvedJavaType'''getSuperclass-1 type))) ;; returns Object[].class
                 )
-                (when-not (#_"ResolvedJavaType" .isInterface type)
+                (when-not (ResolvedJavaType''isInterface-1 type)
                     type
                 )
             )
@@ -67111,7 +67708,7 @@ ZeroExtendNode'new-4
     (defn #_"TypeReference" TypeReference'createTrusted-1 [#_"ResolvedJavaType" type]
         (when (some? type)
             (let [
-                #_"ResolvedJavaType" exact (when (#_"ResolvedJavaType" .isLeaf type) type)
+                #_"ResolvedJavaType" exact (when (ResolvedJavaType''isLeaf-1 type) type)
             ]
                 (if (some? exact) (TypeReference'new-2 exact, true) (TypeReference'new-2 type, false))
             )
@@ -67423,7 +68020,7 @@ ZeroExtendNode'new-4
                                     i (if (some? speculations) (inc i) i)
                                 ]
                                     (when (and (satisfies? ConstantNode thisReason) (satisfies? ConstantNode thisSpeculation) (= (:value thisSpeculation) JavaConstant'NULL_POINTER))
-                                        (UseTrappingNullChecksPhase'tryUseTrappingNullCheck-5 deopt, (:predecessor end), (#_"MetaAccessProvider" .decodeDeoptReason HotSpot'metaAccess, (ValueNode''asJavaConstant-1 thisReason)), nil, implicitNullCheckLimit)
+                                        (UseTrappingNullChecksPhase'tryUseTrappingNullCheck-5 deopt, (:predecessor end), (MetaAccessProvider'''decodeDeoptReason-2 HotSpot'metaAccess, (ValueNode''asJavaConstant-1 thisReason)), nil, implicitNullCheckLimit)
                                     )
                                     (recur i (next s))
                                 )
@@ -68885,7 +69482,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" WordOperationPlugin'processMetaspaceOperation-4 [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode*" args, #_"MetaspaceOperation" operation]
         (let [
-            #_"JavaKind" returnKind (#_"Signature" .getReturnKind (JavaMethod'''getSignature-1 method))
+            #_"JavaKind" returnKind (Signature''getReturnKind-1 (JavaMethod'''getSignature-1 method))
         ]
             (condp =? (MetaspaceOperation''opcode-1 operation)
                [:MetaspaceOpcode'POINTER_EQ :MetaspaceOpcode'POINTER_NE]
@@ -68985,7 +69582,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" WordOperationPlugin'processWordOperation-3 [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode*" args]
         (let [
-            #_"JavaKind" returnKind (#_"Signature" .getReturnKind (JavaMethod'''getSignature-1 method))
+            #_"JavaKind" returnKind (Signature''getReturnKind-1 (JavaMethod'''getSignature-1 method))
             #_"WordFactoryOperation" factoryOperation (#_"ResolvedJavaMethod" .getAnnotation method, WordFactoryOperation)
         ]
             (or
@@ -69034,7 +69631,7 @@ ZeroExtendNode'new-4
                             (BytecodeParser''addPush-3 parser, returnKind, (XorNode'new-2 (nth args 0), (BytecodeParser''add-2 parser, (ConstantNode'forIntegerKind-2 :JavaKind'Long, -1))))
                        [:WordOpcode'READ_POINTER :WordOpcode'READ_OBJECT :WordOpcode'READ_BARRIERED]
                             (let [
-                                #_"JavaKind" readKind (WordTypes'asKind-1 (#_"Signature" .getReturnType (JavaMethod'''getSignature-1 method), (JavaMethod'''getDeclaringType-1 method)))
+                                #_"JavaKind" readKind (WordTypes'asKind-1 (Signature'''getReturnType-2 (JavaMethod'''getSignature-1 method), (JavaMethod'''getDeclaringType-1 method)))
                                 #_"AddressNode" address (WordOperationPlugin'makeAddress-3 parser, (nth args 0), (nth args 1))
                                 #_"LocationIdentity" location
                                     (if (= (count args) 2)
@@ -69046,7 +69643,7 @@ ZeroExtendNode'new-4
                             )
                         :WordOpcode'READ_HEAP
                             (let [
-                                #_"JavaKind" readKind (WordTypes'asKind-1 (#_"Signature" .getReturnType (JavaMethod'''getSignature-1 method), (JavaMethod'''getDeclaringType-1 method)))
+                                #_"JavaKind" readKind (WordTypes'asKind-1 (Signature'''getReturnType-2 (JavaMethod'''getSignature-1 method), (JavaMethod'''getDeclaringType-1 method)))
                                 #_"AddressNode" address (WordOperationPlugin'makeAddress-3 parser, (nth args 0), (nth args 1))
                                 #_"BarrierType" barrierType (SnippetReflection'asObject-2c BarrierType, (ValueNode''asJavaConstant-1 (nth args 2)))
                             ]
@@ -69054,7 +69651,7 @@ ZeroExtendNode'new-4
                             )
                        [:WordOpcode'WRITE_POINTER :WordOpcode'WRITE_OBJECT :WordOpcode'WRITE_BARRIERED :WordOpcode'INITIALIZE]
                             (let [
-                                #_"JavaKind" writeKind (WordTypes'asKind-1 (#_"Signature" .getParameterType (JavaMethod'''getSignature-1 method), (if (#_"ResolvedJavaMethod" .isStatic method) 2 1), (JavaMethod'''getDeclaringType-1 method)))
+                                #_"JavaKind" writeKind (WordTypes'asKind-1 (Signature'''getParameterType-3 (JavaMethod'''getSignature-1 method), (if (ResolvedJavaMethod''isStatic-1 method) 2 1), (JavaMethod'''getDeclaringType-1 method)))
                                 #_"AddressNode" address (WordOperationPlugin'makeAddress-3 parser, (nth args 0), (nth args 1))
                                 #_"LocationIdentity" location
                                     (if (= (count args) 3)
@@ -69093,9 +69690,9 @@ ZeroExtendNode'new-4
                         :WordOpcode'CAS_POINTER
                             (let [
                                 #_"AddressNode" address (WordOperationPlugin'makeAddress-3 parser, (nth args 0), (nth args 1))
-                                #_"JavaKind" valueKind (WordTypes'asKind-1 (#_"Signature" .getParameterType (JavaMethod'''getSignature-1 method), 1, (JavaMethod'''getDeclaringType-1 method)))
+                                #_"JavaKind" valueKind (WordTypes'asKind-1 (Signature'''getParameterType-3 (JavaMethod'''getSignature-1 method), 1, (JavaMethod'''getDeclaringType-1 method)))
                                 #_"LocationIdentity" location (SnippetReflection'asObject-2c LocationIdentity'iface, (ValueNode''asJavaConstant-1 (nth args 4)))
-                                #_"JavaType" returnType (#_"Signature" .getReturnType (JavaMethod'''getSignature-1 method), (JavaMethod'''getDeclaringType-1 method))
+                                #_"JavaType" returnType (Signature'''getReturnType-2 (JavaMethod'''getSignature-1 method), (JavaMethod'''getDeclaringType-1 method))
                             ]
                                 (BytecodeParser''addPush-3 parser, returnKind, (WordOperationPlugin'casOp-6 valueKind, (WordTypes'asKind-1 returnType), address, location, (nth args 2), (nth args 3)))
                             )
@@ -69130,7 +69727,7 @@ ZeroExtendNode'new-4
 
     (defm WordOperationPlugin TypePlugin
         (#_"Stamp" TypePlugin'''interceptType-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"JavaType" type, #_"boolean" never-nil?]
-            (when (instance? ResolvedJavaType type)
+            (when (satisfies? ResolvedJavaType type)
                 (cond
                     (WordTypes'isWord-1j type)
                         (WordTypes'getWordStamp-1 type)
@@ -69505,7 +70102,7 @@ ZeroExtendNode'new-4
     (defn #_"Stamp" StampFactory'forConstant-1 [#_"JavaConstant" value]
         (when (= (JavaConstant'''getJavaKind-1 value) :JavaKind'Object) => (StampFactory'forPrimitiveConstant-1 value)
             (let [
-                #_"ResolvedJavaType" type (when-not (JavaConstant'''isNull-1 value) (#_"MetaAccessProvider" .lookupJavaType HotSpot'metaAccess, value))
+                #_"ResolvedJavaType" type (when-not (JavaConstant'''isNull-1 value) (MetaAccessProvider'''lookupJavaType-2j HotSpot'metaAccess, value))
             ]
                 (ObjectStamp'new-4 type, (JavaConstant''isNonNull-1 value), (JavaConstant''isNonNull-1 value), (JavaConstant'''isNull-1 value))
             )
@@ -69528,7 +70125,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"Stamp" StampFactory'forDeclaredType-2 [#_"JavaType" type, #_"boolean" never-nil?]
-        (if (and (= (JavaType'''getJavaKind-1 type) :JavaKind'Object) (instance? ResolvedJavaType type))
+        (if (and (= (JavaType'''getJavaKind-1 type) :JavaKind'Object) (satisfies? ResolvedJavaType type))
             (StampFactory'object-2 (TypeReference'create-1 type), never-nil?)
             (StampFactory'forKind-1 (JavaType'''getJavaKind-1 type))
         )
@@ -69626,10 +70223,10 @@ ZeroExtendNode'new-4
     (defn- #_"CallingConvention" Compiler'getCallingConvention-2 [#_"CallingConventionType" type, #_"ResolvedJavaMethod" method]
         (let [
             #_"Signature" sig (JavaMethod'''getSignature-1 method)
-            #_"JavaType" returnType (#_"Signature" .getReturnType sig, nil)
-            #_"JavaType*" parameterTypes (map #(#_"Signature" .getParameterType sig, %, nil) (range (#_"Signature" .getParameterCount sig, false)))
+            #_"JavaType" returnType (Signature'''getReturnType-2 sig, nil)
+            #_"JavaType*" parameterTypes (map #(Signature'''getParameterType-3 sig, %, nil) (range (Signature'''getParameterCount-2 sig, false)))
             parameterTypes
-                (when-not (#_"ResolvedJavaMethod" .isStatic method) => parameterTypes
+                (when-not (ResolvedJavaMethod''isStatic-1 method) => parameterTypes
                     (cons (JavaMethod'''getDeclaringType-1 method) parameterTypes)
                 )
         ]
@@ -69781,7 +70378,7 @@ public final class DataPatch extends Site
     (§
         super(pcOffset)
         this.reference = reference
-        this.note = null
+        this.note = nil
     )
 
     public DataPatch(#_"int" pcOffset, #_"Reference" reference, #_"Object" note)
@@ -69883,314 +70480,6 @@ public abstract class Site
 
 (§ package jdk.vm.ci.hotspot
 
-import java.lang.reflect.Array
-import java.util.Objects
-
-import jdk.vm.ci.common.JVMCIError
-import jdk.vm.ci.meta.ConstantReflectionProvider
-import jdk.vm.ci.meta.MemoryAccessProvider
-import jdk.vm.ci.meta.ResolvedJavaField
-import jdk.vm.ci.meta.ResolvedJavaType
-
-;;;
- ; HotSpot implementation of {@link ConstantReflectionProvider}.
- ;;
-public class HotSpotConstantReflectionProvider implements ConstantReflectionProvider
-(§
-    protected final #_"HotSpotJVMCIRuntimeProvider" runtime
-    protected final #_"HotSpotMemoryAccessProviderImpl" memoryAccess
-
-    public HotSpotConstantReflectionProvider(#_"HotSpotJVMCIRuntimeProvider" runtime)
-    (§
-        this.runtime = runtime
-        this.memoryAccess = new HotSpotMemoryAccessProviderImpl(runtime)
-    )
-
-    @Override
-    public #_"MemoryAccessProvider" getMemoryAccessProvider()
-    (§
-        return memoryAccess
-    )
-
-    @Override
-    public Boolean constantEquals(#_"Constant" x, #_"Constant" y)
-    (§
-        if (x == y)
-        (§
-            return true
-        )
-        else if (x instanceof ObjectConstantImpl)
-        (§
-            return y instanceof ObjectConstantImpl && ((ObjectConstantImpl) x).object() == ((ObjectConstantImpl) y).object()
-        )
-        else
-        (§
-            return Objects.equals(x, y)
-        )
-    )
-
-    @Override
-    public Integer readArrayLength(#_"JavaConstant" array)
-    (§
-        if (array == null || JavaConstant'''getJavaKind-1(array) != :JavaKind'Object || JavaConstant'''isNull-1(array))
-        (§
-            return null
-        )
-
-        #_"Object" arrayObject = ((ObjectConstantImpl) array).object()
-        if (!arrayObject.getClass().isArray())
-        (§
-            return null
-        )
-        return Array.getLength(arrayObject)
-    )
-
-    @Override
-    public #_"JavaConstant" readArrayElement(#_"JavaConstant" array, #_"int" index)
-    (§
-        if (array == null || JavaConstant'''getJavaKind-1(array) != :JavaKind'Object || JavaConstant'''isNull-1(array))
-        (§
-            return null
-        )
-        #_"Object" a = ((ObjectConstantImpl) array).object()
-
-        if (!a.getClass().isArray() || index < 0 || index >= Array.getLength(a))
-        (§
-            return null
-        )
-
-        if (a instanceof Object[])
-        (§
-            Object #_"element" = ((Object[]) a)[index]
-            return ObjectConstantImpl.forObject(element)
-        )
-        else
-        (§
-            return JavaConstant.forBoxedPrimitive(Array.get(a, index))
-        )
-    )
-
-    public #_"JavaConstant" forObject(#_"Object" value)
-    (§
-        return ObjectConstantImpl.forObject(value)
-    )
-
-    @Override
-    public #_"ResolvedJavaType" asJavaType(#_"Constant" constant)
-    (§
-        if (satisfies? ObjectConstant constant)
-        (§
-            #_"Object" obj = ((ObjectConstantImpl) constant).object()
-            if (obj instanceof Class)
-            (§
-                return runtime.getHostJVMCIBackend().getMetaAccess().lookupJavaType((Class<?>) obj)
-            )
-        )
-        if (satisfies? MetaspaceConstant constant)
-        (§
-            #_"MetaspaceWrapperObject" obj = MetaspaceConstantImpl.getMetaspaceObject(constant)
-            if (obj instanceof HotSpotResolvedObjectTypeImpl)
-            (§
-                return (ResolvedJavaType) obj
-            )
-        )
-        return null
-    )
-
-    public #_"JavaConstant" readFieldValue(#_"ResolvedJavaField" field, #_"JavaConstant" receiver)
-    (§
-        #_"HotSpotResolvedJavaField" hotspotField = (HotSpotResolvedJavaField) field
-        if (hotspotField.isStatic())
-        (§
-            #_"HotSpotResolvedJavaType" holder = (HotSpotResolvedJavaType) hotspotField.JavaField'''getDeclaringType-1()
-            if (holder.isInitialized())
-            (§
-                return memoryAccess.readFieldValue(hotspotField, holder.mirror())
-            )
-        )
-        else
-        (§
-            if (receiver.JavaConstant''isNonNull-1())
-            (§
-                #_"Object" object = ((ObjectConstantImpl) receiver).object()
-                if (hotspotField.isInObject(object))
-                (§
-                    return memoryAccess.readFieldValue(hotspotField, object)
-                )
-            )
-        )
-        return null
-    )
-
-    @Override
-    public #_"JavaConstant" asJavaClass(#_"ResolvedJavaType" type)
-    (§
-        return ObjectConstantImpl.forObject(((HotSpotResolvedJavaType) type).mirror())
-    )
-
-    @Override
-    public #_"Constant" asObjectHub(#_"ResolvedJavaType" type)
-    (§
-        if (type instanceof HotSpotResolvedObjectType)
-        (§
-            return ((HotSpotResolvedObjectType) type).klass()
-        )
-        else
-        (§
-            throw JVMCIError.unimplemented()
-        )
-    )
-)
-)
-
-(§ package jdk.vm.ci.hotspot
-
-import jdk.vm.ci.meta.MemoryAccessProvider
-
-;;;
- ; HotSpot specific extension of {@link MemoryAccessProvider}.
- ;;
-public interface HotSpotMemoryAccessProvider extends MemoryAccessProvider
-(§
-    ;;;
-     ; @throws IllegalArgumentException if the address computed from {@code base} and
-     ;             {@code displacement} does not denote a location holding a narrow oop
-     ;;
-    #_"JavaConstant" readNarrowOopConstant(#_"Constant" base, #_"long" displacement)
-
-    #_"Constant" readKlassPointerConstant(#_"Constant" base, #_"long" displacement)
-
-    #_"Constant" readNarrowKlassPointerConstant(#_"Constant" base, #_"long" displacement)
-
-    #_"Constant" readMethodPointerConstant(#_"Constant" base, #_"long" displacement)
-)
-)
-
-(§ package jdk.vm.ci.hotspot
-
-import jdk.vm.ci.meta.ResolvedJavaField
-
-;;;
- ; Represents a field in a HotSpot type.
- ;;
-public interface HotSpotResolvedJavaField extends ResolvedJavaField
-(§
-    ;;;
-     ; Determines if a given object contains this field.
-     ;
-     ; @return true iff this is a non-static field and its declaring class is assignable from
-     ;         {@code object}'s class
-     ;;
-    #_"boolean" isInObject(#_"Object" object)
-
-    #_"int" offset()
-
-    ;;;
-     ; Determines if this field should be treated as a constant.
-     ;;
-    #_"boolean" isStable()
-)
-)
-
-(§ package jdk.vm.ci.hotspot
-
-import java.lang.reflect.Modifier
-
-import jdk.vm.ci.meta.ResolvedJavaMethod
-import jdk.vm.ci.meta.ResolvedJavaType
-
-;;;
- ; Implementation of {@link JavaMethod} for resolved HotSpot methods.
- ;;
-public interface HotSpotResolvedJavaMethod extends ResolvedJavaMethod
-(§
-    ;;;
-     ; Returns true if this method has a {@code CallerSensitive} annotation.
-     ;
-     ; @return true if CallerSensitive annotation present, false otherwise
-     ;;
-    #_"boolean" isCallerSensitive()
-
-    #_"HotSpotResolvedObjectType" JavaMethod'''getDeclaringType-1()
-
-    ;;;
-     ; Returns true if this method is one of the special methods that is ignored by security stack walks.
-     ;
-     ; @return true if special method ignored by security stack walks, false otherwise
-     ;;
-    #_"boolean" ignoredBySecurityStackWalk()
-)
-)
-
-(§ package jdk.vm.ci.hotspot
-
-import jdk.vm.ci.meta.ConstantPool
-import jdk.vm.ci.meta.ResolvedJavaMethod
-import jdk.vm.ci.meta.ResolvedJavaType
-
-;;;
- ; Implementation of {@link JavaType} for resolved non-primitive HotSpot classes.
- ;;
-public interface HotSpotResolvedObjectType extends ResolvedJavaType
-(§
-    ;;;
-     ; Gets the JVMCI mirror for a {@link Class} object.
-     ;
-     ; @return the {@link HotSpotResolvedJavaType} corresponding to {@code javaClass}
-     ;;
-    static #_"HotSpotResolvedObjectType" fromObjectClass(#_"Class<?>" javaClass)
-    (§
-        return HotSpotResolvedObjectTypeImpl.fromObjectClass(javaClass)
-    )
-
-    #_"HotSpotResolvedObjectType" JavaType'''getArrayClass-1()
-
-    #_"ResolvedJavaType" JavaType'''getComponentType-1()
-
-    #_"HotSpotResolvedObjectType" getSuperclass()
-
-    #_"HotSpotResolvedObjectType[]" getInterfaces()
-
-    #_"HotSpotResolvedObjectType" getSupertype()
-
-    #_"HotSpotResolvedObjectType" findLeastCommonAncestor(#_"ResolvedJavaType" otherType)
-
-    default #_"boolean" isPrimitive()
-    (§
-        return false
-    )
-
-    default #_"JavaKind" JavaType'''getJavaKind-1()
-    (§
-        return :JavaKind'Object
-    )
-
-    #_"ConstantPool" getConstantPool()
-
-    ;;;
-     ; Gets the instance size of this type. If an instance of this type cannot be fast path
-     ; allocated, then the returned value is negative (its absolute value gives the size). Must not
-     ; be called if this is an array or interface type.
-     ;;
-    #_"int" instanceSize()
-
-    ;;;
-     ; Gets the metaspace Klass boxed in a {@link JavaConstant}.
-     ;;
-    #_"Constant" klass()
-
-    #_"boolean" isPrimaryType()
-
-    #_"int" superCheckOffset()
-
-    #_"long" prototypeMarkWord()
-
-    #_"ResolvedJavaMethod" getClassInitializer()
-)
-)
-
-(§ package jdk.vm.ci.hotspot
-
 import jdk.vm.ci.common.JVMCIError
 
 ;;;
@@ -70217,9 +70506,9 @@ public class HotSpotVMConfigAccess
     public #_"long" getAddress(#_"String" name, #_"Long" notPresent)
     (§
         #_"Long" entry = store.vmAddresses.get(name)
-        if (entry == null)
+        if (entry == nil)
         (§
-            if (notPresent != null)
+            if (notPresent != nil)
             (§
                 return notPresent
             )
@@ -70237,7 +70526,7 @@ public class HotSpotVMConfigAccess
      ;;
     public #_"long" getAddress(#_"String" name)
     (§
-        return getAddress(name, null)
+        return getAddress(name, nil)
     )
 
     ;;;
@@ -70252,15 +70541,15 @@ public class HotSpotVMConfigAccess
     public #_"<T> T" getConstant(#_"String" name, #_"Class<T>" type, #_"T" notPresent)
     (§
         #_"Long" c = store.vmConstants.get(name)
-        if (c == null)
+        if (c == nil)
         (§
-            if (notPresent != null)
+            if (notPresent != nil)
             (§
                 return notPresent
             )
             throw new JVMCIError("expected VM constant not found: " + name)
         )
-        return type.cast(convertValue(name, type, c, null))
+        return type.cast(convertValue(name, type, c, nil))
     )
 
     ;;;
@@ -70273,7 +70562,7 @@ public class HotSpotVMConfigAccess
      ;;
     public #_"<T> T" getConstant(#_"String" name, #_"Class<T>" type)
     (§
-        return getConstant(name, type, null)
+        return getConstant(name, type, nil)
     )
 
     ;;;
@@ -70289,8 +70578,8 @@ public class HotSpotVMConfigAccess
      ;;
     public #_"<T> T" getFieldOffset(#_"String" name, #_"Class<T>" type, #_"String" cppType, #_"T" notPresent)
     (§
-        #_"VMField" entry = getField(name, cppType, notPresent == null)
-        if (entry == null)
+        #_"VMField" entry = getField(name, cppType, notPresent == nil)
+        if (entry == nil)
         (§
             return notPresent
         )
@@ -70313,7 +70602,7 @@ public class HotSpotVMConfigAccess
      ;;
     public #_"<T> T" getFieldOffset(#_"String" name, #_"Class<T>" type, #_"String" cppType)
     (§
-        return getFieldOffset(name, type, cppType, null)
+        return getFieldOffset(name, type, cppType, nil)
     )
 
     ;;;
@@ -70327,7 +70616,7 @@ public class HotSpotVMConfigAccess
      ;;
     public #_"<T> T" getFieldOffset(#_"String" name, #_"Class<T>" type)
     (§
-        return getFieldOffset(name, type, null, null)
+        return getFieldOffset(name, type, nil, nil)
     )
 
     ;;;
@@ -70341,8 +70630,8 @@ public class HotSpotVMConfigAccess
      ;;
     public #_"long" getFieldAddress(#_"String" name, #_"String" cppType, #_"Long" notPresent)
     (§
-        #_"VMField" entry = getField(name, cppType, notPresent == null)
-        if (entry == null)
+        #_"VMField" entry = getField(name, cppType, notPresent == nil)
+        if (entry == nil)
         (§
             return notPresent
         )
@@ -70363,7 +70652,7 @@ public class HotSpotVMConfigAccess
      ;;
     public #_"long" getFieldAddress(#_"String" name, #_"String" cppType)
     (§
-        return getFieldAddress(name, cppType, null)
+        return getFieldAddress(name, cppType, nil)
     )
 
     ;;;
@@ -70378,12 +70667,12 @@ public class HotSpotVMConfigAccess
      ;;
     public #_"<T> T" getFieldValue(#_"String" name, #_"Class<T>" type, #_"String" cppType, #_"T" notPresent)
     (§
-        #_"VMField" entry = getField(name, cppType, notPresent == null)
-        if (entry == null)
+        #_"VMField" entry = getField(name, cppType, notPresent == nil)
+        if (entry == nil)
         (§
             return notPresent
         )
-        if (entry.value == null)
+        if (entry.value == nil)
         (§
             throw new JVMCIError(name + " is not a static field")
         )
@@ -70401,7 +70690,7 @@ public class HotSpotVMConfigAccess
      ;;
     public #_"<T> T" getFieldValue(#_"String" name, #_"Class<T>" type, #_"String" cppType)
     (§
-        return getFieldValue(name, type, cppType, null)
+        return getFieldValue(name, type, cppType, nil)
     )
 
     ;;;
@@ -70414,7 +70703,7 @@ public class HotSpotVMConfigAccess
      ;;
     public #_"<T> T" getFieldValue(#_"String" name, #_"Class<T>" type)
     (§
-        return getFieldValue(name, type, null, null)
+        return getFieldValue(name, type, nil, nil)
     )
 
     ;;;
@@ -70429,17 +70718,17 @@ public class HotSpotVMConfigAccess
     private #_"VMField" getField(#_"String" name, #_"String" cppType, #_"boolean" required)
     (§
         #_"VMField" entry = store.vmFields.get(name)
-        if (entry == null)
+        if (entry == nil)
         (§
             if (!required)
             (§
-                return null
+                return nil
             )
             throw new JVMCIError("expected VM field not found: " + name)
         )
 
         ;; Make sure the native type is still the type we expect.
-        if (cppType != null && !cppType.equals(entry.type))
+        if (cppType != nil && !cppType.equals(entry.type))
         (§
             throw new JVMCIError("expected type " + cppType + " but VM field " + name + " is of type " + entry.type)
         )
@@ -70457,7 +70746,7 @@ public class HotSpotVMConfigAccess
      ;;
     public #_"<T> T" getFlag(#_"String" name, #_"Class<T>" type)
     (§
-        return getFlag(name, type, null)
+        return getFlag(name, type, nil)
     )
 
     ;;;
@@ -70475,13 +70764,13 @@ public class HotSpotVMConfigAccess
         #_"VMFlag" entry = store.vmFlags.get(name)
         #_"Object" value
         #_"String" cppType
-        if (entry == null)
+        if (entry == nil)
         (§
             ;; Fall back to VM call
             value = store.compilerToVm.getFlagValue(name)
             if (value == store.compilerToVm)
             (§
-                if (notPresent != null)
+                if (notPresent != nil)
                 (§
                     return notPresent
                 )
@@ -70489,7 +70778,7 @@ public class HotSpotVMConfigAccess
             )
             else
             (§
-                cppType = null
+                cppType = nil
             )
         )
         else
@@ -70537,7 +70826,7 @@ public class HotSpotVMConfigAccess
         )
         else if (toType == String.class)
         (§
-            if (value == null || value instanceof String)
+            if (value == nil || value instanceof String)
             (§
                 return value
             )
@@ -70547,7 +70836,7 @@ public class HotSpotVMConfigAccess
             return value
         )
 
-        throw new JVMCIError("cannot convert " + name + " of type " + value.getClass().getSimpleName() + (cppType == null ? "" (§ colon ) " [" + cppType + "]") + " to " + toType.getSimpleName())
+        throw new JVMCIError("cannot convert " + name + " of type " + value.getClass().getSimpleName() + (cppType == nil ? "" (§ colon ) " [" + cppType + "]") + " to " + toType.getSimpleName())
     )
 
     private final #_"HotSpotVMConfigStore" store
@@ -70652,77 +70941,6 @@ public interface ConstantPool
 (§ package jdk.vm.ci.meta
 
 ;;;
- ; Reflection operations on values represented as {@linkplain JavaConstant constants}. All methods
- ; in this interface require the VM to access the actual object encapsulated in
- ; {@link JavaKind#Object object} constants. This access is not always possible, depending on kind
- ; of VM and the state that the VM is in. Therefore, all methods can return {@code null} at any
- ; time, to indicate that the result is not available at this point. The caller is responsible to
- ; check for {@code null} results and handle them properly, e.g., not perform an optimization.
- ;;
-public interface ConstantReflectionProvider
-(§
-    ;;;
-     ; Compares two constants for equality. The equality relationship is symmetric. Returns
-     ; {@link Boolean#TRUE true} if the two constants represent the same run time value,
-     ; {@link Boolean#FALSE false} if they are different. Returns {@code null} if the constants
-     ; cannot be compared at this point.
-     ;;
-    #_"Boolean" constantEquals(#_"Constant" x, #_"Constant" y)
-
-    ;;;
-     ; Returns the length of the array constant. Returns {@code null} if the constant is not an
-     ; array, or if the array length is not available at this point.
-     ;;
-    #_"Integer" readArrayLength(#_"JavaConstant" array)
-
-    ;;;
-     ; Reads a value from the given array at the given index. Returns {@code null} if the constant
-     ; is not an array, if the index is out of bounds, or if the value is not available at this
-     ; point.
-     ;;
-    #_"JavaConstant" readArrayElement(#_"JavaConstant" array, #_"int" index)
-
-    ;;;
-     ; Gets the current value of this field for a given object, if available.
-     ;
-     ; There is no guarantee that the same value will be returned by this method for a field unless
-     ; the field is considered to be constant by the runtime.
-     ;
-     ; @param receiver object from which this field's value is to be read. This value is ignored if
-     ;            this field is static.
-     ; @return the value of this field or {@code null} if the value is not available (e.g., because
-     ;         the field holder is not yet initialized).
-     ;;
-    #_"JavaConstant" readFieldValue(#_"ResolvedJavaField" field, #_"JavaConstant" receiver)
-
-    ;;;
-     ; Returns the {@link ResolvedJavaType} for a {@link Class} object (or any other object regarded
-     ; as a class by the VM) encapsulated in the given constant. Returns {@code null} if the
-     ; constant does not encapsulate a class, or if the type is not available at this point.
-     ;;
-    #_"ResolvedJavaType" asJavaType(#_"Constant" constant)
-
-    ;;;
-     ; Gets raw memory access.
-     ;;
-    #_"MemoryAccessProvider" getMemoryAccessProvider()
-
-    ;;;
-     ; Gets the runtime representation of the {@link Class} object of this type.
-     ;;
-    #_"JavaConstant" asJavaClass(#_"ResolvedJavaType" type)
-
-    ;;;
-     ; Gets the runtime representation of the "hub" of this type--that is, the closest part of the
-     ; type representation which is typically stored in the object header.
-     ;;
-    #_"Constant" asObjectHub(#_"ResolvedJavaType" type)
-)
-)
-
-(§ package jdk.vm.ci.meta
-
-;;;
  ; Specifies the action that should be taken by the runtime in case a certain deoptimization is
  ; triggered.
  ;;
@@ -70798,646 +71016,160 @@ public enum DeoptimizationReason
 )
 )
 
-(§ package jdk.vm.ci.meta
+(§ package jdk.vm.ci.hotspot
+
+import java.lang.reflect.Array
+import java.util.Objects
+
+import jdk.vm.ci.common.JVMCIError
 
 ;;;
- ; Provides memory access operations for the target VM.
+ ; HotSpot implementation of {@link ConstantReflectionProvider}.
  ;;
-public interface MemoryAccessProvider
+public class HotSpotConstantReflectionProvider implements ConstantReflectionProvider
 (§
-    ;;;
-     ; Reads a primitive value using a base address and a displacement.
-     ;
-     ; @param kind the {@link JavaKind} of the returned {@link JavaConstant} object
-     ; @param base the base address from which the value is read
-     ; @param displacement the displacement within the object in bytes
-     ; @param bits the number of bits to read from memory
-     ; @return the read value encapsulated in a {@link JavaConstant} object of {@link JavaKind} kind
-     ; @throws IllegalArgumentException if the read is out of bounds of the object or {@code kind}
-     ;             is {@link JavaKind#Void} or not {@linkplain JavaKind#isPrimitive() primitive}
-     ;             kind or {@code bits} is not 8, 16, 32 or 64
-     ;;
-    #_"JavaConstant" readPrimitiveConstant(#_"JavaKind" kind, #_"Constant" base, #_"long" displacement, #_"int" bits) throws IllegalArgumentException
+    protected final #_"HotSpotJVMCIRuntimeProvider" runtime
+    protected final #_"HotSpotMemoryAccessProviderImpl" memoryAccess
 
-    ;;;
-     ; Reads a Java {@link Object} value using a base address and a displacement.
-     ;
-     ; @param base the base address from which the value is read
-     ; @param displacement the displacement within the object in bytes
-     ; @return the read value encapsulated in a {@link Constant} object
-     ; @throws IllegalArgumentException if the address computed from {@code base} and
-     ;             {@code displacement} does not denote a location holding an {@code Object} value
-     ;;
-    #_"JavaConstant" readObjectConstant(#_"Constant" base, #_"long" displacement)
-)
-)
-
-(§ package jdk.vm.ci.meta
-
-import java.lang.reflect.Executable
-import java.lang.reflect.Field
-
-;;;
- ; Provides access to the metadata of a class typically provided in a class file.
- ;;
-public interface MetaAccessProvider
-(§
-    ;;;
-     ; Returns the resolved Java type representing a given Java class.
-     ;
-     ; @param clazz the Java class object
-     ; @return the resolved Java type object
-     ;;
-    #_"ResolvedJavaType" lookupJavaType(#_"Class<?>" clazz)
-
-    ;;;
-     ; Provides the {@link ResolvedJavaMethod} for a {@link Method} or {@link Constructor} obtained
-     ; via reflection.
-     ;;
-    #_"ResolvedJavaMethod" lookupJavaMethod(#_"Executable" reflectionMethod)
-
-    ;;;
-     ; Provides the {@link ResolvedJavaField} for a {@link Field} obtained via reflection.
-     ;;
-    #_"ResolvedJavaField" lookupJavaField(#_"Field" reflectionField)
-
-    ;;;
-     ; Returns the resolved Java type of the given {@link JavaConstant} object.
-     ;
-     ; @return {@code null} if {@code constant.isNull() || !constant.kind.isObject()}
-     ;;
-    #_"ResolvedJavaType" lookupJavaType(#_"JavaConstant" constant)
-
-    ;;;
-     ; Encodes a deoptimization action and a deoptimization reason in an integer value.
-     ;
-     ; @param debugId an integer that can be used to track the origin of a deoptimization at
-     ;            runtime. There is no guarantee that the runtime will use this value. The runtime
-     ;            may even keep fewer than 32 bits.
-     ;
-     ; @return the encoded value as an integer
-     ;;
-    #_"JavaConstant" encodeDeoptActionAndReason(#_"DeoptimizationAction" action, #_"DeoptimizationReason" reason, #_"int" debugId)
-
-    #_"DeoptimizationReason" decodeDeoptReason(#_"JavaConstant" constant)
-
-    #_"DeoptimizationAction" decodeDeoptAction(#_"JavaConstant" constant)
-
-    #_"int" decodeDebugId(#_"JavaConstant" constant)
-)
-)
-
-(§ package jdk.vm.ci.meta
-
-;;;
- ; Represents a reference to a resolved Java field. Fields, like methods and types, are resolved
- ; through {@link ConstantPool constant pools}.
- ;;
-public interface ResolvedJavaField extends JavaField, ModifiersProvider
-(§
-    ;;;
-     ; {@inheritDoc}
-     ; <p>
-     ; Only the {@linkplain Modifier#fieldModifiers() field flags} specified in the JVM
-     ; specification will be included in the returned mask.
-     ;;
-    #_"int" getModifiers()
-
-    default #_"boolean" isFinal()
+    public HotSpotConstantReflectionProvider(#_"HotSpotJVMCIRuntimeProvider" runtime)
     (§
-        return ModifiersProvider.super.isFinalFlagSet()
+        this.runtime = runtime
+        this.memoryAccess = new HotSpotMemoryAccessProviderImpl(runtime)
     )
 
-    ;;;
-     ; Determines if this field is a synthetic field as defined by the Java Language Specification.
-     ;;
-    #_"boolean" isSynthetic()
-
-    ;;;
-     ; Returns the {@link ResolvedJavaType} object representing the class or interface that declares
-     ; this field.
-     ;;
-    #_"ResolvedJavaType" JavaField'''getDeclaringType-1()
-)
-)
-
-(§ package jdk.vm.ci.meta
-
-;;;
- ; Represents a resolved Java method. Methods, like fields and types, are resolved through
- ; {@link ConstantPool constant pools}.
- ;;
-public interface ResolvedJavaMethod extends JavaMethod, InvokeTarget, ModifiersProvider
-(§
-    ;;;
-     ; Returns the bytecode of this method, if the method has code. The returned byte array does not
-     ; contain breakpoints or non-Java bytecodes. This may return null if the
-     ; {@link #getDeclaringClass() holder} is not {@link ResolvedJavaType#isLinked() linked}.
-     ;
-     ; The contained constant pool indices may not be the ones found in the original class file but
-     ; they can be used with the JVMCI API (e.g. methods in {@link ConstantPool}).
-     ;
-     ; @return the bytecode of the method, or {@code null} if {@code getCodeSize() == 0} or if the
-     ;         code is not ready.
-     ;;
-    #_"byte"[] getCode()
-
-    ;;;
-     ; Returns the size of the bytecode of this method, if the method has code. This is equivalent
-     ; to {@link #getCode()}. {@code length} if the method has code.
-     ;
-     ; @return the size of the bytecode in bytes, or 0 if no bytecode is available
-     ;;
-    #_"int" getCodeSize()
-
-    ;;;
-     ; Returns the {@link ResolvedJavaType} object representing the class or interface that declares
-     ; this method.
-     ;;
-    #_"ResolvedJavaType" JavaMethod'''getDeclaringType-1()
-
-    ;;;
-     ; Returns the maximum number of locals used in this method's bytecodes.
-     ;;
-    #_"int" getMaxLocals()
-
-    default #_"boolean" isFinal()
+    @Override
+    public #_"MemoryAccessProvider" ConstantReflectionProvider'''getMemoryAccessProvider-1()
     (§
-        return ModifiersProvider.super.isFinalFlagSet()
+        return memoryAccess
     )
 
-    ;;;
-     ; Determines if this method is a synthetic method as defined by the Java Language
-     ; Specification.
-     ;;
-    #_"boolean" isSynthetic()
-
-    ;;;
-     ; Checks whether this method is a class initializer.
-     ;
-     ; @return {@code true} if the method is a class initializer
-     ;;
-    #_"boolean" isClassInitializer()
-
-    ;;;
-     ; Checks whether this method is a constructor.
-     ;
-     ; @return {@code true} if the method is a constructor
-     ;;
-    #_"boolean" isConstructor()
-
-    ;;;
-     ; Checks whether this method can be statically bound (usually, that means it is final or
-     ; private or static, but not abstract, or the declaring class is final).
-     ;
-     ; @return {@code true} if this method can be statically bound
-     ;;
-    #_"boolean" canBeStaticallyBound()
-
-    ;;;
-     ; Returns the constant pool of this method.
-     ;;
-    #_"ConstantPool" getConstantPool()
-
-    ;;;
-     ; A {@code Parameter} provides information about method parameters.
-     ;;
-    class Parameter
+    @Override
+    public Boolean ConstantReflectionProvider'''constantEquals-3(#_"Constant" x, #_"Constant" y)
     (§
-        private final #_"String" name
-        private final #_"ResolvedJavaMethod" method
-        private final #_"int" modifiers
-        private final #_"int" index
-
-        ;;;
-         ; Constructor for {@code Parameter}.
-         ;
-         ; @param name the name of the parameter or {@code null} if there is no
-         ;            {@literal MethodParameters} class file attribute providing a non-empty name
-         ;            for the parameter
-         ; @param modifiers the modifier flags for the parameter
-         ; @param method the method which defines this parameter
-         ; @param index the index of the parameter
-         ;;
-        public Parameter(#_"String" name, #_"int" modifiers, #_"ResolvedJavaMethod" method, #_"int" index)
+        if (x == y)
         (§
-            this.name = name
-            this.modifiers = modifiers
-            this.method = method
-            this.index = index
+            return true
         )
-
-        ;;;
-         ; Gets the name of the parameter. If the parameter's name is {@linkplain #isNamePresent()
-         ; present}, then this method returns the name provided by the class file. Otherwise, this
-         ; method synthesizes a name of the form argN, where N is the index of the parameter in the
-         ; descriptor of the method which declares the parameter.
-         ;
-         ; @return the name of the parameter, either provided by the class file or synthesized if
-         ;         the class file does not provide a name
-         ;;
-        public #_"String" getName()
+        else if (x instanceof ObjectConstantImpl)
         (§
-            if (name == null)
-            (§
-                return "arg" + index
-            )
-            else
-            (§
-                return name
-            )
-        )
-
-        ;;;
-         ; Gets the method declaring the parameter.
-         ;;
-        public #_"ResolvedJavaMethod" getDeclaringMethod()
-        (§
-            return method
-        )
-
-        ;;;
-         ; Get the modifier flags for the parameter.
-         ;;
-        public #_"int" getModifiers()
-        (§
-            return modifiers
-        )
-
-        ;;;
-         ; Gets the kind of the parameter.
-         ;;
-        public #_"JavaKind" getKind()
-        (§
-            return method.JavaMethod'''getSignature-1().getParameterKind(index)
-        )
-
-        ;;;
-         ; Gets the type of the parameter.
-         ;;
-        public #_"JavaType" getType()
-        (§
-            return method.JavaMethod'''getSignature-1().getParameterType(index, method.JavaMethod'''getDeclaringType-1())
-        )
-    )
-
-    ;;;
-     ; Returns an array of {@code Parameter} objects that represent all the parameters to this
-     ; method. Returns an array of length 0 if this method has no parameters. Returns {@code null}
-     ; if the parameter information is unavailable.
-     ;;
-    default #_"Parameter[]" getParameters()
-    (§
-        return null
-    )
-
-    ;;;
-     ; Returns {@code true} if this method is not excluded from inlining and has associated Java
-     ; bytecodes (@see {@link ResolvedJavaMethod#hasBytecodes()}).
-     ;;
-    #_"boolean" canBeInlined()
-
-    ;;;
-     ; Returns {@code true} if the inlining of this method should be forced.
-     ;;
-    #_"boolean" shouldBeInlined()
-
-    default #_"JavaType[]" toParameterTypes()
-    (§
-        #_"JavaType" receiver = isStatic() || isConstructor() ? null (§ colon ) this.JavaMethod'''getDeclaringType-1()
-        return this.JavaMethod'''getSignature-1().toParameterTypes(receiver)
-    )
-
-    ;;;
-     ; Checks whether the method has bytecodes associated with it. Methods without bytecodes are
-     ; either abstract or native methods.
-     ;
-     ; @return whether the definition of this method is Java bytecodes
-     ;;
-    default #_"boolean" hasBytecodes()
-    (§
-        return isConcrete() && !isNative()
-    )
-)
-)
-
-(§ package jdk.vm.ci.meta
-
-;;;
- ; Represents a resolved Java type. Types include primitives, objects, {@code void}, and arrays thereof.
- ; Types, like fields and methods, are resolved through {@link ConstantPool constant pools}.
- ;;
-public interface ResolvedJavaType extends JavaType, ModifiersProvider
-(§
-    ;;;
-     ; Checks whether this type is an interface.
-     ;
-     ; @return {@code true} if this type is an interface
-     ;;
-    #_"boolean" isInterface()
-
-    ;;;
-     ; Checks whether this type is primitive.
-     ;
-     ; @return {@code true} if this type is primitive
-     ;;
-    #_"boolean" isPrimitive()
-
-    ;;
-     ; The setting of the final bit for types is a bit confusing since arrays are marked as final.
-     ; This method provides a semantically equivalent test that appropriate for types.
-     ;;
-    default #_"boolean" isLeaf()
-    (§
-        return this.JavaType''getElementalType-1().isFinalFlagSet()
-    )
-
-    ;;;
-     ; Checks whether this type is initialized. If a type is initialized it implies that it was
-     ; {@link #isLinked() linked} and that the static initializer has run.
-     ;
-     ; @return {@code true} if this type is initialized
-     ;;
-    #_"boolean" isInitialized()
-
-    ;;;
-     ; Initializes this type.
-     ;;
-    #_"void" initialize()
-
-    ;;;
-     ; Checks whether this type is linked and verified. When a type is linked the static initializer
-     ; has not necessarily run. An {@link #isInitialized() initialized} type is always linked.
-     ;
-     ; @return {@code true} if this type is linked
-     ;;
-    #_"boolean" isLinked()
-
-    ;;;
-     ; Determines if this type is either the same as, or is a superclass or superinterface of, the
-     ; type represented by the specified parameter. This method is identical to
-     ; {@link Class#isAssignableFrom(Class)} in terms of the value return for this type.
-     ;;
-    #_"boolean" isAssignableFrom(ResolvedJavaType other)
-
-    ;;;
-     ; Returns the {@link ResolvedJavaType} object representing the host class of this VM anonymous
-     ; class (as opposed to the unrelated concept specified by {@link Class#isAnonymousClass()}) or
-     ; {@code null} if this object does not represent a VM anonymous class.
-     ;;
-    #_"ResolvedJavaType" getHostClass()
-
-    ;;;
-     ; Returns true if this type is exactly the type {@link java.lang.Object}.
-     ;;
-    default #_"boolean" isJavaLangObject()
-    (§
-        ;; Removed assertion due to https://bugs.eclipse.org/bugs/show_bug.cgi?id=434442
-        return getSuperclass() == null && !isInterface() && this.JavaType'''getJavaKind-1() == :JavaKind'Object
-    )
-
-    ;;;
-     ; Checks whether the specified object is an instance of this type.
-     ;
-     ; @param obj the object to test
-     ; @return {@code true} if the object is an instance of this type
-     ;;
-    #_"boolean" isInstance(#_"JavaConstant" obj)
-
-    ;;;
-     ; Gets the super class of this type. If this type represents either the {@code Object} class,
-     ; an interface, a primitive type, or void, then null is returned. If this object represents an
-     ; array class then the type object representing the {@code Object} class is returned.
-     ;;
-    #_"ResolvedJavaType" getSuperclass()
-
-    ;;;
-     ; Gets the interfaces implemented or extended by this type. This method is analogous to
-     ; {@link Class#getInterfaces()} and as such, only returns the interfaces directly implemented
-     ; or extended by this type.
-     ;;
-    #_"ResolvedJavaType"[] getInterfaces()
-
-    ;;;
-     ; Walks the class hierarchy upwards and returns the least common class that is a superclass of
-     ; both the current and the given type.
-     ;
-     ; @return the least common type that is a super type of both the current and the given type, or
-     ;         {@code null} if primitive types are involved.
-     ;;
-    #_"ResolvedJavaType" findLeastCommonAncestor(ResolvedJavaType otherType)
-
-    ;;;
-     ; Resolves the method implementation for virtual dispatches on objects of this dynamic type.
-     ; This resolution process only searches "up" the class hierarchy of this type. A broader search
-     ; that also walks "down" the hierarchy is implemented by
-     ; {@link #findUniqueConcreteMethod(ResolvedJavaMethod)}. For interface types it returns null
-     ; since no concrete object can be an interface.
-     ;
-     ; @param method the method to select the implementation of
-     ; @param callerType the caller or context type used to perform access checks
-     ; @return the link-time resolved method (might be abstract) or {@code null} if it is either a
-     ;         signature polymorphic method or can not be linked.
-     ;;
-    #_"ResolvedJavaMethod" resolveMethod(#_"ResolvedJavaMethod" method, #_"ResolvedJavaType" callerType)
-
-    ;;;
-     ; A convenience wrapper for {@link #resolveMethod(ResolvedJavaMethod, ResolvedJavaType)} that
-     ; only returns non-abstract methods.
-     ;
-     ; @param method the method to select the implementation of
-     ; @param callerType the caller or context type used to perform access checks
-     ; @return the concrete method that would be selected at runtime, or {@code null} if there is no
-     ;         concrete implementation of {@code method} in this type or any of its superclasses
-     ;;
-    default #_"ResolvedJavaMethod" resolveConcreteMethod(#_"ResolvedJavaMethod" method, #_"ResolvedJavaType" callerType)
-    (§
-        #_"ResolvedJavaMethod" resolvedMethod = resolveMethod(method, callerType)
-        if (resolvedMethod == null || resolvedMethod.isAbstract())
-        (§
-            return null
-        )
-        return resolvedMethod
-    )
-
-    ;;;
-     ; Returns the instance fields of this class, including
-     ; {@linkplain ResolvedJavaField#isInternal() internal} fields. A zero-length array is returned
-     ; for array and primitive types. The order of fields returned by this method is stable. That
-     ; is, for a single JVM execution the same order is returned each time this method is called. It
-     ; is also the "natural" order, which means that the JVM would expect the fields in this order
-     ; if no specific order is given.
-     ;
-     ; @param includeSuperclasses if true, then instance fields for the complete hierarchy of this
-     ;            type are included in the result
-     ; @return an array of instance fields
-     ;;
-    #_"ResolvedJavaField[]" getInstanceFields(#_"boolean" includeSuperclasses)
-
-    ;;;
-     ; Returns the static fields of this class, including {@linkplain ResolvedJavaField#isInternal()
-     ; internal} fields. A zero-length array is returned for array and primitive types. The order of
-     ; fields returned by this method is stable. That is, for a single JVM execution the same order
-     ; is returned each time this method is called.
-     ;;
-    #_"ResolvedJavaField[]" getStaticFields()
-
-    ;;;
-     ; Returns the instance field of this class (or one of its super classes) at the given offset,
-     ; or {@code null} if there is no such field.
-     ;
-     ; @param offset the offset of the field to look for
-     ; @return the field with the given offset, or {@code null} if there is no such field.
-     ;;
-    #_"ResolvedJavaField" findInstanceFieldWithOffset(#_"long" offset, #_"JavaKind" expectedKind)
-
-    ;;;
-     ; Returns an array reflecting all the constructors declared by this type. This method is
-     ; similar to {@link Class#getDeclaredConstructors()} in terms of returned constructors.
-     ;;
-    #_"ResolvedJavaMethod[]" getDeclaredConstructors()
-
-    ;;;
-     ; Returns an array reflecting all the methods declared by this type. This method is similar to
-     ; {@link Class#getDeclaredMethods()} in terms of returned methods.
-     ;;
-    #_"ResolvedJavaMethod[]" getDeclaredMethods()
-
-    ;;;
-     ; Returns the {@code <clinit>} method for this class if there is one.
-     ;;
-    #_"ResolvedJavaMethod" getClassInitializer()
-)
-)
-
-(§ package jdk.vm.ci.meta
-
-;;;
- ; Represents a method signature provided by the runtime.
- ;
- ; @see <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.3.3">Method Descriptors</a>
- ;;
-public interface Signature
-(§
-    ;;;
-     ; Returns the number of parameters in this signature, adding 1 for a receiver if requested.
-     ;
-     ; @param receiver true if 1 is to be added to the result for a receiver
-     ; @return the number of parameters; + 1 iff {@code receiver == true}
-     ;;
-    #_"int" getParameterCount(#_"boolean" receiver)
-
-    ;;;
-     ; Gets the parameter type at the specified position.
-     ;
-     ; @param index the index into the parameters, with {@code 0} indicating the first parameter
-     ; @param accessingClass the context of the type lookup. If non-null, its class loader is used
-     ;            for resolving the type. If {@code null}, then the type returned is either
-     ;            unresolved or a resolved type whose resolution is context free (e.g., a primitive
-     ;            type or a type in a java.* package).
-     ; @return the {@code index}'th parameter type
-     ; @throws LinkageError if {@code accessingClass != null} and resolution fails
-     ;
-     ;;
-    #_"JavaType" getParameterType(#_"int" index, #_"ResolvedJavaType" accessingClass)
-
-    ;;;
-     ; Gets the parameter kind at the specified position. This is the same as calling
-     ; {@link #getParameterType}.{@link JavaType#getJavaKind getJavaKind}.
-     ;
-     ; @param index the index into the parameters, with {@code 0} indicating the first parameter
-     ; @return the kind of the parameter at the specified position
-     ;;
-    default #_"JavaKind" getParameterKind(#_"int" index)
-    (§
-        return getParameterType(index, null).JavaType'''getJavaKind-1()
-    )
-
-    ;;;
-     ; Gets the return type of this signature.
-     ;
-     ; @param accessingClass the context of the type lookup. If non-null, its class loader is used
-     ;            for resolving the type. If {@code null}, then the type returned is either
-     ;            unresolved or a resolved type whose resolution is context free (e.g., a primitive
-     ;            type or a type in a java.* package).
-     ; @return the return type
-     ; @throws LinkageError if {@code accessingClass != null} and resolution fails
-     ;;
-    #_"JavaType" getReturnType(#_"ResolvedJavaType" accessingClass)
-
-    ;;;
-     ; Gets the return kind of this signature. This is the same as calling
-     ; {@link #getReturnType}.{@link JavaType#getJavaKind getJavaKind}.
-     ;;
-    default #_"JavaKind" getReturnKind()
-    (§
-        return getReturnType(null).JavaType'''getJavaKind-1()
-    )
-
-    ;;;
-     ; Gets the
-     ; <a href="http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.3.3">method
-     ; descriptor</a> corresponding to this signature. For example:
-     ;
-     ; <pre>
-     ; (ILjava/lang/String;D)V
-     ; </pre>
-     ;
-     ; @return the signature as a string
-     ;;
-    default #_"String" toMethodDescriptor()
-    (§
-        #_"StringBuilder" sb = new StringBuilder("(")
-        for (int i = 0(§ semi ) i < getParameterCount(false)(§ semi ) ++i)
-        (§
-            sb.append(getParameterType(i, null).JavaType'''getName-1())
-        )
-        sb.append((§ char ")")).append(getReturnType(null).JavaType'''getName-1())
-        return sb.toString()
-    )
-
-    default #_"JavaType[]" toParameterTypes(#_"JavaType" receiverType)
-    (§
-        #_"int" args = getParameterCount(false)
-        #_"JavaType[]" result
-        #_"int" i = 0
-        if (receiverType != null)
-        (§
-            result = new JavaType[args + 1]
-            result[0] = receiverType
-            i = 1
+            return y instanceof ObjectConstantImpl && ((ObjectConstantImpl) x).object() == ((ObjectConstantImpl) y).object()
         )
         else
         (§
-            result = new JavaType[args]
+            return Objects.equals(x, y)
         )
-        for (#_"int" j = 0(§ semi ) j < args(§ semi ) j++)
-        (§
-            result[i + j] = getParameterType(j, null)
-        )
-        return result
     )
 
-    default #_"JavaKind[]" toParameterKinds(#_"boolean" receiver)
+    @Override
+    public Integer ConstantReflectionProvider'''readArrayLength-2(#_"JavaConstant" array)
     (§
-        #_"int" args = getParameterCount(false)
-        #_"JavaKind[]" result
-        #_"int" i = 0
-        if (receiver)
+        if (array == nil || JavaConstant'''getJavaKind-1(array) != :JavaKind'Object || JavaConstant'''isNull-1(array))
         (§
-            result = new JavaKind[args + 1]
-            result[0] = :JavaKind'Object
-            i = 1
+            return nil
+        )
+
+        #_"Object" arrayObject = ((ObjectConstantImpl) array).object()
+        if (!arrayObject.getClass().isArray())
+        (§
+            return nil
+        )
+        return Array.getLength(arrayObject)
+    )
+
+    @Override
+    public #_"JavaConstant" ConstantReflectionProvider'''readArrayElement-3(#_"JavaConstant" array, #_"int" index)
+    (§
+        if (array == nil || JavaConstant'''getJavaKind-1(array) != :JavaKind'Object || JavaConstant'''isNull-1(array))
+        (§
+            return nil
+        )
+        #_"Object" a = ((ObjectConstantImpl) array).object()
+
+        if (!a.getClass().isArray() || index < 0 || index >= Array.getLength(a))
+        (§
+            return nil
+        )
+
+        if (a instanceof Object[])
+        (§
+            Object #_"element" = ((Object[]) a)[index]
+            return ObjectConstantImpl.forObject(element)
         )
         else
         (§
-            result = new JavaKind[args]
+            return JavaConstant.forBoxedPrimitive(Array.get(a, index))
         )
-        for (#_"int" j = 0(§ semi ) j < args(§ semi ) j++)
+    )
+
+    public #_"JavaConstant" forObject(#_"Object" value)
+    (§
+        return ObjectConstantImpl.forObject(value)
+    )
+
+    @Override
+    public #_"ResolvedJavaType" ConstantReflectionProvider'''asJavaType-2(#_"Constant" constant)
+    (§
+        if (satisfies? ObjectConstant constant)
         (§
-            result[i + j] = getParameterKind(j)
+            #_"Object" obj = ((ObjectConstantImpl) constant).object()
+            if (obj instanceof Class)
+            (§
+                return runtime.getHostJVMCIBackend().getMetaAccess().MetaAccessProvider'''lookupJavaType-2c((Class<?>) obj)
+            )
         )
-        return result
+        if (satisfies? MetaspaceConstant constant)
+        (§
+            #_"MetaspaceWrapperObject" obj = MetaspaceConstantImpl.getMetaspaceObject(constant)
+            if (obj instanceof HotSpotResolvedObjectTypeImpl)
+            (§
+                return (ResolvedJavaType) obj
+            )
+        )
+        return nil
+    )
+
+    public #_"JavaConstant" ConstantReflectionProvider'''readFieldValue-3(#_"ResolvedJavaField" field, #_"JavaConstant" receiver)
+    (§
+        #_"HotSpotResolvedJavaField" hotspotField = (HotSpotResolvedJavaField) field
+        if (hotspotField.ResolvedJavaField''isStatic-1())
+        (§
+            #_"HotSpotResolvedJavaType" holder = (HotSpotResolvedJavaType) hotspotField.JavaField'''getDeclaringType-1()
+            if (holder.ResolvedJavaType'''isInitialized-1())
+            (§
+                return memoryAccess.ConstantReflectionProvider'''readFieldValue-3(hotspotField, holder.mirror())
+            )
+        )
+        else
+        (§
+            if (receiver.JavaConstant''isNonNull-1())
+            (§
+                #_"Object" object = ((ObjectConstantImpl) receiver).object()
+                if (hotspotField.HotSpotResolvedJavaField'''isInObject-2(object))
+                (§
+                    return memoryAccess.ConstantReflectionProvider'''readFieldValue-3(hotspotField, object)
+                )
+            )
+        )
+        return nil
+    )
+
+    @Override
+    public #_"JavaConstant" ConstantReflectionProvider'''asJavaClass-2(#_"ResolvedJavaType" type)
+    (§
+        return ObjectConstantImpl.forObject(((HotSpotResolvedJavaType) type).mirror())
+    )
+
+    @Override
+    public #_"Constant" ConstantReflectionProvider'''asObjectHub-2(#_"ResolvedJavaType" type)
+    (§
+        if (satisfies? HotSpotResolvedObjectType type)
+        (§
+            return ((HotSpotResolvedObjectType) type).HotSpotResolvedObjectType'''klass-1()
+        )
+        else
+        (§
+            throw JVMCIError.unimplemented()
+        )
     )
 )
 )
