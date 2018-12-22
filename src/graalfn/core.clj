@@ -709,6 +709,7 @@ BlockStates'new-1
 BranchOp'new-4
 BranchOp'new-4c
 BranchOp'new-4f
+Bytecode'new-3
 BytecodeFrame'AFTER_BCI
 BytecodeFrame'BEFORE_BCI
 BytecodeFrame'INVALID_FRAMESTATE_BCI
@@ -728,6 +729,11 @@ BytecodeParser''getNonIntrinsicAncestor-1
 BytecodeParser''parsingIntrinsic-1
 BytecodeParser''push-3
 BytecodeParser'new-5
+BytecodeProvider''findField-5
+BytecodeProvider''findMethod-5
+BytecodeProvider''getBytecode-2
+BytecodeProvider''resolveToClass-2
+BytecodeProvider'new-0
 BytecodeStream''currentBC-1
 BytecodeStream''endBCI-1
 BytecodeStream''next-1
@@ -936,11 +942,6 @@ ClassRef'new-1
 Classfile''getCode-3
 Classfile'new-3
 Classfile'skipFully-2
-ClassfileBytecode'new-3
-ClassfileBytecodeProvider''findField-5
-ClassfileBytecodeProvider''findMethod-5
-ClassfileBytecodeProvider''resolveToClass-2
-ClassfileBytecodeProvider'new-0
 ClassfileConstant'CONSTANT_Class
 ClassfileConstant'CONSTANT_Double
 ClassfileConstant'CONSTANT_Dynamic
@@ -1084,7 +1085,6 @@ ConstantFields'isFinalField-1
 ConstantFields'isFinalFieldValueConstant-3
 ConstantFields'isStableField-1
 ConstantFields'isStableFieldValueConstant-3
-ConstantFields'isStaticFieldConstant-1
 ConstantFields'readConstantField-2
 ConstantFields'tryConstantFold-2
 ConstantLoadOptimization'new-0
@@ -1385,7 +1385,6 @@ FrameStateBuilder''clearNonLiveLocals-4
 FrameStateBuilder''clearStack-1
 FrameStateBuilder''create-3
 FrameStateBuilder''create-6
-FrameStateBuilder''getMethod-1
 FrameStateBuilder''inferPhiStamps-2
 FrameStateBuilder''initializeForMethodStart-1
 FrameStateBuilder''initializeFromArgumentsArray-2
@@ -1403,8 +1402,7 @@ FrameStateBuilder''pushLock-3
 FrameStateBuilder''pushReturn-3
 FrameStateBuilder''stackOp-2
 FrameStateBuilder''storeLocal-4
-FrameStateBuilder'new-3c
-FrameStateBuilder'new-3m
+FrameStateBuilder'new-3
 G1PostWriteBarrier'new-4
 G1PreWriteBarrier'new-4
 G1ReferentFieldReadBarrier''getExpectedObject-1
@@ -1466,9 +1464,7 @@ GraalOptions'reassociateInvariants
 GraalOptions'reduceDCE
 GraalOptions'removeNeverExecutedCode
 GraalOptions'replaceInputsWithConstantsBasedOnStamps
-GraalOptions'resolveClassBeforeStaticInvoke
 GraalOptions'simpleFastInflatedLocking
-GraalOptions'stressTestEarlyReads
 GraalOptions'trivialInliningSize
 GraalOptions'trustFinalDefaultFields
 GraalOptions'unrollMaxIterations
@@ -1513,7 +1509,6 @@ Graph''setAfterFloatingReadPhase-2
 Graph''setGuardsStage-2
 Graph''setHasValueProxies-2
 Graph''setStart-2
-Graph''trackNodeEvents-2
 Graph''unregister-2
 Graph'copy-1
 Graph'new-1
@@ -1585,6 +1580,7 @@ HotSpot'arrayLengthOffset
 HotSpot'arrayOopDescSize
 HotSpot'biasedLockMaskInPlace
 HotSpot'biasedLockPattern
+HotSpot'bytecodeProvider
 HotSpot'cardTableAddress
 HotSpot'cardTableAddressMark
 HotSpot'cardTableShift
@@ -1595,7 +1591,6 @@ HotSpot'codeCacheLowBound
 HotSpot'codeEntryAlignment
 HotSpot'config
 HotSpot'constantReflection
-HotSpot'defaultBytecodeProvider
 HotSpot'deoptHandlerEntryMark
 HotSpot'dirtyCardValue
 HotSpot'epochMaskInPlace
@@ -1700,7 +1695,6 @@ IfNode''setTrueSuccessorProbability-2
 IfNode'new-4b
 IfNode'new-4f
 IllegalStamp'instance
-IncrementalCanonicalizerPhase'new-1
 IncrementalCanonicalizerPhase'new-2
 InductionVariable'new-1
 InfoElement'new-4
@@ -1868,7 +1862,6 @@ IntervalWalker''removeFromList-2
 IntervalWalker''walkTo-2
 IntervalWalker'new-3
 IntrinsicContext''isCallToOriginal-2
-IntrinsicContext''isCompilationRoot-1
 IntrinsicContext''isPostParseInlined-1
 IntrinsicContext'createFrameState-3
 IntrinsicContext'new-4
@@ -2897,8 +2890,6 @@ ResolvedJavaMethod''isNative-1
 ResolvedJavaMethod''isPublic-1
 ResolvedJavaMethod''isStatic-1
 ResolvedJavaMethod''isSynchronized-1
-ResolvedJavaMethodBytecode'new-1
-ResolvedJavaMethodBytecodeProvider'INSTANCE
 ResolvedJavaType''isAbstract-1
 ResolvedJavaType''isInterface-1
 ResolvedJavaType''isJavaLangObject-1
@@ -3775,33 +3766,10 @@ ZeroExtendNode'new-4
 (defp BlockScope)
 (defp BlockStates)
 (defp BranchOp)
-
-;;;
- ; An interface for accessing the bytecode properties of a ResolvedJavaMethod that allows for
- ; different properties than those returned by ResolvedJavaMethod. Since the bytecode accessed
- ; directly from ResolvedJavaMethod may have been subject to bytecode instrumentation and VM
- ; rewriting, this indirection can be used to enable access to the original bytecode of a method
- ; (i.e. as defined in a class file).
- ;;
-(defp Bytecode
-    (#_"ResolvedJavaMethod" Bytecode'''getMethod-1 [#_"Bytecode" this])
-    (#_"[byte]" Bytecode'''getCode-1 [#_"Bytecode" this])
-    (#_"int" Bytecode'''getCodeSize-1 [#_"Bytecode" this])
-    (#_"int" Bytecode'''getMaxLocals-1 [#_"Bytecode" this])
-    (#_"ConstantPool" Bytecode'''getConstantPool-1 [#_"Bytecode" this])
-)
-
+(defp Bytecode)
 (defp BytecodeLookupSwitch)
 (defp BytecodeParser)
-
-;;;
- ; Provides a Bytecode object for interposing on the bytecode of a ResolvedJavaMethod
- ; (i.e. potentially getting bytecode different than ResolvedJavaMethod#getCode()).
- ;;
-(defp BytecodeProvider
-    (#_"Bytecode" BytecodeProvider'''getBytecode-2 [#_"BytecodeProvider" this, #_"ResolvedJavaMethod" method])
-)
-
+(defp BytecodeProvider)
 (defp BytecodeStream)
 
 ;;;
@@ -3920,8 +3888,6 @@ ZeroExtendNode'new-4
 (defp ClassGetHubNode)
 (defp ClassRef)
 (defp Classfile)
-(defp ClassfileBytecode)
-(defp ClassfileBytecodeProvider)
 
 (defp ClassfileConstant
     ;;;
@@ -5798,23 +5764,11 @@ ZeroExtendNode'new-4
      ; @return the bytecode of the method, or {@code nil} if {@code getCodeSize() == 0} or if the
      ;         code is not ready
      ;;
-    (#_"byte[]" ResolvedJavaMethod'''getCode-1 [#_"ResolvedJavaMethod" this])
-    ;;;
-     ; Returns the size of the bytecode of this method, if the method has code. This is equivalent
-     ; to {@link #getCode()}.{@code length} if the method has code.
-     ;
-     ; @return the size of the bytecode in bytes, or 0 if no bytecode is available
-     ;;
-    (#_"int" ResolvedJavaMethod'''getCodeSize-1 [#_"ResolvedJavaMethod" this])
+    (#_"byte[]" ResolvedJavaMethod'''getCode-1 [#_"ResolvedJavaMethod" this])
     ;;;
      ; Returns the maximum number of locals used in this method's bytecodes.
      ;;
-    (#_"int" ResolvedJavaMethod'''getMaxLocals-1 [#_"ResolvedJavaMethod" this])
-    ;;;
-     ; Determines if this method is a synthetic method as defined by the Java Language Specification.
-     ;;
-    #_unused
-    (#_"boolean" ResolvedJavaMethod'''isSynthetic-1 [#_"ResolvedJavaMethod" this])
+    (#_"int" ResolvedJavaMethod'''getMaxLocals-1 [#_"ResolvedJavaMethod" this])
     ;;;
      ; Checks whether this method is a class initializer.
      ;;
@@ -5831,7 +5785,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Returns the constant pool of this method.
      ;;
-    (#_"ConstantPool" ResolvedJavaMethod'''getConstantPool-1 [#_"ResolvedJavaMethod" this])
+    (#_"ConstantPool" ResolvedJavaMethod'''getConstantPool-1 [#_"ResolvedJavaMethod" this])
     ;;;
      ; Returns {@code true} if this method is not excluded from inlining and has associated Java
      ; bytecodes (@see {@link ResolvedJavaMethod#hasBytecodes()}).
@@ -5876,9 +5830,6 @@ ZeroExtendNode'new-4
         (and (not (ResolvedJavaMethod''isAbstract-1 this)) (not (ResolvedJavaMethod''isNative-1 this)))
     )
 )
-
-(defp ResolvedJavaMethodBytecode)
-(defp ResolvedJavaMethodBytecodeProvider)
 
 ;;;
  ; Represents a resolved Java type. Types include primitives, objects, {@code void}, and arrays thereof.
@@ -7832,7 +7783,7 @@ ZeroExtendNode'new-4
     (def #_"Register" HotSpot'heapBaseRegister     AMD64'r12)
     (def #_"Register" HotSpot'stackPointerRegister AMD64'rsp)
 
-    (§ def #_"BytecodeProvider" HotSpot'defaultBytecodeProvider (ClassfileBytecodeProvider'new-0))
+    (§ def #_"BytecodeProvider" HotSpot'bytecodeProvider (BytecodeProvider'new-0))
 
     (§ def #_"ForeignCalls" HotSpot'foreignCalls (ForeignCalls'new-0))
     (§ def #_"Replacements" HotSpot'replacements (Replacements'new-0))
@@ -8602,16 +8553,12 @@ ZeroExtendNode'new-4
     ;; debugging settings
     (def #_"boolean" GraalOptions'zapStackOnMethodEntry false)
 
-    ;; @Option "Stress the code by emitting reads at earliest instead of latest point."
-    (def #_"boolean" GraalOptions'stressTestEarlyReads false)
-
     ;; register allocator debugging
     (def #_"boolean" GraalOptions'conditionalElimination true)
     (def #_"boolean" GraalOptions'rawConditionalElimination true)
     (def #_"boolean" GraalOptions'replaceInputsWithConstantsBasedOnStamps true)
     (def #_"boolean" GraalOptions'removeNeverExecutedCode true)
     (def #_"boolean" GraalOptions'genLoopSafepoints true)
-    (def #_"boolean" GraalOptions'resolveClassBeforeStaticInvoke false)
     (def #_"boolean" GraalOptions'canOmitFrame true)
 
     ;; runtime settings
@@ -8876,28 +8823,15 @@ ZeroExtendNode'new-4
  ; Implements the logic that decides whether a field read should be constant folded.
  ;;
 (value-ns ConstantFields
-    (def- #_"ResolvedJavaField" ConstantFields'stringValueField (§ soon MetaAccessProvider'''lookupJavaField-2 HotSpot'metaAccess, (#_"Class" .getDeclaredField String, "value")))
-    (def- #_"ResolvedJavaField" ConstantFields'stringHashField  (§ soon MetaAccessProvider'''lookupJavaField-2 HotSpot'metaAccess, (#_"Class" .getDeclaredField String, "hash")))
-
     (def- #_"ResolvedJavaType" ConstantFields'hotSpotType   (§ soon MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, (ß HotSpot)))
     (def- #_"ResolvedJavaType" ConstantFields'nodeClassType (§ soon MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, NodeClass'iface))
-
-    (defn #_"boolean" ConstantFields'isStaticFieldConstant-1 [#_"ResolvedJavaField" field]
-        (let [
-            #_"ResolvedJavaType" declaringClass (JavaField'''getDeclaringType-1 field)
-        ]
-            (and (ResolvedJavaType'''isInitialized-1 declaringClass) (not (= (JavaType'''getName-1 declaringClass) "Ljava/lang/System;")))
-        )
-    )
 
     (defn #_"boolean" ConstantFields'isStableField-1 [#_"ResolvedJavaField" field]
         (and HotSpot'foldStableValues
              (or (not (ResolvedJavaField''isStatic-1 field))
-                 (ConstantFields'isStaticFieldConstant-1 field)
+                 (ResolvedJavaType'''isInitialized-1 (JavaField'''getDeclaringType-1 field))
              )
-             (or (HotSpotResolvedJavaField'''isStable-1 field)
-                 (any = field ConstantFields'stringValueField ConstantFields'stringHashField)
-             )
+             (HotSpotResolvedJavaField'''isStable-1 field)
         )
     )
 
@@ -8911,7 +8845,9 @@ ZeroExtendNode'new-4
 
     (defn #_"boolean" ConstantFields'isFinalField-1 [#_"ResolvedJavaField" field]
         (and (ResolvedJavaField''isFinal-1 field)
-            (or (not (ResolvedJavaField''isStatic-1 field)) (ConstantFields'isStaticFieldConstant-1 field))
+            (or (not (ResolvedJavaField''isStatic-1 field))
+                (ResolvedJavaType'''isInitialized-1 (JavaField'''getDeclaringType-1 field))
+            )
         )
     )
 
@@ -11195,10 +11131,6 @@ ZeroExtendNode'new-4
              ; An intrinsic is being processed when inlining an InvokeNode in an existing graph.
              ;;
             :CompilationContext'INLINE_AFTER_PARSING
-            ;;;
-             ; An intrinsic is the root of compilation.
-             ;;
-            :CompilationContext'ROOT_COMPILATION
         )
     )
 )
@@ -12235,7 +12167,7 @@ ZeroExtendNode'new-4
         ]
             ;; This code assumes that Graph.addDuplicates doesn't trigger the NodeEventListener to track
             ;; only nodes which were modified into the process of inlining the graph into the current graph.
-            (try (§ with [#_"NodeEventScope" _ (Graph''trackNodeEvents-2 (:graph invoke), listener)])
+            (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 (:graph invoke), listener)])
                 (InliningUtil'inline-4 invoke, inlineGraph, receiverNullCheck, inlineeMethod)
             )
             (:changedNodes listener)
@@ -17415,7 +17347,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"[this [BciBlock]]" BciBlockMapping''createMapping-2 [#_"BciBlockMapping" this, #_"BytecodeStream" stream]
         (let [
-            #_"[BciBlock]" mapping (vec (repeat (Bytecode'''getCodeSize-1 (:bytecode this)) nil))
+            #_"[BciBlock]" mapping (vec (repeat (count (:code (:bytecode this))) nil))
         ]
             ;; iterate over the bytecodes top to bottom,
             ;; mark the entrypoints of basic blocks and build lists of successors for all bytecodes
@@ -19868,8 +19800,8 @@ ZeroExtendNode'new-4
 (class-ns BytecodeParser []
     (defn #_"BytecodeParser" BytecodeParser'new-5 [#_"GraphBuilderInstance" builder, #_"Graph" graph, #_"BytecodeParser" parent, #_"ResolvedJavaMethod" method, #_"IntrinsicContext" context]
         (let [
-            #_"BytecodeProvider" bytecodeProvider (if (some? context) (:bytecodeProvider context) ResolvedJavaMethodBytecodeProvider'INSTANCE)
-            #_"Bytecode" code (BytecodeProvider'''getBytecode-2 bytecodeProvider, method)
+            #_"BytecodeProvider" bytecodeProvider (if (some? context) (:bytecodeProvider context) HotSpot'bytecodeProvider)
+            #_"Bytecode" code (BytecodeProvider''getBytecode-2 bytecodeProvider, method)
         ]
             (merge (BytecodeParser'class.)
                 (hash-map
@@ -19883,9 +19815,9 @@ ZeroExtendNode'new-4
                     #_"IntrinsicContext" :intrinsicContext context
                     #_"BytecodeProvider" :bytecodeProvider bytecodeProvider
                     #_"Bytecode" :bytecode code
-                    #_"ResolvedJavaMethod" :method (Bytecode'''getMethod-1 code)
-                    #_"ConstantPool" :constantPool (Bytecode'''getConstantPool-1 code)
-                    #_"BytecodeStream" :stream (BytecodeStream'new-1 (Bytecode'''getCode-1 code))
+                    #_"ResolvedJavaMethod" :method (:method code)
+                    #_"ConstantPool" :constantPool (:constantPool code)
+                    #_"BytecodeStream" :stream (BytecodeStream'new-1 (:code code))
 
                     #_"BciBlockMapping" :blockMap nil
                     #_"LocalLiveness" :liveness nil
@@ -20388,7 +20320,7 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"boolean" BytecodeParser''tryFastInlineAccessor-3 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" targetMethod, #_"[ValueNode]" args]
         (let [
-            #_"[byte]" code (vec (ResolvedJavaMethod'''getCode-1 targetMethod))
+            #_"[byte]" code (vec (ResolvedJavaMethod'''getCode-1 targetMethod))
         ]
             (and (some? code) (= (count code) BytecodeParser'ACCESSOR_BYTECODE_LENGTH) (= (Bytes'beU1-2 code, 0) Bytecodes'ALOAD_0) (= (Bytes'beU1-2 code, 1) Bytecodes'GETFIELD)
                 (let [
@@ -20397,7 +20329,7 @@ ZeroExtendNode'new-4
                     (and (<= Bytecodes'IRETURN b4 Bytecodes'ARETURN)
                         (let [
                             #_"int" cpi (Bytes'beU2-2 code, 2)
-                            #_"JavaField" field (#_"ConstantPool" .lookupField (ResolvedJavaMethod'''getConstantPool-1 targetMethod), cpi, targetMethod, Bytecodes'GETFIELD)
+                            #_"JavaField" field (#_"ConstantPool" .lookupField (ResolvedJavaMethod'''getConstantPool-1 targetMethod), cpi, targetMethod, Bytecodes'GETFIELD)
                         ]
                             (and (satisfies? ResolvedJavaField field)
                                 (let [
@@ -20419,7 +20351,7 @@ ZeroExtendNode'new-4
         (try (§ with [#_"IntrinsicScope" _ (when (and (some? calleeIntrinsicContext) (not (BytecodeParser''parsingIntrinsic-1 this))) (IntrinsicScope'new-3 this, (Signature''toParameterKinds-2 (JavaMethod'''getSignature-1 targetMethod), (not (ResolvedJavaMethod''isStatic-1 targetMethod))), args))])
             (let [
                 #_"BytecodeParser" parser (BytecodeParser'new-5 (:graphBuilderInstance this), (:graph this), this, targetMethod, calleeIntrinsicContext)
-                #_"FrameStateBuilder" startFrameState (FrameStateBuilder'new-3c parser, (:bytecode parser), (:graph this))
+                #_"FrameStateBuilder" startFrameState (FrameStateBuilder'new-3 parser, (:bytecode parser), (:graph this))
                 _
                     (when-not (ResolvedJavaMethod''isStatic-1 targetMethod)
                         (§ ass! args (update' args 0 #(BytecodeParser''nullCheckedValue-2 this, %)))
@@ -20468,38 +20400,30 @@ ZeroExtendNode'new-4
 
     (defn- #_"boolean" BytecodeParser''inline-5 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" targetMethod, #_"ResolvedJavaMethod" inlinedMethod, #_"BytecodeProvider" intrinsicBytecodeProvider, #_"[ValueNode]" args]
         (let [
-            #_"IntrinsicContext" intrinsic (:intrinsicContext this)
+            #_"IntrinsicContext" context (:intrinsicContext this)
         ]
-            (or (and (nil? intrinsic) (= targetMethod inlinedMethod) (zero? (& (ResolvedJavaMethod'''getModifiers-1 targetMethod) (| Modifier/STATIC Modifier/SYNCHRONIZED))) (BytecodeParser''tryFastInlineAccessor-3 this, targetMethod, args))
-                (if (and (some? intrinsic) (IntrinsicContext''isCallToOriginal-2 intrinsic, targetMethod))
-                    (if (IntrinsicContext''isCompilationRoot-1 intrinsic)
+            (or (and (nil? context) (= targetMethod inlinedMethod) (zero? (& (ResolvedJavaMethod'''getModifiers-1 targetMethod) (| Modifier/STATIC Modifier/SYNCHRONIZED))) (BytecodeParser''tryFastInlineAccessor-3 this, targetMethod, args))
+                (if (and (some? context) (IntrinsicContext''isCallToOriginal-2 context, targetMethod))
+                    (and (not (ResolvedJavaMethod''isNative-1 (:originalMethod context))) GraalOptions'inlinePartialIntrinsicExitDuringParsing
                         (do
-                            ;; A root compiled intrinsic needs to deoptimize if the slow path is taken. During frame state
-                            ;; assignment, the deopt node will get its stateBefore from the start node of the intrinsic.
-                            (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/RuntimeConstraint))
+                            ;; Otherwise inline the original method. Any frame state created during the inlining
+                            ;; will exclude frame(s) in the intrinsic method (see FrameStateBuilder.create(int bci)).
+                            (BytecodeParser'notifyBeforeInline-1 inlinedMethod)
+                            (§ ass! this (BytecodeParser''parseAndInlineCallee-4 this, (:originalMethod context), args, nil))
+                            (BytecodeParser'notifyAfterInline-1 inlinedMethod)
                             true
-                        )
-                        (and (not (ResolvedJavaMethod''isNative-1 (:originalMethod intrinsic))) GraalOptions'inlinePartialIntrinsicExitDuringParsing
-                            (do
-                                ;; Otherwise inline the original method. Any frame state created during the inlining
-                                ;; will exclude frame(s) in the intrinsic method (see FrameStateBuilder.create(int bci)).
-                                (BytecodeParser'notifyBeforeInline-1 inlinedMethod)
-                                (§ ass! this (BytecodeParser''parseAndInlineCallee-4 this, (:originalMethod intrinsic), args, nil))
-                                (BytecodeParser'notifyAfterInline-1 inlinedMethod)
-                                true
-                            )
                         )
                     )
                     (let [
-                        intrinsic
-                            (when (and (nil? intrinsic) (some? intrinsicBytecodeProvider)) => intrinsic
+                        context
+                            (when (and (nil? context) (some? intrinsicBytecodeProvider)) => context
                                 (IntrinsicContext'new-4 targetMethod, inlinedMethod, intrinsicBytecodeProvider, :CompilationContext'INLINE_DURING_PARSING)
                             )
                     ]
                         (and (ResolvedJavaMethod''hasBytecodes-1 inlinedMethod)
                             (do
                                 (BytecodeParser'notifyBeforeInline-1 inlinedMethod)
-                                (§ ass! this (BytecodeParser''parseAndInlineCallee-4 this, inlinedMethod, args, intrinsic))
+                                (§ ass! this (BytecodeParser''parseAndInlineCallee-4 this, inlinedMethod, args, context))
                                 (BytecodeParser'notifyAfterInline-1 inlinedMethod)
                                 true
                             )
@@ -20574,7 +20498,7 @@ ZeroExtendNode'new-4
             [#_"ResolvedJavaMethod" targetMethod #_"InvokeKind" invokeKind]
                 (when (InvokeKind''isIndirect-1 initialInvokeKind) => [initialTargetMethod initialInvokeKind]
                     (let [
-                        #_"ResolvedJavaType" contextType (JavaMethod'''getDeclaringType-1 (FrameStateBuilder''getMethod-1 (:frameState this)))
+                        #_"ResolvedJavaType" contextType (JavaMethod'''getDeclaringType-1 (:method (:bytecode (:frameState this))))
                         #_"ResolvedJavaMethod" specialCallTarget (MethodCallTargetNode'findSpecialCallTarget-4 initialInvokeKind, (nth args 0), initialTargetMethod, contextType)
                     ]
                         (when (some? specialCallTarget) => [initialTargetMethod initialInvokeKind]
@@ -20656,7 +20580,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"this" BytecodeParser''genInvokeStatic-2 [#_"BytecodeParser" this, #_"JavaMethod" target]
-        (if (and (BytecodeParser'callTargetIsResolved-1 target) (or (ResolvedJavaType'''isInitialized-1 (JavaMethod'''getDeclaringType-1 target)) (not GraalOptions'resolveClassBeforeStaticInvoke)))
+        (when (BytecodeParser'callTargetIsResolved-1 target) => (BytecodeParser''handleUnresolvedInvoke-3 this, target, :InvokeKind'Static)
             (let [
                 #_"InvokeNode" invoke (BytecodeParser''appendInvoke-4 this, :InvokeKind'Static, target, (FrameStateBuilder''popArguments-2 (:frameState this), (Signature'''getParameterCount-2 (JavaMethod'''getSignature-1 target), false)))
                 _
@@ -20666,7 +20590,6 @@ ZeroExtendNode'new-4
             ]
                 this
             )
-            (BytecodeParser''handleUnresolvedInvoke-3 this, target, :InvokeKind'Static)
         )
     )
 
@@ -22080,7 +22003,7 @@ ZeroExtendNode'new-4
             (let [
                 f'local #(let [#_"ValueNode" node (nth (:locals (:frameState this)) %)] (when-not (= node :FrameState'TWO_SLOT_MARKER) node))
                 #_"ResolvedJavaMethod" o'method (:originalMethod (:intrinsicContext this))
-                #_"int" m (ResolvedJavaMethod'''getMaxLocals-1 o'method)
+                #_"int" m (ResolvedJavaMethod'''getMaxLocals-1 o'method)
                 #_"ValueNode*" locals
                     (if (or (= (count (:locals (:frameState this))) m) (ResolvedJavaMethod''isNative-1 o'method))
                         (map f'local (range m))
@@ -22091,7 +22014,7 @@ ZeroExtendNode'new-4
                         )
                     )
             ]
-                (Graph''add-2 (:graph this), (FrameState'new-8a nil, (ResolvedJavaMethodBytecode'new-1 o'method), 0, locals, nil, nil, nil, false))
+                (Graph''add-2 (:graph this), (FrameState'new-8a nil, (BytecodeProvider''getBytecode-2 HotSpot'bytecodeProvider, o'method), 0, locals, nil, nil, nil, false))
             )
         )
     )
@@ -22113,7 +22036,7 @@ ZeroExtendNode'new-4
                 (when-not (ResolvedJavaMethod''isStatic-1 (:method this)) => this
                     (assoc this :originalReceiver (nth (:locals startFrameState) 0))
                 )
-            this (assoc this :liveness (LocalLiveness'compute-4 (:stream this), (:blocks (:blockMap this)), (ResolvedJavaMethod'''getMaxLocals-1 (:method this)), (:nextLoop (:blockMap this))))
+            this (assoc this :liveness (LocalLiveness'compute-4 (:stream this), (:blocks (:blockMap this)), (ResolvedJavaMethod'''getMaxLocals-1 (:method this)), (:nextLoop (:blockMap this))))
             this (assoc this :lastInstr startInstruction)
             this (assoc this :frameState startFrameState)
             this (update this :stream BytecodeStream''setBCI-2 0)
@@ -22196,7 +22119,7 @@ ZeroExtendNode'new-4
     ; @SuppressWarnings("try")
     (defn #_"this" BytecodeParser''buildRootMethod-1 [#_"BytecodeParser" this]
         (let [
-            #_"FrameStateBuilder" startFrameState (FrameStateBuilder'new-3c this, (:bytecode this), (:graph this))
+            #_"FrameStateBuilder" startFrameState (FrameStateBuilder'new-3 this, (:bytecode this), (:graph this))
             startFrameState (FrameStateBuilder''initializeForMethodStart-1 startFrameState)
             this
                 (try (§ with [#_"IntrinsicScope" _ (when (some? (:intrinsicContext this)) (IntrinsicScope'new-1 this))])
@@ -23236,7 +23159,7 @@ ZeroExtendNode'new-4
                     )
                 )
         ]
-            (try (§ with [#_"NodeEventScope" _ (Graph''trackNodeEvents-2 graph, listener)])
+            (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 graph, listener)])
                 (doseq [#_"Node" node (remove Node''isDeleted-1 (:worklist this))]
                     (CanonicalizerInstance''processNode-2 this, node)
                 )
@@ -23343,21 +23266,21 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"ClassfileBytecode" Classfile'findCodeAttribute-6 [#_"DataInputStream" stream, #_"ClassfileConstantPool" cp, #_"ResolvedJavaType" type, #_"String" name, #_"String" descriptor, #_"boolean" static?]
+    (defn- #_"Bytecode" Classfile'findCodeAttribute-6 [#_"DataInputStream" stream, #_"ClassfileConstantPool" cp, #_"ResolvedJavaType" type, #_"String" name, #_"String" descriptor, #_"boolean" static?]
         (let [
             #_"int" attributesCount (#_"DataInputStream" .readUnsignedShort stream)
         ]
-            (loop-when [#_"ClassfileBytecode" code nil #_"int" i 0] (< i attributesCount) => code
+            (loop-when [#_"Bytecode" code nil #_"int" i 0] (< i attributesCount) => code
                 (let [
                     #_"String" attributeName (:value (ClassfileConstantPool''get-3 cp, Utf8'iface, (#_"DataInputStream" .readUnsignedShort stream)))
                     #_"int" attributeLength (#_"DataInputStream" .readInt stream)
                     code
                         (if (and (nil? code) (= attributeName "Code"))
                             (let [
-                                #_"ResolvedJavaMethod" method (ClassfileBytecodeProvider''findMethod-5 (:context cp), type, name, descriptor, static?)
+                                #_"ResolvedJavaMethod" method (BytecodeProvider''findMethod-5 (:context cp), type, name, descriptor, static?)
                                 ;; Even if we will discard the Code attribute (see below), we still
                                 ;; need to parse it to reach the following class file content.
-                                code (ClassfileBytecode'new-3 method, stream, cp)
+                                code (Bytecode'new-3 method, stream, cp)
                             ]
                                 (when (some? method) ;; => this is a method hidden from reflection (see sun.reflect.Reflection.filterMethods)
                                     code
@@ -23375,10 +23298,10 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"[ClassfileBytecode]" Classfile'readMethods-3 [#_"DataInputStream" stream, #_"ClassfileConstantPool" cp, #_"ResolvedJavaType" type]
+    (defn- #_"[Bytecode]" Classfile'readMethods-3 [#_"DataInputStream" stream, #_"ClassfileConstantPool" cp, #_"ResolvedJavaType" type]
         (let [
             #_"int" n (#_"DataInputStream" .readUnsignedShort stream)
-            #_"[ClassfileBytecode]" methods []
+            #_"[Bytecode]" methods []
             _
                 (dotimes [_ n]
                     (let [
@@ -23386,7 +23309,7 @@ ZeroExtendNode'new-4
                         #_"boolean" static? (Modifier/isStatic accessFlags)
                         #_"String" name (:value (ClassfileConstantPool''get-3 cp, Utf8'iface, (#_"DataInputStream" .readUnsignedShort stream)))
                         #_"String" descriptor (:value (ClassfileConstantPool''get-3 cp, Utf8'iface, (#_"DataInputStream" .readUnsignedShort stream)))
-                        #_"ClassfileBytecode" code (Classfile'findCodeAttribute-6 stream, cp, type, name, descriptor, static?)
+                        #_"Bytecode" code (Classfile'findCodeAttribute-6 stream, cp, type, name, descriptor, static?)
                     ]
                         (when (some? code)
                             (§ ass! methods (conj' methods code))
@@ -23401,7 +23324,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Creates a Classfile by parsing the class file bytes for {@code type} loadable from {@code context}.
      ;;
-    (defn #_"Classfile" Classfile'new-3 [#_"ResolvedJavaType" type, #_"DataInputStream" stream, #_"ClassfileBytecodeProvider" context]
+    (defn #_"Classfile" Classfile'new-3 [#_"ResolvedJavaType" type, #_"DataInputStream" stream, #_"BytecodeProvider" context]
         (let [
             #_"int" magic (#_"DataInputStream" .readInt stream)
             #_"int" minor (#_"DataInputStream" .readUnsignedShort stream)
@@ -23414,25 +23337,24 @@ ZeroExtendNode'new-4
             _ (Classfile'skipFully-2 stream, 6)                                                     ;; access_flags, this_class, super_class
             _ (Classfile'skipFully-2 stream, (* (#_"DataInputStream" .readUnsignedShort stream) 2)) ;; interfaces
             _ (Classfile'skipFields-1 stream)                                                       ;; fields
-            #_"[ClassfileBytecode]" methods (Classfile'readMethods-3 stream, cp, type)              ;; methods
+            #_"[Bytecode]" methods (Classfile'readMethods-3 stream, cp, type)                       ;; methods
             _ (Classfile'skipAttributes-1 stream)                                                   ;; attributes
         ]
             (merge (Classfile'class.)
                 (hash-map
                     #_"ResolvedJavaType" :type type
-                    #_"[ClassfileBytecode]" :codeAttributes methods
+                    #_"[Bytecode]" :codeAttributes methods
                 )
             )
         )
     )
 
-    (defn #_"ClassfileBytecode" Classfile''getCode-3 [#_"Classfile" this, #_"String" name, #_"String" descriptor]
+    (defn #_"Bytecode" Classfile''getCode-3 [#_"Classfile" this, #_"String" name, #_"String" descriptor]
         (loop-when [#_"seq" s (seq (:codeAttributes this))] (some? s) => (throw! (str "NoSuchMethodError: " (JavaType''toJavaName-1 (:type this)) "." name descriptor))
             (let [
-                #_"ClassfileBytecode" code (first s)
-                #_"ResolvedJavaMethod" method (Bytecode'''getMethod-1 code)
+                #_"Bytecode" code (first s)
             ]
-                (when (and (= (JavaMethod'''getName-1 method) name) (= (Signature''toMethodDescriptor-1 (JavaMethod'''getSignature-1 method)) descriptor)) => (recur (next s))
+                (when (and (= (JavaMethod'''getName-1 (:method code)) name) (= (Signature''toMethodDescriptor-1 (JavaMethod'''getSignature-1 (:method code))) descriptor)) => (recur (next s))
                     code
                 )
             )
@@ -23444,10 +23366,10 @@ ZeroExtendNode'new-4
  ; The bytecode properties of a method as parsed directly from a class file without any
  ; instrumentation or other rewriting performed on the bytecode.
  ;;
-(class-ns ClassfileBytecode [Bytecode]
-    (def- #_"int" ClassfileBytecode'EXCEPTION_HANDLER_TABLE_SIZE_IN_BYTES 8)
+(class-ns Bytecode []
+    (def- #_"int" Bytecode'EXCEPTION_HANDLER_TABLE_SIZE_IN_BYTES 8)
 
-    (defn- #_"void" ClassfileBytecode'skipCodeAttributes-1 [#_"DataInputStream" stream]
+    (defn- #_"void" Bytecode'skipCodeAttributes-1 [#_"DataInputStream" stream]
         (let [
             #_"int" n (#_"DataInputStream" .readUnsignedShort stream)
         ]
@@ -23459,7 +23381,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"ClassfileBytecode" ClassfileBytecode'new-3 [#_"ResolvedJavaMethod" method, #_"DataInputStream" stream, #_"ClassfileConstantPool" constantPool]
+    (defn #_"Bytecode" Bytecode'new-3 [#_"ResolvedJavaMethod" method, #_"DataInputStream" stream, #_"ClassfileConstantPool" constantPool]
         (let [
             _ (#_"DataInputStream" .readUnsignedShort stream)
             #_"int" maxLocals (#_"DataInputStream" .readUnsignedShort stream)
@@ -23467,10 +23389,10 @@ ZeroExtendNode'new-4
             #_"byte[]" code! (byte-array codeLength)
             _ (#_"DataInputStream" .readFully stream, code!)
             #_"int" n (#_"DataInputStream" .readUnsignedShort stream)
-            _ (Classfile'skipFully-2 stream, (* n ClassfileBytecode'EXCEPTION_HANDLER_TABLE_SIZE_IN_BYTES))
-            _ (ClassfileBytecode'skipCodeAttributes-1 stream)
+            _ (Classfile'skipFully-2 stream, (* n Bytecode'EXCEPTION_HANDLER_TABLE_SIZE_IN_BYTES))
+            _ (Bytecode'skipCodeAttributes-1 stream)
         ]
-            (merge (ClassfileBytecode'class.)
+            (merge (Bytecode'class.)
                 (hash-map
                     #_"ResolvedJavaMethod" :method method
                     #_"ClassfileConstantPool" :constantPool constantPool
@@ -23480,34 +23402,10 @@ ZeroExtendNode'new-4
             )
         )
     )
-
-    (defm ClassfileBytecode Bytecode
-        (#_"[byte]" Bytecode'''getCode-1 [#_"ClassfileBytecode" this]
-            (:code this)
-        )
-
-        (#_"int" Bytecode'''getCodeSize-1 [#_"ClassfileBytecode" this]
-            (count (:code this))
-        )
-
-        (#_"int" Bytecode'''getMaxLocals-1 [#_"ClassfileBytecode" this]
-            (:maxLocals this)
-        )
-
-        (#_"ConstantPool" Bytecode'''getConstantPool-1 [#_"ClassfileBytecode" this]
-            (:constantPool this)
-        )
-
-        (#_"ResolvedJavaMethod" Bytecode'''getMethod-1 [#_"ClassfileBytecode" this]
-            (:method this)
-        )
-    )
 )
 
 ;;;
- ; A BytecodeProvider that provides bytecode properties of a ResolvedJavaMethod as parsed from a class file.
- ; This avoids all {@linkplain java.lang.instrument.Instrumentation instrumentation} and any bytecode
- ; rewriting performed by the VM.
+ ; A BytecodeProvider provides bytecode properties of a ResolvedJavaMethod as parsed from a class file.
  ;
  ; This mechanism retrieves class files based on the name and ClassLoader of existing Class instances.
  ; It bypasses all VM parsing and verification of the class file and assumes the class files are well formed.
@@ -23519,11 +23417,11 @@ ZeroExtendNode'new-4
  ; appropriate LinkageError being thrown. The only way to avoid this is to have a completely isolated
  ; {@code jdk.vm.ci.meta} implementation for parsing snippet/intrinsic bytecodes.
  ;;
-(class-ns ClassfileBytecodeProvider [BytecodeProvider]
-    (defn #_"ClassfileBytecodeProvider" ClassfileBytecodeProvider'new-0 []
+(class-ns BytecodeProvider []
+    (defn #_"BytecodeProvider" BytecodeProvider'new-0 []
         (let [
-            #_"ClassfileBytecodeProvider" this
-                (merge (ClassfileBytecodeProvider'class.)
+            #_"BytecodeProvider" this
+                (merge (BytecodeProvider'class.)
                     (hash-map
                         #_"ClassLoader" :loader nil
                         #_"{Class Classfile}" :classfiles {}
@@ -23541,19 +23439,19 @@ ZeroExtendNode'new-4
     ;;;
      ; Gets the class file bytes for {@code c}.
      ;;
-    (defn- #_"InputStream" ClassfileBytecodeProvider'getClassfileAsStream-1 [#_"Class" c]
+    (defn- #_"InputStream" BytecodeProvider'getClassfileAsStream-1 [#_"Class" c]
         (#_"Module" .getResourceAsStream (#_"Class" .getModule c), (str (#_"String" .replace (#_"Class" .getName c), (§ char "."), (§ char "/")) ".class"))
     )
 
     ;;;
      ; Gets a Classfile created by parsing the class file bytes for {@code c}.
      ;;
-    (defn- #_"Classfile" ClassfileBytecodeProvider''getClassfile-2 [#_"ClassfileBytecodeProvider" this, #_"Class" c]
+    (defn- #_"Classfile" BytecodeProvider''getClassfile-2 [#_"BytecodeProvider" this, #_"Class" c]
         (locking this
             (or (get (:classfiles this) c)
                 (let [
                     #_"ResolvedJavaType" type (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, c)
-                    #_"InputStream" in (ClassfileBytecodeProvider'getClassfileAsStream-1 c)
+                    #_"InputStream" in (BytecodeProvider'getClassfileAsStream-1 c)
                 ]
                     (when (some? in) => (throw! (str "NoClassDefFoundError: " (#_"Class" .getName c)))
                         (let [
@@ -23568,7 +23466,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"Class" ClassfileBytecodeProvider''resolveToClass-2 [#_"ClassfileBytecodeProvider" this, #_"String" descriptor]
+    (defn #_"Class" BytecodeProvider''resolveToClass-2 [#_"BytecodeProvider" this, #_"String" descriptor]
         (locking this
             (or (get (:classes this) descriptor)
                 (if (= (count descriptor) 1)
@@ -23590,13 +23488,11 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm ClassfileBytecodeProvider BytecodeProvider
-        (#_"Bytecode" BytecodeProvider'''getBytecode-2 [#_"ClassfileBytecodeProvider" this, #_"ResolvedJavaMethod" method]
-            (let [
-                #_"Classfile" classfile (ClassfileBytecodeProvider''getClassfile-2 this, (ClassfileBytecodeProvider''resolveToClass-2 this, (JavaType'''getName-1 (JavaMethod'''getDeclaringType-1 method))))
-            ]
-                (Classfile''getCode-3 classfile, (JavaMethod'''getName-1 method), (Signature''toMethodDescriptor-1 (JavaMethod'''getSignature-1 method)))
-            )
+    (defn #_"Bytecode" BytecodeProvider''getBytecode-2 [#_"BytecodeProvider" this, #_"ResolvedJavaMethod" method]
+        (let [
+            #_"Classfile" classfile (BytecodeProvider''getClassfile-2 this, (BytecodeProvider''resolveToClass-2 this, (JavaType'''getName-1 (JavaMethod'''getDeclaringType-1 method))))
+        ]
+            (Classfile''getCode-3 classfile, (JavaMethod'''getName-1 method), (Signature''toMethodDescriptor-1 (JavaMethod'''getSignature-1 method)))
         )
     )
 
@@ -23605,7 +23501,7 @@ ZeroExtendNode'new-4
      ;
      ; Synchronized since the cache is lazily created.
      ;;
-    (defn- #_"MethodsCache" ClassfileBytecodeProvider''getMethods-2 [#_"ClassfileBytecodeProvider" this, #_"ResolvedJavaType" type]
+    (defn- #_"MethodsCache" BytecodeProvider''getMethods-2 [#_"BytecodeProvider" this, #_"ResolvedJavaType" type]
         (locking this
             (let [
                 #_"MethodsCache" methodsCache (get (:methods this) type)
@@ -23625,7 +23521,7 @@ ZeroExtendNode'new-4
      ;
      ; Synchronized since the cache is lazily created.
      ;;
-    (defn- #_"FieldsCache" ClassfileBytecodeProvider''getFields-2 [#_"ClassfileBytecodeProvider" this, #_"ResolvedJavaType" type]
+    (defn- #_"FieldsCache" BytecodeProvider''getFields-2 [#_"BytecodeProvider" this, #_"ResolvedJavaType" type]
         (locking this
             (let [
                 #_"FieldsCache" fieldsCache (get (:fields this) type)
@@ -23640,13 +23536,13 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"ResolvedJavaField" ClassfileBytecodeProvider''findField-5 [#_"ClassfileBytecodeProvider" this, #_"ResolvedJavaType" type, #_"String" name, #_"String" fieldType, #_"boolean" static?]
-        (FieldsCache''lookup-5 (ClassfileBytecodeProvider''getFields-2 this, type), type, name, fieldType, static?)
+    (defn #_"ResolvedJavaField" BytecodeProvider''findField-5 [#_"BytecodeProvider" this, #_"ResolvedJavaType" type, #_"String" name, #_"String" fieldType, #_"boolean" static?]
+        (FieldsCache''lookup-5 (BytecodeProvider''getFields-2 this, type), type, name, fieldType, static?)
     )
 
-    (defn #_"ResolvedJavaMethod" ClassfileBytecodeProvider''findMethod-5 [#_"ClassfileBytecodeProvider" this, #_"ResolvedJavaType" type, #_"String" name, #_"String" descriptor, #_"boolean" static?]
+    (defn #_"ResolvedJavaMethod" BytecodeProvider''findMethod-5 [#_"BytecodeProvider" this, #_"ResolvedJavaType" type, #_"String" name, #_"String" descriptor, #_"boolean" static?]
         (let [
-            #_"ResolvedJavaMethod" method (MethodsCache''lookup-4 (ClassfileBytecodeProvider''getMethods-2 this, type), type, name, descriptor)
+            #_"ResolvedJavaMethod" method (MethodsCache''lookup-4 (BytecodeProvider''getMethods-2 this, type), type, name, descriptor)
         ]
             (when (and (some? method) (= (ResolvedJavaMethod''isStatic-1 method) static?))
                 method
@@ -23686,8 +23582,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"ResolvedJavaMethod" ClassfileConstant'resolveMethod-5 [#_"ClassfileBytecodeProvider" context, #_"ResolvedJavaType" type, #_"String" name, #_"String" descriptor, #_"boolean" static?]
-        (or (ClassfileBytecodeProvider''findMethod-5 context, type, name, descriptor, static?)
+    (defn #_"ResolvedJavaMethod" ClassfileConstant'resolveMethod-5 [#_"BytecodeProvider" context, #_"ResolvedJavaType" type, #_"String" name, #_"String" descriptor, #_"boolean" static?]
+        (or (BytecodeProvider''findMethod-5 context, type, name, descriptor, static?)
             (when-not (or (ResolvedJavaType''isJavaLangObject-1 type) (ResolvedJavaType''isInterface-1 type))
                 (ClassfileConstant'resolveMethod-5 context, (ResolvedJavaType'''getSuperclass-1 type), name, descriptor, static?)
             )
@@ -23699,8 +23595,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"ResolvedJavaField" ClassfileConstant'resolveField-5 [#_"ClassfileBytecodeProvider" context, #_"ResolvedJavaType" type, #_"String" name, #_"String" fieldType, #_"boolean" static?]
-        (or (ClassfileBytecodeProvider''findField-5 context, type, name, fieldType, static?)
+    (defn #_"ResolvedJavaField" ClassfileConstant'resolveField-5 [#_"BytecodeProvider" context, #_"ResolvedJavaType" type, #_"String" name, #_"String" fieldType, #_"boolean" static?]
+        (or (BytecodeProvider''findField-5 context, type, name, fieldType, static?)
             (when-not (or (ResolvedJavaType''isJavaLangObject-1 type) (ResolvedJavaType''isInterface-1 type))
                 (ClassfileConstant'resolveField-5 context, (ResolvedJavaType'''getSuperclass-1 type), name, fieldType, static?)
             )
@@ -23732,7 +23628,7 @@ ZeroExtendNode'new-4
 
     (defn #_"ResolvedJavaType" ClassRef''resolve-2 [#_"ClassRef" this, #_"ClassfileConstantPool" cp]
         (when (nil? (:type this))
-            (§ ass! this (assoc this :type (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, (ClassfileBytecodeProvider''resolveToClass-2 (:context cp), (:value (ClassfileConstantPool''get-3 cp, Utf8'iface, (:nameIndex this)))))))
+            (§ ass! this (assoc this :type (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, (BytecodeProvider''resolveToClass-2 (:context cp), (:value (ClassfileConstantPool''get-3 cp, Utf8'iface, (:nameIndex this)))))))
         )
         (:type this)
     )
@@ -23913,7 +23809,7 @@ ZeroExtendNode'new-4
 
     (defm Unsupported ClassfileConstant
         (#_"void" ClassfileConstant'''loadReferencedType-4 [#_"Unsupported" this, #_"ClassfileConstantPool" cp, #_"int" index, #_"int" opcode]
-            (throw! (str "Resolution of " (:name this) " constant pool entries not supported by " (#_"Class" .getSimpleName ClassfileBytecodeProvider'iface)))
+            (throw! (str "Resolution of " (:name this) " constant pool entries not supported by " (#_"Class" .getSimpleName BytecodeProvider'iface)))
         )
     )
 )
@@ -23967,7 +23863,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"ClassfileConstantPool" ClassfileConstantPool'new-2 [#_"DataInputStream" stream, #_"ClassfileBytecodeProvider" context]
+    (defn #_"ClassfileConstantPool" ClassfileConstantPool'new-2 [#_"DataInputStream" stream, #_"BytecodeProvider" context]
         (let [
             #_"int" n (#_"DataInputStream" .readUnsignedShort stream)
             #_"[ClassfileConstant]" entries
@@ -23982,7 +23878,7 @@ ZeroExtendNode'new-4
             (merge (ClassfileConstantPool'class.)
                 (hash-map
                     #_"[ClassfileConstant]" :entries entries
-                    #_"ClassfileBytecodeProvider" :context context
+                    #_"BytecodeProvider" :context context
                 )
             )
         )
@@ -23998,7 +23894,7 @@ ZeroExtendNode'new-4
 
     (§ override! #_"void" #_"ConstantPool." loadReferencedType [#_"ClassfileConstantPool" this, #_"int" index, #_"int" opcode]
         (when (= opcode Bytecodes'INVOKEDYNAMIC)
-            (throw! (str "INVOKEDYNAMIC not supported by " (#_"Class" .getSimpleName ClassfileBytecodeProvider'iface)))
+            (throw! (str "INVOKEDYNAMIC not supported by " (#_"Class" .getSimpleName BytecodeProvider'iface)))
         )
         (ClassfileConstant'''loadReferencedType-4 (nth (:entries this) index), this, index, opcode)
         nil
@@ -24010,7 +23906,7 @@ ZeroExtendNode'new-4
 
     (§ override! #_"JavaMethod" #_"ConstantPool." lookupMethod [#_"ClassfileConstantPool" this, #_"int" index, #_"int" opcode]
         (when (= opcode Bytecodes'INVOKEDYNAMIC)
-            (throw! (str "INVOKEDYNAMIC not supported by" (#_"Class" .getSimpleName ClassfileBytecodeProvider'iface)))
+            (throw! (str "INVOKEDYNAMIC not supported by" (#_"Class" .getSimpleName BytecodeProvider'iface)))
         )
         (ExecutableRef''resolve-3 (ClassfileConstantPool''get-3 this, ExecutableRef'iface, index), this, opcode)
     )
@@ -29418,7 +29314,7 @@ ZeroExtendNode'new-4
                         (let [
                             #_"HashSetNodeEventListener" listener (HashSetNodeEventListener'new-0)
                             _
-                                (try (§ with [#_"NodeEventScope" _ (Graph''trackNodeEvents-2 graph, listener)])
+                                (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 graph, listener)])
                                     (EffectsClosure'''applyEffects-1 closure)
                                 )
                             _ (§ ass! graph (Phase'''run-3 (DeadCodeEliminationPhase'new-1 :Optionality'Required), graph, nil))
@@ -31323,7 +31219,7 @@ ZeroExtendNode'new-4
                     )
                 #_"HashSetNodeEventListener" listener (HashSetNodeEventListener'new-1 #{ :NodeEvent'NODE_ADDED, :NodeEvent'ZERO_USAGES })
                 _
-                    (try (§ with [#_"NodeEventScope" _ (Graph''trackNodeEvents-2 graph, listener)])
+                    (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 graph, listener)])
                         (ReentrantNodeIterator'apply-3 (FloatingReadClosure'new-3 modifiedInLoops, (:createFloatingReads this), (:createMemoryMapNodes this)), (:start graph), (MemoryMap0'new-1 (:start graph)))
                     )
                 _
@@ -32041,12 +31937,12 @@ ZeroExtendNode'new-4
      ; @param bytecode the bytecode in which the frame exists
      ; @param graph the target graph of nodes to be created by the builder
      ;;
-    (defn #_"FrameStateBuilder" FrameStateBuilder'new-3c [#_"BytecodeParser" parser, #_"Bytecode" bytecode, #_"Graph" graph]
+    (defn #_"FrameStateBuilder" FrameStateBuilder'new-3 [#_"BytecodeParser" parser, #_"Bytecode" bytecode, #_"Graph" graph]
         (merge (FrameStateBuilder'class.)
             (hash-map
                 #_"BytecodeParser" :parser parser
                 #_"Bytecode" :bytecode bytecode
-                #_"[ValueNode]" :locals (vec (repeat (Bytecode'''getMaxLocals-1 bytecode) nil))
+                #_"[ValueNode]" :locals (vec (repeat (:maxLocals bytecode) nil))
                 #_"(ValueNode)" :stack nil
                 #_"[ValueNode]" :lockedObjects []
                 #_"[MonitorIdNode]" :monitorIds []
@@ -32061,20 +31957,9 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; Creates a new frame state builder for the given method and the given target graph.
-     ;
-     ; @param method the method whose frame is simulated
-     ; @param graph the target graph of Graal nodes created by the builder
-     ;;
-    #_unused
-    (defn #_"FrameStateBuilder" FrameStateBuilder'new-3m [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"Graph" graph]
-        (FrameStateBuilder'new-3c parser, (ResolvedJavaMethodBytecode'new-1 method), graph)
-    )
-
     (defn #_"this" FrameStateBuilder''initializeFromArgumentsArray-2 [#_"FrameStateBuilder" this, #_"ValueNode*" arguments]
         (let [
-            #_"ResolvedJavaMethod" method (FrameStateBuilder''getMethod-1 this)
+            #_"ResolvedJavaMethod" method (:method (:bytecode this))
             [this #_"int" i #_"int" j]
                 (when-not (ResolvedJavaMethod''isStatic-1 method) => [this 0 0]
                     ;; set the receiver
@@ -32099,7 +31984,7 @@ ZeroExtendNode'new-4
 
     (defn #_"this" FrameStateBuilder''initializeForMethodStart-1 [#_"FrameStateBuilder" this]
         (let [
-            #_"ResolvedJavaMethod" method (FrameStateBuilder''getMethod-1 this)
+            #_"ResolvedJavaMethod" method (:method (:bytecode this))
             #_"ResolvedJavaType" originalType (JavaMethod'''getDeclaringType-1 method)
             [this #_"int" i #_"int" j]
                 (when-not (ResolvedJavaMethod''isStatic-1 method) => [this 0 0]
@@ -32134,10 +32019,6 @@ ZeroExtendNode'new-4
                 )
             )
         )
-    )
-
-    (defn #_"ResolvedJavaMethod" FrameStateBuilder''getMethod-1 [#_"FrameStateBuilder" this]
-        (Bytecode'''getMethod-1 (:bytecode this))
     )
 
     (defn #_"FrameState" FrameStateBuilder''create-3 [#_"FrameStateBuilder" this, #_"int" bci, #_"StateSplit" forStateSplit]
@@ -32631,18 +32512,6 @@ ZeroExtendNode'new-4
             (Graph''addInputs-2 this, node)
             (Graph''add-2 this, node)
         )
-    )
-
-    ;;;
-     ; Registers a given NodeEventListener with this graph. This should be used in
-     ; conjunction with try-with-resources statement as follows:
-     ;
-     ; try (NodeEventScope nes = graph.trackNodeEvents(listener)) {
-     ;     // make changes to the graph
-     ; }
-     ;;
-    (defn #_"NodeEventScope" Graph''trackNodeEvents-2 [#_"Graph" this, #_"NodeEventListener" listener]
-        (NodeEventScope'new-2 this, listener)
     )
 
     ;;;
@@ -33552,7 +33421,7 @@ ZeroExtendNode'new-4
         (let [
             #_"int" n (loop-when-recur [n 1 #_"seq" s (seq args)] (some? s) [(if (satisfies? ConstantNode (first s)) (inc n) n) (next s)] => n)
         ]
-            (<= (count (ResolvedJavaMethod'''getCode-1 method)) (* n GraalOptions'trivialInliningSize))
+            (<= (count (ResolvedJavaMethod'''getCode-1 method)) (* n GraalOptions'trivialInliningSize))
         )
     )
 
@@ -33634,7 +33503,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"InlineInvokeInfo" InlineInvokeInfo'createIntrinsicInlineInfo-1 [#_"ResolvedJavaMethod" methodToInline]
-        (InlineInvokeInfo'new-2 methodToInline, HotSpot'defaultBytecodeProvider)
+        (InlineInvokeInfo'new-2 methodToInline, HotSpot'bytecodeProvider)
     )
 
     #_unused
@@ -36125,10 +35994,6 @@ ZeroExtendNode'new-4
         (= (:compilationContext this) :CompilationContext'INLINE_AFTER_PARSING)
     )
 
-    (defn #_"boolean" IntrinsicContext''isCompilationRoot-1 [#_"IntrinsicContext" this]
-        (= (:compilationContext this) :CompilationContext'ROOT_COMPILATION)
-    )
-
     (defn #_"FrameState" IntrinsicContext'createFrameState-3 [#_"Graph" graph, #_"SideEffectsState" sideEffects, #_"StateSplit" forStateSplit]
         (if (StateSplit'''hasSideEffect-1 forStateSplit)
             (let [
@@ -36200,7 +36065,7 @@ ZeroExtendNode'new-4
      ; Fixes up the {@linkplain BytecodeFrame#isPlaceholderBci(int) placeholder} frame states
      ; added to the graph while parsing/inlining the intrinsic for which this object exists.
      ;;
-    (defn- #_"this" IntrinsicScope''processPlaceholderFrameStates-2 [#_"IntrinsicScope" this, #_"IntrinsicContext" intrinsic]
+    (defn- #_"this" IntrinsicScope''processPlaceholderFrameStates-1 [#_"IntrinsicScope" this]
         (let [
             #_"Graph" graph (:graph (:parser this))
             [this #_"boolean" invalid?]
@@ -36301,7 +36166,7 @@ ZeroExtendNode'new-4
             #_"IntrinsicContext" context (:intrinsicContext (:parser this))
             _
                 (when-not (and (some? context) (IntrinsicContext''isPostParseInlined-1 context))
-                    (§ ass! this (IntrinsicScope''processPlaceholderFrameStates-2 this, context))
+                    (§ ass! this (IntrinsicScope''processPlaceholderFrameStates-1 this))
                 )
         ]
         )
@@ -36362,7 +36227,7 @@ ZeroExtendNode'new-4
                 (loop [graph graph #_"int" iteration 0]
                     (let [
                         graph
-                            (try (§ with [#_"NodeEventScope" _ (Graph''trackNodeEvents-2 graph, listener)])
+                            (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 graph, listener)])
                                 (Phase'''run-3 (ConditionalEliminationPhase'new-1 (:fullSchedule this)), graph, context)
                             )
                     ]
@@ -44732,7 +44597,7 @@ ZeroExtendNode'new-4
                     (loop []
                         (let [
                             #_"boolean" changed?
-                                (try (§ with [#_"NodeEventScope" _ (Graph''trackNodeEvents-2 graph, listener)])
+                                (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 graph, listener)])
                                     (let [
                                         #_"LoopsData" dataCounted (LoopsData'new-1 graph)
                                     ]
@@ -60819,10 +60684,10 @@ ZeroExtendNode'new-4
             ;; Make sure the bci is within range of the bytecodes. If the code size is 0 then allow any value, otherwise the
             ;; bci must be less than the code size. Any negative value is also allowed to represent special bytecode states.
             (let [
-                #_"int" codeSize (Bytecode'''getCodeSize-1 code)
+                #_"int" codeSize (count (:code code))
             ]
                 (when (and (not (zero? codeSize)) (<= codeSize bci))
-                    (throw! (str "bci " bci " is out of range for " (Bytecode'''getMethod-1 code) " " codeSize " bytes"))
+                    (throw! (str "bci " bci " is out of range for " (:method code) " " codeSize " bytes"))
                 )
             )
         )
@@ -60901,7 +60766,7 @@ ZeroExtendNode'new-4
 
     (defn #_"ResolvedJavaMethod" FrameState''getMethod-1 [#_"FrameState" this]
         (when (some? (:bytecode this))
-            (Bytecode'''getMethod-1 (:bytecode this))
+            (:method (:bytecode this))
         )
     )
 
@@ -61730,17 +61595,14 @@ ZeroExtendNode'new-4
  ; phases in the suite have been applied if any of the phases changed the graph.
  ;;
 (class-ns IncrementalCanonicalizerPhase [PhaseSuite, Phase]
-    (defn #_"IncrementalCanonicalizerPhase" IncrementalCanonicalizerPhase'new-1 [#_"CanonicalizerPhase" canonicalizer]
-        (merge (IncrementalCanonicalizerPhase'class.) (PhaseSuite'new-0)
-            (hash-map
-                #_"CanonicalizerPhase" :canonicalizer canonicalizer
-            )
-        )
-    )
-
     (defn #_"IncrementalCanonicalizerPhase" IncrementalCanonicalizerPhase'new-2 [#_"CanonicalizerPhase" canonicalizer, #_"Phase" phase]
         (let [
-            #_"IncrementalCanonicalizerPhase" this (merge (IncrementalCanonicalizerPhase'class.) (IncrementalCanonicalizerPhase'new-1 canonicalizer))
+            #_"IncrementalCanonicalizerPhase" this
+                (merge (IncrementalCanonicalizerPhase'class.) (PhaseSuite'new-0)
+                    (hash-map
+                        #_"CanonicalizerPhase" :canonicalizer canonicalizer
+                    )
+                )
         ]
             (PhaseSuite''appendPhase-2 this, phase)
         )
@@ -61752,7 +61614,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"HashSetNodeEventListener" listener (HashSetNodeEventListener'new-0)
                 graph
-                    (try (§ with [#_"NodeEventScope" _ (Graph''trackNodeEvents-2 graph, listener)])
+                    (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 graph, listener)])
                         (Phase'''run-3 (§ super #_"PhaseSuite"), graph, context)
                     )
             ]
@@ -61771,7 +61633,7 @@ ZeroExtendNode'new-4
             #_"LowTier" this (merge (LowTier'class.) (PhaseSuite'new-0))
             this (PhaseSuite''appendPhase-2 this, (LoweringPhase'new-2 (CanonicalizerPhase'new-0), :LoweringStage'LOW_TIER))
             this (PhaseSuite''appendPhase-2 this, (ExpandLogicPhase'new-0))
-            this (PhaseSuite''appendPhase-2 this, (FixReadsPhase'new-1 (SchedulePhase'new-1 (if GraalOptions'stressTestEarlyReads :SchedulingStrategy'EARLIEST :SchedulingStrategy'LATEST_OUT_OF_LOOPS))))
+            this (PhaseSuite''appendPhase-2 this, (FixReadsPhase'new-1 (SchedulePhase'new-1 :SchedulingStrategy'LATEST_OUT_OF_LOOPS)))
             this (PhaseSuite''appendPhase-2 this, (AddressLoweringPhase'new-1 (AddressLowering'new-1 HotSpot'heapBaseRegister)))
             this (PhaseSuite''appendPhase-2 this, (CanonicalizerPhase'new-0))
             this (PhaseSuite''appendPhase-2 this, (UseTrappingNullChecksPhase'new-0))
@@ -63222,10 +63084,10 @@ ZeroExtendNode'new-4
         (#_"void" InlineInvokePlugin'''notifyNotInlined-4 [#_"Replacements" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"InvokeNode" invoke]
             (when (BytecodeParser''parsingIntrinsic-1 parser)
                 (let [
-                    #_"IntrinsicContext" intrinsic (:intrinsicContext parser)
+                    #_"IntrinsicContext" context (:intrinsicContext parser)
                 ]
-                    (when-not (IntrinsicContext''isCallToOriginal-2 intrinsic, method)
-                        (throw! (str "All non-recursive calls in the intrinsic " (:intrinsicMethod intrinsic) " must be inlined or intrinsified: found call to " method))
+                    (when-not (IntrinsicContext''isCallToOriginal-2 context, method)
+                        (throw! (str "All non-recursive calls in the intrinsic " (:intrinsicMethod context) " must be inlined or intrinsified: found call to " method))
                     )
                 )
             )
@@ -63238,15 +63100,15 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"Graph" Replacements'buildInitialGraph-1 [#_"ResolvedJavaMethod" method]
         (let [
-            #_"IntrinsicContext" intrinsic
+            #_"IntrinsicContext" context
                 (if (some? (#_"ResolvedJavaMethod" .getAnnotation method, Snippet))
                     ;; snippet
-                    (IntrinsicContext'new-4 method, method, HotSpot'defaultBytecodeProvider, :CompilationContext'INLINE_AFTER_PARSING)
+                    (IntrinsicContext'new-4 method, method, HotSpot'bytecodeProvider, :CompilationContext'INLINE_AFTER_PARSING)
                     ;; post-parse inlined intrinsic
-                    (IntrinsicContext'new-4 nil, method, HotSpot'defaultBytecodeProvider, :CompilationContext'INLINE_AFTER_PARSING)
+                    (IntrinsicContext'new-4 nil, method, HotSpot'bytecodeProvider, :CompilationContext'INLINE_AFTER_PARSING)
                 )
             #_"Graph" graph (Graph'new-1 method)
-            graph (Phase'''run-3 (GraphBuilderInstance'new-2 OptimisticOptimizations'NONE, intrinsic), graph, nil)
+            graph (Phase'''run-3 (GraphBuilderInstance'new-2 OptimisticOptimizations'NONE, context), graph, nil)
             graph (Phase'''run-3 (CanonicalizerPhase'new-0), graph, nil)
         ]
             graph
@@ -63279,62 +63141,6 @@ ZeroExtendNode'new-4
 
         (#_"void" InlineInvokePlugin'''notifyAfterInline-2 [#_"Replacements" this, #_"ResolvedJavaMethod" methodToInline]
             nil
-        )
-    )
-)
-
-;;;
- ; Direct access to the bytecode of a ResolvedJavaMethod that will reflect any
- ; instrumentation and rewriting performed on the ResolvedJavaMethod.
- ;;
-(class-ns ResolvedJavaMethodBytecode [Bytecode]
-    (defn #_"ResolvedJavaMethodBytecode" ResolvedJavaMethodBytecode'new-1 [#_"ResolvedJavaMethod" method]
-        (merge (ResolvedJavaMethodBytecode'class.)
-            (hash-map
-                #_"ResolvedJavaMethod" :method method
-            )
-        )
-    )
-
-    (defm ResolvedJavaMethodBytecode Bytecode
-        (#_"ResolvedJavaMethod" Bytecode'''getMethod-1 [#_"ResolvedJavaMethodBytecode" this]
-            (:method this)
-        )
-
-        (#_"[byte]" Bytecode'''getCode-1 [#_"ResolvedJavaMethodBytecode" this]
-            (vec (ResolvedJavaMethod'''getCode-1 (:method this)))
-        )
-
-        (#_"int" Bytecode'''getCodeSize-1 [#_"ResolvedJavaMethodBytecode" this]
-            (ResolvedJavaMethod'''getCodeSize-1 (:method this))
-        )
-
-        (#_"int" Bytecode'''getMaxLocals-1 [#_"ResolvedJavaMethodBytecode" this]
-            (ResolvedJavaMethod'''getMaxLocals-1 (:method this))
-        )
-
-        (#_"ConstantPool" Bytecode'''getConstantPool-1 [#_"ResolvedJavaMethodBytecode" this]
-            (ResolvedJavaMethod'''getConstantPool-1 (:method this))
-        )
-    )
-)
-
-;;;
- ; BytecodeProvider that returns ResolvedJavaMethodBytecode objects.
- ;;
-(class-ns ResolvedJavaMethodBytecodeProvider [BytecodeProvider]
-    (defn- #_"ResolvedJavaMethodBytecodeProvider" ResolvedJavaMethodBytecodeProvider'new-0 []
-        (ResolvedJavaMethodBytecodeProvider'class.)
-    )
-
-    ;;;
-     ; A state-less, shared ResolvedJavaMethodBytecodeProvider instance.
-     ;;
-    (def #_"ResolvedJavaMethodBytecodeProvider" ResolvedJavaMethodBytecodeProvider'INSTANCE (ResolvedJavaMethodBytecodeProvider'new-0))
-
-    (defm ResolvedJavaMethodBytecodeProvider BytecodeProvider
-        (#_"Bytecode" BytecodeProvider'''getBytecode-2 [#_"ResolvedJavaMethodBytecodeProvider" this, #_"ResolvedJavaMethod" method]
-            (ResolvedJavaMethodBytecode'new-1 method)
         )
     )
 )
@@ -70480,8 +70286,6 @@ public abstract class Site
 
 (§ package jdk.vm.ci.hotspot
 
-import jdk.vm.ci.common.JVMCIError
-
 ;;;
  ; Access to VM configuration data.
  ;;
@@ -70501,7 +70305,6 @@ public class HotSpotVMConfigAccess
      ; @param name name of C++ symbol
      ; @param notPresent if non-null and the symbol is not present then this value is returned
      ; @return the address of the symbol
-     ; @throws JVMCIError if the symbol is not present and {@code notPresent == null}
      ;;
     public #_"long" getAddress(#_"String" name, #_"Long" notPresent)
     (§
@@ -70512,7 +70315,7 @@ public class HotSpotVMConfigAccess
             (§
                 return notPresent
             )
-            throw new JVMCIError("expected VM symbol not found: " + name)
+            throw new JVMCIError("expected VM symbol not found: " + name)
         )
         return entry
     )
@@ -70522,7 +70325,6 @@ public class HotSpotVMConfigAccess
      ;
      ; @param name name of C++ symbol
      ; @return the address of the symbol
-     ; @throws JVMCIError if the symbol is not present
      ;;
     public #_"long" getAddress(#_"String" name)
     (§
@@ -70536,7 +70338,6 @@ public class HotSpotVMConfigAccess
      ; @param type the boxed type to which the constant value will be converted
      ; @param notPresent if non-null and the constant is not present then this value is returned
      ; @return the constant value converted to {@code type}
-     ; @throws JVMCIError if the constant is not present and {@code notPresent == null}
      ;;
     public #_"<T> T" getConstant(#_"String" name, #_"Class<T>" type, #_"T" notPresent)
     (§
@@ -70547,7 +70348,7 @@ public class HotSpotVMConfigAccess
             (§
                 return notPresent
             )
-            throw new JVMCIError("expected VM constant not found: " + name)
+            throw new JVMCIError("expected VM constant not found: " + name)
         )
         return type.cast(convertValue(name, type, c, nil))
     )
@@ -70558,7 +70359,6 @@ public class HotSpotVMConfigAccess
      ; @param name name of the constant (e.g., {@code "frame::arg_reg_save_area_bytes"})
      ; @param type the boxed type to which the constant value will be converted
      ; @return the constant value converted to {@code type}
-     ; @throws JVMCIError if the constant is not present
      ;;
     public #_"<T> T" getConstant(#_"String" name, #_"Class<T>" type)
     (§
@@ -70574,7 +70374,6 @@ public class HotSpotVMConfigAccess
      ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
      ; @param notPresent if non-null and the field is not present then this value is returned
      ; @return the offset in bytes of the requested field
-     ; @throws JVMCIError if the field is static or not present and {@code notPresent} is null
      ;;
     public #_"<T> T" getFieldOffset(#_"String" name, #_"Class<T>" type, #_"String" cppType, #_"T" notPresent)
     (§
@@ -70585,7 +70384,7 @@ public class HotSpotVMConfigAccess
         )
         if (entry.address != 0)
         (§
-            throw new JVMCIError("cannot get offset of static field " + name)
+            throw new JVMCIError("cannot get offset of static field " + name)
         )
         return type.cast(convertValue(name, type, entry.offset, cppType))
     )
@@ -70598,7 +70397,6 @@ public class HotSpotVMConfigAccess
      ;            {@link Integer} or {@link Long})
      ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
      ; @return the offset in bytes of the requested field
-     ; @throws JVMCIError if the field is static or not present
      ;;
     public #_"<T> T" getFieldOffset(#_"String" name, #_"Class<T>" type, #_"String" cppType)
     (§
@@ -70612,7 +70410,6 @@ public class HotSpotVMConfigAccess
      ; @param type the boxed type to which the offset value will be converted (must be
      ;            {@link Integer} or {@link Long})
      ; @return the offset in bytes of the requested field
-     ; @throws JVMCIError if the field is static or not present
      ;;
     public #_"<T> T" getFieldOffset(#_"String" name, #_"Class<T>" type)
     (§
@@ -70626,7 +70423,6 @@ public class HotSpotVMConfigAccess
      ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
      ; @param notPresent if non-null and the field is not present then this value is returned
      ; @return the address of the requested field
-     ; @throws JVMCIError if the field is not static or not present and {@code notPresent} is null
      ;;
     public #_"long" getFieldAddress(#_"String" name, #_"String" cppType, #_"Long" notPresent)
     (§
@@ -70637,7 +70433,7 @@ public class HotSpotVMConfigAccess
         )
         if (entry.address == 0)
         (§
-            throw new JVMCIError(name + " is not a static field")
+            throw new JVMCIError(name + " is not a static field")
         )
         return entry.address
     )
@@ -70648,7 +70444,6 @@ public class HotSpotVMConfigAccess
      ; @param name fully qualified name of the field
      ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
      ; @return the address of the requested field
-     ; @throws JVMCIError if the field is not static or not present
      ;;
     public #_"long" getFieldAddress(#_"String" name, #_"String" cppType)
     (§
@@ -70663,7 +70458,6 @@ public class HotSpotVMConfigAccess
      ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
      ; @param notPresent if non-null and the field is not present then this value is returned
      ; @return the value of the requested field
-     ; @throws JVMCIError if the field is not static or not present and {@code notPresent} is null
      ;;
     public #_"<T> T" getFieldValue(#_"String" name, #_"Class<T>" type, #_"String" cppType, #_"T" notPresent)
     (§
@@ -70674,7 +70468,7 @@ public class HotSpotVMConfigAccess
         )
         if (entry.value == nil)
         (§
-            throw new JVMCIError(name + " is not a static field")
+            throw new JVMCIError(name + " is not a static field")
         )
         return type.cast(convertValue(name, type, entry.value, cppType))
     )
@@ -70686,7 +70480,6 @@ public class HotSpotVMConfigAccess
      ; @param type the boxed type to which the constant value will be converted
      ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
      ; @return the value of the requested field
-     ; @throws JVMCIError if the field is not static or not present
      ;;
     public #_"<T> T" getFieldValue(#_"String" name, #_"Class<T>" type, #_"String" cppType)
     (§
@@ -70699,7 +70492,6 @@ public class HotSpotVMConfigAccess
      ; @param name fully qualified name of the field
      ; @param type the boxed type to which the constant value will be converted
      ; @return the value of the requested field
-     ; @throws JVMCIError if the field is not static or not present
      ;;
     public #_"<T> T" getFieldValue(#_"String" name, #_"Class<T>" type)
     (§
@@ -70713,7 +70505,6 @@ public class HotSpotVMConfigAccess
      ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
      ; @param required specifies if the field must be present
      ; @return the field
-     ; @throws JVMCIError if the field is not present and {@code required == true}
      ;;
     private #_"VMField" getField(#_"String" name, #_"String" cppType, #_"boolean" required)
     (§
@@ -70724,13 +70515,13 @@ public class HotSpotVMConfigAccess
             (§
                 return nil
             )
-            throw new JVMCIError("expected VM field not found: " + name)
+            throw new JVMCIError("expected VM field not found: " + name)
         )
 
         ;; Make sure the native type is still the type we expect.
         if (cppType != nil && !cppType.equals(entry.type))
         (§
-            throw new JVMCIError("expected type " + cppType + " but VM field " + name + " is of type " + entry.type)
+            throw new JVMCIError("expected type " + cppType + " but VM field " + name + " is of type " + entry.type)
         )
         return entry
     )
@@ -70740,9 +70531,7 @@ public class HotSpotVMConfigAccess
      ;
      ; @param name name of the flag (e.g., {@code "CompileTheWorldStartAt"})
      ; @param type the boxed type to which the flag's value will be converted
-     ; @return the flag's value converted to {@code type} or {@code notPresent} if the flag is not
-     ;         present
-     ; @throws JVMCIError if the flag is not present
+     ; @return the flag's value converted to {@code type} or {@code notPresent} if the flag is not present
      ;;
     public #_"<T> T" getFlag(#_"String" name, #_"Class<T>" type)
     (§
@@ -70755,9 +70544,7 @@ public class HotSpotVMConfigAccess
      ; @param name name of the flag (e.g., {@code "CompileTheWorldStartAt"})
      ; @param type the boxed type to which the flag's value will be converted
      ; @param notPresent if non-null and the flag is not present then this value is returned
-     ; @return the flag's value converted to {@code type} or {@code notPresent} if the flag is not
-     ;         present
-     ; @throws JVMCIError if the flag is not present and {@code notPresent == null}
+     ; @return the flag's value converted to {@code type} or {@code notPresent} if the flag is not present
      ;;
     public #_"<T> T" getFlag(#_"String" name, #_"Class<T>" type, #_"T" notPresent)
     (§
@@ -70774,7 +70561,7 @@ public class HotSpotVMConfigAccess
                 (§
                     return notPresent
                 )
-                throw new JVMCIError("expected VM flag not found: " + name)
+                throw new JVMCIError("expected VM flag not found: " + name)
             )
             else
             (§
@@ -70789,7 +70576,7 @@ public class HotSpotVMConfigAccess
         return type.cast(convertValue(name, type, value, cppType))
     )
 
-    private static #_"<T> Object" convertValue(#_"String" name, #_"Class<T>" toType, #_"Object" value, #_"String" cppType) throws JVMCIError
+    private static #_"<T> Object" convertValue(#_"String" name, #_"Class<T>" toType, #_"Object" value, #_"String" cppType)
     (§
         if (toType == Boolean.class)
         (§
@@ -70836,7 +70623,7 @@ public class HotSpotVMConfigAccess
             return value
         )
 
-        throw new JVMCIError("cannot convert " + name + " of type " + value.getClass().getSimpleName() + (cppType == nil ? "" (§ colon ) " [" + cppType + "]") + " to " + toType.getSimpleName())
+        throw new JVMCIError("cannot convert " + name + " of type " + value.getClass().getSimpleName() + (cppType == nil ? "" (§ colon ) " [" + cppType + "]") + " to " + toType.getSimpleName())
     )
 
     private final #_"HotSpotVMConfigStore" store
@@ -71003,16 +70790,11 @@ public enum DeoptimizationReason
     ClassCastException,
     ArrayStoreException,
     UnreachedCode,
-    TypeCheckedInliningViolated,
-    OptimizedTypeCheckViolated,
-    NotCompiledExceptionHandler,
     Unresolved,
     JavaSubroutineMismatch,
     ArithmeticException,
     RuntimeConstraint,
-    LoopLimitCheck,
-    Aliasing,
-    TransferToInterpreter,
+    LoopLimitCheck
 )
 )
 
@@ -71020,8 +70802,6 @@ public enum DeoptimizationReason
 
 import java.lang.reflect.Array
 import java.util.Objects
-
-import jdk.vm.ci.common.JVMCIError
 
 ;;;
  ; HotSpot implementation of {@link ConstantReflectionProvider}.
@@ -71168,7 +70948,7 @@ public class HotSpotConstantReflectionProvider implements ConstantReflectionProv
         )
         else
         (§
-            throw JVMCIError.unimplemented()
+            (throw! "unimplemented")
         )
     )
 )
