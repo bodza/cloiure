@@ -364,8 +364,6 @@ AbstractCompareAndSwapNode''getNewValue-1
 AbstractCompareAndSwapNode'new-6
 AbstractDeoptimizeNode'new-1
 AbstractEndNode'new-0
-AbstractInlineInfo'inline-4
-AbstractInlineInfo'new-1
 AbstractLocalNode''index-1
 AbstractLocalNode'new-2
 AbstractMemoryCheckpoint'new-1
@@ -712,8 +710,6 @@ BranchOp'new-4f
 Bytecode'new-3
 BytecodeFrame'AFTER_BCI
 BytecodeFrame'BEFORE_BCI
-BytecodeFrame'INVALID_FRAMESTATE_BCI
-BytecodeFrame'UNKNOWN_BCI
 BytecodeFrame'isPlaceholderBci-1
 BytecodeLookupSwitch'new-2
 BytecodeParser''add-2
@@ -722,13 +718,8 @@ BytecodeParser''append-2
 BytecodeParser''bci-1
 BytecodeParser''build-3
 BytecodeParser''buildRootMethod-1
-BytecodeParser''getInvokeKind-1
-BytecodeParser''getInvokeReturnStamp-1
-BytecodeParser''getInvokeReturnType-1
-BytecodeParser''getNonIntrinsicAncestor-1
-BytecodeParser''parsingIntrinsic-1
 BytecodeParser''push-3
-BytecodeParser'new-5
+BytecodeParser'new-2
 BytecodeProvider''findField-5
 BytecodeProvider''findMethod-5
 BytecodeProvider''getBytecode-2
@@ -917,12 +908,6 @@ CallTargetNode''setTargetMethod-2
 CallTargetNode'new-4
 CallingConvention'new-3*
 CallingConventionType'SET
-CallsiteHolder''computeProbabilities-1
-CallsiteHolder''invokeProbability-2
-CallsiteHolder''invokeRelevance-2
-CallsiteHolder''popInvoke-1
-CallsiteHolder''pushInvoke-2
-CallsiteHolder'new-4
 CanonicalCondition'BT
 CanonicalCondition'EQ
 CanonicalCondition'LT
@@ -992,7 +977,6 @@ CompareNode'new-3
 CompareNode'tryConstantFold-3
 CompareNode'tryConstantFoldPrimitive-3
 CompareOp'new-0
-CompilationContext'SET
 CompilationResult''close-1
 CompilationResult''recordDataPatch-3
 CompilationResult''recordMark-3
@@ -1018,9 +1002,6 @@ CompressionNode'uncompress-2
 CompressionOp'SET
 ComputeBlockOrder'computeCodeEmittingOrder-1
 ComputeBlockOrder'computeLinearScanOrder-1
-ComputeInliningRelevance''compute-1
-ComputeInliningRelevance''getRelevance-2
-ComputeInliningRelevance'new-2
 ComputeLoopFrequenciesClosure'PHASE_INSTANCE
 ComputeLoopFrequenciesClosure'compute-1
 ComputeLoopFrequencyPhase'new-0
@@ -1174,7 +1155,6 @@ CountedLoopInfo''isExactTripCount-1
 CountedLoopInfo''maxTripCountNode-1
 CountedLoopInfo''maxTripCountNode-2
 CountedLoopInfo'new-6
-CurrentInvoke'new-3
 CurrentLockNode'new-1
 Data''updateAlignment-2
 Data'new-2
@@ -1263,7 +1243,6 @@ EndNode'new-0
 EpilogueBlockEndOp''leaveFrameAndRestoreRbp-2
 EpilogueBlockEndOp'new-0
 EscapeObjectState'new-1
-ExactInlineInfo'new-2
 ExecutableRef''resolve-3
 ExecutableRef'new-2
 ExpandLogicPhase'new-0
@@ -1293,8 +1272,6 @@ FixedGuardNode'new-3
 FixedGuardNode'new-4
 FixedGuardNode'new-5
 FixedNode'new-1
-FixedNodeProbabilityCache''applyAsDouble-2
-FixedNodeProbabilityCache'new-0
 FixedTarget'new-2
 FixedValueAnchorNode'new-1
 FixedWithNextNode''setNext-2
@@ -1373,18 +1350,15 @@ FrameState''lockAt-2
 FrameState''locksSize-1
 FrameState''monitorIdAt-2
 FrameState''nestedLockDepth-1
-FrameState''setOuterFrameState-2
 FrameState''stackAt-2
 FrameState'new-1
 FrameState'new-2
-FrameState'new-8a
-FrameState'new-9
+FrameState'new-7a
 FrameStateAssignmentClosure'new-0
 FrameStateAssignmentPhase'new-0
 FrameStateBuilder''clearNonLiveLocals-4
 FrameStateBuilder''clearStack-1
-FrameStateBuilder''create-3
-FrameStateBuilder''create-6
+FrameStateBuilder''create-2
 FrameStateBuilder''inferPhiStamps-2
 FrameStateBuilder''initializeForMethodStart-1
 FrameStateBuilder''initializeFromArgumentsArray-2
@@ -1421,12 +1395,6 @@ GraalOptions'fullUnrollMaxIterations
 GraalOptions'fullUnrollMaxNodes
 GraalOptions'genLoopSafepoints
 GraalOptions'guardPriorities
-GraalOptions'inline
-GraalOptions'inlineDuringParsing
-GraalOptions'inlineDuringParsingMaxDepth
-GraalOptions'inlineEverything
-GraalOptions'inlinePartialIntrinsicExitDuringParsing
-GraalOptions'limitInlinedInvokes
 GraalOptions'lirOptLSRAEliminateSpillMoves
 GraalOptions'lirOptLSRAOptimizeSpillPosition
 GraalOptions'lirOptimization
@@ -1440,15 +1408,11 @@ GraalOptions'lsraOptSplitOnly
 GraalOptions'lsraOptimization
 GraalOptions'maximumDesiredSize
 GraalOptions'maximumEscapeAnalysisArrayLength
-GraalOptions'maximumInliningSize
-GraalOptions'maximumRecursiveInlining
-GraalOptions'methodInlineBailoutLimit
 GraalOptions'minimumPeelProbability
 GraalOptions'mitigateSpeculativeExecutionAttacks
 GraalOptions'optClearNonLiveLocals
 GraalOptions'optConvertDeoptsToGuards
 GraalOptions'optDeoptimizationGrouping
-GraalOptions'optDevirtualizeInvokesOptimistically
 GraalOptions'optEarlyReadElimination
 GraalOptions'optEliminateGuards
 GraalOptions'optFloatingReads
@@ -1465,7 +1429,6 @@ GraalOptions'reduceDCE
 GraalOptions'removeNeverExecutedCode
 GraalOptions'replaceInputsWithConstantsBasedOnStamps
 GraalOptions'simpleFastInflatedLocking
-GraalOptions'trivialInliningSize
 GraalOptions'trustFinalDefaultFields
 GraalOptions'unrollMaxIterations
 GraalOptions'useLoopLimitChecks
@@ -1512,7 +1475,7 @@ Graph''setStart-2
 Graph''unregister-2
 Graph'copy-1
 Graph'new-1
-GraphBuilderInstance'new-2
+GraphBuilderInstance'new-1
 GraphBuilderPhase'new-0
 GraphEffects''add-2
 GraphEffects''addAll-2
@@ -1650,7 +1613,6 @@ HotSpot'pollNearMark
 HotSpot'pollReturnFarMark
 HotSpot'pollReturnNearMark
 HotSpot'prototypeMarkWordOffset
-HotSpot'replacements
 HotSpot'safepointPollingAddress
 HotSpot'secondarySuperCacheOffset
 HotSpot'secondarySupersOffset
@@ -1683,7 +1645,7 @@ HotSpot'vmPageSize
 HotSpot'writeBarrierPostAddress
 HotSpot'writeBarrierPreAddress
 HotSpotDirectCallTargetNode'new-6
-HotSpotNodePlugin'new-1
+HotSpotNodePlugin'new-0
 HotSpotSwitchClosure'new-3
 HubGetClassNode'new-1
 IfNode''eliminateNegation-1
@@ -1698,27 +1660,6 @@ IllegalStamp'instance
 IncrementalCanonicalizerPhase'new-2
 InductionVariable'new-1
 InfoElement'new-4
-InlineDuringParsingPlugin'new-0
-InlineInvokeInfo''allowsInlining-1
-InlineInvokeInfo'createIntrinsicInlineInfo-1
-InlineInvokeInfo'createStandardInlineInfo-1
-InlineableGraph'new-4
-InliningData''countRecursiveInlining-2
-InliningData''inliningDepth-1
-InliningData''moveForward-1
-InliningData'isFreshInstantiation-1
-InliningData'new-3
-InliningIterator'apply-1
-InliningPhase'new-1
-InliningPolicy'CapInheritedRelevance
-InliningPolicy'RelevanceCapForInlining
-InliningPolicy'continueInlining-1
-InliningPolicy'isWorthInlining-3
-InliningUtil'checkInvokeConditions-1
-InliningUtil'inline-4
-InliningUtil'inlineForCanonicalization-4
-InliningUtil'nonNullReceiver-1
-InliningUtil'processFrameStates-4
 InputEdges'new-2
 InputEdges'translateInto-2
 InputInfo'new-6
@@ -1861,12 +1802,6 @@ IntervalState'SET
 IntervalWalker''removeFromList-2
 IntervalWalker''walkTo-2
 IntervalWalker'new-3
-IntrinsicContext''isCallToOriginal-2
-IntrinsicContext''isPostParseInlined-1
-IntrinsicContext'createFrameState-3
-IntrinsicContext'new-4
-IntrinsicScope'new-1
-IntrinsicScope'new-3
 InvokeKind''hasReceiver-1
 InvokeKind''isIndirect-1
 InvokeKind''isInterface-1
@@ -1879,7 +1814,6 @@ InvokeNode''getReceiver-1
 InvokeNode''getReceiverType-1
 InvokeNode''intrinsify-2
 InvokeNode''setClassInit-2
-InvokeNode''setUseForInlining-2
 InvokeNode'new-2
 InvokeNode'new-3
 IsNullNode'create-1
@@ -2452,11 +2386,6 @@ MethodCallTargetNode''returnKind-1
 MethodCallTargetNode'devirtualizeCall-4
 MethodCallTargetNode'findSpecialCallTarget-4
 MethodCallTargetNode'new-4
-MethodInvocation''buildCallsiteHolderForElement-2
-MethodInvocation''incrementProcessedGraphs-1
-MethodInvocation''isRoot-1
-MethodInvocation''totalGraphs-1
-MethodInvocation'new-4
 MethodKey'new-2
 MethodRef'new-1
 MethodsCache''lookup-4
@@ -2466,8 +2395,7 @@ MicroBlock''prependChildrenTo-2
 MicroBlock'new-1
 MidTier'new-0
 MonitorEnterNode'new-2
-MonitorExitNode''clearEscapedReturnValue-1
-MonitorExitNode'new-3
+MonitorExitNode'new-2
 MonitorIdNode''setLockDepth-2
 MonitorIdNode'new-1
 MonitorTemplates''lower-3i
@@ -2676,8 +2604,6 @@ OpaqueNode'new-1
 OperandFlag'SET
 OperandMode'SET
 OperandModeAnnotation'new-0
-OptimisticOptimizations''devirtualizeInvokes-1
-OptimisticOptimizations''lessOptimisticThan-2
 OptimisticOptimizations''removeNeverExecutedCode-1
 OptimisticOptimizations''useLoopLimitChecks-1
 OptimisticOptimizations'ALL
@@ -2883,10 +2809,8 @@ ReplacementsUtil'writeTlabTop-2
 ResolvedJavaField''isFinal-1
 ResolvedJavaField''isStatic-1
 ResolvedJavaField''isVolatile-1
-ResolvedJavaMethod''hasBytecodes-1
 ResolvedJavaMethod''isAbstract-1
 ResolvedJavaMethod''isFinal-1
-ResolvedJavaMethod''isNative-1
 ResolvedJavaMethod''isPublic-1
 ResolvedJavaMethod''isStatic-1
 ResolvedJavaMethod''isSynchronized-1
@@ -2899,7 +2823,6 @@ ReturnNode''setMemoryMap-2
 ReturnNode'new-1
 ReturnNode'new-2
 ReturnOp'new-1
-ReturnToCallerData'new-2
 RightShiftNode'create-2
 RightShiftNode'new-2
 SSAUtil'forEachPhiRegisterHint-6
@@ -2926,11 +2849,6 @@ ScheduledNodeIterator''replaceCurrent-2
 ScheduledNodeIterator'new-0
 SchedulingStrategy'SET
 SchedulingStrategy'isEarliest-1
-Scope''computeInvokeRelevance-2
-Scope''getFastPathMinProbability-1
-Scope''getScopeRelevanceWithinParent-1
-Scope''process-2
-Scope'new-3
 SequentialStrategy'new-2
 SerialWriteBarrier'new-2
 ShiftNode''getOp-2
@@ -3529,7 +3447,6 @@ ZeroExtendNode'new-4
     (#_"AbstractMergeNode" AbstractEndNode'''merge-1 [#_"AbstractEndNode" this])
 )
 
-(defp AbstractInlineInfo)
 (defp AbstractLocalNode)
 (defp AbstractMemoryCheckpoint)
 
@@ -3820,7 +3737,6 @@ ZeroExtendNode'new-4
 (defp CallingConvention)
 (defp CallOp)
 (defp CallTargetNode)
-(defp CallsiteHolder)
 (defp CanonicalCondition)
 
 ;;;
@@ -3933,7 +3849,6 @@ ZeroExtendNode'new-4
 (defp CompressEncoding)
 (defp CompressPointerOp)
 (defp CompressionNode)
-(defp ComputeInliningRelevance)
 (defp ComputeLoopFrequenciesClosure)
 (defp ComputeLoopFrequencyPhase)
 (defp ComputeObjectAddressNode)
@@ -4099,7 +4014,6 @@ ZeroExtendNode'new-4
 (defp CountLeadingZerosNode)
 (defp CountTrailingZerosNode)
 (defp CountedLoopInfo)
-(defp CurrentInvoke)
 (defp CurrentLockNode)
 
 (defp Data
@@ -4233,7 +4147,6 @@ ZeroExtendNode'new-4
 (defp EndNode)
 (defp EpilogueBlockEndOp)
 (defp EscapeObjectState)
-(defp ExactInlineInfo)
 (defp ExecutableRef)
 (defp ExpandLogicPhase)
 (defp ExplodeLoopNode)
@@ -4252,7 +4165,6 @@ ZeroExtendNode'new-4
 (defp FixedBinaryNode)
 (defp FixedGuardNode)
 (defp FixedNode)
-(defp FixedNodeProbabilityCache)
 (defp FixedTarget)
 (defp FixedValueAnchorNode)
 (defp FixedWithNextNode)
@@ -4466,43 +4378,6 @@ ZeroExtendNode'new-4
 )
 
 (defp InfoElement)
-(defp InlineDuringParsingPlugin)
-
-;;;
- ; Represents an opportunity for inlining at a given invoke, with the given weight and level. The weight is the amortized
- ; weight of the additional code - so smaller is better. The level is the number of nested inlinings that lead to this invoke.
- ;;
-(defp InlineInfo
-    ;;;
-     ; The invocation that may be inlined.
-     ;;
-    (#_"InvokeNode" InlineInfo'''invoke-1 [#_"InlineInfo" this])
-    ;;;
-     ; Returns the number of methods that may be inlined by the {@link #invoke() invocation}.
-     ;;
-    (#_"int" InlineInfo'''numberOfMethods-1 [#_"InlineInfo" this])
-    (#_"ResolvedJavaMethod" InlineInfo'''methodAt-2 [#_"InlineInfo" this, #_"int" index])
-    (#_"Inlineable" InlineInfo'''inlineableElementAt-2 [#_"InlineInfo" this, #_"int" index])
-    (#_"double" InlineInfo'''probabilityAt-2 [#_"InlineInfo" this, #_"int" index])
-    (#_"double" InlineInfo'''relevanceAt-2 [#_"InlineInfo" this, #_"int" index])
-    (#_"this" InlineInfo'''setInlinableElement-3 [#_"InlineInfo" this, #_"int" index, #_"Inlineable" inlineableElement])
-    ;;;
-     ; Performs the inlining described by this object and returns the node that represents the return value
-     ; of the inlined method (or nil for void methods and methods that have no non-exceptional exit).
-     ;
-     ; @return a collection of nodes that need to be canonicalized after the inlining
-     ;;
-    (#_"{Node}" InlineInfo'''inline-1 [#_"InlineInfo" this])
-    ;;;
-     ; Try to make the call static bindable to avoid interface and virtual method calls.
-     ;;
-    (#_"void" InlineInfo'''tryToDevirtualizeInvoke-1 [#_"InlineInfo" this])
-    (#_"boolean" InlineInfo'''shouldInline-1 [#_"InlineInfo" this])
-    (#_"this" InlineInfo'''populateInlinableElements-4 [#_"InlineInfo" this, #_"PhaseContext" context, #_"Graph" caller, #_"CanonicalizerPhase" canonicalizer])
-    (#_"int" InlineInfo'''determineNodeCount-1 [#_"InlineInfo" this])
-)
-
-(defp InlineInvokeInfo)
 
 ;;;
  ; Plugin for specifying what is inlined during graph parsing. This plugin is also notified
@@ -4512,54 +4387,13 @@ ZeroExtendNode'new-4
  ;;
 (defp InlineInvokePlugin
     ;;;
-     ; Determines whether a call to a given method is to be inlined. The return value is a tri-state:
-     ;
-     ; Non-null return value with a non-nil {@link InlineInvokeInfo#getMethodToInline method}:
-     ; That {@link InlineInvokeInfo#getMethodToInline method} is inlined. Note that it can be
-     ; a different method than the one specified here as the parameter, which allows method substitutions.
-     ;
-     ; Non-null return value with a nil {@link InlineInvokeInfo#getMethodToInline method},
-     ; e.g. InlineInvokeInfo#DO_NOT_INLINE_WITH_EXCEPTION: The method is not inlined,
-     ; and other plugins with a lower priority cannot overwrite this decision.
-     ;
-     ; Null return value: This plugin made no decision, other plugins with a lower priority are asked.
-     ;
-     ; @param method the target method of an invoke
-     ; @param args the arguments to the invoke
-     ;;
-    (#_"InlineInvokeInfo" InlineInvokePlugin'''shouldInlineInvoke-4 [#_"InlineInvokePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"[ValueNode]" args])
-    ;;;
-     ; Notification that a method is about to be inlined.
-     ;
-     ; @param methodToInline the inlined method
-     ;;
-    (#_"void" InlineInvokePlugin'''notifyBeforeInline-2 [#_"InlineInvokePlugin" this, #_"ResolvedJavaMethod" methodToInline])
-    ;;;
-     ; Notification that a method was inlined.
-     ;
-     ; @param methodToInline the inlined method
-     ;;
-    (#_"void" InlineInvokePlugin'''notifyAfterInline-2 [#_"InlineInvokePlugin" this, #_"ResolvedJavaMethod" methodToInline])
-    ;;;
      ; Notifies this plugin of the InvokeNode created for a method that was not inlined per #shouldInlineInvoke.
      ;
      ; @param method the method that was not inlined
      ; @param invoke the invoke node created for the call to {@code method}
      ;;
-    (#_"void" InlineInvokePlugin'''notifyNotInlined-4 [#_"InlineInvokePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"InvokeNode" invoke])
+    (#_"void" InlineInvokePlugin'''notifyNotInlined-4 [#_"InlineInvokePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"InvokeNode" invoke])
 )
-
-(defp Inlineable
-    (#_"int" Inlineable'''getNodeCount-1 [#_"Inlineable" this])
-    (#_"InvokeNode*" Inlineable'''getInvokes-1 [#_"Inlineable" this])
-    (#_"double" Inlineable'''getProbability-2 [#_"Inlineable" this, #_"InvokeNode" invoke])
-)
-
-(defp InlineableGraph)
-(defp InliningData)
-(defp InliningIterator)
-(defp InliningPhase)
-(defp InliningPolicy)
 
 (defp InplaceUpdateClosure
     (#_"Node" InplaceUpdateClosure'''replacement-3 [#_"InplaceUpdateClosure" this, #_"Node" node, #_"EdgesType" type])
@@ -4649,8 +4483,6 @@ ZeroExtendNode'new-4
     (#_"this" IntervalWalker'''walk-1 [#_"IntervalWalker" this])
 )
 
-(defp IntrinsicContext)
-(defp IntrinsicScope)
 (defp InvokeKind)
 (defp InvokeNode)
 
@@ -5304,7 +5136,6 @@ ZeroExtendNode'new-4
 
 (defp MethodCallOp)
 (defp MethodCallTargetNode)
-(defp MethodInvocation)
 (defp MethodKey)
 (defp MethodRef)
 (defp MethodsCache)
@@ -5754,21 +5585,9 @@ ZeroExtendNode'new-4
 (defp ResolvedJavaMethod #_[JavaMethod, InvokeTarget]
     (#_"int" ResolvedJavaMethod'''getModifiers-1 [#_"ResolvedJavaMethod" this])
     ;;;
-     ; Returns the bytecode of this method, if the method has code. The returned byte array does not
-     ; contain breakpoints or non-Java bytecodes. This may return nil if the
-     ; {@link #getDeclaringClass() holder} is not {@link ResolvedJavaType#isLinked() linked}.
-     ;
-     ; The contained constant pool indices may not be the ones found in the original class file, but
-     ; they can be used with the JVMCI API (e.g. methods in {@link ConstantPool}).
-     ;
-     ; @return the bytecode of the method, or {@code nil} if {@code getCodeSize() == 0} or if the
-     ;         code is not ready
-     ;;
-    (#_"byte[]" ResolvedJavaMethod'''getCode-1 [#_"ResolvedJavaMethod" this])
-    ;;;
      ; Returns the maximum number of locals used in this method's bytecodes.
      ;;
-    (#_"int" ResolvedJavaMethod'''getMaxLocals-1 [#_"ResolvedJavaMethod" this])
+    (#_"int" ResolvedJavaMethod'''getMaxLocals-1 [#_"ResolvedJavaMethod" this])
     ;;;
      ; Checks whether this method is a class initializer.
      ;;
@@ -5782,19 +5601,6 @@ ZeroExtendNode'new-4
      ; private or static, but not abstract, or the declaring class is final).
      ;;
     (#_"boolean" ResolvedJavaMethod'''canBeStaticallyBound-1 [#_"ResolvedJavaMethod" this])
-    ;;;
-     ; Returns the constant pool of this method.
-     ;;
-    (#_"ConstantPool" ResolvedJavaMethod'''getConstantPool-1 [#_"ResolvedJavaMethod" this])
-    ;;;
-     ; Returns {@code true} if this method is not excluded from inlining and has associated Java
-     ; bytecodes (@see {@link ResolvedJavaMethod#hasBytecodes()}).
-     ;;
-    (#_"boolean" ResolvedJavaMethod'''canBeInlined-1 [#_"ResolvedJavaMethod" this])
-    ;;;
-     ; Returns {@code true} if the inlining of this method should be forced.
-     ;;
-    (#_"boolean" ResolvedJavaMethod'''shouldBeInlined-1 [#_"ResolvedJavaMethod" this])
 )
 
 (value-ns ResolvedJavaMethod
@@ -5804,10 +5610,6 @@ ZeroExtendNode'new-4
 
     (defn #_"boolean" ResolvedJavaMethod''isFinal-1 [#_"ResolvedJavaMethod" this]
         (Modifier/isFinal (ResolvedJavaMethod'''getModifiers-1 this))
-    )
-
-    (defn #_"boolean" ResolvedJavaMethod''isNative-1 [#_"ResolvedJavaMethod" this]
-        (Modifier/isNative (ResolvedJavaMethod'''getModifiers-1 this))
     )
 
     (defn #_"boolean" ResolvedJavaMethod''isPublic-1 [#_"ResolvedJavaMethod" this]
@@ -5820,14 +5622,6 @@ ZeroExtendNode'new-4
 
     (defn #_"boolean" ResolvedJavaMethod''isSynchronized-1 [#_"ResolvedJavaMethod" this]
         (Modifier/isSynchronized (ResolvedJavaMethod'''getModifiers-1 this))
-    )
-
-    ;;;
-     ; Checks whether the method has bytecodes associated with it. Methods without bytecodes are
-     ; either abstract or native methods.
-     ;;
-    (defn #_"boolean" ResolvedJavaMethod''hasBytecodes-1 [#_"ResolvedJavaMethod" this]
-        (and (not (ResolvedJavaMethod''isAbstract-1 this)) (not (ResolvedJavaMethod''isNative-1 this)))
     )
 )
 
@@ -6000,7 +5794,6 @@ ZeroExtendNode'new-4
 
 (defp ReturnNode)
 (defp ReturnOp)
-(defp ReturnToCallerData)
 (defp RightShiftNode)
 (defp SafepointNode)
 (defp SafepointOp)
@@ -6019,7 +5812,6 @@ ZeroExtendNode'new-4
     (#_"void" ScheduledNodeIterator'''processNode-2 [#_"ScheduledNodeIterator" this, #_"Node" node])
 )
 
-(defp Scope)
 (defp SequentialStrategy)
 (defp SerialWriteBarrier)
 (defp ShiftNode)
@@ -6041,25 +5833,6 @@ ZeroExtendNode'new-4
 (defp Shl)
 (defp ShortCircuitOrNode)
 (defp Shr)
-
-;;;
- ; Models the state of a graph in terms of {@link StateSplit#hasSideEffect() side effects}
- ; that are control flow predecessors of the current point in a graph.
- ;;
-(defp SideEffectsState
-    ;;;
-     ; Determines if the current program point is preceded by one or more side effects.
-     ;;
-    (#_"boolean" SideEffectsState'''isAfterSideEffect-1 [#_"SideEffectsState" this])
-    ;;;
-     ; Gets the side effects preceding the current program point.
-     ;;
-    (#_"StateSplit*" SideEffectsState'''sideEffects-1 [#_"SideEffectsState" this])
-    ;;;
-     ; Records a side effect for the current program point.
-     ;;
-    (#_"this" SideEffectsState'''addSideEffect-2 [#_"SideEffectsState" this, #_"StateSplit" sideEffect])
-)
 
 ;;;
  ; Represents a method signature provided by the runtime.
@@ -6145,6 +5918,7 @@ ZeroExtendNode'new-4
         )
     )
 
+    #_unused
     (defn #_"[JavaKind]" Signature''toParameterKinds-2 [#_"Signature" this, #_"boolean" receiver?]
         (into' (if receiver? [ :JavaKind'Object ] [])
             (for [#_"int" i (range (Signature'''getParameterCount-2 this, false))]
@@ -7786,7 +7560,6 @@ ZeroExtendNode'new-4
     (§ def #_"BytecodeProvider" HotSpot'bytecodeProvider (BytecodeProvider'new-0))
 
     (§ def #_"ForeignCalls" HotSpot'foreignCalls (ForeignCalls'new-0))
-    (§ def #_"Replacements" HotSpot'replacements (Replacements'new-0))
     (§ def #_"Plugins"      HotSpot'plugins      (Plugins'create-0))
 
     (§ def #_"PhaseSuite" HotSpot'graphBuilderSuite (Suites'createGraphBuilderSuite-0))
@@ -8523,19 +8296,6 @@ ZeroExtendNode'new-4
     ;; @Option "Maximum desired size of the compiler graph in nodes."
     (def #_"int" GraalOptions'maximumDesiredSize 20000)
 
-    ;; @Option "Maximum level of recursive inlining."
-    (def #_"int" GraalOptions'maximumRecursiveInlining 5)
-
-    ;; @Option "Graphs with less than this number of nodes are trivial and therefore always inlined."
-    (def #_"int" GraalOptions'trivialInliningSize 10)
-
-    ;; @Option "Inlining is explored up to this number of nodes in the graph for each call site."
-    (def #_"int" GraalOptions'maximumInliningSize 300)
-
-    (def #_"double" GraalOptions'limitInlinedInvokes 5.0)
-
-    (def #_"boolean" GraalOptions'inlineEverything false)
-
     ;; escape analysis settings
     (def #_"boolean" GraalOptions'partialEscapeAnalysis true)
     (def #_"int" GraalOptions'escapeAnalysisIterations 2)
@@ -8573,7 +8333,6 @@ ZeroExtendNode'new-4
     (def #_"boolean" GraalOptions'optClearNonLiveLocals true)
     (def #_"boolean" GraalOptions'optLoopTransform true)
     (def #_"boolean" GraalOptions'optFloatingReads true)
-    (def #_"boolean" GraalOptions'optDevirtualizeInvokesOptimistically true)
 
     ;; @Option "AMD64: Emit lfence instructions at the beginning of basic blocks."
     (def #_"boolean" GraalOptions'mitigateSpeculativeExecutionAttacks false)
@@ -8581,26 +8340,11 @@ ZeroExtendNode'new-4
     ;; @Option "Determines whether to treat final fields with default values as constant."
     (def #_"boolean" GraalOptions'trustFinalDefaultFields true)
 
-    ;; @Option "Enable inlining."
-    (def #_"boolean" GraalOptions'inline true)
-
     ;;;
      ; Options related to HotSpot snippets in this package.
      ;;
     ;; @Option "Handle simple cases for inflated monitors in the fast-path."
     (def #_"boolean" GraalOptions'simpleFastInflatedLocking true)
-
-    ;;;
-     ; Options related to BytecodeParser.
-     ;;
-    ;; @Option "Inlines trivial methods during bytecode parsing."
-    (def #_"boolean" GraalOptions'inlineDuringParsing true)
-
-    ;; @Option "Inlines partial intrinsic exits during bytecode parsing when possible. A partial intrinsic exit is a call within an intrinsic to the method being intrinsified and denotes semantics of the original method that the intrinsic does not support."
-    (def #_"boolean" GraalOptions'inlinePartialIntrinsicExitDuringParsing true)
-
-    ;; @Option "Maximum depth when inlining during bytecode parsing."
-    (def #_"int" GraalOptions'inlineDuringParsingMaxDepth 10)
 
     ;; @Option "Enable LIR level optimiztations."
     (def #_"boolean" GraalOptions'lirOptimization true)
@@ -8629,14 +8373,6 @@ ZeroExtendNode'new-4
 
     ;; @Option "Disable optional dead code eliminations."
     (def #_"boolean" GraalOptions'reduceDCE true)
-
-    ;;;
-     ; This is a defensive measure against known pathologies of the inliner where the breadth of
-     ; the inlining call tree exploration can be wide enough to prevent inlining from completing
-     ; in reasonable time.
-     ;;
-    ;; @Option "Per-compilation method inlining exploration limit before giving up (use 0 to disable)."
-    (def #_"int" GraalOptions'methodInlineBailoutLimit 5000)
 
     ;; @Option "Use traps for nil-checks instead of explicit nil-checks."
     (def #_"boolean" GraalOptions'useTrappingNullChecks true)
@@ -11115,26 +10851,6 @@ ZeroExtendNode'new-4
     )
 )
 
-;;;
- ; Denotes the compilation context in which an intrinsic is being parsed.
- ;;
-(value-ns CompilationContext
-    #_unused
-    (def #_"ordered {CompilationContext}" CompilationContext'SET
-        (ordered-set
-            ;;;
-             ; An intrinsic is being processed when parsing an invoke bytecode that calls the
-             ; intrinsified method.
-             ;;
-            :CompilationContext'INLINE_DURING_PARSING
-            ;;;
-             ; An intrinsic is being processed when inlining an InvokeNode in an existing graph.
-             ;;
-            :CompilationContext'INLINE_AFTER_PARSING
-        )
-    )
-)
-
 (value-ns LoopType
     #_unused
     (def #_"ordered {LoopType}" LoopType'SET
@@ -11929,10 +11645,6 @@ ZeroExtendNode'new-4
 
 (value-ns BytecodeFrame
     ;;;
-     ; This BCI should be used for frame states that are built for code with no meaningful BCI.
-     ;;
-    (def #_"int" BytecodeFrame'UNKNOWN_BCI -5)
-    ;;;
      ; The BCI for the state before starting to execute a method. Note that if the method is
      ; synchronized, the monitor is not yet held.
      ;;
@@ -11942,356 +11654,12 @@ ZeroExtendNode'new-4
      ; Note that if the method was synchronized the monitor is already released.
      ;;
     (def #_"int" BytecodeFrame'AFTER_BCI -3)
-    ;;;
-     ; This BCI should be used for states that cannot be the target of a deoptimization, like
-     ; snippet frame states.
-     ;;
-    (def #_"int" BytecodeFrame'INVALID_FRAMESTATE_BCI -6)
 
     ;;;
      ; Determines if a given BCI matches one of the placeholder BCI constants defined in this class.
      ;;
     (defn #_"boolean" BytecodeFrame'isPlaceholderBci-1 [#_"int" bci]
         (neg? bci)
-    )
-)
-
-(value-ns InliningUtil
-    ;;;
-     ; @return nil iff the check succeeds, otherwise a (non-nil) descriptive message
-     ;;
-    (defn #_"String" InliningUtil'checkInvokeConditions-1 [#_"InvokeNode" invoke]
-        (cond
-            (or (nil? (:predecessor invoke)) (not (Node''isAlive-1 invoke))) "the invoke is dead code"
-            (not (satisfies? MethodCallTargetNode (:callTarget invoke)))     "the invoke has already been lowered, or has been created as a low-level node"
-            :else
-                (let [
-                    #_"MethodCallTargetNode" callTarget (:callTarget invoke)
-                ]
-                    (cond
-                        (nil? (:targetMethod callTarget)) "target method is nil"
-                        (not (:useForInlining invoke))    "the invoke is marked to be not used for inlining"
-                        :else
-                            (let [
-                                #_"ValueNode" receiver (MethodCallTargetNode''receiver-1 callTarget)
-                            ]
-                                (when (and (some? receiver) (satisfies? ConstantNode receiver) (ValueNode''isNullConstant-1 receiver))
-                                    "receiver is nil"
-                                )
-                            )
-                    )
-                )
-        )
-    )
-
-    (defn- #_"void" InliningUtil'fixFrameStates-2 [#_"MergeNode" originalMerge, #_"PhiNode" returnPhi]
-        ;; It is possible that some of the frame states that came from AFTER_BCI reference a Phi node
-        ;; that was created to merge multiple returns. This can create cycles (see GR-3949 and GR-3957).
-        ;; To detect this, we follow the control paths starting from the merge node,
-        ;; split the Phi node inputs at merges and assign the proper input to each frame state.
-        (loop-when [#_"{Node}" seen #{} #_"([Node ValueNode])" stack (list [originalMerge returnPhi])] (seq stack)
-            (let [
-                [[#_"Node" node #_"ValueNode" value] & stack] stack
-            ]
-                (when-not (contains? seen node) => (recur seen stack)
-                    (let [
-                        seen (conj seen node)
-                        _
-                            (when (and (satisfies? StateSplit node) (not= node originalMerge))
-                                (let [
-                                    #_"FrameState" state (:stateAfter node)
-                                ]
-                                    (when (and (some? state) (not= (index-of (:fsValues state) returnPhi) -1))
-                                        (let [
-                                            #_"FrameState" dup
-                                                (loop-when [dup (FrameState''duplicate-1 state) #_"int" i 0 #_"seq" s (seq (:fsValues state))] (some? s) => dup
-                                                    (let [
-                                                        dup
-                                                            (when (= (first s) returnPhi) => dup
-                                                                (Node''updateUsages-3 dup, (nth (:fsValues dup) i), value)
-                                                                (update dup :fsValues assoc' i value)
-                                                            )
-                                                    ]
-                                                        (recur dup (inc i) (next s))
-                                                    )
-                                                )
-                                            _ (§ ass! node (StateSplit'''setStateAfter-2 node, dup))
-                                        ]
-                                            (GraphUtil'tryKillUnused-1 state)
-                                        )
-                                    )
-                                )
-                            )
-                        stack
-                            (when (satisfies? AbstractMergeNode node) => (if (some? (:predecessor node)) (cons [(:predecessor node) value] stack) stack)
-                                (into stack
-                                    (for [#_"EndNode" pred (Node'''cfgPredecessors-1 node)]
-                                        [pred (if (AbstractMergeNode''isPhiAtMerge-2 node, value) (PhiNode''valueAt-2n value, pred) value)]
-                                    )
-                                )
-                            )
-                    ]
-                        (recur seen stack)
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (defn- #_"ValueNode" InliningUtil'finishInlining-5 [#_"InvokeNode" invoke, #_"Graph" graph, #_"FixedNode" firstNode, #_"ReturnNode*" returnNodes, #_"Graph" inlineGraph]
-        (let [
-            #_"FixedNode" invokeNode invoke
-            #_"FrameState" stateAfter (:stateAfter invoke)
-            _ (Node''replaceAtPredecessor-2 invokeNode, firstNode)
-        ]
-            (if (empty? returnNodes)
-                (let [
-                    _ (§ ass! invokeNode (Node''replaceAtUsages-2 invokeNode, nil))
-                ]
-                    (GraphUtil'killCFG-1 (:next invoke))
-                    nil
-                )
-                (let [
-                    #_"FixedNode" n (:next invoke)
-                    _ (§ ass! invoke (FixedWithNextNode''setNext-2 invoke, nil))
-                ]
-                    (if (= (count returnNodes) 1)
-                        (let [
-                            #_"ReturnNode" returnNode (nth returnNodes 0)
-                            returnValue (:result returnNode)
-                            _ (§ ass! invokeNode (Node''replaceAtUsages-2 invokeNode, returnValue))
-                            _ (§ ass! returnNode (Node''replaceAndDelete-2 returnNode, n))
-                        ]
-                            returnValue
-                        )
-                        (let [
-                            #_"MergeNode" merge (Graph''add-2 graph, (MergeNode'new-0))
-                            merge (StateSplit'''setStateAfter-2 merge, stateAfter)
-                            returnValue (ValueMergeUtil'mergeReturns-2 merge, returnNodes)
-                            _ (§ ass! invokeNode (Node''replaceAtUsages-2 invokeNode, returnValue))
-                            _
-                                (when (AbstractMergeNode''isPhiAtMerge-2 merge, returnValue)
-                                    (InliningUtil'fixFrameStates-2 merge, (§ cast #_"PhiNode" returnValue))
-                                )
-                            _ (§ ass! merge (FixedWithNextNode''setNext-2 merge, n))
-                        ]
-                            returnValue
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defn- #_"MonitorIdNode" InliningUtil'processMonitorId-2 [#_"MonitorIdNode" monitorIdNode, #_"FrameState" stateAfter]
-        (when (some? stateAfter) => monitorIdNode
-            (MonitorIdNode''setLockDepth-2 monitorIdNode, (+ (:lockDepth monitorIdNode) (FrameState''nestedLockDepth-1 stateAfter)))
-        )
-    )
-
-    ;;;
-     ; Performs an actual inlining, thereby replacing the given invoke with the given {@code inlineGraph}.
-     ;
-     ; @param invoke the invoke that will be replaced
-     ; @param inlineGraph the graph that the invoke will be replaced with
-     ; @param receiverNullCheck true if a nil-check needs to be generated for non-static inlinings,
-     ;            false if no such check is required
-     ; @param inlineeMethod the actual method being inlined. Maybe be nil for snippets.
-     ;;
-    (defn #_"void" InliningUtil'inline-4 [#_"InvokeNode" invoke, #_"Graph" inlineGraph, #_"boolean" receiverNullCheck, #_"ResolvedJavaMethod" inlineeMethod]
-        (let [
-            #_"FixedNode" invokeNode invoke
-            #_"Graph" graph (:graph invokeNode)
-            #_"[ValueNode]" parameters (:arguments (:callTarget invoke))
-            _
-                (when (and receiverNullCheck (not (MethodCallTargetNode''isStatic-1 (:callTarget invoke))))
-                    (InliningUtil'nonNullReceiver-1 invoke)
-                )
-            #_"StartNode" start (:start inlineGraph)
-            #_"FixedNode" firstCFGNode (:next start)
-        ]
-            (when (some? firstCFGNode) => (throw (IllegalStateException. (str "Inlined graph is in invalid state: " inlineGraph)))
-                (let [
-                    #_"Node*" nodes (remove #(or (= % start) (and (= % (:stateAfter start)) (Node''hasExactlyOneUsage-1 %)) (satisfies? ParameterNode %)) (Graph''getNodes-1 inlineGraph))
-                    #_"ReturnNode*" returnNodes (filter #(satisfies? ReturnNode %) nodes)
-                    #_"InvokeNode*" partialIntrinsicExits (filter #(and (satisfies? InvokeNode %) (= (:bci %) BytecodeFrame'UNKNOWN_BCI)) nodes)
-                    #_"AbstractBeginNode" prevBegin (AbstractBeginNode'prevBegin-1 invokeNode)
-                    #_"DuplicationReplacement" localReplacement
-                        (reify DuplicationReplacement
-                            (#_"Node" DuplicationReplacement'''replacement-2 [#_"DuplicationReplacement" _, #_"Node" original]
-                                (cond
-                                    (satisfies? ParameterNode original) (nth parameters (AbstractLocalNode''index-1 original))
-                                    (= original start)                  prevBegin
-                                    :else                               original
-                                )
-                            )
-                        )
-                    ;; Instead, attach the inlining log of the child graph to the current inlining log.
-                    #_"{Node Node}" duplicates (Graph''addDuplicates-4r graph, nodes, inlineGraph, localReplacement)
-                    #_"FrameState" stateAfter (:stateAfter invoke)
-                    _
-                        (when (some? stateAfter)
-                            (InliningUtil'processFrameStates-4 invoke, inlineGraph, duplicates, (< 1 (count returnNodes)))
-                            (when-not (zero? (FrameState''nestedLockDepth-1 stateAfter))
-                                (doseq [#_"MonitorIdNode" original (Graph''getNodes-2 inlineGraph, MonitorIdNode)]
-                                    (§ ass! duplicates (update duplicates original InliningUtil'processMonitorId-2 (:stateAfter invoke)))
-                                )
-                            )
-                        )
-                    _
-                        (doseq [#_"InvokeNode" exit partialIntrinsicExits]
-                            ;; A partial intrinsic exit must be replaced with a call to the intrinsified method.
-                            (§ ass! duplicates (update duplicates exit InvokeNode''intrinsify-2 (Graph''add-2 graph, (InvokeNode'new-2 (:callTarget invoke), (:bci invoke)))))
-                        )
-                ]
-                    (InliningUtil'finishInlining-5 invoke, graph, (get duplicates firstCFGNode), (map #(get duplicates %) returnNodes), inlineGraph)
-                    (GraphUtil'killCFG-1 invokeNode)
-                )
-            )
-        )
-        nil
-    )
-
-    ;;;
-     ; Inline {@code inlineGraph} into the current replacing the InvokeNode and return the set of
-     ; nodes which should be canonicalized. The set should only contain nodes which modified by the
-     ; inlining since the current graph and {@code inlineGraph} are expected to already be canonical.
-     ;
-     ; @return the set of nodes to canonicalize
-     ;;
-    ; @SuppressWarnings("try")
-    (defn #_"{Node}" InliningUtil'inlineForCanonicalization-4 [#_"InvokeNode" invoke, #_"Graph" inlineGraph, #_"boolean" receiverNullCheck, #_"ResolvedJavaMethod" inlineeMethod]
-        (let [
-            #_"HashSetNodeEventListener" listener (HashSetNodeEventListener'new-0)
-        ]
-            ;; This code assumes that Graph.addDuplicates doesn't trigger the NodeEventListener to track
-            ;; only nodes which were modified into the process of inlining the graph into the current graph.
-            (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 (:graph invoke), listener)])
-                (InliningUtil'inline-4 invoke, inlineGraph, receiverNullCheck, inlineeMethod)
-            )
-            (:changedNodes listener)
-        )
-    )
-
-    (defn- #_"FrameState" InliningUtil'handleAfterBciFrameState-3 [#_"FrameState" frameState, #_"InvokeNode" invoke, #_"boolean" alwaysDuplicateStateAfter]
-        (let [
-            #_"FrameState" atReturn (:stateAfter invoke)
-            #_"JavaKind" invokeReturnKind (ValueNode''getStackKind-1 invoke)
-            ;; pop return kind from invoke's stateAfter and replace with this frameState's return value (top of stack)
-            #_"FrameState" afterReturn
-                (if (and (pos? (:stackSize frameState)) (or alwaysDuplicateStateAfter (not= (FrameState''stackAt-2 atReturn, 0) (FrameState''stackAt-2 frameState, 0))))
-                    (FrameState''duplicateModified-4 atReturn, invokeReturnKind, invokeReturnKind, (FrameState''stackAt-2 frameState, 0)) ;; a non-void return value
-                    (FrameState''duplicate-1 atReturn) ;; a void return value
-                )
-            ;; return value does no longer need to be limited by the monitor exit
-            _
-                (doseq [#_"MonitorExitNode" node (filter #(satisfies? MonitorExitNode %) (:nodeUsages frameState))]
-                    (§ ass! node (MonitorExitNode''clearEscapedReturnValue-1 node))
-                )
-            _ (§ ass! frameState (Node''replaceAndDelete-2 frameState, afterReturn))
-        ]
-            afterReturn
-        )
-    )
-
-    (defn- #_"FrameState" InliningUtil'processFrameState-7 [#_"FrameState" frameState, #_"InvokeNode" invoke, #_"ResolvedJavaMethod" inlinedMethod, #_"FrameState" outerFrameState, #_"boolean" alwaysDuplicateStateAfter, #_"ResolvedJavaMethod" invokeTargetMethod, #_"ValueNode*" invokeArgs]
-        (let [
-            #_"FrameState" atReturn (:stateAfter invoke)
-            #_"JavaKind" invokeReturnKind (ValueNode''getStackKind-1 invoke)
-        ]
-            (condp = (:bci frameState)
-                BytecodeFrame'AFTER_BCI
-                    (InliningUtil'handleAfterBciFrameState-3 frameState, invoke, alwaysDuplicateStateAfter)
-                BytecodeFrame'BEFORE_BCI
-                    ;; This is an intrinsic. Deoptimizing within an intrinsic must re-execute the intrinsified invocation.
-                    (let [
-                        #_"FrameState" beforeCall (FrameState''duplicateModifiedBeforeCall-5 atReturn, (:bci invoke), invokeReturnKind, (Signature''toParameterKinds-2 (JavaMethod'''getSignature-1 invokeTargetMethod), (not (ResolvedJavaMethod''isStatic-1 invokeTargetMethod))), invokeArgs)
-                        _ (§ ass! frameState (Node''replaceAndDelete-2 frameState, beforeCall))
-                    ]
-                        beforeCall
-                    )
-                ;; only handle the outermost frame states
-                (when (nil? (:outerFrameState frameState)) => frameState
-                    (FrameState''setOuterFrameState-2 frameState, outerFrameState)
-                )
-            )
-        )
-    )
-
-    (defn #_"void" InliningUtil'processFrameStates-4 [#_"InvokeNode" invoke, #_"Graph" inlineGraph, #_"{Node Node}" duplicates, #_"boolean" alwaysDuplicateStateAfter]
-        (let [
-            #_"FrameState" atReturn (:stateAfter invoke)
-            #_"JavaKind" invokeReturnKind (ValueNode''getStackKind-1 invoke)
-        ]
-            (loop-when [#_"FrameState" outerFrameState nil #_"seq" s (seq (Graph''getNodes-2 inlineGraph, FrameState))] (some? s)
-                (let [
-                    #_"FrameState" frameState (get duplicates (first s))
-                    outerFrameState
-                        (when (and (some? frameState) (Node''isAlive-1 frameState)) => outerFrameState
-                            (let [
-                                outerFrameState
-                                    (or outerFrameState
-                                        (FrameState''duplicateModifiedDuringCall-3 atReturn, (:bci invoke), invokeReturnKind)
-                                    )
-                            ]
-                                (InliningUtil'processFrameState-7 frameState, invoke, (:rootMethod inlineGraph), outerFrameState, alwaysDuplicateStateAfter, (:targetMethod (:callTarget invoke)), (:arguments (:callTarget invoke)))
-                                outerFrameState
-                            )
-                        )
-                ]
-                    (recur outerFrameState (next s))
-                )
-            )
-        )
-        nil
-    )
-
-    ;;;
-     ; Gets the receiver for an invoke, adding a guard if necessary to ensure it is non-nil,
-     ; and ensuring that the resulting type is compatible with the method being invoked.
-     ;;
-    (defn #_"ValueNode" InliningUtil'nonNullReceiver-1 [#_"InvokeNode" invoke]
-        (let [
-            #_"MethodCallTargetNode" callTarget (:callTarget invoke)
-            #_"Graph" graph (:graph callTarget)
-            #_"ValueNode" oldReceiver (nth (:arguments callTarget) 0)
-            #_"ValueNode" newReceiver oldReceiver
-            newReceiver
-                (when (= (ValueNode''getStackKind-1 newReceiver) :JavaKind'Object) => newReceiver
-                    (let [
-                        newReceiver
-                            (when (= (InvokeNode''getInvokeKind-1 invoke) :InvokeKind'Special) => newReceiver
-                                (let [
-                                    #_"Stamp" paramStamp (:stamp newReceiver)
-                                    #_"Stamp" stamp (Stamp'''join-2 paramStamp, (StampFactory'object-1 (TypeReference'create-1 (JavaMethod'''getDeclaringType-1 (:targetMethod callTarget)))))
-                                ]
-                                    (when-not (= stamp paramStamp) => newReceiver
-                                        ;; The verifier and previous optimizations guarantee unconditionally that the
-                                        ;; receiver is at least of the type of the method holder for a special invoke.
-                                        (Graph''add-2 graph, (PiNode'new-2 newReceiver, stamp))
-                                    )
-                                )
-                            )
-                    ]
-                        (when-not (StampTool'isPointerNeverNull-1 (:stamp newReceiver)) => newReceiver
-                            (let [
-                                #_"LogicNode" logic (Graph''add-2 graph, (IsNullNode'create-1 newReceiver))
-                                #_"FixedGuardNode" fixedGuard (Graph''add-2 graph, (FixedGuardNode'new-4 logic, DeoptimizationReason/NullCheckException, DeoptimizationAction/InvalidateReprofile, true))
-                                #_"PiNode" nonNullReceiver (Graph''add-2 graph, (PiNode'new-3 newReceiver, StampFactory'objectNonNullStamp, fixedGuard))
-                            ]
-                                (Graph''addBeforeFixed-3 graph, invoke, fixedGuard)
-                                nonNullReceiver
-                            )
-                        )
-                    )
-                )
-        ]
-            (when-not (= newReceiver oldReceiver)
-                (Node''replaceFirstInput-3 callTarget, oldReceiver, newReceiver)
-            )
-            newReceiver
-        )
     )
 )
 
@@ -12584,7 +11952,6 @@ ZeroExtendNode'new-4
     (def #_"ordered {Optimization}" Optimization'SET
         (ordered-set
             :Optimization'RemoveNeverExecutedCode
-            :Optimization'UseTypeCheckedInlining
             :Optimization'UseLoopLimitChecks
         )
     )
@@ -13540,149 +12907,6 @@ ZeroExtendNode'new-4
                  ; Optional additive displacement.
                  ;;
                 #_"int" :displacement displacement
-            )
-        )
-    )
-)
-
-(class-ns AbstractInlineInfo [InlineInfo]
-    (defn #_"AbstractInlineInfo" AbstractInlineInfo'new-1 [#_"InvokeNode" invoke]
-        (merge (AbstractInlineInfo'class.)
-            (hash-map
-                #_"InvokeNode" :invoke invoke
-            )
-        )
-    )
-
-    (defm AbstractInlineInfo InlineInfo
-        (#_"InvokeNode" InlineInfo'''invoke-1 [#_"AbstractInlineInfo" this]
-            (:invoke this)
-        )
-    )
-
-    (defn #_"{Node}" AbstractInlineInfo'inline-4 [#_"InvokeNode" invoke, #_"ResolvedJavaMethod" concrete, #_"Inlineable" inlineable, #_"boolean" receiverNullCheck]
-        (InliningUtil'inlineForCanonicalization-4 invoke, (:graph inlineable), receiverNullCheck, concrete)
-    )
-
-    (defm AbstractInlineInfo InlineInfo
-        (#_"this" InlineInfo'''populateInlinableElements-4 [#_"AbstractInlineInfo" this, #_"PhaseContext" context, #_"Graph" caller, #_"CanonicalizerPhase" canonicalizer]
-            (loop-when [this this #_"int" i 0] (< i (InlineInfo'''numberOfMethods-1 this)) => this
-                (let [
-                    this (InlineInfo'''setInlinableElement-3 this, i, (InlineableGraph'new-4 (InlineInfo'''methodAt-2 this, i), (:invoke this), context, canonicalizer))
-                ]
-                    (recur this (inc i))
-                )
-            )
-        )
-
-        (#_"int" InlineInfo'''determineNodeCount-1 [#_"AbstractInlineInfo" this]
-            (loop-when [#_"int" n 0 #_"int" i 0] (< i (InlineInfo'''numberOfMethods-1 this)) => n
-                (let [
-                    #_"Inlineable" elem (InlineInfo'''inlineableElementAt-2 this, i)
-                ]
-                    (recur (if (some? elem) (+ n (Inlineable'''getNodeCount-1 elem)) n) (inc i))
-                )
-            )
-        )
-    )
-)
-
-;;;
- ; Represents an inlining opportunity where the compiler can statically determine a monomorphic
- ; target method and therefore is able to determine the called method exactly.
- ;;
-(class-ns ExactInlineInfo [AbstractInlineInfo, InlineInfo]
-    (defn #_"ExactInlineInfo" ExactInlineInfo'new-2 [#_"InvokeNode" invoke, #_"ResolvedJavaMethod" concrete]
-        (merge (ExactInlineInfo'class.) (AbstractInlineInfo'new-1 invoke)
-            (hash-map
-                #_"ResolvedJavaMethod" :concrete concrete
-                #_"Inlineable" :inlineableElement nil
-            )
-        )
-    )
-
-    (defm ExactInlineInfo InlineInfo
-        (#_"{Node}" InlineInfo'''inline-1 [#_"ExactInlineInfo" this]
-            (AbstractInlineInfo'inline-4 (:invoke this), (:concrete this), (:inlineableElement this), true)
-        )
-
-        (#_"void" InlineInfo'''tryToDevirtualizeInvoke-1 [#_"ExactInlineInfo" this]
-            ;; nothing todo, can already be bound statically
-            nil
-        )
-
-        (#_"int" InlineInfo'''numberOfMethods-1 [#_"ExactInlineInfo" this]
-            1
-        )
-
-        (#_"ResolvedJavaMethod" InlineInfo'''methodAt-2 [#_"ExactInlineInfo" this, #_"int" index]
-            (:concrete this)
-        )
-
-        (#_"double" InlineInfo'''probabilityAt-2 [#_"ExactInlineInfo" this, #_"int" index]
-            1.0
-        )
-
-        (#_"double" InlineInfo'''relevanceAt-2 [#_"ExactInlineInfo" this, #_"int" index]
-            1.0
-        )
-
-        (#_"Inlineable" InlineInfo'''inlineableElementAt-2 [#_"ExactInlineInfo" this, #_"int" index]
-            (:inlineableElement this)
-        )
-
-        (#_"this" InlineInfo'''setInlinableElement-3 [#_"ExactInlineInfo" this, #_"int" index, #_"Inlineable" inlineableElement]
-            (assoc this :inlineableElement inlineableElement)
-        )
-
-        (#_"boolean" InlineInfo'''shouldInline-1 [#_"ExactInlineInfo" this]
-            (ResolvedJavaMethod'''shouldBeInlined-1 (:concrete this))
-        )
-    )
-)
-
-(value-ns InliningPolicy
-    (def #_"float" InliningPolicy'RelevanceCapForInlining 1.0 #_"f")
-    (def #_"float" InliningPolicy'CapInheritedRelevance 1.0 #_"f")
-
-    (defn- #_"double" InliningPolicy'determineInvokeProbability-1 [#_"InlineInfo" info]
-        (loop-when [#_"double" probability 0 #_"int" i 0] (< i (InlineInfo'''numberOfMethods-1 info)) => probability
-            (let [
-                #_"Inlineable" callee (InlineInfo'''inlineableElementAt-2 info, i)
-                probability
-                    (loop-when-recur [probability probability #_"seq" s (seq (Inlineable'''getInvokes-1 callee))]
-                                     (some? s)
-                                     [(+ probability (Inlineable'''getProbability-2 callee, (first s))) (next s)]
-                                  => probability
-                    )
-            ]
-                (recur probability (inc i))
-            )
-        )
-    )
-
-    (defn- #_"double" InliningPolicy'computeMaximumSize-2 [#_"double" relevance, #_"int" configuredMaximum]
-        (* configuredMaximum (min InliningPolicy'RelevanceCapForInlining relevance))
-    )
-
-    (defn #_"boolean" InliningPolicy'continueInlining-1 [#_"Graph" graph]
-        (< (Graph''getNodeCount-1 graph) GraalOptions'maximumDesiredSize)
-    )
-
-    (defn #_"boolean" InliningPolicy'isWorthInlining-3 [#_"MethodInvocation" invocation, #_"int" inliningDepth, #_"boolean" fullyProcessed]
-        (or GraalOptions'inlineEverything (InlineInfo'''shouldInline-1 (:callee invocation))
-            (let [
-                #_"int" nodes (InlineInfo'''determineNodeCount-1 (:callee invocation))
-            ]
-                (or (< nodes GraalOptions'trivialInliningSize)
-                    ;; TODO invoked methods that are on important paths but not yet compiled -> will be compiled anyways
-                    ;; and it is likely that we are the only caller... might be useful to inline those methods but increases
-                    ;; bootstrap time (maybe those methods are also getting queued in the compilation queue concurrently)
-                    (and
-                        (not (and fullyProcessed (pos? GraalOptions'limitInlinedInvokes) (< GraalOptions'limitInlinedInvokes (InliningPolicy'determineInvokeProbability-1 (:callee invocation)))))
-                        (<= nodes (InliningPolicy'computeMaximumSize-2 (:relevance invocation), GraalOptions'maximumInliningSize))
-                    )
-                )
             )
         )
     )
@@ -19798,22 +19022,15 @@ ZeroExtendNode'new-4
 )
 
 (class-ns BytecodeParser []
-    (defn #_"BytecodeParser" BytecodeParser'new-5 [#_"GraphBuilderInstance" builder, #_"Graph" graph, #_"BytecodeParser" parent, #_"ResolvedJavaMethod" method, #_"IntrinsicContext" context]
+    (defn #_"BytecodeParser" BytecodeParser'new-2 [#_"GraphBuilderInstance" builder, #_"Graph" graph]
         (let [
-            #_"BytecodeProvider" bytecodeProvider (if (some? context) (:bytecodeProvider context) HotSpot'bytecodeProvider)
-            #_"Bytecode" code (BytecodeProvider''getBytecode-2 bytecodeProvider, method)
+            #_"Bytecode" code (BytecodeProvider''getBytecode-2 HotSpot'bytecodeProvider, (:rootMethod graph))
         ]
             (merge (BytecodeParser'class.)
                 (hash-map
                     #_"GraphBuilderInstance" :graphBuilderInstance builder
                     #_"OptimisticOptimizations" :optimisticOpts (:optimisticOpts builder)
                     #_"Graph" :graph graph
-                    ;;;
-                     ; The parsing context for the method that inlines the method being parsed by this context.
-                     ;;
-                    #_"BytecodeParser" :parent parent
-                    #_"IntrinsicContext" :intrinsicContext context
-                    #_"BytecodeProvider" :bytecodeProvider bytecodeProvider
                     #_"Bytecode" :bytecode code
                     #_"ResolvedJavaMethod" :method (:method code)
                     #_"ConstantPool" :constantPool (:constantPool code)
@@ -19822,14 +19039,12 @@ ZeroExtendNode'new-4
                     #_"BciBlockMapping" :blockMap nil
                     #_"LocalLiveness" :liveness nil
                     #_"ValueNode" :methodSynchronizedObject nil
-                    #_"[ReturnToCallerData]" :returnDataList nil
                     #_"FixedWithNextNode" :lastInstr nil ;; the last instruction added
                     #_"boolean" :controlFlowSplit false
                     #_"{int FixedWithNextNode}" :firstInstructions nil
                     #_"{int FrameStateBuilder}" :entryStates nil
                     #_"boolean" :finalBarrierRequired false
                     #_"ValueNode" :originalReceiver nil
-                    #_"CurrentInvoke" :currentInvoke nil
                     #_"FrameStateBuilder" :frameState nil
                     #_"BciBlock" :currentBlock nil
                 )
@@ -19844,32 +19059,14 @@ ZeroExtendNode'new-4
         (:curBCI (:stream this))
     )
 
-    ;;;
-     ; Determines if this parsing context is within the bytecode of an intrinsic or a method inlined by an intrinsic.
-     ;;
-    (defn #_"boolean" BytecodeParser''parsingIntrinsic-1 [#_"BytecodeParser" this]
-        (some? (:intrinsicContext this))
-    )
-
-    ;;;
-     ; Gets the first ancestor parsing context that is not parsing a {@linkplain #parsingIntrinsic() intrinsic}.
-     ;;
-    (defn #_"BytecodeParser" BytecodeParser''getNonIntrinsicAncestor-1 [#_"BytecodeParser" this]
-        (loop-when-recur [#_"BytecodeParser" ancestor (:parent this)]
-                         (and (some? ancestor) (BytecodeParser''parsingIntrinsic-1 ancestor))
-                         [(:parent ancestor)]
-                      => ancestor
-        )
-    )
-
-    (defn- #_"FrameState" BytecodeParser''createFrameState-3 [#_"BytecodeParser" this, #_"int" bci, #_"StateSplit" forStateSplit]
+    (defn- #_"FrameState" BytecodeParser''createFrameState-2 [#_"BytecodeParser" this, #_"int" bci]
         (let [
             _
                 (when (and (some? (:currentBlock this)) (< (:endBci (:currentBlock this)) bci))
                     (§ ass! this (update this :frameState FrameStateBuilder''clearNonLiveLocals-4 (:currentBlock this), (:liveness this), false))
                 )
         ]
-            (FrameStateBuilder''create-3 (:frameState this), bci, forStateSplit)
+            (FrameStateBuilder''create-2 (:frameState this), bci)
         )
     )
 
@@ -19907,7 +19104,7 @@ ZeroExtendNode'new-4
                                     lastLoopExit loopExit
                                     _ (§ ass! newState (FrameStateBuilder''clearNonLiveLocals-4 newState, targetBlock, (:liveness this), true))
                                     _ (§ ass! newState (FrameStateBuilder''insertLoopProxies-3 newState, loopExit, (get (:entryStates this) (:id _loop))))
-                                    _ (§ ass! loopExit (StateSplit'''setStateAfter-2 loopExit, (FrameStateBuilder''create-3 newState, (:startBci targetBlock), loopExit)))
+                                    _ (§ ass! loopExit (StateSplit'''setStateAfter-2 loopExit, (FrameStateBuilder''create-2 newState, (:startBci targetBlock))))
                                 ]
                                     (recur firstLoopExit lastLoopExit (next s))
                                 )
@@ -20031,7 +19228,7 @@ ZeroExtendNode'new-4
      ; @param sideEffect a side effect node just appended to the graph
      ;;
     (defn- #_"StateSplit" BytecodeParser''setStateAfter-2 [#_"BytecodeParser" this, #_"StateSplit" sideEffect]
-        (StateSplit'''setStateAfter-2 sideEffect, (BytecodeParser''createFrameState-3 this, (:nextBCI (:stream this)), sideEffect))
+        (StateSplit'''setStateAfter-2 sideEffect, (BytecodeParser''createFrameState-2 this, (:nextBCI (:stream this))))
     )
 
     ;;;
@@ -20084,11 +19281,6 @@ ZeroExtendNode'new-4
                 (BytecodeParser''setStateAfter-2 this, value)
             )
         )
-    )
-
-    #_unused
-    (defn #_"Stamp" BytecodeParser''getInvokeReturnStamp-1 [#_"BytecodeParser" this]
-        (StampFactory'forDeclaredType-2 (BytecodeParser''getInvokeReturnType-1 this), false)
     )
 
     ;;;
@@ -20198,14 +19390,11 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"void" BytecodeParser''maybeEagerlyResolve-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" bytecode]
-        (if (some? (:intrinsicContext this))
+        ;; Since we're potentially triggering class initialization here, we need synchronization
+        ;; to mitigate the potential for class initialization related deadlock being caused by
+        ;; the compiler (e.g. https://github.com/graalvm/graal-core/pull/232/files#r90788550).
+        (locking BytecodeParser'iface
             (#_"ConstantPool" .loadReferencedType (:constantPool this), cpi, bytecode)
-            ;; Since we're potentially triggering class initialization here, we need synchronization
-            ;; to mitigate the potential for class initialization related deadlock being caused by
-            ;; the compiler (e.g. https://github.com/graalvm/graal-core/pull/232/files#r90788550).
-            (locking BytecodeParser'iface
-                (#_"ConstantPool" .loadReferencedType (:constantPool this), cpi, bytecode)
-            )
         )
         nil
     )
@@ -20298,181 +19487,12 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" BytecodeParser'notifyBeforeInline-1 [#_"ResolvedJavaMethod" inlinedMethod]
-        (doseq [#_"InlineInvokePlugin" plugin (:inlineInvokePlugins HotSpot'plugins)]
-            (InlineInvokePlugin'''notifyBeforeInline-2 plugin, inlinedMethod)
-        )
-        nil
-    )
-
-    (defn- #_"void" BytecodeParser'notifyAfterInline-1 [#_"ResolvedJavaMethod" inlinedMethod]
-        (doseq [#_"InlineInvokePlugin" plugin (:inlineInvokePlugins HotSpot'plugins)]
-            (InlineInvokePlugin'''notifyAfterInline-2 plugin, inlinedMethod)
-        )
-        nil
-    )
-
-    (def- #_"int" BytecodeParser'ACCESSOR_BYTECODE_LENGTH 5)
-
-    ;;;
-     ; Tries to inline {@code targetMethod} if it is an instance field accessor. This avoids the
-     ; overhead of creating and using a nested BytecodeParser object.
-     ;;
-    (defn- #_"boolean" BytecodeParser''tryFastInlineAccessor-3 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" targetMethod, #_"[ValueNode]" args]
-        (let [
-            #_"[byte]" code (vec (ResolvedJavaMethod'''getCode-1 targetMethod))
-        ]
-            (and (some? code) (= (count code) BytecodeParser'ACCESSOR_BYTECODE_LENGTH) (= (Bytes'beU1-2 code, 0) Bytecodes'ALOAD_0) (= (Bytes'beU1-2 code, 1) Bytecodes'GETFIELD)
-                (let [
-                    #_"int" b4 (Bytes'beU1-2 code, 4)
-                ]
-                    (and (<= Bytecodes'IRETURN b4 Bytecodes'ARETURN)
-                        (let [
-                            #_"int" cpi (Bytes'beU2-2 code, 2)
-                            #_"JavaField" field (#_"ConstantPool" .lookupField (ResolvedJavaMethod'''getConstantPool-1 targetMethod), cpi, targetMethod, Bytecodes'GETFIELD)
-                        ]
-                            (and (satisfies? ResolvedJavaField field)
-                                (let [
-                                    _ (§ ass! this (BytecodeParser''genGetField-3r this, field, (BytecodeParser''getReceiver-3 this, args, true)))
-                                ]
-                                    (BytecodeParser'notifyBeforeInline-1 targetMethod)
-                                    (BytecodeParser'notifyAfterInline-1 targetMethod)
-                                    true
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defn- #_"this" BytecodeParser''parseAndInlineCallee-4 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" targetMethod, #_"[ValueNode]" args, #_"IntrinsicContext" calleeIntrinsicContext]
-        (try (§ with [#_"IntrinsicScope" _ (when (and (some? calleeIntrinsicContext) (not (BytecodeParser''parsingIntrinsic-1 this))) (IntrinsicScope'new-3 this, (Signature''toParameterKinds-2 (JavaMethod'''getSignature-1 targetMethod), (not (ResolvedJavaMethod''isStatic-1 targetMethod))), args))])
-            (let [
-                #_"BytecodeParser" parser (BytecodeParser'new-5 (:graphBuilderInstance this), (:graph this), this, targetMethod, calleeIntrinsicContext)
-                #_"FrameStateBuilder" startFrameState (FrameStateBuilder'new-3 parser, (:bytecode parser), (:graph this))
-                _
-                    (when-not (ResolvedJavaMethod''isStatic-1 targetMethod)
-                        (§ ass! args (update' args 0 #(BytecodeParser''nullCheckedValue-2 this, %)))
-                    )
-                startFrameState (FrameStateBuilder''initializeFromArgumentsArray-2 startFrameState, args)
-                parser (BytecodeParser''build-3 parser, (:lastInstr this), startFrameState)
-                this
-                    (when (some? (:returnDataList parser)) => (assoc this :lastInstr nil) ;; Callee does not return.
-                        (let [
-                            [this #_"MergeNode" merge #_"ValueNode" calleeReturnValue]
-                                (if (= (count (:returnDataList parser)) 1)
-                                    ;; Callee has a single return, we can continue parsing at that point.
-                                    (let [
-                                        #_"ReturnToCallerData" singleReturnData (nth (:returnDataList parser) 0)
-                                        this (assoc this :lastInstr (:beforeReturnNode singleReturnData))
-                                    ]
-                                        [this nil (:returnValue singleReturnData)]
-                                    )
-                                    ;; Callee has multiple returns, we need to insert a control flow merge.
-                                    (let [
-                                        merge (Graph''add-2 (:graph this), (MergeNode'new-0))
-                                        calleeReturnValue (ValueMergeUtil'mergeValueProducers-4 merge, (:returnDataList parser), :beforeReturnNode, :returnValue)
-                                    ]
-                                        [this merge calleeReturnValue]
-                                    )
-                                )
-                            this
-                                (when (some? calleeReturnValue) => this
-                                    (update this :frameState FrameStateBuilder''push-3 (JavaKind'getStackKind-1 (Signature''getReturnKind-1 (JavaMethod'''getSignature-1 targetMethod))), calleeReturnValue)
-                                )
-                        ]
-                            (when (some? merge) => this
-                                (§ ass! merge (StateSplit'''setStateAfter-2 merge, (BytecodeParser''createFrameState-3 this, (:nextBCI (:stream this)), merge)))
-                                (assoc this :lastInstr merge)
-                            )
-                        )
-                    )
-            ]
-                ;; Propagate any side effects into the caller when parsing intrinsics.
-                (when (and (SideEffectsState'''isAfterSideEffect-1 (:frameState parser)) (BytecodeParser''parsingIntrinsic-1 this)) => this
-                    (update this :frameState #(reduce SideEffectsState'''addSideEffect-2 % (SideEffectsState'''sideEffects-1 (:frameState parser))))
-                )
-            )
-        )
-    )
-
-    (defn- #_"boolean" BytecodeParser''inline-5 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" targetMethod, #_"ResolvedJavaMethod" inlinedMethod, #_"BytecodeProvider" intrinsicBytecodeProvider, #_"[ValueNode]" args]
-        (let [
-            #_"IntrinsicContext" context (:intrinsicContext this)
-        ]
-            (or (and (nil? context) (= targetMethod inlinedMethod) (zero? (& (ResolvedJavaMethod'''getModifiers-1 targetMethod) (| Modifier/STATIC Modifier/SYNCHRONIZED))) (BytecodeParser''tryFastInlineAccessor-3 this, targetMethod, args))
-                (if (and (some? context) (IntrinsicContext''isCallToOriginal-2 context, targetMethod))
-                    (and (not (ResolvedJavaMethod''isNative-1 (:originalMethod context))) GraalOptions'inlinePartialIntrinsicExitDuringParsing
-                        (do
-                            ;; Otherwise inline the original method. Any frame state created during the inlining
-                            ;; will exclude frame(s) in the intrinsic method (see FrameStateBuilder.create(int bci)).
-                            (BytecodeParser'notifyBeforeInline-1 inlinedMethod)
-                            (§ ass! this (BytecodeParser''parseAndInlineCallee-4 this, (:originalMethod context), args, nil))
-                            (BytecodeParser'notifyAfterInline-1 inlinedMethod)
-                            true
-                        )
-                    )
-                    (let [
-                        context
-                            (when (and (nil? context) (some? intrinsicBytecodeProvider)) => context
-                                (IntrinsicContext'new-4 targetMethod, inlinedMethod, intrinsicBytecodeProvider, :CompilationContext'INLINE_DURING_PARSING)
-                            )
-                    ]
-                        (and (ResolvedJavaMethod''hasBytecodes-1 inlinedMethod)
-                            (do
-                                (BytecodeParser'notifyBeforeInline-1 inlinedMethod)
-                                (§ ass! this (BytecodeParser''parseAndInlineCallee-4 this, inlinedMethod, args, context))
-                                (BytecodeParser'notifyAfterInline-1 inlinedMethod)
-                                true
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (def- #_"InlineInvokeInfo" BytecodeParser'SUCCESSFULLY_INLINED (§ soon InlineInvokeInfo'createStandardInlineInfo-1 nil))
-
-    ;;;
-     ; Try to inline a method. If the method was inlined, returns #SUCCESSFULLY_INLINED.
-     ; Otherwise, it returns the InlineInvokeInfo that lead to the decision to not inline it,
-     ; or nil if there is no InlineInvokeInfo for this method.
-     ;;
-    (defn- #_"InlineInvokeInfo" BytecodeParser''tryInline-3 [#_"BytecodeParser" this, #_"[ValueNode]" args, #_"ResolvedJavaMethod" targetMethod]
-        (when (or (BytecodeParser''parsingIntrinsic-1 this) (ResolvedJavaMethod'''canBeInlined-1 targetMethod))
-            (loop [#_"seq" s (seq (:inlineInvokePlugins HotSpot'plugins))]
-                (if (some? s)
-                    (let [
-                        #_"InlineInvokeInfo" inlineInfo (InlineInvokePlugin'''shouldInlineInvoke-4 (first s), this, targetMethod, args)
-                    ]
-                        (when (some? inlineInfo) => (recur (next s))
-                            (when (some? (:methodToInline inlineInfo)) => inlineInfo ;; do not inline, and do not ask the remaining plugins
-                                (when (BytecodeParser''inline-5 this, targetMethod, (:methodToInline inlineInfo), (:intrinsicBytecodeProvider inlineInfo), args)
-                                    BytecodeParser'SUCCESSFULLY_INLINED
-                                )
-                            )
-                        )
-                    )
-                    ;; There was no inline plugin with a definite answer to whether or not to inline.
-                    ;; If we're parsing an intrinsic, then we need to enforce the invariant here
-                    ;; that methods are always force inlined in intrinsics/snippets.
-                    (when (and (BytecodeParser''parsingIntrinsic-1 this) (BytecodeParser''inline-5 this, targetMethod, targetMethod, (:bytecodeProvider this), args))
-                        BytecodeParser'SUCCESSFULLY_INLINED
-                    )
-                )
-            )
-        )
-    )
-
     (defn- #_"InvokeNode" BytecodeParser''createInvoke-4 [#_"BytecodeParser" this, #_"int" invokeBci, #_"CallTargetNode" callTarget, #_"JavaKind" resultType]
         (let [
             #_"InvokeNode" invoke (BytecodeParser''append-2 this, (InvokeNode'new-2 callTarget, invokeBci))
             _ (§ ass! this (update this :frameState FrameStateBuilder''pushReturn-3 resultType, invoke))
         ]
-            (StateSplit'''setStateAfter-2 invoke, (BytecodeParser''createFrameState-3 this, (:nextBCI (:stream this)), invoke))
+            (StateSplit'''setStateAfter-2 invoke, (BytecodeParser''createFrameState-2 this, (:nextBCI (:stream this))))
         )
     )
 
@@ -20514,67 +19534,16 @@ ZeroExtendNode'new-4
                     (§ ass! args (BytecodeParser''emitCheckForInvokeSuperSpecial-2 this, args))
                 )
         ]
-            (try
-                (§ ass! this (assoc this :currentInvoke (CurrentInvoke'new-3 args, invokeKind, returnType)))
-                (when (BytecodeParser''tryNodePluginForInvocation-3 this, args, targetMethod)
-                    (§ return nil)
-                )
-
-                (when (and (InvokeKind''hasReceiver-1 invokeKind) (ValueNode''isNullConstant-1 (nth args 0)))
+            (cond
+                (BytecodeParser''tryNodePluginForInvocation-3 this, args, targetMethod)
+                    nil
+                (and (InvokeKind''hasReceiver-1 invokeKind) (ValueNode''isNullConstant-1 (nth args 0)))
+                (do
                     (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/NullCheckException))
-                    (§ return nil)
+                    nil
                 )
-
-                (when (and (:direct invokeKind) (= (BytecodeParser''tryInline-3 this, args, targetMethod) BytecodeParser'SUCCESSFULLY_INLINED))
-                    (§ return nil)
-                )
-                (finally
-                    (§ ass! this (assoc this :currentInvoke nil))
-                )
-            )
-
-            (let [
-                #_"int" invokeBci (BytecodeParser''bci-1 this)
-                #_"boolean" partialIntrinsicExit
-                    (when (and (some? (:intrinsicContext this)) (IntrinsicContext''isCallToOriginal-2 (:intrinsicContext this), targetMethod)) => false
-                        (let [
-                            #_"ResolvedJavaMethod" originalMethod (:originalMethod (:intrinsicContext this))
-                            #_"BytecodeParser" intrinsicCallSiteParser (BytecodeParser''getNonIntrinsicAncestor-1 this)
-                            _
-                                (if (some? intrinsicCallSiteParser)
-                                    ;; When exiting a partial intrinsic, the invoke to the original
-                                    ;; must use the same context as the call to the intrinsic.
-                                    (§ ass invokeBci (BytecodeParser''bci-1 intrinsicCallSiteParser))
-                                    ;; We are parsing the intrinsic for the root compilation or for inlining.
-                                    ;; This call is a partial intrinsic exit, and we do not have profile information
-                                    ;; for this callsite. We also have to assume that the call needs an exception
-                                    ;; edge. Finally, we know that this intrinsic is parsed for late inlining,
-                                    ;; so the bci must be set to unknown, so that the inliner patches it later.
-                                    (§ ass invokeBci BytecodeFrame'UNKNOWN_BCI)
-                                )
-                            _
-                                (if (ResolvedJavaMethod''isStatic-1 originalMethod)
-                                    (§ ass invokeKind :InvokeKind'Static)
-                                    ;; The original call to the intrinsic must have been devirtualized,
-                                    ;; otherwise we wouldn't be here.
-                                    (§ ass invokeKind :InvokeKind'Special)
-                                )
-                            #_"Signature" sig (JavaMethod'''getSignature-1 originalMethod)
-                            _ (§ ass returnType (Signature'''getReturnType-2 sig, (JavaMethod'''getDeclaringType-1 (:method this))))
-                            _ (§ ass resultType (Signature''getReturnKind-1 sig))
-                            _ (§ ass targetMethod originalMethod)
-                        ]
-                            true
-                        )
-                    )
-                #_"InvokeNode" invoke (BytecodeParser''createNonInlinedInvoke-7 this, invokeBci, args, targetMethod, invokeKind, resultType, returnType)
-            ]
-                (when partialIntrinsicExit => invoke
-                    ;; This invoke must never be later inlined as it might select the intrinsic graph.
-                    ;; Until there is a mechanism to guarantee that any late inlining will not select
-                    ;; the intrinsic graph, prevent this invoke from being inlined.
-                    (InvokeNode''setUseForInlining-2 invoke, false)
-                )
+                :else
+                    (BytecodeParser''createNonInlinedInvoke-7 this, (BytecodeParser''bci-1 this), args, targetMethod, invokeKind, resultType, returnType)
             )
         )
     )
@@ -20672,21 +19641,6 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Gets the kind of invocation currently being parsed.
-     ;;
-    #_unused
-    (defn #_"InvokeKind" BytecodeParser''getInvokeKind-1 [#_"BytecodeParser" this]
-        (when (some? (:currentInvoke this)) (:kind (:currentInvoke this)))
-    )
-
-    ;;;
-     ; Gets the return type of the invocation currently being parsed.
-     ;;
-    (defn #_"JavaType" BytecodeParser''getInvokeReturnType-1 [#_"BytecodeParser" this]
-        (when (some? (:currentInvoke this)) (:returnType (:currentInvoke this)))
-    )
-
-    ;;;
      ; Gets a version of a given value that has a {@linkplain StampTool#isPointerNonNull(ValueNode) non-nil} stamp.
      ;;
     (defn- #_"ValueNode" BytecodeParser''nullCheckedValue-3 [#_"BytecodeParser" this, #_"ValueNode" value, #_"DeoptimizationAction" action]
@@ -20705,25 +19659,9 @@ ZeroExtendNode'new-4
         )
     )
 
+    #_unused
     (defn- #_"ValueNode" BytecodeParser''nullCheckedValue-2 [#_"BytecodeParser" this, #_"ValueNode" value]
         (BytecodeParser''nullCheckedValue-3 this, value, DeoptimizationAction/InvalidateReprofile)
-    )
-
-    ;;;
-     ; Gets the receiver value with optional nil-check.
-     ;;
-    (defn- #_"ValueNode" BytecodeParser''getReceiver-3 [#_"BytecodeParser" this, #_"[ValueNode]" args, #_"boolean" nil-check?]
-        (when nil-check? => (nth args 0)
-            (let [
-                #_"ValueNode" value (BytecodeParser''nullCheckedValue-2 this, (nth args 0))
-                _
-                    (when-not (= value (nth args 0))
-                        (§ ass! args (assoc' args 0 value))
-                    )
-            ]
-                value
-            )
-        )
     )
 
     (defn- #_"ValueNode" BytecodeParser''genLoadField-3 [#_"BytecodeParser" this, #_"ValueNode" receiver, #_"ResolvedJavaField" field]
@@ -20756,7 +19694,7 @@ ZeroExtendNode'new-4
                     (let [
                         #_"StateSplitProxyNode" readProxy (BytecodeParser''append-2 this, (StateSplitProxyNode'new-1 fieldRead))
                         this (update this :frameState FrameStateBuilder''push-3 fieldKind, readProxy)
-                        _ (§ ass! readProxy (StateSplit'''setStateAfter-2 readProxy, (FrameStateBuilder''create-3 (:frameState this), (:nextBCI (:stream this)), readProxy)))
+                        _ (§ ass! readProxy (StateSplit'''setStateAfter-2 readProxy, (FrameStateBuilder''create-2 (:frameState this), (:nextBCI (:stream this)))))
                     ]
                         this
                     )
@@ -20810,13 +19748,13 @@ ZeroExtendNode'new-4
             #_"MonitorIdNode" monitorId (Graph''add-2 (:graph this), (MonitorIdNode'new-1 (FrameStateBuilder''lockDepth-2 (:frameState this), true)))
             #_"MonitorEnterNode" monitorEnter (BytecodeParser''append-2 this, (MonitorEnterNode'new-2 x, monitorId))
             this (update this :frameState FrameStateBuilder''pushLock-3 x, monitorId)
-            _ (§ ass! monitorEnter (StateSplit'''setStateAfter-2 monitorEnter, (BytecodeParser''createFrameState-3 this, bci, monitorEnter)))
+            _ (§ ass! monitorEnter (StateSplit'''setStateAfter-2 monitorEnter, (BytecodeParser''createFrameState-2 this, bci)))
         ]
             this
         )
     )
 
-    (defn- #_"this" BytecodeParser''genMonitorExit-4 [#_"BytecodeParser" this, #_"ValueNode" x, #_"ValueNode" escapedReturnValue, #_"int" bci]
+    (defn- #_"this" BytecodeParser''genMonitorExit-3 [#_"BytecodeParser" this, #_"ValueNode" x, #_"int" bci]
         (let [
             _
                 (when (zero? (FrameStateBuilder''lockDepth-2 (:frameState this), false))
@@ -20828,8 +19766,8 @@ ZeroExtendNode'new-4
                 (when-not (= (GraphUtil'originalValue-1 lockedObject) (GraphUtil'originalValue-1 x))
                     (throw! (str "unbalanced monitors: mismatch at monitorexit, " (GraphUtil'originalValue-1 x) " != " (GraphUtil'originalValue-1 lockedObject)))
                 )
-            #_"MonitorExitNode" monitorExit (BytecodeParser''append-2 this, (MonitorExitNode'new-3 lockedObject, monitorId, escapedReturnValue))
-            _ (§ ass! monitorExit (StateSplit'''setStateAfter-2 monitorExit, (BytecodeParser''createFrameState-3 this, bci, monitorExit)))
+            #_"MonitorExitNode" monitorExit (BytecodeParser''append-2 this, (MonitorExitNode'new-2 lockedObject, monitorId))
+            _ (§ ass! monitorExit (StateSplit'''setStateAfter-2 monitorExit, (BytecodeParser''createFrameState-2 this, bci)))
         ]
             this
         )
@@ -20845,7 +19783,7 @@ ZeroExtendNode'new-4
                                 (update this :frameState FrameStateBuilder''push-3 currentReturnValueKind, currentReturnValue)
                             )
                     ]
-                        (BytecodeParser''genMonitorExit-4 this, (:methodSynchronizedObject this), currentReturnValue, bci)
+                        (BytecodeParser''genMonitorExit-3 this, (:methodSynchronizedObject this), bci)
                     )
                 )
         ]
@@ -20864,35 +19802,13 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"this" BytecodeParser''genReturn-3 [#_"BytecodeParser" this, #_"ValueNode" returnVal, #_"JavaKind" returnKind]
-        (when (and (BytecodeParser''parsingIntrinsic-1 this) (satisfies? StateSplit returnVal) (StateSplit'''hasSideEffect-1 returnVal))
-            (let [
-                #_"FrameState" stateAfter (:stateAfter returnVal)
-            ]
-                (when (= (:bci stateAfter) BytecodeFrame'AFTER_BCI) ;; => must be the return value from within a partial intrinsification
-                    (let [
-                        stateAfter (Node''replaceAtUsages-2 stateAfter, (Graph''add-2 (:graph this), (FrameState'new-2 BytecodeFrame'AFTER_BCI, returnVal)))
-                    ]
-                        (GraphUtil'killWithUnusedFloatingInputs-1 stateAfter)
-                    )
-                )
-            )
-        )
         (let [
             #_"ValueNode" realReturnVal (BytecodeParser''processReturnValue-3 this, returnVal, returnKind)
             this (update this :frameState FrameStateBuilder''clearStack-1)
             this (BytecodeParser''beforeReturn-3 this, realReturnVal, returnKind)
         ]
-            (if (some? (:parent this))
-                (let [
-                    this (update this :returnDataList conj' (ReturnToCallerData'new-2 realReturnVal, (:lastInstr this)))
-                ]
-                    (assoc this :lastInstr nil)
-                )
-                (do
-                    (BytecodeParser''append-2 this, (ReturnNode'new-1 realReturnVal))
-                    this
-                )
-            )
+            (BytecodeParser''append-2 this, (ReturnNode'new-1 realReturnVal))
+            this
         )
     )
 
@@ -21064,31 +19980,15 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" BytecodeParser''returnAfterConstant-2 [#_"BytecodeParser" this, #_"BciBlock" block]
-        (let [
-            _ (§ ass! this (update this :stream BytecodeStream''setBCI-2 (:startBci block)))
-            _ (§ ass! this (update this :stream BytecodeStream''setBCI-2 (:nextBCI (:stream this))))
-        ]
-            (= (BytecodeStream''currentBC-1 (:stream this)) Bytecodes'IRETURN)
-        )
-    )
-
     (defn- #_"boolean" BytecodeParser''tryGenConditionalForIf-7 [#_"BytecodeParser" this, #_"BciBlock" trueBlock, #_"BciBlock" falseBlock, #_"LogicNode" logic, #_"int" oldBci, #_"int" trueBlockInt, #_"int" falseBlockInt]
-        (cond
-            (and (BytecodeParser''gotoOrFallThroughAfterConstant-2 this, trueBlock) (BytecodeParser''gotoOrFallThroughAfterConstant-2 this, falseBlock) (= (BciBlock''getSuccessor-2 trueBlock, 0) (BciBlock''getSuccessor-2 falseBlock, 0)))
+        (and (BytecodeParser''gotoOrFallThroughAfterConstant-2 this, trueBlock)
+             (BytecodeParser''gotoOrFallThroughAfterConstant-2 this, falseBlock)
+             (= (BciBlock''getSuccessor-2 trueBlock, 0) (BciBlock''getSuccessor-2 falseBlock, 0))
             (let [
                 _ (§ ass! this (BytecodeParser''genConditionalForIf-7 this, trueBlock, logic, oldBci, trueBlockInt, falseBlockInt, false))
             ]
                 true
             )
-            (and (some? (:parent this)) (BytecodeParser''returnAfterConstant-2 this, trueBlock) (BytecodeParser''returnAfterConstant-2 this, falseBlock))
-            (let [
-                _ (§ ass! this (BytecodeParser''genConditionalForIf-7 this, trueBlock, logic, oldBci, trueBlockInt, falseBlockInt, true))
-            ]
-                true
-            )
-            :else
-                false
         )
     )
 
@@ -21542,7 +20442,7 @@ ZeroExtendNode'new-4
         (let [
             #_"StoreFieldNode" storeFieldNode (StoreFieldNode'new-3 receiver, field, value)
             _ (BytecodeParser''append-2 this, storeFieldNode)
-            _ (§ ass! storeFieldNode (StateSplit'''setStateAfter-2 storeFieldNode, (BytecodeParser''createFrameState-3 this, (:nextBCI (:stream this)), storeFieldNode)))
+            _ (§ ass! storeFieldNode (StateSplit'''setStateAfter-2 storeFieldNode, (BytecodeParser''createFrameState-2 this, (:nextBCI (:stream this)))))
         ]
             this
         )
@@ -21893,7 +20793,7 @@ ZeroExtendNode'new-4
             Bytecodes'CHECKCAST       (BytecodeParser''genCheckCast-1 this)
             Bytecodes'INSTANCEOF      (BytecodeParser''genInstanceOf-1 this)
             Bytecodes'MONITORENTER    (BytecodeParser''genMonitorEnter-3 this, (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Object), (:nextBCI (:stream this)))
-            Bytecodes'MONITOREXIT     (BytecodeParser''genMonitorExit-4 this, (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Object), nil, (:nextBCI (:stream this)))
+            Bytecodes'MONITOREXIT     (BytecodeParser''genMonitorExit-3 this, (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Object), (:nextBCI (:stream this)))
             Bytecodes'IFNULL          (BytecodeParser''genIfNull-2 this, Condition'EQ)
             Bytecodes'IFNONNULL       (BytecodeParser''genIfNull-2 this, Condition'NE)
             Bytecodes'GOTO_W          (BytecodeParser''genGoto-1 this)
@@ -21905,10 +20805,6 @@ ZeroExtendNode'new-4
         (let [
             #_"EndNode" preLoopEnd (Graph''add-2 (:graph this), (EndNode'new-0))
             #_"LoopBeginNode" loopBegin (Graph''add-2 (:graph this), (LoopBeginNode'new-0))
-            loopBegin
-                (when (BytecodeParser''parsingIntrinsic-1 this) => loopBegin
-                    (LoopBeginNode''disableSafepoint-1 loopBegin)
-                )
             _ (§ ass! fixedWithNext (FixedWithNextNode''setNext-2 fixedWithNext, preLoopEnd))
         ]
             ;; Add the single non-loop predecessor of the loop header.
@@ -21927,7 +20823,7 @@ ZeroExtendNode'new-4
                         this (assoc this :lastInstr loopBegin)
                         ;; Create phi functions for all local variables and operand stack slots.
                         this (update this :frameState FrameStateBuilder''insertLoopPhis-6 (:liveness this), (:loopId block), loopBegin, false, false)
-                        _ (§ ass! loopBegin (StateSplit'''setStateAfter-2 loopBegin, (BytecodeParser''createFrameState-3 this, (:startBci block), loopBegin)))
+                        _ (§ ass! loopBegin (StateSplit'''setStateAfter-2 loopBegin, (BytecodeParser''createFrameState-2 this, (:startBci block))))
                         ;; We have seen all forward branches. All subsequent backward branches will merge to the
                         ;; loop header. This ensures that the loop header has exactly one non-loop predecessor.
                         this (assoc-in this [:firstInstructions (:id block)] loopBegin)
@@ -21968,7 +20864,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"FixedWithNextNode" BytecodeParser''setMergeStateAfter-3 [#_"BytecodeParser" this, #_"BciBlock" block, #_"FixedWithNextNode" firstInstruction]
         (when (nil? (:stateAfter firstInstruction)) => firstInstruction
-            (StateSplit'''setStateAfter-2 firstInstruction, (BytecodeParser''createFrameState-3 this, (:startBci block), firstInstruction))
+            (StateSplit'''setStateAfter-2 firstInstruction, (BytecodeParser''createFrameState-2 this, (:startBci block)))
         )
     )
 
@@ -21993,32 +20889,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; Creates the frame state after the start node of a graph for an {@link IntrinsicContext intrinsic}
-     ; that is the parse root (either for root compiling or for post-parse inlining).
-     ;;
-    (defn- #_"FrameState" BytecodeParser''createStateAfterStartOfReplacementGraph-1 [#_"BytecodeParser" this]
-        (if (IntrinsicContext''isPostParseInlined-1 (:intrinsicContext this))
-            (Graph''add-2 (:graph this), (FrameState'new-1 BytecodeFrame'BEFORE_BCI))
-            (let [
-                f'local #(let [#_"ValueNode" node (nth (:locals (:frameState this)) %)] (when-not (= node :FrameState'TWO_SLOT_MARKER) node))
-                #_"ResolvedJavaMethod" o'method (:originalMethod (:intrinsicContext this))
-                #_"int" m (ResolvedJavaMethod'''getMaxLocals-1 o'method)
-                #_"ValueNode*" locals
-                    (if (or (= (count (:locals (:frameState this))) m) (ResolvedJavaMethod''isNative-1 o'method))
-                        (map f'local (range m))
-                        (let [
-                            #_"int" n (Signature'''getParameterCount-2 (JavaMethod'''getSignature-1 o'method), (not (ResolvedJavaMethod''isStatic-1 o'method)))
-                        ]
-                            (concat (map f'local (range n)) (repeat (- m n) nil))
-                        )
-                    )
-            ]
-                (Graph''add-2 (:graph this), (FrameState'new-8a nil, (BytecodeProvider''getBytecode-2 HotSpot'bytecodeProvider, o'method), 0, locals, nil, nil, nil, false))
-            )
-        )
-    )
-
     (defn- #_"ValueNode" BytecodeParser''synchronizedObject-3 [#_"BytecodeParser" this, #_"FrameStateBuilder" state, #_"ResolvedJavaMethod" target]
         (if (ResolvedJavaMethod''isStatic-1 target)
             (ConstantNode'forConstant-2c (ConstantReflectionProvider'''asJavaClass-2 HotSpot'constantReflection, (JavaMethod'''getDeclaringType-1 target)), (:graph this))
@@ -22036,38 +20906,26 @@ ZeroExtendNode'new-4
                 (when-not (ResolvedJavaMethod''isStatic-1 (:method this)) => this
                     (assoc this :originalReceiver (nth (:locals startFrameState) 0))
                 )
-            this (assoc this :liveness (LocalLiveness'compute-4 (:stream this), (:blocks (:blockMap this)), (ResolvedJavaMethod'''getMaxLocals-1 (:method this)), (:nextLoop (:blockMap this))))
+            this (assoc this :liveness (LocalLiveness'compute-4 (:stream this), (:blocks (:blockMap this)), (ResolvedJavaMethod'''getMaxLocals-1 (:method this)), (:nextLoop (:blockMap this))))
             this (assoc this :lastInstr startInstruction)
             this (assoc this :frameState startFrameState)
             this (update this :stream BytecodeStream''setBCI-2 0)
             #_"BciBlock" startBlock (:startBlock (:blockMap this))
             this
-                (when (nil? (:parent this)) => this
-                    (let [
-                        #_"StartNode" startNode (:start (:graph this))
-                    ]
-                        (cond
-                            (ResolvedJavaMethod''isSynchronized-1 (:method this))
-                                (let [
-                                    _ (§ ass! startNode (StateSplit'''setStateAfter-2 startNode, (BytecodeParser''createFrameState-3 this, BytecodeFrame'BEFORE_BCI, startNode)))
-                                ]
-                                    this
-                                )
-                            (BytecodeParser''parsingIntrinsic-1 this)
-                                (when (nil? (:stateAfter startNode)) => this
-                                    (let [
-                                        _ (§ ass! startNode (StateSplit'''setStateAfter-2 startNode, (BytecodeParser''createStateAfterStartOfReplacementGraph-1 this)))
-                                    ]
-                                        this
-                                    )
-                                )
-                            :else
-                                (let [
-                                    this (update this :frameState FrameStateBuilder''clearNonLiveLocals-4 startBlock, (:liveness this), true)
-                                    _ (§ ass! startNode (StateSplit'''setStateAfter-2 startNode, (BytecodeParser''createFrameState-3 this, (BytecodeParser''bci-1 this), startNode)))
-                                ]
-                                    this
-                                )
+                (let [
+                    #_"StartNode" startNode (:start (:graph this))
+                ]
+                    (if (ResolvedJavaMethod''isSynchronized-1 (:method this))
+                        (let [
+                            _ (§ ass! startNode (StateSplit'''setStateAfter-2 startNode, (BytecodeParser''createFrameState-2 this, BytecodeFrame'BEFORE_BCI)))
+                        ]
+                            this
+                        )
+                        (let [
+                            this (update this :frameState FrameStateBuilder''clearNonLiveLocals-4 startBlock, (:liveness this), true)
+                            _ (§ ass! startNode (StateSplit'''setStateAfter-2 startNode, (BytecodeParser''createFrameState-2 this, (BytecodeParser''bci-1 this))))
+                        ]
+                            this
                         )
                     )
                 )
@@ -22121,10 +20979,7 @@ ZeroExtendNode'new-4
         (let [
             #_"FrameStateBuilder" startFrameState (FrameStateBuilder'new-3 this, (:bytecode this), (:graph this))
             startFrameState (FrameStateBuilder''initializeForMethodStart-1 startFrameState)
-            this
-                (try (§ with [#_"IntrinsicScope" _ (when (some? (:intrinsicContext this)) (IntrinsicScope'new-1 this))])
-                    (BytecodeParser''build-3 this, (:start (:graph this)), startFrameState)
-                )
+            this (BytecodeParser''build-3 this, (:start (:graph this)), startFrameState)
             this (BytecodeParser''cleanupFinalGraph-1 this)
         ]
             (ComputeLoopFrequenciesClosure'compute-1 (:graph this))
@@ -22816,90 +21671,6 @@ ZeroExtendNode'new-4
         (#_"LocationIdentity" CacheEntry'''getIdentity-1 [#_"UnsafeLoadCacheEntry" this]
             (:locationIdentity this)
         )
-    )
-)
-
-;;;
- ; Information about a graph that will potentially be inlined, esp. tracking the invocations that will subject to inlining themselves.
- ;;
-(class-ns CallsiteHolder []
-    (defn- #_"{ParameterNode}" CallsiteHolder'fixedParamsAt-2 [#_"Graph" graph, #_"BitSet" freshArgs]
-        (when (and (some? freshArgs) (not (#_"BitSet" .isEmpty freshArgs)))
-            (set (filter #(#_"BitSet" .get freshArgs, (AbstractLocalNode''index-1 %)) (Graph''getNodes-2 graph, ParameterNode)))
-        )
-    )
-
-    (defn #_"CallsiteHolder" CallsiteHolder'new-4 [#_"Graph" graph, #_"double" probability, #_"double" relevance, #_"BitSet" freshArgs]
-        (let [
-            #_"CallsiteHolder" this
-                (merge (CallsiteHolder'class.)
-                    (hash-map
-                        ;;;
-                         ; Graph in which inlining may be performed at one or more of the callsites containined in #remainingInvokes.
-                         ;;
-                        #_"Graph" :graph graph
-                        #_"(InvokeNode)" :remainingInvokes (InliningIterator'apply-1 graph)
-                        #_"double" :probability probability
-                        #_"double" :relevance relevance
-                        ;;;
-                         ; Parameters for which the callsite targeting #graph() provides "fixed" arguments. That callsite isn't referenced
-                         ; by this instance. Instead, it belongs to the graph of the caller of this CallsiteHolderExplorable.
-                         ;
-                         ; Constant arguments don't contribute to fixed-params: those params have been removed already, see InlineableGraph.
-                         ; Instead, fixed-params are those receiving freshly instantiated arguments (possibly instantiated several levels
-                         ; up in the call-hierarchy).
-                         ;;
-                        #_"{ParameterNode}" :fixedParams (CallsiteHolder'fixedParamsAt-2 graph, freshArgs)
-                        #_"fn double [FixedNode]" :f'probabilities-1 nil
-                        #_"ComputeInliningRelevance" :computeInliningRelevance nil
-                    )
-                )
-        ]
-            (when (seq (:remainingInvokes this)) => this
-                (let [
-                    #_"fn double [FixedNode]" f'probabilities-1 (FixedNodeProbabilityCache'new-0)
-                ]
-                    (assoc this :f'probabilities-1 f'probabilities-1, :computeInliningRelevance (ComputeInliningRelevance''compute-1 (ComputeInliningRelevance'new-2 graph, f'probabilities-1)))
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Gets the method associated with the {@linkplain #graph() graph} represented by this object.
-     ;;
-    (defn #_"ResolvedJavaMethod" CallsiteHolder''method-1 [#_"CallsiteHolder" this]
-        (when (some? (:graph this)) (:rootMethod (:graph this)))
-    )
-
-    ;;;
-     ; The stack realized by InliningData grows upon InliningData#moveForward() deciding
-     ; to explore (depth-first) a callsite of the graph associated to this CallsiteHolder.
-     ; The list of not-yet-considered callsites is managed by CallsiteHolderExplorable,
-     ; and this method reports whether any such candidates remain.
-     ;;
-    (defn #_"boolean" CallsiteHolder''hasRemainingInvokes-1 [#_"CallsiteHolder" this]
-        (seq (:remainingInvokes this))
-    )
-
-    (defn #_"[InvokeNode this]" CallsiteHolder''popInvoke-1 [#_"CallsiteHolder" this]
-        [(first (:remainingInvokes this)) (update this :remainingInvokes next)]
-    )
-
-    (defn #_"this" CallsiteHolder''pushInvoke-2 [#_"CallsiteHolder" this, #_"InvokeNode" invoke]
-        (update this :remainingInvokes cons invoke)
-    )
-
-    (defn #_"this" CallsiteHolder''computeProbabilities-1 [#_"CallsiteHolder" this]
-        (update this :computeInliningRelevance ComputeInliningRelevance''compute-1)
-    )
-
-    (defn #_"double" CallsiteHolder''invokeProbability-2 [#_"CallsiteHolder" this, #_"InvokeNode" invoke]
-        (* (:probability this) ((:f'probabilities-1 this) invoke))
-    )
-
-    (defn #_"double" CallsiteHolder''invokeRelevance-2 [#_"CallsiteHolder" this, #_"InvokeNode" invoke]
-        (* (min InliningPolicy'CapInheritedRelevance (:relevance this)) (ComputeInliningRelevance''getRelevance-2 (:computeInliningRelevance this), invoke))
     )
 )
 
@@ -24911,216 +23682,6 @@ ZeroExtendNode'new-4
     #_unused
     (defn #_"boolean" CompressEncoding''hasShift-1 [#_"CompressEncoding" this]
         (not (zero? (:shift this)))
-    )
-)
-
-(class-ns ComputeInliningRelevance []
-    (def- #_"double" ComputeInliningRelevance'EPSILON (/ 1.0 Integer/MAX_VALUE))
-    (def- #_"double" ComputeInliningRelevance'UNINITIALIZED -1.0)
-
-    (defn #_"ComputeInliningRelevance" ComputeInliningRelevance'new-2 [#_"Graph" graph, #_"fn double [FixedNode]" f'probabilities-1]
-        (merge (ComputeInliningRelevance'class.)
-            (hash-map
-                #_"Graph" :graph graph
-                #_"fn double [FixedNode]" :f'probabilities-1 f'probabilities-1
-                ;;;
-                 ; Node relevances are pre-computed for all invokes if the graph contains loops.
-                 ; If there are no loops, the computation happens lazily based on #rootScope.
-                 ;;
-                #_"{FixedNode Double}" :relevances {}
-                ;;;
-                 ; This scope is non-nil if (and only if) there are no loops in the graph.
-                 ; In this case, the root scope is used to compute invoke relevances on the fly.
-                 ;;
-                #_"Scope" :rootScope nil
-            )
-        )
-    )
-
-    ;;;
-     ; Determines the parent of the given loop and creates a Scope object for each one.
-     ; This method will call itself recursively if no Scope for the parent loop exists.
-     ;;
-    (defn- #_"Scope" ComputeInliningRelevance''createLoopScope-4 [#_"ComputeInliningRelevance" this, #_"LoopBeginNode" loopBegin, #_"{LoopBeginNode Scope}" loops, #_"Scope" topScope]
-        (or (get loops loopBegin)
-            ;; look for the parent scope
-            (let [
-                #_"Scope" parent
-                    (loop [#_"FixedNode" node (LoopBeginNode''forwardEnd-1 loopBegin)]
-                        (cond
-                            (nil? (:predecessor node))
-                                (condp satisfies? node
-                                    LoopBeginNode
-                                        ;; if we reach a LoopBeginNode then we're within this loop
-                                        (ComputeInliningRelevance''createLoopScope-4 this, node, loops, topScope)
-                                    StartNode
-                                        ;; we're within the outermost scope
-                                        topScope
-                                    ;; follow any path upwards - it doesn't matter which one
-                                    (recur (nth (:ends node) 0))
-                                )
-                            (satisfies? LoopExitNode node)
-                                ;; if we reach a loop exit then we follow this loop and have the same parent
-                                (:parent (ComputeInliningRelevance''createLoopScope-4 this, (:loopBegin node), loops, topScope))
-                            :else
-                                (recur (:predecessor node))
-                        )
-                    )
-                #_"Scope" scope (Scope'new-3 this, loopBegin, parent)
-                _ (§ ass! loops (assoc loops loopBegin scope))
-            ]
-                scope
-            )
-        )
-    )
-
-    ;;;
-     ; Initializes or updates the relevance computation. If there are no loops within the graph,
-     ; most computation happens lazily.
-     ;;
-    (defn #_"this" ComputeInliningRelevance''compute-1 [#_"ComputeInliningRelevance" this]
-        (let [
-            #_"Scope" topScope (Scope'new-3 this, (:start (:graph this)), nil)
-        ]
-            (when (Graph''hasLoops-1 (:graph this)) => (assoc this :rootScope topScope)
-                (let [
-                    this (assoc this :rootScope nil)
-                    #_"{LoopBeginNode Scope}" loops {}
-                    _
-                        (doseq [#_"LoopBeginNode" loopBegin (Graph''getNodes-2 (:graph this), LoopBeginNode)]
-                            (ComputeInliningRelevance''createLoopScope-4 this, loopBegin, loops, topScope)
-                        )
-                    #_"{Node}" visited #{}
-                    _ (§ ass! [topScope visited] (Scope''process-2 topScope, visited))
-                    _
-                        (doseq [#_"Scope" scope (vals loops)]
-                            (§ ass! [scope visited] (Scope''process-2 scope, visited))
-                        )
-                ]
-                    this
-                )
-            )
-        )
-    )
-
-    (defn #_"double" ComputeInliningRelevance''getRelevance-2 [#_"ComputeInliningRelevance" this, #_"InvokeNode" invoke]
-        (if (some? (:rootScope this))
-            (Scope''computeInvokeRelevance-2 (:rootScope this), invoke)
-            (get (:relevances this) invoke)
-        )
-    )
-
-    ;;;
-     ; Returns the most probable loop exit. If multiple successors share the maximum probability,
-     ; one is returned and the others are enqueued in pathBeginNodes.
-     ;;
-    (defn- #_"Node" ComputeInliningRelevance''getMaxProbabilityLoopExit-3 [#_"ComputeInliningRelevance" this, #_"LoopBeginNode" loopBegin, #_"[FixedNode]" pathBeginNodes]
-        (let [
-            #_"int" n (count pathBeginNodes)
-        ]
-            (loop-when [#_"Node" maxSux nil #_"double" maxProbability 0.0 #_"seq" s (seq (LoopBeginNode''loopExits-1 loopBegin))] (some? s) => maxSux
-                (let [
-                    #_"LoopExitNode" sux (first s)
-                    #_"double" probability ((:f'probabilities-1 this) sux)
-                    [maxSux maxProbability]
-                        (if (< maxProbability probability)
-                            (let [
-                                _ (§ ass! pathBeginNodes (subvec pathBeginNodes 0 n))
-                            ]
-                                [sux probability]
-                            )
-                            (let [
-                                _
-                                    (when (= probability maxProbability)
-                                        (§ ass! pathBeginNodes (conj' pathBeginNodes sux))
-                                    )
-                            ]
-                                [maxSux maxProbability]
-                            )
-                        )
-                ]
-                    (recur maxSux maxProbability (next s))
-                )
-            )
-        )
-    )
-
-    (defn- #_"double" ComputeInliningRelevance''getMinPathProbability-3 [#_"ComputeInliningRelevance" this, #_"FixedNode" node, #_"double" minPathProbability]
-        (if (some? node) (min minPathProbability ((:f'probabilities-1 this) node)) minPathProbability)
-    )
-
-    ;;;
-     ; Returns the most probable successor. If multiple successors share the maximum probability,
-     ; one is returned and the others are enqueued in pathBeginNodes.
-     ;;
-    (defn- #_"Node" ComputeInliningRelevance'getMaxProbabilitySux-2 [#_"ControlSplitNode" controlSplit, #_"[FixedNode]" pathBeginNodes]
-        (let [
-            #_"int" n (count pathBeginNodes)
-        ]
-            (loop-when [#_"Node" maxSux nil #_"double" maxProbability 0.0 #_"seq" s (seq (Node''successors-1 controlSplit))] (some? s) => maxSux
-                (let [
-                    #_"Node" sux (first s)
-                    #_"double" probability (ControlSplitNode'''probability-2 controlSplit, (§ cast #_"AbstractBeginNode" sux))
-                    [maxSux maxProbability]
-                        (if (< maxProbability probability)
-                            (let [
-                                _ (§ ass! pathBeginNodes (subvec pathBeginNodes 0 n))
-                            ]
-                                [sux probability]
-                            )
-                            (let [
-                                _
-                                    (when (= probability maxProbability)
-                                        (§ ass! pathBeginNodes (conj' pathBeginNodes sux))
-                                    )
-                            ]
-                                [maxSux maxProbability]
-                            )
-                        )
-                ]
-                    (recur maxSux maxProbability (next s))
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Computes the minimum probability along the most probable path within the scope.
-     ; During iteration, the method returns immediately once a loop exit is discovered.
-     ;;
-    (defn- #_"double" ComputeInliningRelevance''computeFastPathMinProbability-2 [#_"ComputeInliningRelevance" this, #_"FixedNode" scopeStart]
-        (loop [#_"[FixedNode]" pathBeginNodes [ scopeStart ] #_"double" minPathProbability ((:f'probabilities-1 this) scopeStart)]
-            (let [
-                [pathBeginNodes minPathProbability]
-                    (loop [#_"Node" node (peek' pathBeginNodes) pathBeginNodes (pop' pathBeginNodes) minPathProbability minPathProbability]
-                        (let [
-                            [node minPathProbability]
-                                (cond
-                                    (and (satisfies? LoopBeginNode scopeStart) (satisfies? LoopExitNode node) (some #(= % node) (LoopBeginNode''loopExits-1 scopeStart)))
-                                        (§ return minPathProbability)
-                                    (and (satisfies? LoopBeginNode node) (not= node scopeStart))
-                                        (let [
-                                            node (ComputeInliningRelevance''getMaxProbabilityLoopExit-3 this, node, pathBeginNodes)
-                                        ]
-                                            [node (ComputeInliningRelevance''getMinPathProbability-3 this, node, minPathProbability)]
-                                        )
-                                    (satisfies? ControlSplitNode node)
-                                        (let [
-                                            node (ComputeInliningRelevance'getMaxProbabilitySux-2 node, pathBeginNodes)
-                                        ]
-                                            [node (ComputeInliningRelevance''getMinPathProbability-3 this, node, minPathProbability)]
-                                        )
-                                    :else
-                                        [(first (Node''successors-1 node)) minPathProbability]
-                                )
-                        ]
-                            (recur-if (some? node) [node pathBeginNodes minPathProbability] => [pathBeginNodes minPathProbability])
-                        )
-                    )
-            ]
-                (recur-if (seq pathBeginNodes) [pathBeginNodes minPathProbability] => minPathProbability)
-            )
-        )
     )
 )
 
@@ -27644,18 +26205,6 @@ ZeroExtendNode'new-4
 
     (defn #_"IntegerStamp" CountedLoopInfo''getStamp-1 [#_"CountedLoopInfo" this]
         (:stamp (InductionVariable'''valueNode-1 (:iv this)))
-    )
-)
-
-(class-ns CurrentInvoke []
-    (defn #_"CurrentInvoke" CurrentInvoke'new-3 [#_"[ValueNode]" args, #_"InvokeKind" kind, #_"JavaType" returnType]
-        (merge (CurrentInvoke'class.)
-            (hash-map
-                #_"[ValueNode]" :args args
-                #_"InvokeKind" :kind kind
-                #_"JavaType" :returnType returnType
-            )
-        )
     )
 )
 
@@ -31029,96 +29578,6 @@ ZeroExtendNode'new-4
     )
 )
 
-;;;
- ; Compute probabilities for fixed nodes on the fly and cache them at AbstractBeginNodes.
- ;;
-(class-ns FixedNodeProbabilityCache [#_"fn double [FixedNode]"]
-    (defn #_"FixedNodeProbabilityCache" FixedNodeProbabilityCache'new-0 []
-        (merge (FixedNodeProbabilityCache'class.)
-            (hash-map
-                #_"{FixedNode Double}" :cache {}
-            )
-        )
-    )
-
-    (defn- #_"FixedNode" FixedNodeProbabilityCache'findBegin-1 [#_"FixedNode" node]
-        (loop [node node]
-            (let [
-                #_"Node" predecessor (:predecessor node)
-            ]
-                (if (satisfies? AbstractBeginNode node)
-                    (when (and (some? predecessor) (= (count (Node''successors-1 predecessor)) 1)) => node
-                        (recur predecessor)
-                    )
-                    (when (some? predecessor)
-                        (recur predecessor)
-                    )
-                )
-            )
-        )
-    )
-
-    (defn- #_"double" FixedNodeProbabilityCache''handleMerge-3 [#_"FixedNodeProbabilityCache" this, #_"FixedNode" node, #_"double" probability]
-        ;; Use simple iteration instead of streams, since the stream infrastructure adds many frames
-        ;; which causes the recursion to overflow the stack earlier than it would otherwise.
-        (let [
-            probability
-                (loop-when-recur [probability probability #_"seq" s (seq (:ends node))]
-                                 (some? s)
-                                 [(+ probability (FixedNodeProbabilityCache''applyAsDouble-2 this, (first s))) (next s)]
-                              => probability
-                )
-        ]
-            (when (satisfies? LoopBeginNode node) => probability
-                (ControlFlowGraph'multiplyProbabilities-2 probability, (:loopFrequency node))
-            )
-        )
-    )
-
-    ;;;
-     ; Given a FixedNode this method finds the most immediate AbstractBeginNode preceding it that either:
-     ;
-     ; - has no predecessor (i.e. the begin-node is a merge, in particular a loop-begin, or the start-node)
-     ; - has a control-split predecessor
-     ;
-     ; The thus found AbstractBeginNode is equi-probable with the FixedNode it was obtained from.
-     ; When computed for the first time (afterwards a cache lookup returns it) that probability
-     ; is computed as follows, again depending on the begin-node's predecessor:
-     ;
-     ; - No predecessor. In this case the begin-node is either:
-     ; -- a merge-node, whose probability adds up those of its forward-ends
-     ; -- a loop-begin, with probability as above multiplied by the loop-frequency
-     ; - Control-split predecessor: probability of the branch times that of the control-split
-     ;
-     ; As an exception to all the above, a probability of 1 is assumed for a FixedNode that
-     ; appears to be dead-code (i.e. lacks a predecessor).
-     ;;
-    (defn #_"double" FixedNodeProbabilityCache''applyAsDouble-2 [#_"FixedNodeProbabilityCache" this, #_"FixedNode" node]
-        (let [
-            node (FixedNodeProbabilityCache'findBegin-1 node)
-        ]
-            (when (some? node) => 1.0 ;; this should only appear for dead code
-                (or (get (:cache this) node)
-                    (let [
-                        #_"Node" predecessor (:predecessor node)
-                        #_"double" probability
-                            (if (some? predecessor)
-                                (ControlFlowGraph'multiplyProbabilities-2 (ControlSplitNode'''probability-2 predecessor, node), (FixedNodeProbabilityCache''applyAsDouble-2 this, predecessor))
-                                (if (satisfies? AbstractMergeNode node)
-                                    (FixedNodeProbabilityCache''handleMerge-3 this, node, 0.0)
-                                    1.0
-                                )
-                            )
-                        _ (§ ass! this (update this :cache assoc node probability))
-                    ]
-                        probability
-                    )
-                )
-            )
-        )
-    )
-)
-
 (class-ns FixedTarget []
     (defn #_"FixedTarget" FixedTarget'new-2 [#_"FixedNode" fixed, #_"FrameStateBuilder" state]
         (merge (FixedTarget'class.)
@@ -31930,7 +30389,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FrameStateBuilder [SideEffectsState]
+(class-ns FrameStateBuilder []
     ;;;
      ; Creates a new frame state builder for the given bytecode and the given target graph.
      ;
@@ -31948,15 +30407,11 @@ ZeroExtendNode'new-4
                 #_"[MonitorIdNode]" :monitorIds []
                 #_"Graph" :graph graph
                 #_"FrameState" :outerFrameState nil
-                ;;;
-                 ; The closest {@link StateSplit#hasSideEffect() side-effect} predecessors. There will be more
-                 ; than one when the current block contains no side-effects but merging predecessor blocks do.
-                 ;;
-                #_"[StateSplit]" :sideEffects nil
             )
         )
     )
 
+    #_unused
     (defn #_"this" FrameStateBuilder''initializeFromArgumentsArray-2 [#_"FrameStateBuilder" this, #_"ValueNode*" arguments]
         (let [
             #_"ResolvedJavaMethod" method (:method (:bytecode this))
@@ -32021,41 +30476,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"FrameState" FrameStateBuilder''create-3 [#_"FrameStateBuilder" this, #_"int" bci, #_"StateSplit" forStateSplit]
-        (if (and (some? (:parser this)) (BytecodeParser''parsingIntrinsic-1 (:parser this)))
-            (IntrinsicContext'createFrameState-3 (:graph (:parser this)), this, forStateSplit)
-            ;; skip intrinsic frames
-            (FrameStateBuilder''create-6 this, bci, (when (some? (:parser this)) (BytecodeParser''getNonIntrinsicAncestor-1 (:parser this))), false, nil, nil)
-        )
-    )
-
-    ;;;
-     ; @param pushedValues if non-nil, values to #push(JavaKind, ValueNode) to the stack before creating the FrameState
-     ;;
-    (defn #_"FrameState" FrameStateBuilder''create-6 [#_"FrameStateBuilder" this, #_"int" bci, #_"BytecodeParser" parent, #_"boolean" duringCall, #_"JavaKind*" pushedSlotKinds, #_"[ValueNode]" pushedValues]
-        (let [
-            _
-                (when (and (nil? (:outerFrameState this)) (some? parent))
-                    (§ ass! this (assoc this :outerFrameState (FrameStateBuilder''create-6 (:frameState parent), (BytecodeParser''bci-1 parent), (BytecodeParser''getNonIntrinsicAncestor-1 parent), true, nil, nil)))
-                )
-        ]
-            (when-not (= bci BytecodeFrame'INVALID_FRAMESTATE_BCI) => (throw! "should not reach here")
-                (if (some? pushedValues)
-                    (let [
-                        #_"(ValueNode)" o'stack (:stack this)
-                        _
-                            (dotimes [#_"int" i (count pushedValues)]
-                                (§ ass! this (FrameStateBuilder''push-3 this, (nth pushedSlotKinds i), (nth pushedValues i)))
-                            )
-                        #_"FrameState" res (Graph''add-2 (:graph this), (FrameState'new-8a (:outerFrameState this), (:bytecode this), bci, (:locals this), (:stack this), (:lockedObjects this), (:monitorIds this), duringCall))
-                        _ (§ ass! this (assoc this :stack o'stack))
-                    ]
-                        res
-                    )
-                    (Graph''add-2 (:graph this), (FrameState'new-8a (:outerFrameState this), (:bytecode this), bci, (:locals this), (:stack this), (:lockedObjects this), (:monitorIds this), duringCall))
-                )
-            )
-        )
+    (defn #_"FrameState" FrameStateBuilder''create-2 [#_"FrameStateBuilder" this, #_"int" bci]
+        (Graph''add-2 (:graph this), (FrameState'new-7a (:outerFrameState this), (:bytecode this), bci, (:locals this), (:stack this), (:lockedObjects this), (:monitorIds this)))
     )
 
     (defn #_"boolean" FrameStateBuilder''isCompatibleWith-2 [#_"FrameStateBuilder" this, #_"FrameStateBuilder" other]
@@ -32118,11 +30540,7 @@ ZeroExtendNode'new-4
             this (assoc this :stack         (map  f'merge         (:stack this)         (:stack that)))
             this (assoc this :lockedObjects (mapv f'merge (:lockedObjects this) (:lockedObjects that)))
         ]
-            (cond
-                (nil? (:sideEffects this))  (assoc this :sideEffects (:sideEffects that))
-                (some? (:sideEffects that)) (update this :sideEffects into' (:sideEffects that))
-                :else                       this
-            )
+            this
         )
     )
 
@@ -32226,14 +30644,8 @@ ZeroExtendNode'new-4
         (peek' (:monitorIds this))
     )
 
-    (defn #_"int" FrameStateBuilder''lockDepth-2 [#_"FrameStateBuilder" this, #_"boolean" includeParents]
-        (let [
-            #_"int" depth (count (:lockedObjects this))
-        ]
-            (when (and includeParents (some? (:parent (:parser this)))) => depth
-                (+ depth (FrameStateBuilder''lockDepth-2 (:frameState (:parent (:parser this))), true))
-            )
-        )
+    (defn #_"int" FrameStateBuilder''lockDepth-2 [#_"FrameStateBuilder" this, #_"boolean" _includeParents]
+        (count (:lockedObjects this))
     )
 
     (defn #_"this" FrameStateBuilder''clearNonLiveLocals-4 [#_"FrameStateBuilder" this, #_"BciBlock" block, #_"LocalLiveness" liveness, #_"boolean" liveIn]
@@ -32386,20 +30798,6 @@ ZeroExtendNode'new-4
     (defn #_"this" FrameStateBuilder''stackOp-2 [#_"FrameStateBuilder" this, #_"int" opcode]
         (update this :stack FrameStateBuilder'stackOp-2 opcode)
     )
-
-    (defm FrameStateBuilder SideEffectsState
-        (#_"boolean" SideEffectsState'''isAfterSideEffect-1 [#_"FrameStateBuilder" this]
-            (some? (:sideEffects this))
-        )
-
-        (#_"StateSplit*" SideEffectsState'''sideEffects-1 [#_"FrameStateBuilder" this]
-            (:sideEffects this)
-        )
-
-        (#_"this" SideEffectsState'''addSideEffect-2 [#_"FrameStateBuilder" this, #_"StateSplit" sideEffect]
-            (update this :sideEffects conj' sideEffect)
-        )
-    )
 )
 
 ;;;
@@ -32447,6 +30845,7 @@ ZeroExtendNode'new-4
         )
     )
 
+    #_unused
     (defn #_"Graph" Graph'copy-1 [#_"Graph" other]
         (let [
             #_"Graph" this (Graph'new-1 (:rootMethod other))
@@ -32847,22 +31246,17 @@ ZeroExtendNode'new-4
 )
 
 (class-ns GraphBuilderInstance [Phase]
-    (defn #_"GraphBuilderInstance" GraphBuilderInstance'new-2 [#_"OptimisticOptimizations" optimisticOpts, #_"IntrinsicContext" initialIntrinsicContext]
+    (defn #_"GraphBuilderInstance" GraphBuilderInstance'new-1 [#_"OptimisticOptimizations" optimisticOpts]
         (merge (GraphBuilderInstance'class.)
             (hash-map
                 #_"OptimisticOptimizations" :optimisticOpts optimisticOpts
-                #_"IntrinsicContext" :initialIntrinsicContext initialIntrinsicContext
             )
         )
     )
 
     (defm GraphBuilderInstance Phase
         (#_"Graph" Phase'''run-3 [#_"GraphBuilderInstance" this, #_"Graph" graph, #_"PhaseContext" context]
-            (let [
-                #_"BytecodeParser" parser (BytecodeParser'new-5 this, graph, nil, (:rootMethod graph), (:initialIntrinsicContext this))
-            ]
-                (:graph (BytecodeParser''buildRootMethod-1 parser))
-            )
+            (-> this (BytecodeParser'new-2 graph) (BytecodeParser''buildRootMethod-1) :graph)
         )
     )
 )
@@ -32877,7 +31271,7 @@ ZeroExtendNode'new-4
 
     (defm GraphBuilderPhase Phase
         (#_"Graph" Phase'''run-3 [#_"GraphBuilderPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (Phase'''run-3 (GraphBuilderInstance'new-2 (:optimisticOpts context), nil), graph, nil)
+            (Phase'''run-3 (GraphBuilderInstance'new-1 (:optimisticOpts context)), graph, nil)
         )
     )
 )
@@ -32930,23 +31324,17 @@ ZeroExtendNode'new-4
  ; Constant folding of field loads.
  ;;
 (class-ns HotSpotNodePlugin [NodePlugin, TypePlugin]
-    (defn #_"HotSpotNodePlugin" HotSpotNodePlugin'new-1 [#_"WordOperationPlugin" wordOperationPlugin]
-        (merge (HotSpotNodePlugin'class.)
-            (hash-map
-                #_"WordOperationPlugin" :wordOperationPlugin wordOperationPlugin
-            )
-        )
+    (defn #_"HotSpotNodePlugin" HotSpotNodePlugin'new-0 []
+        (HotSpotNodePlugin'class.)
     )
 
     (defm HotSpotNodePlugin TypePlugin
         (#_"Stamp" TypePlugin'''interceptType-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"JavaType" declaredType, #_"boolean" never-nil?]
-            (when (BytecodeParser''parsingIntrinsic-1 parser)
-                (TypePlugin'''interceptType-4 (:wordOperationPlugin this), parser, declaredType, never-nil?)
-            )
+            nil
         )
     )
 
-    (defn- #_"boolean" HotSpotNodePlugin'tryConstantFold-3 [#_"BytecodeParser" parser, #_"ResolvedJavaField" field, #_"JavaConstant" object]
+    (defn- #_"boolean" HotSpotNodePlugin'tryReadField-3 [#_"BytecodeParser" parser, #_"ResolvedJavaField" field, #_"JavaConstant" object]
         (let [
             #_"ConstantNode" constant (ConstantFields'tryConstantFold-2 field, object)
         ]
@@ -32960,69 +31348,47 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" HotSpotNodePlugin'tryReadField-3 [#_"BytecodeParser" parser, #_"ResolvedJavaField" field, #_"JavaConstant" object]
-        (HotSpotNodePlugin'tryConstantFold-3 parser, field, object)
-    )
-
     (defm HotSpotNodePlugin NodePlugin
         (#_"boolean" NodePlugin'''handleInvoke-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"[ValueNode]" args]
-            (and (BytecodeParser''parsingIntrinsic-1 parser)
-                (NodePlugin'''handleInvoke-4 (:wordOperationPlugin this), parser, method, args)
-            )
+            false
         )
 
         (#_"boolean" NodePlugin'''handleLoadField-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field]
             (or (and (satisfies? ConstantNode object)
                     (HotSpotNodePlugin'tryReadField-3 parser, field, (ValueNode''asJavaConstant-1 object))
                 )
-                (and (BytecodeParser''parsingIntrinsic-1 parser)
-                    (NodePlugin'''handleLoadField-4 (:wordOperationPlugin this), parser, object, field)
-                )
+                false
             )
         )
 
         (#_"boolean" NodePlugin'''handleLoadStaticField-3 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field]
             (or (HotSpotNodePlugin'tryReadField-3 parser, field, nil)
-                (and (BytecodeParser''parsingIntrinsic-1 parser)
-                    (NodePlugin'''handleLoadStaticField-3 (:wordOperationPlugin this), parser, field)
-                )
+                false
             )
         )
 
         (#_"boolean" NodePlugin'''handleStoreField-5 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field, #_"ValueNode" value]
-            (and (BytecodeParser''parsingIntrinsic-1 parser)
-                (NodePlugin'''handleStoreField-5 (:wordOperationPlugin this), parser, object, field, value)
-            )
+            false
         )
 
         (#_"boolean" NodePlugin'''handleStoreStaticField-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field, #_"ValueNode" value]
-            (and (BytecodeParser''parsingIntrinsic-1 parser)
-                (NodePlugin'''handleStoreStaticField-4 (:wordOperationPlugin this), parser, field, value)
-            )
+            false
         )
 
         (#_"boolean" NodePlugin'''handleLoadIndexed-5 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind]
-            (and (BytecodeParser''parsingIntrinsic-1 parser)
-                (NodePlugin'''handleLoadIndexed-5 (:wordOperationPlugin this), parser, array, index, elementKind)
-            )
+            false
         )
 
         (#_"boolean" NodePlugin'''handleStoreIndexed-6 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind, #_"ValueNode" value]
-            (and (BytecodeParser''parsingIntrinsic-1 parser)
-                (NodePlugin'''handleStoreIndexed-6 (:wordOperationPlugin this), parser, array, index, elementKind, value)
-            )
+            false
         )
 
         (#_"boolean" NodePlugin'''handleCheckCast-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
-            (and (BytecodeParser''parsingIntrinsic-1 parser)
-                (NodePlugin'''handleCheckCast-4 (:wordOperationPlugin this), parser, object, type)
-            )
+            false
         )
 
         (#_"boolean" NodePlugin'''handleInstanceOf-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
-            (and (BytecodeParser''parsingIntrinsic-1 parser)
-                (NodePlugin'''handleInstanceOf-4 (:wordOperationPlugin this), parser, object, type)
-            )
+            false
         )
     )
 )
@@ -33400,713 +31766,6 @@ ZeroExtendNode'new-4
                 #_"GuardingNode" :guard guard
                 #_"ValueNode" :proxifiedInput proxifiedInput
                 #_"InfoElement" :parent parent
-            )
-        )
-    )
-)
-
-(class-ns InlineDuringParsingPlugin [InlineInvokePlugin]
-    (defn #_"InlineDuringParsingPlugin" InlineDuringParsingPlugin'new-0 []
-        (InlineDuringParsingPlugin'class.)
-    )
-
-    ;;;
-     ; Budget which when exceeded reduces the effective value of
-     ; GraalOptions#inlineDuringParsingMaxDepth to #maxDepthAfterBudgetExceeded.
-     ;;
-    (def- #_"int" InlineDuringParsingPlugin'nodeBudget 2000)
-    (def- #_"int" InlineDuringParsingPlugin'maxDepthAfterBudgetExceeded 3)
-
-    (defn- #_"boolean" InlineDuringParsingPlugin'checkSize-3 [#_"ResolvedJavaMethod" method, #_"ValueNode*" args, #_"Graph" graph]
-        (let [
-            #_"int" n (loop-when-recur [n 1 #_"seq" s (seq args)] (some? s) [(if (satisfies? ConstantNode (first s)) (inc n) n) (next s)] => n)
-        ]
-            (<= (count (ResolvedJavaMethod'''getCode-1 method)) (* n GraalOptions'trivialInliningSize))
-        )
-    )
-
-    ;;;
-     ; Gets the inline depth of this context. A return value of 0 implies that this is the context for the parse root.
-     ;;
-    (defn- #_"int" InlineDuringParsingPlugin'getDepth-1 [#_"BytecodeParser" parser]
-        (loop-when-recur [#_"int" depth 0 parser (:parent parser)] (some? parser) [(inc depth) (:parent parser)] => depth)
-    )
-
-    (defn- #_"boolean" InlineDuringParsingPlugin'checkInliningDepth-1 [#_"BytecodeParser" parser]
-        (let [
-            #_"int" nodeCount (Graph''getNodeCount-1 (:graph parser))
-            #_"int" maxDepth GraalOptions'inlineDuringParsingMaxDepth
-            maxDepth
-                (if (and (< InlineDuringParsingPlugin'nodeBudget nodeCount) (< InlineDuringParsingPlugin'maxDepthAfterBudgetExceeded maxDepth))
-                    InlineDuringParsingPlugin'maxDepthAfterBudgetExceeded
-                    maxDepth
-                )
-        ]
-            (< (InlineDuringParsingPlugin'getDepth-1 parser) maxDepth)
-        )
-    )
-
-    (defm InlineDuringParsingPlugin InlineInvokePlugin
-        (#_"InlineInvokeInfo" InlineInvokePlugin'''shouldInlineInvoke-4 [#_"InlineDuringParsingPlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode*" args]
-            (when (and (ResolvedJavaMethod''hasBytecodes-1 method) (ResolvedJavaType'''isLinked-1 (JavaMethod'''getDeclaringType-1 method)) (ResolvedJavaMethod'''canBeInlined-1 method))
-                ;; test force inlining first
-                (cond
-                    (ResolvedJavaMethod'''shouldBeInlined-1 method)
-                        (InlineInvokeInfo'createStandardInlineInfo-1 method)
-                    (and (not (ResolvedJavaMethod''isSynchronized-1 method))
-                        (InlineDuringParsingPlugin'checkSize-3 method, args, (:graph parser))
-                        (InlineDuringParsingPlugin'checkInliningDepth-1 parser)
-                    )
-                        (InlineInvokeInfo'createStandardInlineInfo-1 method)
-                )
-            )
-        )
-
-        (#_"void" InlineInvokePlugin'''notifyBeforeInline-2 [#_"InlineDuringParsingPlugin" this, #_"ResolvedJavaMethod" methodToInline]
-            nil
-        )
-
-        (#_"void" InlineInvokePlugin'''notifyAfterInline-2 [#_"InlineDuringParsingPlugin" this, #_"ResolvedJavaMethod" methodToInline]
-            nil
-        )
-
-        (#_"void" InlineInvokePlugin'''notifyNotInlined-4 [#_"InlineDuringParsingPlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"InvokeNode" invoke]
-            nil
-        )
-    )
-)
-
-;;;
- ; Result of a {@link #shouldInlineInvoke inlining decision}.
- ;;
-(class-ns InlineInvokeInfo []
-    (defn- #_"InlineInvokeInfo" InlineInvokeInfo'new-2 [#_"ResolvedJavaMethod" methodToInline, #_"BytecodeProvider" intrinsicBytecodeProvider]
-        (merge (InlineInvokeInfo'class.)
-            (hash-map
-                ;;;
-                 ; The method to be inlined, or nil if the call site must not be inlined.
-                 ;;
-                #_"ResolvedJavaMethod" :methodToInline methodToInline
-                ;;;
-                 ; The provider of bytecode to be parsed for #getMethodToInline() if it is
-                 ; an intrinsic for the original method (i.e. the {@code method} passed to
-                 ; InlineInvokePlugin#shouldInlineInvoke).
-                 ; A nil value indicates that this is not an intrinsic inlining.
-                 ;;
-                #_"BytecodeProvider" :intrinsicBytecodeProvider intrinsicBytecodeProvider
-            )
-        )
-    )
-
-    (defn #_"InlineInvokeInfo" InlineInvokeInfo'createStandardInlineInfo-1 [#_"ResolvedJavaMethod" methodToInline]
-        (InlineInvokeInfo'new-2 methodToInline, nil)
-    )
-
-    (defn #_"InlineInvokeInfo" InlineInvokeInfo'createIntrinsicInlineInfo-1 [#_"ResolvedJavaMethod" methodToInline]
-        (InlineInvokeInfo'new-2 methodToInline, HotSpot'bytecodeProvider)
-    )
-
-    #_unused
-    (defn #_"boolean" InlineInvokeInfo''allowsInlining-1 [#_"InlineInvokeInfo" this]
-        (some? (:methodToInline this))
-    )
-)
-
-;;;
- ; Represents a feasible concrete target for inlining, whose graph has been copied already and thus
- ; can be modified without affecting the original (usually cached) version.
- ;
- ; Instances of this class don't make sense in isolation but as part of an InlineInfo.
- ;;
-(class-ns InlineableGraph [Inlineable]
-    ;;;
-     ; This method builds the IR nodes for the given {@code method} and canonicalizes them.
-     ; Provided profiling info is mature, the resulting graph is cached. The caller is responsible
-     ; for cloning before modification.
-     ;;
-    (defn- #_"Graph" InlineableGraph'parseBytecodes-3 [#_"ResolvedJavaMethod" method, #_"PhaseContext" context, #_"CanonicalizerPhase" canonicalizer]
-        (let [
-            #_"Graph" graph (Graph'new-1 method)
-            graph (Phase'''run-3 HotSpot'graphBuilderSuite, graph, context)
-            graph (Phase'''run-3 (DeadCodeEliminationPhase'new-1 :Optionality'Optional), graph, nil)
-            graph (Phase'''run-3 canonicalizer, graph, context)
-        ]
-            graph
-        )
-    )
-
-    (defn- #_"Stamp" InlineableGraph'improvedStamp-2 [#_"ValueNode" arg, #_"ParameterNode" param]
-        (let [
-            #_"Stamp" joinedStamp (Stamp'''join-2 (:stamp param), (:stamp arg))
-        ]
-            (when (and (some? joinedStamp) (not= joinedStamp (:stamp param)))
-                joinedStamp
-            )
-        )
-    )
-
-    ;;;
-     ; This method detects:
-     ;
-     ; (1) constants among the arguments to the {@code invoke}
-     ; (2) arguments with more precise type than that declared by the corresponding parameter
-     ;
-     ; The corresponding parameters are updated to reflect the above information. Before doing so,
-     ; their usages are added to {@code parameterUsages} for later incremental canonicalization.
-     ;
-     ; @return nil if no incremental canonicalization is need, otherwise a list of nodes for such canonicalization
-     ;;
-    (defn- #_"[Node]" InlineableGraph''replaceParamsWithMoreInformativeArguments-2 [#_"InlineableGraph" this, #_"InvokeNode" invoke]
-        (let [
-            #_"[ValueNode]" args (:arguments (:callTarget invoke))
-        ]
-            ;; param-nodes that aren't used (e.g. as a result of canonicalization) don't occur in 'params'.
-            ;; Thus, in general, the sizes of 'params' and 'args' don't always match. Still, it's always possible
-            ;; to pair a param-node with its corresponding arg-node using param.index() as index into 'args'.
-            (loop-when [#_"[Node]" usages nil #_"seq" s (seq (Graph''getNodes-2 (:graph this), ParameterNode))] (some? s) => usages
-                (let [
-                    #_"ParameterNode" param (first s)
-                    usages
-                        (when (seq (:nodeUsages param)) => usages
-                            (let [
-                                #_"ValueNode" arg (nth args (AbstractLocalNode''index-1 param))
-                            ]
-                                (if (satisfies? ConstantNode arg)
-                                    (let [
-                                        usages (into' usages (:nodeUsages param))
-                                        ;; collect param usages before replacing the param
-                                        _ (§ ass! param (Node''replaceAtUsagesAndDelete-2 param, (Graph''add-2 (:graph this), (ConstantNode'forConstant-4 (:stamp arg), (:value arg), (:stableDimension arg), (:isDefaultStable arg)))))
-                                    ]
-                                        ;; param-node gone, leaving a gap in the sequence given by param.index()
-                                        usages
-                                    )
-                                    (let [
-                                        #_"Stamp" improved (InlineableGraph'improvedStamp-2 arg, param)
-                                    ]
-                                        (when (some? improved) => usages
-                                            (§ ass! param (ValueNode''setStamp-2 param, improved))
-                                            (into' usages (:nodeUsages param))
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                ]
-                    (recur usages (next s))
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; @return true iff one or more parameters {@code newGraph} were specialized to account for
-     ;         a constant argument, or an argument with a more specific stamp
-     ;;
-    (defn- #_"boolean" InlineableGraph''specializeGraphToArguments-3 [#_"InlineableGraph" this, #_"InvokeNode" invoke, #_"CanonicalizerPhase" canonicalizer]
-        (let [
-            #_"[Node]" parameterUsages (InlineableGraph''replaceParamsWithMoreInformativeArguments-2 this, invoke)
-        ]
-            (if (some? parameterUsages)
-                (do
-                    (CanonicalizerPhase''applyIncremental-3i canonicalizer, (:graph this), parameterUsages)
-                    true
-                )
-                (do
-                    ;; TODO if args are not more concrete, inlining should be avoided in most cases or we
-                    ;; could at least use the previous graph size + invoke probability to check the inlining
-                    false
-                )
-            )
-        )
-    )
-
-    (defn #_"InlineableGraph" InlineableGraph'new-4 [#_"ResolvedJavaMethod" method, #_"InvokeNode" invoke, #_"PhaseContext" context, #_"CanonicalizerPhase" canonicalizer]
-        (let [
-            #_"InlineableGraph" this
-                (merge (InlineableGraph'class.)
-                    (hash-map
-                        ;; TODO copying the graph is only necessary if it is modified or if it contains any invokes
-                        #_"Graph" :graph (Graph'copy-1 (InlineableGraph'parseBytecodes-3 method, context, canonicalizer))
-                        #_"FixedNodeProbabilityCache" :probabilites (FixedNodeProbabilityCache'new-0)
-                    )
-                )
-        ]
-            (InlineableGraph''specializeGraphToArguments-3 this, invoke, canonicalizer)
-            this
-        )
-    )
-
-    (defm InlineableGraph Inlineable
-        (#_"int" Inlineable'''getNodeCount-1 [#_"InlineableGraph" this]
-            (Graph''getNodeCount-1 (:graph this))
-        )
-
-        (#_"InvokeNode*" Inlineable'''getInvokes-1 [#_"InlineableGraph" this]
-            (Graph''getInvokes-1 (:graph this))
-        )
-
-        (#_"double" Inlineable'''getProbability-2 [#_"InlineableGraph" this, #_"InvokeNode" invoke]
-            (FixedNodeProbabilityCache''applyAsDouble-2 (:probabilites this), invoke)
-        )
-    )
-)
-
-;;;
- ; The space of inlining decisions is explored depth-first with the help of a stack realized by InliningData.
- ; At any point in time, the topmost element of that stack consists of:
- ;
- ; (1) the callsite under consideration is tracked as a MethodInvocation.
- ; (2) one or more CallsiteHolders, all of them associated to the callsite above. Why more than one?
- ; Depending on the type-profile for the receiver more than one concrete method may be feasible target.
- ;
- ; The bottom element in the stack consists of:
- ;
- ; (1) a single MethodInvocation (the {@link MethodInvocation#isRoot root} one, i.e. the unknown caller of the root graph)
- ; (2) a single CallsiteHolder (the root one, for the method on which inlining was called)
- ;;
-(class-ns InliningData []
-    (defn #_"InliningData" InliningData'new-3 [#_"Graph" rootGraph, #_"PhaseContext" context, #_"CanonicalizerPhase" canonicalizer]
-        (merge (InliningData'class.)
-            (hash-map
-                ;;;
-                 ; Call hierarchy from outer most call (i.e. compilation unit) to inner most callee.
-                 ;;
-                #_"queue [CallsiteHolder]" :graphQueue [ (CallsiteHolder'new-4 rootGraph, 1.0, 1.0, nil) ]
-                #_"queue [MethodInvocation]" :invocationQueue [ (MethodInvocation'new-4 nil, 1.0, 1.0, nil) ]
-                #_"PhaseContext" :context context
-                #_"CanonicalizerPhase" :canonicalizer canonicalizer
-                #_"Graph" :rootGraph rootGraph
-                #_"int" :maxGraphs 1
-            )
-        )
-    )
-
-    (defn #_"boolean" InliningData'isFreshInstantiation-1 [#_"ValueNode" arg]
-        (or (satisfies? AbstractNewObjectNode arg) (satisfies? AllocatedObjectNode arg) (satisfies? VirtualObjectNode arg))
-    )
-
-    (defn- #_"String" InliningData''checkTargetConditionsHelper-2 [#_"InliningData" this, #_"ResolvedJavaMethod" method]
-        (cond
-            (nil? method)
-                "the method is not resolved"
-            (ResolvedJavaMethod''isNative-1 method)
-                "it is a non-intrinsic native method"
-            (ResolvedJavaMethod''isAbstract-1 method)
-                "it is an abstract method"
-            (not (ResolvedJavaType'''isInitialized-1 (JavaMethod'''getDeclaringType-1 method)))
-                "the method's class is not initialized"
-            (not (ResolvedJavaMethod'''canBeInlined-1 method))
-                "it is marked non-inlinable"
-            (< GraalOptions'maximumRecursiveInlining (InliningData''countRecursiveInlining-2 this, method))
-                "it exceeds the maximum recursive inlining depth"
-            (OptimisticOptimizations''lessOptimisticThan-2 OptimisticOptimizations'ALL, (:optimisticOpts (:context this)))
-                "the callee uses less optimistic optimizations than caller"
-        )
-    )
-
-    (defn- #_"boolean" InliningData''checkTargetConditions-2 [#_"InliningData" this, #_"ResolvedJavaMethod" method]
-        (nil? (InliningData''checkTargetConditionsHelper-2 this, method))
-    )
-
-    (defn- #_"InlineInfo" InliningData''getExactInlineInfo-3 [#_"InliningData" this, #_"InvokeNode" invoke, #_"ResolvedJavaMethod" targetMethod]
-        (when (InliningData''checkTargetConditions-2 this, targetMethod)
-            (ExactInlineInfo'new-2 invoke, targetMethod)
-        )
-    )
-
-    ;;;
-     ; Determines if inlining is possible at the given invoke node.
-     ;
-     ; @param invoke the invoke that should be inlined
-     ; @return an instance of InlineInfo, or nil if no inlining is possible at the given invoke
-     ;;
-    (defn- #_"InlineInfo" InliningData''getInlineInfo-2 [#_"InliningData" this, #_"InvokeNode" invoke]
-        (when (nil? (InliningUtil'checkInvokeConditions-1 invoke))
-            (let [
-                #_"MethodCallTargetNode" callTarget (:callTarget invoke)
-                #_"ResolvedJavaMethod" targetMethod (:targetMethod callTarget)
-            ]
-                (cond
-                    (or (= (:invokeKind callTarget) :InvokeKind'Special) (ResolvedJavaMethod'''canBeStaticallyBound-1 targetMethod))
-                        (InliningData''getExactInlineInfo-3 this, invoke, targetMethod)
-                    (satisfies? ObjectStamp (:stamp (MethodCallTargetNode''receiver-1 callTarget)))
-                        (let [
-                            #_"ObjectStamp" receiverStamp (:stamp (MethodCallTargetNode''receiver-1 callTarget))
-                        ]
-                            (when-not (:always-nil? receiverStamp) ;; => don't inline if receiver is known to be nil
-                                (let [
-                                    #_"ResolvedJavaType" contextType (InvokeNode''getContextType-1 invoke)
-                                    #_"ResolvedJavaType" holder (JavaMethod'''getDeclaringType-1 targetMethod)
-                                    holder
-                                        (when (some? (:type receiverStamp)) => holder
-                                            ;; the invoke target might be more specific than the holder (happens after inlining:
-                                            ;; parameters lose their declared type...)
-                                            (let [
-                                                #_"ResolvedJavaType" receiverType (:type receiverStamp)
-                                            ]
-                                                (when (and (some? receiverType) (ResolvedJavaType'''isAssignableFrom-2 holder, receiverType)) => holder
-                                                    (let [
-                                                        holder receiverType
-                                                    ]
-                                                        (when (AbstractObjectStamp''isExactType-1 receiverStamp)
-                                                            (let [
-                                                                #_"ResolvedJavaMethod" resolvedMethod (ResolvedJavaType''resolveConcreteMethod-3 holder, targetMethod, contextType)
-                                                            ]
-                                                                (when (some? resolvedMethod)
-                                                                    (§ return (InliningData''getExactInlineInfo-3 this, invoke, resolvedMethod))
-                                                                )
-                                                            )
-                                                        )
-                                                        holder
-                                                    )
-                                                )
-                                            )
-                                        )
-                                ]
-                                    (when (JavaType''isArray-1 holder)
-                                        ;; arrays can be treated as objects
-                                        (let [
-                                            #_"ResolvedJavaMethod" resolvedMethod (ResolvedJavaType''resolveConcreteMethod-3 holder, targetMethod, contextType)
-                                        ]
-                                            (when (some? resolvedMethod)
-                                                (InliningData''getExactInlineInfo-3 this, invoke, resolvedMethod)
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                )
-            )
-        )
-    )
-
-    (defn- #_"void" InliningData''doInline-3 [#_"InliningData" this, #_"CallsiteHolder" callerCallsiteHolder, #_"MethodInvocation" calleeInvocation]
-        (let [
-            #_"Graph" graph (:graph callerCallsiteHolder)
-            #_"{Node}" canonicalizedNodes (set (concat (:nodeUsages (InlineInfo'''invoke-1 (:callee calleeInvocation))) (InlineInfo'''inline-1 (:callee calleeInvocation))))
-            #_"int" mark (Graph''getMark-1 graph)
-        ]
-            (CanonicalizerPhase''applyIncremental-3i (:canonicalizer this), graph, canonicalizedNodes)
-
-            ;; process invokes that are possibly created during canonicalization
-            (doseq [#_"Node" node (Graph''getNodesSince-2 graph, mark)]
-                (when (satisfies? InvokeNode node)
-                    (§ ass! callerCallsiteHolder (CallsiteHolder''pushInvoke-2 callerCallsiteHolder, node))
-                )
-            )
-
-            (§ ass! callerCallsiteHolder (CallsiteHolder''computeProbabilities-1 callerCallsiteHolder))
-        )
-        nil
-    )
-
-    ;;;
-     ; This method attempts:
-     ;
-     ; (1) to inline at the callsite given by {@code calleeInvocation}, where that callsite belongs
-     ; to the CallsiteHolderExplorable at the top of the #graphQueue maintained in this class
-     ; (2) otherwise, to devirtualize the callsite in question
-     ;
-     ; @return true iff inlining was actually performed
-     ;;
-    (defn- #_"boolean" InliningData''tryToInline-3 [#_"InliningData" this, #_"MethodInvocation" calleeInvocation, #_"int" inliningDepth]
-        (if (InliningPolicy'isWorthInlining-3 calleeInvocation, inliningDepth, true)
-            (do
-                (InliningData''doInline-3 this, (first (:graphQueue this)), calleeInvocation)
-                true
-            )
-            (do
-                (when (OptimisticOptimizations''devirtualizeInvokes-1 (:optimisticOpts (:context this)))
-                    (InlineInfo'''tryToDevirtualizeInvoke-1 (:callee calleeInvocation))
-                )
-                false
-            )
-        )
-    )
-
-    (defn- #_"this" InliningData''pushInvocationAndGraphs-2 [#_"InliningData" this, #_"MethodInvocation" methodInvocation]
-        (let [
-            this (update this :invocationQueue #(cons methodInvocation %))
-            #_"int" n (InlineInfo'''numberOfMethods-1 (:callee methodInvocation))
-            this (update this :maxGraphs + n)
-        ]
-            (loop-when [this this #_"int" i 0] (< i n) => this
-                (let [
-                    this (update this :graphQueue #(cons (MethodInvocation''buildCallsiteHolderForElement-2 methodInvocation, i) %))
-                ]
-                    (recur this (inc i))
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Gets the freshly instantiated arguments.
-     ;
-     ; A freshly instantiated argument is either:
-     ;
-     ; (1) an InliningData#isFreshInstantiation(ValueNode), or
-     ; (2) a fixed-param, i.e. a ParameterNode receiving a freshly instantiated argument.
-     ;
-     ; @return the positions of freshly instantiated arguments in the argument list of
-     ;         the {@code invoke}, or nil if no such positions exist
-     ;;
-    (defn- #_"BitSet" InliningData'freshlyInstantiatedArguments-2 [#_"InvokeNode" invoke, #_"{ParameterNode}" fixedParams]
-        (loop-when [#_"BitSet" bits nil #_"int" i 0 #_"seq" s (seq (:arguments (:callTarget invoke)))] (some? s) => bits
-            (let [
-                #_"ValueNode" arg (first s)
-                bits
-                    (when (or (InliningData'isFreshInstantiation-1 arg) (and (satisfies? ParameterNode arg) (contains? fixedParams arg))) => bits
-                        (let [
-                            bits (or bits (BitSet.))
-                        ]
-                            (#_"BitSet" .set bits, i)
-                            bits
-                        )
-                    )
-            ]
-                (recur bits (inc i) (next s))
-            )
-        )
-    )
-
-    ;;;
-     ; This method picks one of the callsites belonging to the current CallsiteHolderExplorable.
-     ; Provided the callsite qualifies to be analyzed for inlining, this method prepares a new
-     ; stack top in InliningData for such callsite, which comprises:
-     ;
-     ; - preparing a summary of feasible targets, i.e. preparing an InlineInfo
-     ; - based on it, preparing the stack top proper which consists of:
-     ;
-     ; -- one MethodInvocation
-     ; -- a CallsiteHolder for each feasible target
-     ;
-     ; The thus prepared "stack top" is needed by #moveForward() to explore the space of
-     ; inlining decisions (each decision one of: backtracking, delving, inlining).
-     ;
-     ; The InlineInfo used to get things rolling is kept around in the MethodInvocation,
-     ; it will be needed in case of inlining.
-     ;;
-    (defn- #_"this" InliningData''processNextInvoke-1 [#_"InliningData" this]
-        (let [
-            #_"CallsiteHolder" callsiteHolder (first (:graphQueue this))
-            [#_"InvokeNode" invoke callsiteHolder] (CallsiteHolder''popInvoke-1 callsiteHolder)
-            #_"InlineInfo" info (InliningData''getInlineInfo-2 this, invoke)
-        ]
-            (when (some? info) => this
-                (let [
-                    _ (§ ass! info (InlineInfo'''populateInlinableElements-4 info, (:context this), (:graph (first (:graphQueue this))), (:canonicalizer this)))
-                    #_"double" invokeProbability (CallsiteHolder''invokeProbability-2 callsiteHolder, invoke)
-                    #_"double" invokeRelevance (CallsiteHolder''invokeRelevance-2 callsiteHolder, invoke)
-                ]
-                    (InliningData''pushInvocationAndGraphs-2 this, (MethodInvocation'new-4 info, invokeProbability, invokeRelevance, (InliningData'freshlyInstantiatedArguments-2 invoke, (:fixedParams callsiteHolder))))
-                )
-            )
-        )
-    )
-
-    (defn- #_"this" InliningData''popInvocation-1 [#_"InliningData" this]
-        (let [
-            this (update this :maxGraphs - (InlineInfo'''numberOfMethods-1 (:callee (first (:invocationQueue this)))))
-            this (update this :invocationQueue next)
-        ]
-            this
-        )
-    )
-
-    (defn #_"int" InliningData''countRecursiveInlining-2 [#_"InliningData" this, #_"ResolvedJavaMethod" method]
-        (loop-when-recur [#_"int" n 0 #_"seq" s (seq (:graphQueue this))]
-                         (some? s)
-                         [(if (= method (CallsiteHolder''method-1 (first s))) (inc n) n) (next s)]
-                      => n
-        )
-    )
-
-    (defn #_"int" InliningData''inliningDepth-1 [#_"InliningData" this]
-        (dec (count (:invocationQueue this)))
-    )
-
-    ;;;
-     ; The stack realized by InliningData grows and shrinks as choices are made among the
-     ; alternatives below:
-     ;
-     ; (1) not worth inlining: pop stack top, which comprises:
-     ;
-     ; - pop any remaining graphs not yet delved into
-     ; - pop the current invocation
-     ;
-     ; (2) {@link #processNextInvoke() delve} into one of the callsites hosted in the current graph,
-     ; such callsite is explored next by #moveForward()
-     ;
-     ; (3) {@link #tryToInline(MethodInvocation, int) try to inline}: move past the current graph
-     ; (remove it from the topmost element)
-     ;
-     ; - if that was the last one then {@link #tryToInline(MethodInvocation, int) try to inline}
-     ; the callsite under consideration (i.e. the "current invocation")
-     ; - whether inlining occurs or not, that callsite is removed from the top of InliningData
-     ;
-     ; Some facts about the alternatives above:
-     ;
-     ; - the first step amounts to backtracking, the 2nd one to depth-search, and the 3rd one also
-     ; involves backtracking (however possibly after inlining)
-     ; - the choice of abandon-and-backtrack or delve-into depends on
-     ; InliningPolicy#isWorthInlining and InliningPolicy#continueInlining
-     ; - the 3rd choice is picked whenever none of the previous choices are made
-     ;
-     ; @return true iff inlining was actually performed
-     ;;
-    (defn #_"boolean" InliningData''moveForward-1 [#_"InliningData" this]
-        (let [
-            #_"MethodInvocation" currentInvocation (first (:invocationQueue this))
-        ]
-            (cond
-                (and (not (MethodInvocation''isRoot-1 currentInvocation)) (not (InliningPolicy'isWorthInlining-3 currentInvocation, (InliningData''inliningDepth-1 this), false)))
-                    (let [
-                        _ (§ ass! this (update this :graphQueue nthnext (- (MethodInvocation''totalGraphs-1 currentInvocation) (:processedGraphs currentInvocation))))
-                        _ (§ ass! this (InliningData''popInvocation-1 this))
-                    ]
-                        false
-                    )
-                (and (CallsiteHolder''hasRemainingInvokes-1 (first (:graphQueue this))) (InliningPolicy'continueInlining-1 (:graph (first (:graphQueue this)))))
-                    (let [
-                        _ (§ ass! this (InliningData''processNextInvoke-1 this))
-                    ]
-                        false
-                    )
-                :else
-                    (let [
-                        _ (§ ass! this (update this :graphQueue next))
-                    ]
-                        (and (not (MethodInvocation''isRoot-1 currentInvocation))
-                            (let [
-                                ;; try to inline
-                                _ (§ ass! currentInvocation (MethodInvocation''incrementProcessedGraphs-1 currentInvocation))
-                            ]
-                                (and (= (:processedGraphs currentInvocation) (MethodInvocation''totalGraphs-1 currentInvocation))
-                                    (let [
-                                        ;; "all of currentInvocation's graphs processed" amounts to
-                                        ;; "all concrete methods that come into question already had the callees they contain analyzed for inlining"
-                                        _ (§ ass! this (InliningData''popInvocation-1 this))
-                                    ]
-                                        (and (InliningData''tryToInline-3 this, currentInvocation, (inc (InliningData''inliningDepth-1 this)))
-                                            ;; report real progress only if we inline into the root graph
-                                            (= (:graph (first (:graphQueue this))) (:rootGraph this))
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-            )
-        )
-    )
-)
-
-;;;
- ; Given a graph, visit all fixed nodes in dominator-based order, collecting in the process
- ; the InvokeNodes with MethodCallTargetNode. Such list of callsites is returned by #apply().
- ;;
-(class-ns InliningIterator []
-    (defn- #_"InliningIterator" InliningIterator'new-0 []
-        (merge (InliningIterator'class.)
-            (hash-map
-                #_"queue [FixedNode]" :nodeQueue nil
-                #_"{Node}" :visitedNodes #{}
-            )
-        )
-    )
-
-    (defn- #_"boolean" InliningIterator''visitedAllEnds-2 [#_"InliningIterator" this, #_"AbstractMergeNode" merge]
-        (loop-when [#_"int" i 0] (< i (count (:ends merge))) => true
-            (and (contains? (:visitedNodes this) (nth (:ends merge) i))
-                (recur (inc i))
-            )
-        )
-    )
-
-    (defn- #_"this" InliningIterator''queueMerge-2 [#_"InliningIterator" this, #_"AbstractEndNode" end]
-        (let [
-            #_"AbstractMergeNode" merge (AbstractEndNode'''merge-1 end)
-        ]
-            (when (and (not (contains? (:visitedNodes this) merge)) (InliningIterator''visitedAllEnds-2 this, merge)) => this
-                (-> this
-                    (update :nodeQueue conj' merge)
-                    (update :visitedNodes conj merge)
-                )
-            )
-        )
-    )
-
-    (defn- #_"this" InliningIterator''queueSuccessors-2 [#_"InliningIterator" this, #_"FixedNode" node]
-        (loop-when [this this #_"seq" s (seq (Node''successors-1 node))] (some? s) => this
-            (let [
-                #_"Node" successor (first s)
-                this
-                    (when (and (some? successor) (not (contains? (:visitedNodes this) successor))) => this
-                        (-> this
-                            (update :nodeQueue #(cons successor %))
-                            (update :visitedNodes conj successor)
-                        )
-                    )
-            ]
-                (recur this (next s))
-            )
-        )
-    )
-
-    (defn #_"InvokeNode*" InliningIterator'apply-1 [#_"Graph" graph]
-        (loop-when [#_"InvokeNode*" invokes nil #_"FixedNode" node (:start graph) #_"InliningIterator" it (InliningIterator'new-0)] (some? node) => invokes
-            (let [
-                [it invokes]
-                    (if (and (satisfies? InvokeNode node) (satisfies? MethodCallTargetNode (:callTarget node)))
-                        [(InliningIterator''queueSuccessors-2 it, node) (if (= node (:start graph)) invokes (conj' invokes node))]
-                        (let [
-                            it
-                                (condp satisfies? node
-                                    LoopBeginNode     (InliningIterator''queueSuccessors-2 it, node)
-                                    LoopEndNode       it ;; nothing to do
-                                    AbstractMergeNode (InliningIterator''queueSuccessors-2 it, node)
-                                    FixedWithNextNode (InliningIterator''queueSuccessors-2 it, node)
-                                    EndNode           (InliningIterator''queueMerge-2 it, node)
-                                    ControlSinkNode   it ;; nothing to do
-                                    ControlSplitNode  (InliningIterator''queueSuccessors-2 it, node)
-                                                      it
-                                )
-                        ]
-                            [it invokes]
-                        )
-                    )
-            ]
-                (recur invokes (first (:nodeQueue it)) (update it :nodeQueue next))
-            )
-        )
-    )
-)
-
-(class-ns InliningPhase [Phase]
-    (defn #_"InliningPhase" InliningPhase'new-1 [#_"CanonicalizerPhase" canonicalizer]
-        (merge (InliningPhase'class.)
-            (hash-map
-                #_"CanonicalizerPhase" :canonicalizer canonicalizer
-            )
-        )
-    )
-
-    ;;;
-     ; This method sets in motion the inlining machinery.
-     ;;
-    (defm InliningPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"InliningPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (let [
-                #_"InliningData" data (InliningData'new-3 graph, context, (:canonicalizer this))
-            ]
-                (loop-when [#_"int" n 1] (seq (:graphQueue data))
-                    (when (or (InliningData''moveForward-1 data) (< n GraalOptions'methodInlineBailoutLimit))
-                        (recur (inc n))
-                    )
-                )
-                graph
             )
         )
     )
@@ -35948,229 +33607,6 @@ ZeroExtendNode'new-4
                 (IntervalWalker'''walk-1 (§ super LinearScanWalker'iface))
             )
         )
-    )
-)
-
-;;;
- ; An intrinsic is a substitute implementation of a Java method (or a bytecode in the case of
- ; snippets) that is itself implemented in Java. This interface provides information about the
- ; intrinsic currently being processed by the graph builder.
- ;
- ; When in the scope of an intrinsic, the graph builder does not check the value kinds flowing
- ; through the JVM state since intrinsics can employ non-Java kinds to represent values such as
- ; raw machine words and pointers.
- ;;
-(class-ns IntrinsicContext []
-    (defn #_"IntrinsicContext" IntrinsicContext'new-4 [#_"ResolvedJavaMethod" method, #_"ResolvedJavaMethod" intrinsic, #_"BytecodeProvider" bytecodeProvider, #_"CompilationContext" compilationContext]
-        (merge (IntrinsicContext'class.)
-            (hash-map
-                ;;;
-                 ; Method being intrinsified.
-                 ;;
-                #_"ResolvedJavaMethod" :originalMethod method
-                ;;;
-                 ; Method providing the intrinsic implementation.
-                 ;;
-                #_"ResolvedJavaMethod" :intrinsicMethod intrinsic
-                ;;;
-                 ; Provider of bytecode to be parsed for a method that is part of an intrinsic.
-                 ;;
-                #_"BytecodeProvider" :bytecodeProvider bytecodeProvider
-                #_"CompilationContext" :compilationContext compilationContext
-            )
-        )
-    )
-
-    ;;;
-     ; Determines if a call within the compilation scope of this intrinsic represents a call to the
-     ; {@linkplain #getOriginalMethod() original} method. This denotes the path where a partial
-     ; intrinsification falls back to the original method.
-     ;;
-    (defn #_"boolean" IntrinsicContext''isCallToOriginal-2 [#_"IntrinsicContext" this, #_"ResolvedJavaMethod" targetMethod]
-        (or (= (:originalMethod this) targetMethod) (= (:intrinsicMethod this) targetMethod))
-    )
-
-    (defn #_"boolean" IntrinsicContext''isPostParseInlined-1 [#_"IntrinsicContext" this]
-        (= (:compilationContext this) :CompilationContext'INLINE_AFTER_PARSING)
-    )
-
-    (defn #_"FrameState" IntrinsicContext'createFrameState-3 [#_"Graph" graph, #_"SideEffectsState" sideEffects, #_"StateSplit" forStateSplit]
-        (if (StateSplit'''hasSideEffect-1 forStateSplit)
-            (let [
-                _
-                    (when (SideEffectsState'''isAfterSideEffect-1 sideEffects)
-                        ;; only the last side effect on any execution path in a replacement can inherit the stateAfter of the replaced node
-                        (let [
-                            #_"FrameState" invalid (Graph''add-2 graph, (FrameState'new-1 BytecodeFrame'INVALID_FRAMESTATE_BCI))
-                        ]
-                            (doseq [#_"StateSplit" lastSideEffect (SideEffectsState'''sideEffects-1 sideEffects)]
-                                (§ ass! lastSideEffect (StateSplit'''setStateAfter-2 lastSideEffect, invalid))
-                            )
-                        )
-                    )
-                _ (§ ass! sideEffects (SideEffectsState'''addSideEffect-2 sideEffects, forStateSplit))
-            ]
-                (Graph''add-2 graph, (FrameState'new-1 BytecodeFrame'AFTER_BCI))
-            )
-            (if (satisfies? AbstractMergeNode forStateSplit)
-                ;; merge nodes always need a frame state
-                (if (SideEffectsState'''isAfterSideEffect-1 sideEffects)
-                    (Graph''add-2 graph, (FrameState'new-1 BytecodeFrame'AFTER_BCI))  ;; a merge after one or more side effects
-                    (Graph''add-2 graph, (FrameState'new-1 BytecodeFrame'BEFORE_BCI)) ;; a merge before any side effects
-                )
-                ;; other non-side-effects do not need a state
-                nil
-            )
-        )
-    )
-)
-
-;;;
- ; A scoped object for tasks to be performed after parsing an intrinsic such as processing
- ; {@linkplain BytecodeFrame#isPlaceholderBci(int) placeholder} frame states.
- ;;
-(class-ns IntrinsicScope [#_"AutoCloseable"]
-    ;;;
-     ; Creates a scope for root parsing an intrinsic.
-     ;
-     ; @param parser the parsing context of the intrinsic
-     ;;
-    (defn #_"IntrinsicScope" IntrinsicScope'new-1 [#_"BytecodeParser" parser]
-        (merge (IntrinsicScope'class.)
-            (hash-map
-                #_"BytecodeParser" :parser parser
-                #_"FrameState" :stateBefore nil
-                #_"int" :mark 0
-            )
-        )
-    )
-
-    ;;;
-     ; Creates a scope for parsing an intrinsic during graph builder inlining.
-     ;
-     ; @param parser the parsing context of the (non-intrinsic) method calling the intrinsic
-     ; @param args the arguments to the call
-     ;;
-    (defn #_"IntrinsicScope" IntrinsicScope'new-3 [#_"BytecodeParser" parser, #_"[JavaKind]" argSlotKinds, #_"[ValueNode]" args]
-        (merge (IntrinsicScope'class.)
-            (hash-map
-                #_"BytecodeParser" :parser parser
-                #_"FrameState" :stateBefore (FrameStateBuilder''create-6 (:frameState parser), (BytecodeParser''bci-1 parser), (BytecodeParser''getNonIntrinsicAncestor-1 parser), false, argSlotKinds, args)
-                #_"int" :mark (Graph''getMark-1 (:graph parser))
-            )
-        )
-    )
-
-    ;;;
-     ; Fixes up the {@linkplain BytecodeFrame#isPlaceholderBci(int) placeholder} frame states
-     ; added to the graph while parsing/inlining the intrinsic for which this object exists.
-     ;;
-    (defn- #_"this" IntrinsicScope''processPlaceholderFrameStates-1 [#_"IntrinsicScope" this]
-        (let [
-            #_"Graph" graph (:graph (:parser this))
-            [this #_"boolean" invalid?]
-                (loop-when [this this invalid? false #_"seq" s (seq (Graph''getNodesSince-2 graph, (:mark this)))] (some? s) => [this invalid?]
-                    (let [
-                        #_"Node" node (first s)
-                        [this invalid?]
-                            (when (satisfies? FrameState node) => [this invalid?]
-                                (let [
-                                    #_"FrameState" frameState node
-                                ]
-                                    (when (BytecodeFrame'isPlaceholderBci-1 (:bci frameState)) => [this invalid?]
-                                        (condp = (:bci frameState)
-                                            BytecodeFrame'AFTER_BCI
-                                                (if (nil? (BytecodeParser''getInvokeReturnType-1 (:parser this)))
-                                                    ;; A frame state in a root compiled intrinsic.
-                                                    (let [
-                                                        _ (§ ass! frameState (Node''replaceAndDelete-2 frameState, (Graph''add-2 graph, (FrameState'new-1 BytecodeFrame'INVALID_FRAMESTATE_BCI))))
-                                                    ]
-                                                        [this invalid?]
-                                                    )
-                                                    (let [
-                                                        #_"JavaKind" returnKind (JavaType'''getJavaKind-1 (BytecodeParser''getInvokeReturnType-1 (:parser this)))
-                                                        #_"FrameStateBuilder" frameStateBuilder (:frameState (:parser this))
-                                                    ]
-                                                        (cond
-                                                            (pos? (:stackSize frameState))
-                                                                (let [
-                                                                    #_"ValueNode" returnVal (FrameState''stackAt-2 frameState, 0)
-                                                                    ;; Swap the top-of-stack value with the return value.
-                                                                    #_"ValueNode" tos (FrameStateBuilder''pop-2 frameStateBuilder, returnKind)
-                                                                    _ (§ ass! frameState (Node''replaceAndDelete-2 frameState, (FrameStateBuilder''create-6 frameStateBuilder, (:nextBCI (:stream (:parser this))), (BytecodeParser''getNonIntrinsicAncestor-1 (:parser this)), false, [ returnKind ], [ returnVal ])))
-                                                                    _ (§ ass! frameStateBuilder (FrameStateBuilder''push-3 frameStateBuilder, returnKind, tos))
-                                                                ]
-                                                                    invalid?
-                                                                )
-                                                            (= returnKind :JavaKind'Void)
-                                                                ;; An intrinsic for a void method.
-                                                                (let [
-                                                                    _ (§ ass! frameState (Node''replaceAndDelete-2 frameState, (FrameStateBuilder''create-3 frameStateBuilder, (:nextBCI (:stream (:parser this))), nil)))
-                                                                ]
-                                                                    invalid?
-                                                                )
-                                                            :else
-                                                                ;; If the intrinsic returns a non-void value, then any frame state with an empty stack
-                                                                ;; is invalid as it cannot be used to deoptimize to just after the call returns.
-                                                                ;; These invalid frame states are expected to be removed by later compilation stages.
-                                                                (let [
-                                                                    _ (§ ass! frameState (Node''replaceAndDelete-2 frameState, (Graph''add-2 graph, (FrameState'new-1 BytecodeFrame'INVALID_FRAMESTATE_BCI))))
-                                                                ]
-                                                                    true
-                                                                )
-                                                        )
-                                                        this
-                                                    )
-                                                )
-                                            BytecodeFrame'BEFORE_BCI
-                                                (let [
-                                                    this
-                                                        (when (nil? (:stateBefore this)) => this
-                                                            (assoc this :stateBefore (:stateAfter (:start graph)))
-                                                        )
-                                                    _
-                                                        (when-not (= (:stateBefore this) frameState)
-                                                            (§ ass! frameState (Node''replaceAndDelete-2 frameState, (:stateBefore this)))
-                                                        )
-                                                ]
-                                                    [this invalid?]
-                                                )
-                                            #_else
-                                                [this invalid?]
-                                        )
-                                    )
-                                )
-                            )
-                    ]
-                        (recur this invalid? (next s))
-                    )
-                )
-        ]
-            (when invalid? => this
-                (let [
-                    #_"JavaKind" returnKind (JavaType'''getJavaKind-1 (BytecodeParser''getInvokeReturnType-1 (:parser this)))
-                    #_"ValueNode" returnValue (FrameStateBuilder''pop-2 (:frameState (:parser this)), returnKind)
-                    #_"StateSplitProxyNode" proxy (Graph''add-2 graph, (StateSplitProxyNode'new-1 returnValue))
-                    this (update-in this [:parser :lastInstr] FixedWithNextNode''setNext-2 proxy)
-                    this (update-in this [:parser :frameState] FrameStateBuilder''push-3 returnKind, proxy)
-                    _ (§ ass! proxy (StateSplit'''setStateAfter-2 proxy, (BytecodeParser''createFrameState-3 (:parser this), (:nextBCI (:stream (:parser this))), proxy)))
-                ]
-                    (assoc-in this [:parser :lastInstr] proxy)
-                )
-            )
-        )
-    )
-
-    (§ override! #_"void" #_"AutoCloseable." close [#_"IntrinsicScope" this]
-        (let [
-            #_"IntrinsicContext" context (:intrinsicContext (:parser this))
-            _
-                (when-not (and (some? context) (IntrinsicContext''isPostParseInlined-1 context))
-                    (§ ass! this (IntrinsicScope''processPlaceholderFrameStates-1 this))
-                )
-        ]
-        )
-        nil
     )
 )
 
@@ -46044,60 +43480,6 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; An instance of this class denotes a callsite being analyzed for inlining.
- ;
- ; Each element of the InliningData stack contains one such instance, the accompanying
- ; CallsiteHolders in that element represent feasible targets for the callsite in question.
- ;;
-(class-ns MethodInvocation []
-    (defn #_"MethodInvocation" MethodInvocation'new-4 [#_"InlineInfo" info, #_"double" probability, #_"double" relevance, #_"BitSet" freshArgs]
-        (merge (MethodInvocation'class.)
-            (hash-map
-                #_"InlineInfo" :callee info
-                #_"double" :probability probability
-                #_"double" :relevance relevance
-                #_"int" :processedGraphs 0
-                ;;;
-                 ; The immutable positions of freshly instantiated arguments (i.e. positions in {@code callee.invoke.callTarget.arguments}).
-                 ;
-                 ; A freshly instantiated argument is either:
-                 ;
-                 ; (1) an InliningData#isFreshInstantiation(ValueNode)
-                 ; (2) a fixed-param of the graph containing the callsite (i.e. of {@code callee.graph()} that contains {@code callee.invoke})
-                 ;
-                 ; Given those positions, the CallsiteHolderExplorable instantiated in #buildCallsiteHolderForElement(int) can determine
-                 ; which of <i>its</i> parameters are fixed.
-                 ;;
-                #_"BitSet" :freshArgs freshArgs
-                #_"int" :sizeFreshArgs (if (some? freshArgs) (#_"BitSet" .cardinality freshArgs) 0)
-            )
-        )
-    )
-
-    (defn #_"this" MethodInvocation''incrementProcessedGraphs-1 [#_"MethodInvocation" this]
-        (update this :processedGraphs inc)
-    )
-
-    (defn #_"int" MethodInvocation''totalGraphs-1 [#_"MethodInvocation" this]
-        (InlineInfo'''numberOfMethods-1 (:callee this))
-    )
-
-    (defn #_"boolean" MethodInvocation''isRoot-1 [#_"MethodInvocation" this]
-        (nil? (:callee this))
-    )
-
-    (defn #_"CallsiteHolder" MethodInvocation''buildCallsiteHolderForElement-2 [#_"MethodInvocation" this, #_"int" index]
-        (let [
-            #_"Inlineable" elem (InlineInfo'''inlineableElementAt-2 (:callee this), index)
-            #_"double" invokeProbability (* (:probability this) (InlineInfo'''probabilityAt-2 (:callee this), index))
-            #_"double" invokeRelevance (* (:relevance this) (InlineInfo'''relevanceAt-2 (:callee this), index))
-        ]
-            (CallsiteHolder'new-4 (:graph elem), invokeProbability, invokeRelevance, (:freshArgs this))
-        )
-    )
-)
-
-;;;
  ; Name and descriptor of a method.
  ;;
 (class-ns MethodKey []
@@ -50716,29 +48098,11 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; The MonitorExitNode represents a monitor release. If it is the release of the monitor
- ; of a synchronized method, then the return value of the method will be referenced via the edge
- ; #escapedReturnValue, so that it will be materialized before releasing the monitor.
+ ; The MonitorExitNode represents a monitor release.
  ;;
 (class-ns MonitorExitNode [AccessMonitorNode, AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, DeoptBefore, DeoptimizingNode, DeoptAfter, Virtualizable, Lowerable, MonitorExit, Single]
-    (defn #_"MonitorExitNode" MonitorExitNode'new-3 [#_"ValueNode" object, #_"MonitorIdNode" monitorId, #_"ValueNode" escapedReturnValue]
-        (merge (MonitorExitNode'class.) (AccessMonitorNode'new-2 object, monitorId)
-            (hash-map
-                ;;;
-                 ; Non-null for the monitor exit introduced due to a synchronized root method and nil in all other cases.
-                 ;;
-                ; @OptionalInput
-                #_"ValueNode" :escapedReturnValue escapedReturnValue
-            )
-        )
-    )
-
-    ;;;
-     ; Return value is cleared when a synchronized method graph is inlined.
-     ;;
-    (defn #_"this" MonitorExitNode''clearEscapedReturnValue-1 [#_"MonitorExitNode" this]
-        (Node''updateUsages-3 this, (:escapedReturnValue this), nil)
-        (assoc this :escapedReturnValue nil)
+    (defn #_"MonitorExitNode" MonitorExitNode'new-2 [#_"ValueNode" object, #_"MonitorIdNode" monitorId]
+        (merge (MonitorExitNode'class.) (AccessMonitorNode'new-2 object, monitorId))
     )
 
     (defm MonitorExitNode Single
@@ -50977,7 +48341,6 @@ ZeroExtendNode'new-4
                 #_"ValueNode" :classInit nil
                 ; @OptionalInput
                 #_"FrameState" :stateDuring nil
-                #_"boolean" :useForInlining true
             )
         )
     )
@@ -51034,10 +48397,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"this" InvokeNode''setUseForInlining-2 [#_"InvokeNode" this, #_"boolean" value]
-        (assoc this :useForInlining value)
-    )
-
     (defm InvokeNode Single
         (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"InvokeNode" this]
             LocationIdentity'ANY
@@ -51077,6 +48436,7 @@ ZeroExtendNode'new-4
         )
     )
 
+    #_unused
     (defn #_"this" InvokeNode''intrinsify-2 [#_"InvokeNode" this, #_"Node" node]
         (let [
             #_"CallTargetNode" call (:callTarget this)
@@ -60679,7 +58039,7 @@ ZeroExtendNode'new-4
  ; This can be used as debug or deoptimization information.
  ;;
 (class-ns FrameState [VirtualState, Node]
-    (defn- #_"FrameState" FrameState'new-8i [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"int" localsSize, #_"int" stackSize, #_"boolean" duringCall, #_"MonitorIdNode*" monitorIds, #_"EscapeObjectState*" virtualMappings]
+    (defn- #_"FrameState" FrameState'new-7i [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"int" localsSize, #_"int" stackSize, #_"MonitorIdNode*" monitorIds, #_"EscapeObjectState*" virtualMappings]
         (when (some? code)
             ;; Make sure the bci is within range of the bytecodes. If the code size is 0 then allow any value, otherwise the
             ;; bci must be less than the code size. Any negative value is also allowed to represent special bytecode states.
@@ -60695,7 +58055,6 @@ ZeroExtendNode'new-4
             (hash-map
                 #_"int" :localsSize localsSize
                 #_"int" :stackSize stackSize
-                #_"boolean" :duringCall duringCall
                 ; @OptionalInput
                 #_"FrameState" :outerFrameState outerFrameState
                 ;;;
@@ -60719,17 +58078,18 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"FrameState" FrameState'new-9 [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"ValueNode*" values, #_"int" localsSize, #_"int" stackSize, #_"boolean" duringCall, #_"MonitorIdNode*" monitorIds, #_"EscapeObjectState*" virtualMappings]
+    (defn- #_"FrameState" FrameState'new-8 [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"ValueNode*" values, #_"int" localsSize, #_"int" stackSize, #_"MonitorIdNode*" monitorIds, #_"EscapeObjectState*" virtualMappings]
         (let [
-            #_"FrameState" this (FrameState'new-8i outerFrameState, code, bci, localsSize, stackSize, duringCall, monitorIds, virtualMappings)
+            #_"FrameState" this (FrameState'new-7i outerFrameState, code, bci, localsSize, stackSize, monitorIds, virtualMappings)
         ]
             (assoc this :fsValues (vec values))
         )
     )
 
+    #_unused
     (defn #_"FrameState" FrameState'new-1 [#_"int" bci]
         (let [
-            #_"FrameState" this (FrameState'new-8i nil, nil, bci, 0, 0, false, nil, nil)
+            #_"FrameState" this (FrameState'new-7i nil, nil, bci, 0, 0, nil, nil)
         ]
             (assoc this :fsValues [])
         )
@@ -60742,26 +58102,22 @@ ZeroExtendNode'new-4
      ;
      ; @param bci this must be BytecodeFrame#AFTER_BCI
      ;;
+    #_unused
     (defn #_"FrameState" FrameState'new-2 [#_"int" bci, #_"ValueNode" returnValue]
         (let [
-            #_"FrameState" this (FrameState'new-8i nil, nil, bci, 0, (JavaKind'getSlotCount-1 (ValueNode''getStackKind-1 returnValue)), false, nil, nil)
+            #_"FrameState" this (FrameState'new-7i nil, nil, bci, 0, (JavaKind'getSlotCount-1 (ValueNode''getStackKind-1 returnValue)), nil, nil)
         ]
             (assoc this :fsValues [ returnValue ])
         )
     )
 
-    (defn #_"FrameState" FrameState'new-8a [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"ValueNode*" locals, #_"(ValueNode)" stack, #_"ValueNode*" locks, #_"MonitorIdNode*" monitorIds, #_"boolean" duringCall]
+    (defn #_"FrameState" FrameState'new-7a [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"ValueNode*" locals, #_"(ValueNode)" stack, #_"ValueNode*" locks, #_"MonitorIdNode*" monitorIds]
         (let [
-            #_"FrameState" this (FrameState'new-8i outerFrameState, code, bci, (count locals), (count stack), duringCall, monitorIds, nil)
+            #_"FrameState" this (FrameState'new-7i outerFrameState, code, bci, (count locals), (count stack), monitorIds, nil)
             f'slot #(when-not (= % :FrameState'TWO_SLOT_MARKER) %)
         ]
             (assoc this :fsValues (vec (concat (map f'slot locals) (map f'slot (reverse stack)) locks)))
         )
-    )
-
-    (defn #_"this" FrameState''setOuterFrameState-2 [#_"FrameState" this, #_"FrameState" outer]
-        (Node''updateUsages-3 this, (:outerFrameState this), outer)
-        (assoc this :outerFrameState outer)
     )
 
     (defn #_"ResolvedJavaMethod" FrameState''getMethod-1 [#_"FrameState" this]
@@ -60783,7 +58139,7 @@ ZeroExtendNode'new-4
      ; Gets a copy of this frame state.
      ;;
     (defn #_"FrameState" FrameState''duplicate-1 [#_"FrameState" this]
-        (Graph''add-2 (:graph this), (FrameState'new-9 (:outerFrameState this), (:bytecode this), (:bci this), (:fsValues this), (:localsSize this), (:stackSize this), (:duringCall this), (:monitorNodes this), (:virtualMappings this)))
+        (Graph''add-2 (:graph this), (FrameState'new-8 (:outerFrameState this), (:bytecode this), (:bci this), (:fsValues this), (:localsSize this), (:stackSize this), (:monitorNodes this), (:virtualMappings this)))
     )
 
     ;;;
@@ -60799,7 +58155,7 @@ ZeroExtendNode'new-4
                         (map VirtualState'''duplicateWithVirtualState-1 (:virtualMappings this))
                     )
             ]
-                (Graph''add-2 (:graph this), (FrameState'new-9 outerFrameState, (:bytecode this), (:bci this), (:fsValues this), (:localsSize this), (:stackSize this), (:duringCall this), (:monitorNodes this), virtualMappings))
+                (Graph''add-2 (:graph this), (FrameState'new-8 outerFrameState, (:bytecode this), (:bci this), (:fsValues this), (:localsSize this), (:stackSize this), (:monitorNodes this), virtualMappings))
             )
         )
     )
@@ -60809,7 +58165,7 @@ ZeroExtendNode'new-4
      ; the values in pushedValues pushed on the stack. The pushedValues will be formatted correctly in slot
      ; encoding: a long or double will be followed by a nil slot. The bci will be changed to newBci.
      ;;
-    (defn- #_"FrameState" FrameState''duplicateModified-7 [#_"FrameState" this, #_"Graph" graph, #_"int" bci, #_"boolean" duringCall, #_"JavaKind" popKind, #_"JavaKind*" pushedSlotKinds, #_"ValueNode*" pushedValues]
+    (defn- #_"FrameState" FrameState''duplicateModified-6 [#_"FrameState" this, #_"Graph" graph, #_"int" bci, #_"JavaKind" popKind, #_"JavaKind*" pushedSlotKinds, #_"ValueNode*" pushedValues]
         (let [
             #_"[ValueNode]" values (subvec (:fsValues this) 0 (+ (:localsSize this) (:stackSize this)))
             values
@@ -60834,7 +58190,7 @@ ZeroExtendNode'new-4
             #_"int" stackSize (- (count values) (:localsSize this))
             values (catvec values (subvec (:fsValues this) (+ (:localsSize this) (:stackSize this))))
         ]
-            (Graph''add-2 graph, (FrameState'new-9 (:outerFrameState this), (:bytecode this), bci, values, (:localsSize this), stackSize, duringCall, (:monitorNodes this), (:virtualMappings this)))
+            (Graph''add-2 graph, (FrameState'new-8 (:outerFrameState this), (:bytecode this), bci, values, (:localsSize this), stackSize, (:monitorNodes this), (:virtualMappings this)))
         )
     )
 
@@ -60842,19 +58198,21 @@ ZeroExtendNode'new-4
      ; Creates a copy of this frame state with one stack element of type {@code popKind} popped from the stack.
      ;;
     (defn #_"FrameState" FrameState''duplicateModifiedDuringCall-3 [#_"FrameState" this, #_"int" newBci, #_"JavaKind" popKind]
-        (FrameState''duplicateModified-7 this, (:graph this), newBci, true, popKind, nil, nil)
+        (FrameState''duplicateModified-6 this, (:graph this), newBci, popKind, nil, nil)
     )
 
+    #_unused
     (defn #_"FrameState" FrameState''duplicateModifiedBeforeCall-5 [#_"FrameState" this, #_"int" newBci, #_"JavaKind" popKind, #_"JavaKind*" pushedSlotKinds, #_"ValueNode*" pushedValues]
-        (FrameState''duplicateModified-7 this, (:graph this), newBci, false, popKind, pushedSlotKinds, pushedValues)
+        (FrameState''duplicateModified-6 this, (:graph this), newBci, popKind, pushedSlotKinds, pushedValues)
     )
 
     ;;;
      ; Creates a copy of this frame state with the top of stack replaced with with
      ; {@code pushedValue} which must be of type {@code popKind}.
      ;;
+    #_unused
     (defn #_"FrameState" FrameState''duplicateModified-4 [#_"FrameState" this, #_"JavaKind" popKind, #_"JavaKind" pushedSlotKind, #_"ValueNode" pushedValue]
-        (FrameState''duplicateModified-7 this, (:graph this), (:bci this), (:duringCall this), popKind, [ pushedSlotKind ], [ pushedValue ])
+        (FrameState''duplicateModified-6 this, (:graph this), (:bci this), popKind, [ pushedSlotKind ], [ pushedValue ])
     )
 
     ;;;
@@ -61199,13 +58557,9 @@ ZeroExtendNode'new-4
                         ]
                             (when (some? stateAfter) => state
                                 (let [
-                                    state
-                                        (when-not (= (:bci stateAfter) BytecodeFrame'INVALID_FRAMESTATE_BCI)
-                                            stateAfter
-                                        )
                                     _ (§ ass! node (StateSplit'''setStateAfter-2 node, nil))
                                 ]
-                                    state
+                                    stateAfter
                                 )
                             )
                         )
@@ -61232,14 +58586,9 @@ ZeroExtendNode'new-4
         (let [
             #_"FrameState" singleState (nth states 0)
         ]
-            (loop [#_"int" i 1]
-                (if (< i (count states))
-                    (when (= (nth states i) singleState)
-                        (recur (inc i))
-                    )
-                    (when (and (some? singleState) (not= (:bci singleState) BytecodeFrame'INVALID_FRAMESTATE_BCI))
-                        singleState
-                    )
+            (loop-when [#_"int" i 1] (< i (count states)) => singleState
+                (when (= (nth states i) singleState)
+                    (recur (inc i))
                 )
             )
         )
@@ -61474,26 +58823,8 @@ ZeroExtendNode'new-4
         (and GraalOptions'removeNeverExecutedCode (contains? (:enabledOpts this) :Optimization'RemoveNeverExecutedCode))
     )
 
-    (defn #_"boolean" OptimisticOptimizations''devirtualizeInvokes-1 [#_"OptimisticOptimizations" this]
-        (and GraalOptions'optDevirtualizeInvokesOptimistically (contains? (:enabledOpts this) :Optimization'UseTypeCheckedInlining))
-    )
-
     (defn #_"boolean" OptimisticOptimizations''useLoopLimitChecks-1 [#_"OptimisticOptimizations" this]
         (and GraalOptions'useLoopLimitChecks (contains? (:enabledOpts this) :Optimization'UseLoopLimitChecks))
-    )
-
-    (defn #_"boolean" OptimisticOptimizations''lessOptimisticThan-2 [#_"OptimisticOptimizations" this, #_"OptimisticOptimizations" other]
-        (loop [#_"seq" s (seq Optimization'SET)]
-            (and (some? s)
-                (let [
-                    #_"Optimization" opt (first s)
-                ]
-                    (or (and (not (contains? (:enabledOpts this) opt)) (contains? (:enabledOpts other) opt))
-                        (recur (next s))
-                    )
-                )
-            )
-        )
     )
 )
 
@@ -61537,15 +58868,6 @@ ZeroExtendNode'new-4
             #_"CanonicalizerPhase" canonicalizer (CanonicalizerPhase'new-0)
             #_"LoopPolicies" loopPolicies (DefaultLoopPolicies'new-0)
             this (PhaseSuite''appendPhase-2 this, canonicalizer)
-            this
-                (when GraalOptions'inline => this
-                    (let [
-                        this (PhaseSuite''appendPhase-2 this, (InliningPhase'new-1 canonicalizer))
-                        this (PhaseSuite''appendPhase-2 this, (DeadCodeEliminationPhase'new-1 :Optionality'Optional))
-                    ]
-                        this
-                    )
-                )
             this
                 (when GraalOptions'optConvertDeoptsToGuards => this
                     (PhaseSuite''appendPhase-2 this, (IncrementalCanonicalizerPhase'new-2 canonicalizer, (ConvertDeoptimizeToGuardPhase'new-0)))
@@ -61724,17 +59046,13 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"Plugins" Plugins'create-0 []
         (let [
-            #_"Plugins" this (Plugins'new-0)
-            #_"HotSpotNodePlugin" nodePlugin (HotSpotNodePlugin'new-1 (WordOperationPlugin'new-0))
-            this (Plugins''appendTypePlugin-2 this, nodePlugin)
-            this (Plugins''appendNodePlugin-2 this, nodePlugin)
-            this (Plugins''appendInlineInvokePlugin-2 this, HotSpot'replacements)
-            this
-                (when GraalOptions'inlineDuringParsing => this
-                    (Plugins''appendInlineInvokePlugin-2 this, (InlineDuringParsingPlugin'new-0))
-                )
+            #_"HotSpotNodePlugin" nodePlugin (HotSpotNodePlugin'new-0)
         ]
-            this
+            (-> (Plugins'new-0)
+                (Plugins''appendTypePlugin-2 nodePlugin)
+                (Plugins''appendNodePlugin-2 nodePlugin)
+                (Plugins''appendInlineInvokePlugin-2 (Replacements'new-0))
+            )
         )
     )
 
@@ -63074,23 +60392,7 @@ ZeroExtendNode'new-4
      ;         inlined based on substitution related criteria
      ;;
     (defm Replacements InlineInvokePlugin
-        (#_"InlineInvokeInfo" InlineInvokePlugin'''shouldInlineInvoke-4 [#_"Replacements" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"[ValueNode]" args]
-            (when (BytecodeParser''parsingIntrinsic-1 parser)
-                ;; force inlining when parsing replacements
-                (InlineInvokeInfo'createIntrinsicInlineInfo-1 method)
-            )
-        )
-
         (#_"void" InlineInvokePlugin'''notifyNotInlined-4 [#_"Replacements" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"InvokeNode" invoke]
-            (when (BytecodeParser''parsingIntrinsic-1 parser)
-                (let [
-                    #_"IntrinsicContext" context (:intrinsicContext parser)
-                ]
-                    (when-not (IntrinsicContext''isCallToOriginal-2 context, method)
-                        (throw! (str "All non-recursive calls in the intrinsic " (:intrinsicMethod context) " must be inlined or intrinsified: found call to " method))
-                    )
-                )
-            )
             nil
         )
     )
@@ -63100,15 +60402,8 @@ ZeroExtendNode'new-4
      ;;
     (defn- #_"Graph" Replacements'buildInitialGraph-1 [#_"ResolvedJavaMethod" method]
         (let [
-            #_"IntrinsicContext" context
-                (if (some? (#_"ResolvedJavaMethod" .getAnnotation method, Snippet))
-                    ;; snippet
-                    (IntrinsicContext'new-4 method, method, HotSpot'bytecodeProvider, :CompilationContext'INLINE_AFTER_PARSING)
-                    ;; post-parse inlined intrinsic
-                    (IntrinsicContext'new-4 nil, method, HotSpot'bytecodeProvider, :CompilationContext'INLINE_AFTER_PARSING)
-                )
             #_"Graph" graph (Graph'new-1 method)
-            graph (Phase'''run-3 (GraphBuilderInstance'new-2 OptimisticOptimizations'NONE, context), graph, nil)
+            graph (Phase'''run-3 (GraphBuilderInstance'new-1 OptimisticOptimizations'NONE), graph, nil)
             graph (Phase'''run-3 (CanonicalizerPhase'new-0), graph, nil)
         ]
             graph
@@ -63132,27 +60427,6 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"Graph" Replacements'createSnippet-1 [#_"ResolvedJavaMethod" method]
         (Replacements'finalizeGraph-1 (Replacements'buildInitialGraph-1 method))
-    )
-
-    (defm Replacements InlineInvokePlugin
-        (#_"void" InlineInvokePlugin'''notifyBeforeInline-2 [#_"Replacements" this, #_"ResolvedJavaMethod" methodToInline]
-            nil
-        )
-
-        (#_"void" InlineInvokePlugin'''notifyAfterInline-2 [#_"Replacements" this, #_"ResolvedJavaMethod" methodToInline]
-            nil
-        )
-    )
-)
-
-(class-ns ReturnToCallerData []
-    (defn #_"ReturnToCallerData" ReturnToCallerData'new-2 [#_"ValueNode" returnValue, #_"FixedWithNextNode" beforeReturnNode]
-        (merge (ReturnToCallerData'class.)
-            (hash-map
-                #_"ValueNode" :returnValue returnValue
-                #_"FixedWithNextNode" :beforeReturnNode beforeReturnNode
-            )
-        )
     )
 )
 
@@ -64079,96 +61353,6 @@ ZeroExtendNode'new-4
             )
             nil
         )
-    )
-)
-
-;;;
- ; A scope holds information for the contents of one loop or of the root of the method.
- ;
- ; It does not include child loops, i.e. the iteration in #process() explicitly excludes
- ; the nodes of child loops.
- ;;
-(class-ns Scope []
-    (defn #_"Scope" Scope'new-3 [#_"ComputeInliningRelevance" relevance, #_"FixedNode" start, #_"Scope" parent]
-        (merge (Scope'class.)
-            (hash-map
-                #_"ComputeInliningRelevance" :relevance relevance
-                #_"FixedNode" :start start
-                #_"Scope" :parent parent ;; can be nil for the outermost scope
-                ;;;
-                 ; The minimum probability along the most probable path in this scope. Computed lazily.
-                 ;;
-                #_"double" :fastPathMinProbability ComputeInliningRelevance'UNINITIALIZED
-                ;;;
-                 ; A measure of how important this scope is within its parent scope. Computed lazily.
-                 ;;
-                #_"double" :scopeRelevanceWithinParent ComputeInliningRelevance'UNINITIALIZED
-            )
-        )
-    )
-
-    (defn #_"double" Scope''getFastPathMinProbability-1 [#_"Scope" this]
-        (when (= (:fastPathMinProbability this) ComputeInliningRelevance'UNINITIALIZED)
-            (§ ass! this (assoc this :fastPathMinProbability (max ComputeInliningRelevance'EPSILON (ComputeInliningRelevance''computeFastPathMinProbability-2 (:relevance this), (:start this)))))
-        )
-        (:fastPathMinProbability this)
-    )
-
-    ;;;
-     ; Computes the ratio between the probabilities of the current scope's entry point and the
-     ; parent scope's fastPathMinProbability.
-     ;;
-    (defn #_"double" Scope''getScopeRelevanceWithinParent-1 [#_"Scope" this]
-        (when (= (:scopeRelevanceWithinParent this) ComputeInliningRelevance'UNINITIALIZED)
-            (§ ass! this (assoc this :scopeRelevanceWithinParent (if (satisfies? LoopBeginNode (:start this)) (/ ((:f'probabilities-1 (:relevance this)) (LoopBeginNode''forwardEnd-1 (:start this))) (Scope''getFastPathMinProbability-1 (:parent this))) 1.0)))
-        )
-        (:scopeRelevanceWithinParent this)
-    )
-
-    ;;;
-     ; Processes all invokes in this scope by starting at the scope's start node and iterating
-     ; all fixed nodes. Child loops are skipped by going from loop entries directly to the loop
-     ; exits. Processing stops at loop exits of the current loop.
-     ;;
-    (defn #_"[this {Node}]" Scope''process-2 [#_"Scope" this, #_"{Node}" visited]
-        (let [
-            f'add- (fn #_"{Node}" [#_"{Node}" visited, #_"Node" node] (if (some? node) (conj visited node) visited))
-            f'add* (fn #_"{Node}" [#_"{Node}" visited, #_"Node*" nodes] (reduce f'add- visited (filter Node''isAlive-1 nodes)))
-            visited (f'add* visited (Node''successors-1 (:start this)))
-        ]
-            (doseq [#_"Node" node (remove Node''isDeleted-1 visited)]
-                (condp satisfies? node
-                    InvokeNode
-                    (let [
-                        ;; process the invoke and queue its successors
-                        _ (§ ass! (:relevances (:relevance this)) (assoc (:relevances (:relevance this)) node (Scope''computeInvokeRelevance-2 this, node)))
-                    ]
-                        (§ ass! visited (f'add* visited (Node''successors-1 node)))
-                    )
-                    LoopBeginNode
-                        ;; skip child loops by advancing over the loop exits
-                        (doseq [#_"LoopExitNode" exit (LoopBeginNode''loopExits-1 node)]
-                            (§ ass! visited (f'add- visited (:next exit)))
-                        )
-                    LoopEndNode       nil ;; nothing to do
-                    LoopExitNode      nil ;; nothing to do
-                    FixedWithNextNode (§ ass! visited (f'add- visited (:next node)))
-                    EndNode           (§ ass! visited (f'add- visited (AbstractEndNode'''merge-1 node)))
-                    ControlSinkNode   nil ;; nothing to do
-                    ControlSplitNode  (§ ass! visited (f'add* visited (Node''successors-1 node)))
-                    nil
-                )
-            )
-            [this visited]
-        )
-    )
-
-    ;;;
-     ; The relevance of an invoke is the ratio between the invoke's probability and the current
-     ; scope's fastPathMinProbability, adjusted by scopeRelevanceWithinParent.
-     ;;
-    (defn #_"double" Scope''computeInvokeRelevance-2 [#_"Scope" this, #_"InvokeNode" invoke]
-        (* (/ ((:f'probabilities-1 (:relevance this)) invoke) (Scope''getFastPathMinProbability-1 this)) (min (Scope''getScopeRelevanceWithinParent-1 this) 1.0))
     )
 )
 
@@ -69257,6 +66441,7 @@ ZeroExtendNode'new-4
  ; A plugin for calls to word operations, as well as all other nodes that need special handling for Word types.
  ;;
 (class-ns WordOperationPlugin [NodePlugin, TypePlugin, InlineInvokePlugin]
+    #_unused
     (defn #_"WordOperationPlugin" WordOperationPlugin'new-0 []
         (WordOperationPlugin'class.)
     )
@@ -69669,20 +66854,6 @@ ZeroExtendNode'new-4
                 :else
                     false
             )
-        )
-    )
-
-    (defm WordOperationPlugin InlineInvokePlugin
-        (#_"InlineInvokeInfo" InlineInvokePlugin'''shouldInlineInvoke-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"[ValueNode]" args]
-            nil
-        )
-
-        (#_"void" InlineInvokePlugin'''notifyBeforeInline-2 [#_"WordOperationPlugin" this, #_"ResolvedJavaMethod" methodToInline]
-            nil
-        )
-
-        (#_"void" InlineInvokePlugin'''notifyAfterInline-2 [#_"WordOperationPlugin" this, #_"ResolvedJavaMethod" methodToInline]
-            nil
         )
     )
 )
