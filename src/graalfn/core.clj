@@ -18,7 +18,7 @@
 (import
     [java.lang
         ArithmeticException Boolean Byte Character Class ClassLoader Double Error Float IllegalArgumentException IllegalStateException
-        Integer Iterable Long Math Module Object Short String Void
+        Integer Iterable Long Math Module NullPointerException Object Short String Void
     ]
 )
 
@@ -120,13 +120,13 @@
 (import
     [java.io DataInputStream IOException InputStream]
     [java.lang.ref Reference]
-    [java.lang.reflect Constructor Executable Field Method Modifier]
+    [java.lang.reflect Array Constructor Executable Field Method Modifier]
     [java.nio ByteBuffer ByteOrder]
     [java.util BitSet Iterator List ListIterator]
 
     [jdk.vm.ci.code CodeCacheProvider InstalledCode]
     [jdk.vm.ci.code.site ConstantReference DataPatch DataSectionReference Mark Site]
-    [jdk.vm.ci.hotspot HotSpotCompiledCode HotSpotConstantReflectionProvider HotSpotJVMCIRuntime HotSpotVMConfigAccess]
+    [jdk.vm.ci.hotspot HotSpotCompiledCode HotSpotJVMCIRuntime HotSpotVMConfigAccess]
     [jdk.vm.ci.meta ConstantPool DeoptimizationAction DeoptimizationReason]
     [jdk.vm.ci.runtime JVMCIBackend]
 
@@ -1091,6 +1091,13 @@ ConstantNode'forPrimitive-2s
 ConstantNode'forPrimitive-3
 ConstantNode'forShort-2
 ConstantNode'new-2
+ConstantReflection'constantEquals-2
+ConstantReflection'readArrayLength-1
+ConstantReflection'readArrayElement-2
+ConstantReflection'readFieldValue-2
+ConstantReflection'asJavaType-1
+ConstantReflection'asJavaClass-1
+ConstantReflection'asObjectHub-1
 ConstantTree''get-3
 ConstantTree''getCost-2
 ConstantTree''getOrInitCost-2
@@ -1544,7 +1551,6 @@ HotSpot'codeCacheHighBound
 HotSpot'codeCacheLowBound
 HotSpot'codeEntryAlignment
 HotSpot'config
-HotSpot'constantReflection
 HotSpot'deoptHandlerEntryMark
 HotSpot'dirtyCardValue
 HotSpot'epochMaskInPlace
@@ -1574,7 +1580,6 @@ HotSpot'lockDisplacedMarkOffset
 HotSpot'logOfHeapRegionGrainBytes
 HotSpot'logOfHeapRegionGrainBytesMark
 HotSpot'markOffset
-HotSpot'memoryAccess
 HotSpot'metaAccess
 HotSpot'metaspaceArrayBaseOffset
 HotSpot'metaspaceArrayLengthOffset
@@ -2347,6 +2352,12 @@ MemoryMapNode'new-1
 MemoryOp'new-4
 MemoryOutputMap'new-3
 MemoryPhiNode'new-2
+MemoryReflection'readFieldValue-2
+MemoryReflection'readPrimitiveConstant-4
+MemoryReflection'readObjectConstant-2
+MemoryReflection'readNarrowOopConstant-2
+MemoryReflection'readKlassPointerConstant-2
+MemoryReflection'readNarrowKlassPointerConstant-2
 MemoryRMOp'new-4
 MemoryTwoOp'new-5
 MemoryVMConstOp'new-3
@@ -2360,6 +2371,8 @@ MergeProcessor''setNewState-2
 MergeProcessor''setPhiInput-4
 MergeProcessor''setStateIndexes-2
 MergeProcessor'new-1
+MetaspaceConstant''asResolvedJavaType-1
+MetaspaceConstant'new-2
 MetaspaceOpcode'SET
 MethodCallOp'new-4
 MethodCallTargetNode''invoke-1
@@ -2560,6 +2573,11 @@ NumUtil'signExtend-2
 NumUtil'unsignedMax-2
 NumUtil'unsignedMin-2
 NumUtil'zeroExtend-2
+ObjectConstant''asObject-2c
+ObjectConstant''asObject-2t
+ObjectConstant''getType-1
+ObjectConstant'forObject-1
+ObjectConstant'forObject-2
 ObjectEqualsNode'create-2
 ObjectEqualsNode'createCanonical-2
 ObjectEqualsNode'new-2
@@ -3847,66 +3865,6 @@ ZeroExtendNode'new-4
 
 (defp ConstantLoadOptimization)
 (defp ConstantNode)
-
-;;;
- ; Reflection operations on values represented as {@linkplain JavaConstant constants}. All methods
- ; in this interface require the VM to access the actual object encapsulated in
- ; {@link JavaKind#Object object} constants. This access is not always possible, depending on kind
- ; of VM and the state that the VM is in. Therefore, all methods can return {@code nil} at any
- ; time, to indicate that the result is not available at this point. The caller is responsible to
- ; check for {@code nil} results and handle them properly, e.g. not perform an optimization.
- ;;
-(defp ConstantReflectionProvider
-    ;;;
-     ; Compares two constants for equality. The equality relationship is symmetric. Returns
-     ; {@link Boolean#TRUE true} if the two constants represent the same run time value,
-     ; {@link Boolean#FALSE false} if they are different. Returns {@code nil} if the constants
-     ; cannot be compared at this point.
-     ;;
-    (#_"Boolean" ConstantReflectionProvider'''constantEquals-3 [#_"ConstantReflectionProvider" this, #_"Constant" x, #_"Constant" y])
-    ;;;
-     ; Returns the length of the array constant. Returns {@code nil} if the constant is not an
-     ; array, or if the array length is not available at this point.
-     ;;
-    (#_"Integer" ConstantReflectionProvider'''readArrayLength-2 [#_"ConstantReflectionProvider" this, #_"JavaConstant" array])
-    ;;;
-     ; Reads a value from the given array at the given index. Returns {@code nil} if the constant is
-     ; not an array, if the index is out of bounds, or if the value is not available at this point.
-     ;;
-    (#_"JavaConstant" ConstantReflectionProvider'''readArrayElement-3 [#_"ConstantReflectionProvider" this, #_"JavaConstant" array, #_"int" index])
-    ;;;
-     ; Gets the current value of this field for a given object, if available.
-     ;
-     ; There is no guarantee that the same value will be returned by this method for a field unless
-     ; the field is considered to be constant by the runtime.
-     ;
-     ; @param receiver object from which this field's value is to be read. This value is ignored if
-     ;            this field is static.
-     ; @return the value of this field or {@code nil} if the value is not available (e.g. because
-     ;         the field holder is not yet initialized).
-     ;;
-    (#_"JavaConstant" ConstantReflectionProvider'''readFieldValue-3 [#_"ConstantReflectionProvider" this, #_"ResolvedJavaField" field, #_"JavaConstant" receiver])
-    ;;;
-     ; Returns the {@link ResolvedJavaType} for a {@link Class} object (or any other object regarded
-     ; as a class by the VM) encapsulated in the given constant. Returns {@code nil} if the
-     ; constant does not encapsulate a class, or if the type is not available at this point.
-     ;;
-    (#_"ResolvedJavaType" ConstantReflectionProvider'''asJavaType-2 [#_"ConstantReflectionProvider" this, #_"Constant" constant])
-    ;;;
-     ; Gets raw memory access.
-     ;;
-    (#_"MemoryAccessProvider" ConstantReflectionProvider'''getMemoryAccessProvider-1 [#_"ConstantReflectionProvider" this])
-    ;;;
-     ; Gets the runtime representation of the {@link Class} object of this type.
-     ;;
-    (#_"JavaConstant" ConstantReflectionProvider'''asJavaClass-2 [#_"ConstantReflectionProvider" this, #_"ResolvedJavaType" type])
-    ;;;
-     ; Gets the runtime representation of the "hub" of this type -- that is, the closest part of
-     ; the type representation which is typically stored in the object header.
-     ;;
-    (#_"Constant" ConstantReflectionProvider'''asObjectHub-2 [#_"ConstantReflectionProvider" this, #_"ResolvedJavaType" type])
-)
-
 (defp ConstantTree)
 (defp ConstantTreeAnalyzer)
 (defp ConstantValue)
@@ -4232,38 +4190,7 @@ ZeroExtendNode'new-4
 )
 
 (defp HotSpotDirectCallTargetNode)
-
-;;;
- ; HotSpot specific extension of {@link MemoryAccessProvider}.
- ;;
-(defp HotSpotMemoryAccessProvider #_[MemoryAccessProvider]
-    ;;;
-     ; @throws IllegalArgumentException if the address computed from {@code base} and
-     ;             {@code displacement} does not denote a location holding a narrow oop
-     ;;
-    (#_"JavaConstant" HotSpotMemoryAccessProvider'''readNarrowOopConstant-3 [#_"HotSpotMemoryAccessProvider" this, #_"Constant" base, #_"long" displacement])
-    (#_"Constant" HotSpotMemoryAccessProvider'''readKlassPointerConstant-3 [#_"HotSpotMemoryAccessProvider" this, #_"Constant" base, #_"long" displacement])
-    (#_"Constant" HotSpotMemoryAccessProvider'''readNarrowKlassPointerConstant-3 [#_"HotSpotMemoryAccessProvider" this, #_"Constant" base, #_"long" displacement])
-)
-
 (defp HotSpotNodePlugin)
-
-;;;
- ; Represents a field in a HotSpot type.
- ;;
-(defp HotSpotResolvedJavaField #_[ResolvedJavaField]
-    ;;;
-     ; Determines if a given object contains this field.
-     ;
-     ; @return true iff this is a non-static field and its declaring class is assignable from {@code object}'s class
-     ;;
-    (#_"boolean" HotSpotResolvedJavaField'''isInObject-2 [#_"HotSpotResolvedJavaField" this, #_"Object" object])
-    (#_"int" HotSpotResolvedJavaField'''offset-1 [#_"HotSpotResolvedJavaField" this])
-    ;;;
-     ; Determines if this field should be treated as a constant.
-     ;;
-    (#_"boolean" HotSpotResolvedJavaField'''isStable-1 [#_"HotSpotResolvedJavaField" this])
-)
 
 ;;;
  ; Implementation of {@link JavaType} for resolved non-primitive HotSpot classes.
@@ -4854,9 +4781,7 @@ ZeroExtendNode'new-4
 (defp LoadIndexedPointerNode)
 (defp LoadMetaspaceConstantOp)
 (defp LoadObjectConstantOp)
-
-(defp LocalLiveness
-)
+(defp LocalLiveness)
 
 ;;;
  ; Marker interface for location identities. A different location identity of two memory accesses
@@ -4977,35 +4902,6 @@ ZeroExtendNode'new-4
     (#_"this" MemoryAccess'''setLastLocationAccess-2 [#_"MemoryAccess" this, #_"MemoryNode" lla])
 )
 
-;;;
- ; Provides memory access operations for the target VM.
- ;;
-(defp MemoryAccessProvider
-    ;;;
-     ; Reads a primitive value using a base address and a displacement.
-     ;
-     ; @param kind the {@link JavaKind} of the returned {@link JavaConstant} object
-     ; @param base the base address from which the value is read
-     ; @param displacement the displacement within the object in bytes
-     ; @param bits the number of bits to read from memory
-     ; @return the read value encapsulated in a {@link JavaConstant} object of {@link JavaKind} kind
-     ; @throws IllegalArgumentException if the read is out of bounds of the object or {@code kind}
-     ;             is {@link JavaKind#Void} or not {@linkplain JavaKind#isPrimitive() primitive}
-     ;             kind or {@code bits} is not 8, 16, 32 or 64
-     ;;
-    (#_"JavaConstant" MemoryAccessProvider'''readPrimitiveConstant-5 [#_"MemoryAccessProvider" this, #_"JavaKind" kind, #_"Constant" base, #_"long" displacement, #_"int" bits])
-    ;;;
-     ; Reads a Java {@link Object} value using a base address and a displacement.
-     ;
-     ; @param base the base address from which the value is read
-     ; @param displacement the displacement within the object in bytes
-     ; @return the read value encapsulated in a {@link Constant} object
-     ; @throws IllegalArgumentException if the address computed from {@code base} and
-     ;             {@code displacement} does not denote a location holding an {@code Object} value
-     ;;
-    (#_"JavaConstant" MemoryAccessProvider'''readObjectConstant-3 [#_"MemoryAccessProvider" this, #_"Constant" base, #_"long" displacement])
-)
-
 (defp MemoryAnchorNode)
 
 ;;;
@@ -5094,10 +4990,7 @@ ZeroExtendNode'new-4
     (#_"int" MetaAccessProvider'''decodeDebugId-2 [#_"MetaAccessProvider" this, #_"JavaConstant" constant])
 )
 
-(defp MetaspaceConstant #_[HotSpotConstant, VMConstant, Constant]
-    (#_"HotSpotResolvedObjectType" MetaspaceConstant'''asResolvedJavaType-1 [#_"MetaspaceConstant" this])
-)
-
+(defp MetaspaceConstant)
 (defp MethodCallOp)
 (defp MethodCallTargetNode)
 (defp MethodKey)
@@ -5345,37 +5238,7 @@ ZeroExtendNode'new-4
 (defp NullCheckOp)
 (defp NullCheckOptimizer)
 (defp NullConstant)
-
-;;;
- ; Represents a constant non-{@code null} object reference, within the compiler and across
- ; the compiler/runtime interface.
- ;;
-(defp ObjectConstant #_[JavaConstant, HotSpotConstant, VMConstant, Constant]
-    ;;;
-     ; Gets the object represented by this constant represents if it is of a given type.
-     ;
-     ; @param type the expected type of the object represented by this constant. If the
-     ;            object is required to be of this type, then wrap the call to this method
-     ;            in {@link Objects#requireNonNull(Object)}.
-     ; @return the object value represented by this constant if it is an
-     ;         {@link ResolvedJavaType#isInstance(JavaConstant) instance of} {@code type}
-     ;         otherwise {@code null}
-     ;;
-    (#_"Object" ObjectConstant'''asObject-2c [#_"ObjectConstant" this, #_"Class" type])
-
-    ;;;
-     ; Gets the object represented by this constant represents if it is of a given type.
-     ;
-     ; @param type the expected type of the object represented by this constant. If the
-     ;            object is required to be of this type, then wrap the call to this method
-     ;            in {@link Objects#requireNonNull(Object)}.
-     ; @return the object value represented by this constant if it is an
-     ;         {@link ResolvedJavaType#isInstance(JavaConstant) instance of} {@code type}
-     ;         otherwise {@code null}
-     ;;
-    (#_"Object" ObjectConstant'''asObject-2t [#_"ObjectConstant" this, #_"ResolvedJavaType" type])
-)
-
+(defp ObjectConstant)
 (defp ObjectEqualsNode)
 (defp ObjectEqualsOp)
 (defp ObjectStamp)
@@ -5517,10 +5380,21 @@ ZeroExtendNode'new-4
      ; specification will be included in the returned mask.
      ;;
     (#_"int" ResolvedJavaField'''getModifiers-1 [#_"ResolvedJavaField" this])
+    (#_"int" ResolvedJavaField'''getOffset-1 [#_"ResolvedJavaField" this])
     ;;;
      ; Determines if this field is a synthetic field as defined by the Java Language Specification.
      ;;
     (#_"boolean" ResolvedJavaField'''isSynthetic-1 [#_"ResolvedJavaField" this])
+    ;;;
+     ; Determines if a given object contains this field.
+     ;
+     ; @return true iff this is a non-static field and its declaring class is assignable from {@code object}'s class
+     ;;
+    (#_"boolean" ResolvedJavaField'''isInObject-2 [#_"ResolvedJavaField" this, #_"Object" object])
+    ;;;
+     ; Determines if this field should be treated as a constant.
+     ;;
+    (#_"boolean" ResolvedJavaField'''isStable-1 [#_"ResolvedJavaField" this])
 )
 
 (value-ns ResolvedJavaField
@@ -5987,7 +5861,7 @@ ZeroExtendNode'new-4
      ;
      ; @return the value read or nil if the value can't be read for some reason
      ;;
-    (#_"Constant" Stamp'''readConstant-4 [#_"Stamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement])
+    (#_"Constant" Stamp'''readConstant-3 [#_"Stamp" this, #_"Constant" base, #_"long" displacement])
     ;;;
      ; Tries to improve this stamp with the stamp given as parameter. If successful, returns the new
      ; improved stamp. Otherwise, returns a stamp equal to this.
@@ -6686,6 +6560,395 @@ ZeroExtendNode'new-4
 )
 
 ;;;
+ ; Provides memory access operations for the VM.
+ ;;
+(value-ns MemoryReflection
+    ;;;
+     ; Offset of injected {@code java.lang.Class::oop_size} field.
+     ;;
+    (def- #_"int" MemoryReflection'oopSizeOffset
+        (let [
+            #_"ResolvedJavaType" staticType (§ soon MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, Class)
+        ]
+            (doseq [#_"ResolvedJavaField" f (§ soon ResolvedJavaType'''getInstanceFields-2 staticType, false)]
+                (when (= (JavaField'''getName-1 f) "oop_size")
+                    (§ return (ResolvedJavaField'''getOffset-1 f))
+                )
+            )
+            (§ soon throw! "could not find injected java.lang.Class::oop_size field")
+        )
+    )
+
+    (defn- #_"void" MemoryReflection'checkRead-4 [#_"JavaKind" kind, #_"long" displacement, #_"HotSpotResolvedObjectType" type, #_"Object" object]
+        (cond
+            (JavaType''isArray-1 type)
+                (let [
+                    #_"ResolvedJavaType" componentType (JavaType'''getComponentType-1 type)
+                    #_"int" baseOffset (HotSpot'arrayBaseOffset-1 (JavaType'''getJavaKind-1 componentType))
+                    #_"int" indexScale (HotSpot'arrayIndexScale-1 (JavaType'''getJavaKind-1 componentType))
+                    #_"long" arrayEnd (+ baseOffset (* (Array/getLength object) indexScale))
+                    #_"boolean" aligned? (zero? (% (- displacement baseOffset) indexScale))
+                ]
+                    (when-not (and (<= 0 displacement (- arrayEnd indexScale)) (or aligned? (not (= kind :JavaKind'Object))))
+                        (let [
+                            #_"int" index (int (quot (- displacement baseOffset) indexScale))
+                        ]
+                            (throw! (str "unsafe array access: reading element of kind " kind " at offset " displacement " (index ~ " index ") in " (JavaType''toJavaName-1 type) " object of length " (Array/getLength object)))
+                        )
+                    )
+                )
+            (not= kind :JavaKind'Object)
+                (let [
+                    #_"long" size
+                        (if (instance? Class object)
+                            (* (.getInt HotSpot'unsafe, object, MemoryReflection'oopSizeOffset) (WordSize'inBytes-1 AMD64'wordSize))
+                            (abs (HotSpotResolvedObjectType'''instanceSize-1 type))
+                        )
+                    #_"int" bytesToRead (JavaKind'getByteCount-1 kind)
+                ]
+                    (when (or (neg? displacement) (< (- size bytesToRead) displacement))
+                        (throw! (str "unsafe access: reading " bytesToRead " bytes at offset " displacement " in " (JavaType''toJavaName-1 type) " object of size " size))
+                    )
+                )
+            :else
+                (let [
+                    #_"ResolvedJavaField" field (ResolvedJavaType'''findInstanceFieldWithOffset-3 type, displacement, :JavaKind'Object)
+                    field
+                        (when (and (nil? field) (instance? Class object)) => field
+                            (let [
+                                #_"HotSpotResolvedObjectTypeImpl" staticFieldsHolder (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, object)
+                            ]
+                                (ß HotSpotResolvedObjectTypeImpl''findStaticFieldWithOffset-3 staticFieldsHolder, displacement, :JavaKind'Object)
+                            )
+                        )
+                ]
+                    (when (nil? field)
+                        (throw! (str "unsafe object access: field not found for read of kind Object at offset " displacement " in " (JavaType''toJavaName-1 type) " object"))
+                    )
+                    (when-not (= (JavaField''getJavaKind-1 field) :JavaKind'Object)
+                        (throw! (str "unsafe object access: field " field " not of expected kind Object at offset " displacement " in " (JavaType''toJavaName-1 type) " object"))
+                    )
+                )
+        )
+        nil
+    )
+
+    ;;;
+     ; Gets the object boxed by {@code base} that is about to have a value of kind {@code kind} read from it
+     ; at the offset {@code displacement}.
+     ;
+     ; @param base constant value containing the base address for a pending read
+     ; @return {@code nil} if {@code base} does not box an object otherwise the object boxed in {@code base}
+     ;;
+    (defn- #_"Object" MemoryReflection'asObject-3 [#_"Constant" base, #_"JavaKind" kind, #_"long" displacement]
+        (when (satisfies? ObjectConstant base)
+            (let [
+                #_"HotSpotResolvedObjectType" type (ObjectConstant''getType-1 base)
+                #_"Object" object (:object base)
+            ]
+                (MemoryReflection'checkRead-4 kind, displacement, type, object)
+                object
+            )
+        )
+    )
+
+    (defn- #_"long" MemoryReflection'asRawPointer-1 [#_"Constant" base]
+        (condp satisfies? base
+            MetaspaceConstant
+                (.getMetaspacePointer (:metaspaceObject base))
+            PrimitiveConstant
+                (when (JavaKind'isNumericInteger-1 (JavaConstant'''getJavaKind-1 base)) => (throw! (str base))
+                    (JavaConstant'''asLong-1 base)
+                )
+        )
+    )
+
+    (defn- #_"long" MemoryReflection'readRawValue-4 [#_"Constant" base, #_"long" displacement, #_"JavaKind" kind, #_"int" bits]
+        (let [
+            #_"Object" object (MemoryReflection'asObject-3 base, kind, displacement)
+        ]
+            (if (some? object)
+                (case bits
+                    Byte/SIZE    (.getByte  HotSpot'unsafe, object, displacement)
+                    Short/SIZE   (.getShort HotSpot'unsafe, object, displacement)
+                    Integer/SIZE (.getInt   HotSpot'unsafe, object, displacement)
+                    Long/SIZE    (.getLong  HotSpot'unsafe, object, displacement)
+                )
+                (let [
+                    #_"long" pointer (MemoryReflection'asRawPointer-1 base)
+                ]
+                    (case bits
+                        Byte/SIZE    (.getByte  HotSpot'unsafe, (+ pointer displacement))
+                        Short/SIZE   (.getShort HotSpot'unsafe, (+ pointer displacement))
+                        Integer/SIZE (.getInt   HotSpot'unsafe, (+ pointer displacement))
+                        Long/SIZE    (.getLong  HotSpot'unsafe, (+ pointer displacement))
+                    )
+                )
+            )
+        )
+    )
+
+    (defn- #_"Object" MemoryReflection'readRawObject-3 [#_"Constant" base, #_"long" displacement, #_"boolean" compressed?]
+        (let [
+            #_"Object" object (MemoryReflection'asObject-3 base, :JavaKind'Object, displacement)
+        ]
+            (if (some? object)
+                (.getObject HotSpot'unsafe, object, displacement)
+                (.getUncompressedObject HotSpot'unsafe, (+ (MemoryReflection'asRawPointer-1 base) displacement))
+            )
+        )
+    )
+
+    (defn #_"JavaConstant" MemoryReflection'readFieldValue-2 [#_"ResolvedJavaField" field, #_"Object" object]
+        (let [
+            #_"JavaKind" kind (JavaField''getJavaKind-1 field)
+            #_"long" displacement (ResolvedJavaField'''getOffset-1 field)
+        ]
+            (if (= kind :JavaKind'Object)
+                (ObjectConstant'forObject-1 (.getObject HotSpot'unsafe, object, displacement))
+                (case kind
+                    :JavaKind'Boolean (JavaConstant'forBoolean-1 (.getBoolean HotSpot'unsafe, object, displacement))
+                    :JavaKind'Byte    (JavaConstant'forByte-1    (.getByte    HotSpot'unsafe, object, displacement))
+                    :JavaKind'Char    (JavaConstant'forChar-1    (.getChar    HotSpot'unsafe, object, displacement))
+                    :JavaKind'Short   (JavaConstant'forShort-1   (.getShort   HotSpot'unsafe, object, displacement))
+                    :JavaKind'Int     (JavaConstant'forInt-1     (.getInt     HotSpot'unsafe, object, displacement))
+                    :JavaKind'Long    (JavaConstant'forLong-1    (.getLong    HotSpot'unsafe, object, displacement))
+                )
+            )
+        )
+    )
+
+    ;;;
+     ; Reads a primitive value using a base address and a displacement.
+     ;
+     ; @param kind the {@link JavaKind} of the returned {@link JavaConstant} object
+     ; @param base the base address from which the value is read
+     ; @param displacement the displacement within the object in bytes
+     ; @param bits the number of bits to read from memory
+     ; @return the read value encapsulated in a {@link JavaConstant} object of {@link JavaKind} kind
+     ; @throws IllegalArgumentException if the read is out of bounds of the object or {@code kind}
+     ;             is {@link JavaKind#Void} or not {@linkplain JavaKind#isPrimitive() primitive}
+     ;             kind or {@code bits} is not 8, 16, 32 or 64
+     ;;
+    (defn #_"JavaConstant" MemoryReflection'readPrimitiveConstant-4 [#_"JavaKind" kind, #_"Constant" base, #_"long" displacement, #_"int" bits]
+        (try
+            (let [
+                #_"long" rawValue (MemoryReflection'readRawValue-4 base, displacement, kind, bits)
+            ]
+                (case kind
+                    :JavaKind'Boolean (JavaConstant'forBoolean-1 (not (zero? rawValue)))
+                    :JavaKind'Byte    (JavaConstant'forByte-1          (byte rawValue))
+                    :JavaKind'Char    (JavaConstant'forChar-1          (char rawValue))
+                    :JavaKind'Short   (JavaConstant'forShort-1        (short rawValue))
+                    :JavaKind'Int     (JavaConstant'forInt-1            (int rawValue))
+                    :JavaKind'Long    (JavaConstant'forLong-1                rawValue)
+                )
+            )
+            (catch NullPointerException _
+                nil
+            )
+        )
+    )
+
+    ;;;
+     ; Reads a Java {@link Object} value using a base address and a displacement.
+     ;
+     ; @param base the base address from which the value is read
+     ; @param displacement the displacement within the object in bytes
+     ; @return the read value encapsulated in a {@link Constant} object
+     ; @throws IllegalArgumentException if the address computed from {@code base} and
+     ;             {@code displacement} does not denote a location holding an {@code Object} value
+     ;;
+    (defn #_"JavaConstant" MemoryReflection'readObjectConstant-2 [#_"Constant" base, #_"long" displacement]
+        (condp satisfies? base
+            ObjectConstant
+                (let [
+                    #_"Object" object (MemoryReflection'readRawObject-3 base, displacement, HotSpot'useCompressedOops)
+                ]
+                    (ObjectConstant'forObject-1 object)
+                )
+            MetaspaceConstant
+                (let [
+                    #_"MetaspaceWrapperObject" metaspaceObject (:metaspaceObject base)
+                ]
+                    (§ soon condp instance? metaspaceObject
+                        HotSpotResolvedObjectTypeImpl
+                            (when (= displacement HotSpot'classMirrorHandleOffset)
+                                ;; Klass::_java_mirror is valid for all Klass* values
+                                (ObjectConstant'forObject-1 (#_"HotSpotResolvedObjectTypeImpl" .mirror metaspaceObject))
+                            )
+                    )
+                )
+        )
+    )
+
+    ;;;
+     ; @throws IllegalArgumentException if the address computed from {@code base} and
+     ;             {@code displacement} does not denote a location holding a narrow oop
+     ;;
+    (defn #_"JavaConstant" MemoryReflection'readNarrowOopConstant-2 [#_"Constant" base, #_"long" displacement]
+        (ObjectConstant'forObject-2 (MemoryReflection'readRawObject-3 base, displacement, true), true)
+    )
+
+    (defn- #_"HotSpotResolvedObjectTypeImpl" MemoryReflection'readKlass-3 [#_"Constant" base, #_"long" displacement, #_"boolean" compressed?]
+        (let [
+            #_"Object" object (if (satisfies? MetaspaceConstant base) (MetaspaceConstant''asResolvedJavaType-1 base) (:object base))
+        ]
+            (.getResolvedJavaType (.getCompilerToVM JVMCI'runtime), object, displacement, compressed?)
+        )
+    )
+
+    (defn #_"Constant" MemoryReflection'readKlassPointerConstant-2 [#_"Constant" base, #_"long" displacement]
+        (let [
+            #_"HotSpotResolvedObjectTypeImpl" klass (MemoryReflection'readKlass-3 base, displacement, false)
+        ]
+            (when (some? klass) => JavaConstant'NULL_POINTER
+                (MetaspaceConstant'new-2 klass, false)
+            )
+        )
+    )
+
+    (defn #_"Constant" MemoryReflection'readNarrowKlassPointerConstant-2 [#_"Constant" base, #_"long" displacement]
+        (let [
+            #_"HotSpotResolvedObjectTypeImpl" klass (MemoryReflection'readKlass-3 base, displacement, true)
+        ]
+            (when (some? klass) => JavaConstant'COMPRESSED_NULL
+                (MetaspaceConstant'new-2 klass, true)
+            )
+        )
+    )
+)
+
+;;;
+ ; Reflection operations on values represented as {@linkplain JavaConstant constants}. All methods in this interface
+ ; require the VM to access the actual object encapsulated in {@link JavaKind#Object object} constants. This access
+ ; is not always possible, depending on kind of VM and the state that the VM is in. Therefore, all methods can return
+ ; {@code nil} at any time, to indicate that the result is not available at this point. The caller is responsible to
+ ; check for {@code nil} results and handle them properly, e.g. not perform an optimization.
+ ;;
+(value-ns ConstantReflection
+    ;;;
+     ; Compares two constants for equality. The equality relationship is symmetric. Returns {@link Boolean#TRUE true}
+     ; if the two constants represent the same run time value, {@link Boolean#FALSE false} if they are different.
+     ; Returns {@code nil} if the constants cannot be compared at this point.
+     ;;
+    (defn #_"Boolean" ConstantReflection'constantEquals-2 [#_"Constant" x, #_"Constant" y]
+        (when (satisfies? ObjectConstant x) => (= x y)
+            (and (satisfies? ObjectConstant y) (= (:object x) (:object y)))
+        )
+    )
+
+    ;;;
+     ; Returns the length of the array constant. Returns {@code nil} if the constant is not an array,
+     ; or if the array length is not available at this point.
+     ;;
+    (defn #_"Integer" ConstantReflection'readArrayLength-1 [#_"JavaConstant" array]
+        (when (and (some? array) (= (JavaConstant'''getJavaKind-1 array) :JavaKind'Object) (not (JavaConstant'''isNull-1 array)))
+            (let [
+                #_"Object" a (:object array)
+            ]
+                (when (#_"Class" .isArray (#_"Object" .getClass a))
+                    (Array/getLength a)
+                )
+            )
+        )
+    )
+
+    ;;;
+     ; Reads a value from the given array at the given index. Returns {@code nil} if the constant is
+     ; not an array, if the index is out of bounds, or if the value is not available at this point.
+     ;;
+    (defn #_"JavaConstant" ConstantReflection'readArrayElement-2 [#_"JavaConstant" array, #_"int" index]
+        (when (and (some? array) (= (JavaConstant'''getJavaKind-1 array) :JavaKind'Object) (not (JavaConstant'''isNull-1 array)))
+            (let [
+                #_"Object" a (:object array)
+            ]
+                (when (and (#_"Class" .isArray (#_"Object" .getClass a)) (< -1 index (Array/getLength a)))
+                    (if (instance? Object'array a)
+                        (ObjectConstant'forObject-1 (nth a index))
+                        (#_"JavaConstant" .forBoxedPrimitive (Array/get a, index))
+                    )
+                )
+            )
+        )
+    )
+
+    ;;;
+     ; Gets the current value of this field for a given object, if available.
+     ;
+     ; There is no guarantee that the same value will be returned by this method for a field unless
+     ; the field is considered to be constant by the runtime.
+     ;
+     ; @param receiver object from which this field's value is to be read. This value is ignored if this field is static.
+     ; @return the value of this field or {@code nil} if the value is not available (e.g. because the field holder is not yet initialized).
+     ;;
+    (defn #_"JavaConstant" ConstantReflection'readFieldValue-2 [#_"ResolvedJavaField" field, #_"JavaConstant" receiver]
+        (cond
+            (ResolvedJavaField''isStatic-1 field)
+                (let [
+                    #_"HotSpotResolvedJavaType" holder (JavaField'''getDeclaringType-1 field)
+                ]
+                    (when (ResolvedJavaType'''isInitialized-1 holder)
+                        (MemoryReflection'readFieldValue-2 field, (#_"HotSpotResolvedJavaType" .mirror holder))
+                    )
+                )
+            (JavaConstant''isNonNull-1 receiver)
+                (let [
+                    #_"Object" object (:object receiver)
+                ]
+                    (when (ResolvedJavaField'''isInObject-2 field, object)
+                        (MemoryReflection'readFieldValue-2 field, object)
+                    )
+                )
+        )
+    )
+
+    ;;;
+     ; Returns the {@link ResolvedJavaType} for a {@link Class} object (or any other object regarded as a class by the VM)
+     ; encapsulated in the given constant. Returns {@code nil} if the constant does not encapsulate a class,
+     ; or if the type is not available at this point.
+     ;;
+    (defn #_"ResolvedJavaType" ConstantReflection'asJavaType-1 [#_"Constant" constant]
+        (condp satisfies? constant
+            ObjectConstant
+                (let [
+                    #_"Object" object (:object constant)
+                ]
+                    (when (instance? Class object)
+                        (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, object)
+                    )
+                )
+            MetaspaceConstant
+                (let [
+                    #_"MetaspaceWrapperObject" object (:metaspaceObject constant)
+                ]
+                    (when (§ soon instance? HotSpotResolvedObjectTypeImpl object)
+                        object
+                    )
+                )
+            nil
+        )
+    )
+
+    ;;;
+     ; Gets the runtime representation of the {@link Class} object of this type.
+     ;;
+    (defn #_"JavaConstant" ConstantReflection'asJavaClass-1 [#_"ResolvedJavaType" type]
+        (ObjectConstant'forObject-1 (#_"HotSpotResolvedJavaType" .mirror type))
+    )
+
+    ;;;
+     ; Gets the runtime representation of the "hub" of this type -- that is, the closest part of
+     ; the type representation which is typically stored in the object header.
+     ;;
+    (defn #_"Constant" ConstantReflection'asObjectHub-1 [#_"ResolvedJavaType" type]
+        (when (satisfies? HotSpotResolvedObjectType type) => (throw! "unimplemented")
+            (HotSpotResolvedObjectType'''klass-1 type)
+        )
+    )
+)
+
+;;;
  ; The implementation type of the {@link JavaConstant#NULL_POINTER null constant}.
  ;;
 (class-ns NullConstant [JavaConstant, Constant]
@@ -6802,6 +7065,136 @@ ZeroExtendNode'new-4
 (class-ns RawConstant [PrimitiveConstant]
     (defn #_"RawConstant" RawConstant'new-1 [#_"long" rawValue]
         (merge (RawConstant'class.) (PrimitiveConstant'new-2 :JavaKind'Int, rawValue))
+    )
+)
+
+(class-ns MetaspaceConstant [HotSpotConstant, VMConstant, Constant]
+    (defn #_"MetaspaceConstant" MetaspaceConstant'new-2 [#_"MetaspaceWrapperObject" metaspaceObject, #_"boolean" compressed?]
+        (merge (MetaspaceConstant'class.)
+            (hash-map
+                #_"MetaspaceWrapperObject" :metaspaceObject metaspaceObject
+                #_"boolean" :compressed? compressed?
+            )
+        )
+    )
+
+    (defn #_"HotSpotResolvedObjectType" MetaspaceConstant''asResolvedJavaType-1 [#_"MetaspaceConstant" this]
+        (when (satisfies? HotSpotResolvedObjectType (:metaspaceObject this))
+            (:metaspaceObject this)
+        )
+    )
+
+    (defm MetaspaceConstant Constant
+        (#_"boolean" Constant'''isDefaultForKind-1 [#_"MetaspaceConstant" this]
+            false
+        )
+    )
+
+    (defm MetaspaceConstant HotSpotConstant
+        (#_"boolean" HotSpotConstant'''isCompressed-1 [#_"MetaspaceConstant" this]
+            (:compressed? this)
+        )
+
+        (#_"Constant" HotSpotConstant'''compress-1 [#_"MetaspaceConstant" this]
+            (MetaspaceConstant'new-2 (:metaspaceObject this), true)
+        )
+
+        (#_"Constant" HotSpotConstant'''uncompress-1 [#_"MetaspaceConstant" this]
+            (MetaspaceConstant'new-2 (:metaspaceObject this), false)
+        )
+    )
+)
+
+;;;
+ ; Represents a constant non-{@code nil} object reference.
+ ;;
+(class-ns ObjectConstant [JavaConstant, HotSpotConstant, VMConstant, Constant]
+    (defn- #_"ObjectConstant" ObjectConstant'new-2 [#_"Object" object, #_"boolean" compressed?]
+        (merge (ObjectConstant'class.)
+            (hash-map
+                #_"Object" :object object
+                #_"boolean" :compressed? compressed?
+            )
+        )
+    )
+
+    (defn #_"JavaConstant" ObjectConstant'forObject-2 [#_"Object" object, #_"boolean" compressed?]
+        (when (some? object) => (if compressed? JavaConstant'COMPRESSED_NULL JavaConstant'NULL_POINTER)
+            (ObjectConstant'new-2 object, compressed?)
+        )
+    )
+
+    (defn #_"JavaConstant" ObjectConstant'forObject-1 [#_"Object" object]
+        (ObjectConstant'forObject-2 object, false)
+    )
+
+    ;;;
+     ; Gets the resolved Java type of the object represented by this constant.
+     ;;
+    (defn #_"HotSpotResolvedObjectType" ObjectConstant''getType-1 [#_"ObjectConstant" this]
+        (ß HotSpotResolvedObjectTypeImpl'fromObjectClass-1 (#_"Object" .getClass (:object this)))
+    )
+
+    ;;;
+     ; Gets the object represented by this constant represents if it is of a given type.
+     ;
+     ; @param type the expected type of the object represented by this constant. If the
+     ;            object is required to be of this type, then wrap the call to this method
+     ;            in {@link Objects#requireNonNull(Object)}.
+     ; @return the object value represented by this constant if it is an
+     ;         {@link ResolvedJavaType#isInstance(JavaConstant) instance of} {@code type}
+     ;         otherwise {@code null}
+     ;;
+    (defn #_"Object" ObjectConstant''asObject-2c [#_"ObjectConstant" this, #_"Class" type]
+        (when (#_"Class" .isInstance type, (:object this))
+            (#_"Class" .cast type, (:object this))
+        )
+    )
+
+    ;;;
+     ; Gets the object represented by this constant represents if it is of a given type.
+     ;
+     ; @param type the expected type of the object represented by this constant. If the
+     ;            object is required to be of this type, then wrap the call to this method
+     ;            in {@link Objects#requireNonNull(Object)}.
+     ; @return the object value represented by this constant if it is an
+     ;         {@link ResolvedJavaType#isInstance(JavaConstant) instance of} {@code type}
+     ;         otherwise {@code null}
+     ;;
+    (defn #_"Object" ObjectConstant''asObject-2t [#_"ObjectConstant" this, #_"ResolvedJavaType" type]
+        (when (ResolvedJavaType'''isInstance-2 type, this)
+            (:object this)
+        )
+    )
+
+    (defm ObjectConstant HotSpotConstant
+        (#_"boolean" HotSpotConstant'''isCompressed-1 [#_"ObjectConstant" this]
+            (:compressed? this)
+        )
+
+        (#_"JavaConstant" HotSpotConstant'''compress-1 [#_"ObjectConstant" this]
+            (ObjectConstant'new-2 (:object this), true)
+        )
+
+        (#_"JavaConstant" HotSpotConstant'''uncompress-1 [#_"ObjectConstant" this]
+            (ObjectConstant'new-2 (:object this), false)
+        )
+    )
+
+    (defm ObjectConstant JavaConstant
+        (#_"JavaKind" JavaConstant'''getJavaKind-1 [#_"ObjectConstant" this]
+            :JavaKind'Object
+        )
+
+        (#_"boolean" JavaConstant'''isNull-1 [#_"ObjectConstant" this]
+            false
+        )
+    )
+
+    (defm ObjectConstant Constant
+        (#_"boolean" Constant'''isDefaultForKind-1 [#_"ObjectConstant" this]
+            false
+        )
     )
 )
 
@@ -7248,11 +7641,8 @@ ZeroExtendNode'new-4
     (def #_"HotSpotJVMCIRuntime" JVMCI'runtime (HotSpotJVMCIRuntime/runtime))
     (def #_"JVMCIBackend"        JVMCI'backend (#_"HotSpotJVMCIRuntime" .getHostJVMCIBackend JVMCI'runtime))
 
-    (def #_"CodeCacheProvider"          HotSpot'codeCache          (#_"JVMCIBackend" .getCodeCache          JVMCI'backend))
-    (def #_"ConstantReflectionProvider" HotSpot'constantReflection (#_"JVMCIBackend" .getConstantReflection JVMCI'backend))
-    (def #_"MetaAccessProvider"         HotSpot'metaAccess         (#_"JVMCIBackend" .getMetaAccess         JVMCI'backend))
-
-    (§ soon def #_"MemoryAccessProvider" HotSpot'memoryAccess (ConstantReflectionProvider'''getMemoryAccessProvider-1 HotSpot'constantReflection))
+    (def #_"CodeCacheProvider"  HotSpot'codeCache  (#_"JVMCIBackend" .getCodeCache  JVMCI'backend))
+    (def #_"MetaAccessProvider" HotSpot'metaAccess (#_"JVMCIBackend" .getMetaAccess JVMCI'backend))
 
     (def #_"HotSpotVMConfigAccess" HotSpot'config (HotSpotVMConfigAccess. (#_"HotSpotJVMCIRuntime" .getConfigStore JVMCI'runtime)))
 
@@ -8481,7 +8871,7 @@ ZeroExtendNode'new-4
              (or (not (ResolvedJavaField''isStatic-1 field))
                  (ResolvedJavaType'''isInitialized-1 (JavaField'''getDeclaringType-1 field))
              )
-             (HotSpotResolvedJavaField'''isStable-1 field)
+             (ResolvedJavaField'''isStable-1 field)
         )
     )
 
@@ -8519,7 +8909,7 @@ ZeroExtendNode'new-4
     (defn #_"ConstantNode" ConstantFields'readConstantField-2 [#_"ResolvedJavaField" field, #_"JavaConstant" receiver]
         (when (ConstantFields'isStableField-1 field)
             (let [
-                #_"JavaConstant" value (ConstantReflectionProvider'''readFieldValue-3 HotSpot'constantReflection, field, receiver)
+                #_"JavaConstant" value (ConstantReflection'readFieldValue-2 field, receiver)
             ]
                 (when (and (some? value) (ConstantFields'isStableFieldValueConstant-3 field, value, receiver))
                     (§ return (ConstantNode'forConstant-3c value, (ConstantFields'getArrayDimension-1 (JavaField'''getType-1 field)), false))
@@ -8528,7 +8918,7 @@ ZeroExtendNode'new-4
         )
         (when (ConstantFields'isFinalField-1 field)
             (let [
-                #_"JavaConstant" value (ConstantReflectionProvider'''readFieldValue-3 HotSpot'constantReflection, field, receiver)
+                #_"JavaConstant" value (ConstantReflection'readFieldValue-2 field, receiver)
             ]
                 (when (and (some? value) (ConstantFields'isFinalFieldValueConstant-3 field, value, receiver))
                     (§ return (ConstantNode'forConstant-1 value))
@@ -8560,7 +8950,7 @@ ZeroExtendNode'new-4
      ; @return a constant containing {@code object}
      ;;
     (defn #_"JavaConstant" SnippetReflection'forObject-1 [#_"Object" object]
-        (#_"HotSpotConstantReflectionProvider" .forObject HotSpot'constantReflection, object)
+        (ObjectConstant'forObject-1 object)
     )
 
     ;;;
@@ -8576,7 +8966,7 @@ ZeroExtendNode'new-4
     #_unused
     (defn #_"Object" SnippetReflection'asObject-2t [#_"ResolvedJavaType" type, #_"JavaConstant" constant]
         (when-not (JavaConstant'''isNull-1 constant)
-            (ObjectConstant'''asObject-2t constant, type)
+            (ObjectConstant''asObject-2t constant, type)
         )
     )
 
@@ -8592,7 +8982,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"<T> T" SnippetReflection'asObject-2c [#_"Class<T>" type, #_"JavaConstant" constant]
         (when-not (JavaConstant'''isNull-1 constant)
-            (ObjectConstant'''asObject-2c constant, type)
+            (ObjectConstant''asObject-2c constant, type)
         )
     )
 )
@@ -12115,7 +12505,7 @@ ZeroExtendNode'new-4
 
     (defn #_"AddressNode" Lowerer'createFieldAddress-3 [#_"Graph" graph, #_"ValueNode" object, #_"ResolvedJavaField" field]
         (let [
-            #_"int" offset (HotSpotResolvedJavaField'''offset-1 field)
+            #_"int" offset (ResolvedJavaField'''getOffset-1 field)
         ]
             (when (<= 0 offset) (Lowerer'createOffsetAddress-3 graph, object, offset))
         )
@@ -20002,7 +20392,7 @@ ZeroExtendNode'new-4
             (condp satisfies? constant
                 JavaType ;; this is a load of class constant which might be unresolved
                     (when (satisfies? ResolvedJavaType constant) => (BytecodeParser''handleUnresolvedLoadConstant-2 this, constant)
-                        (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (ConstantNode'forConstant-2c (ConstantReflectionProvider'''asJavaClass-2 HotSpot'constantReflection, constant), (:graph this)))
+                        (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (ConstantNode'forConstant-2c (ConstantReflection'asJavaClass-1 constant), (:graph this)))
                     )
                 JavaConstant
                     (update this :frameState FrameStateBuilder''push-3 (JavaConstant'''getJavaKind-1 constant), (ConstantNode'forConstant-2c constant, (:graph this)))
@@ -20777,7 +21167,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"ValueNode" BytecodeParser''synchronizedObject-3 [#_"BytecodeParser" this, #_"FrameStateBuilder" state, #_"ResolvedJavaMethod" target]
         (if (ResolvedJavaMethod''isStatic-1 target)
-            (ConstantNode'forConstant-2c (ConstantReflectionProvider'''asJavaClass-2 HotSpot'constantReflection, (JavaMethod'''getDeclaringType-1 target)), (:graph this))
+            (ConstantNode'forConstant-2c (ConstantReflection'asJavaClass-1 (JavaMethod'''getDeclaringType-1 target)), (:graph this))
             (nth (:locals state) 0)
         )
     )
@@ -22749,7 +23139,7 @@ ZeroExtendNode'new-4
             #_"Constant" trueConstant (ValueNode''asConstant-1 (:trueValue conditionalNode))
             #_"Constant" falseConstant (ValueNode''asConstant-1 (:falseValue conditionalNode))
         ]
-            (when (and (some? falseConstant) (some? trueConstant) (some? HotSpot'constantReflection))
+            (when (and (some? falseConstant) (some? trueConstant))
                 (let [
                     #_"boolean" trueResult (Condition''foldCondition-3c condition, trueConstant, constant)
                     #_"boolean" falseResult (Condition''foldCondition-3c condition, falseConstant, constant)
@@ -23443,7 +23833,7 @@ ZeroExtendNode'new-4
     (defm ObjectEqualsOp CompareOp
         (#_"LogicNode" CompareOp'''canonicalizeSymmetricConstant-6 [#_"ObjectEqualsOp" this, #_"Integer" smallestCompareWidth, #_"CanonicalCondition" condition, #_"Constant" constant, #_"ValueNode" node, #_"boolean" mirrored?]
             (let [
-                #_"ResolvedJavaType" type (ConstantReflectionProvider'''asJavaType-2 HotSpot'constantReflection, constant)
+                #_"ResolvedJavaType" type (ConstantReflection'asJavaType-1 constant)
             ]
                 (if (and (some? type) (satisfies? GetClassNode node))
                     (if (and (not (ResolvedJavaType'''isPrimitive-1 type)) (not (and (ResolvedJavaType''isAbstract-1 type) (not (JavaType''isArray-1 type)))))
@@ -23767,7 +24157,7 @@ ZeroExtendNode'new-4
         (if (satisfies? PrimitiveConstant lt)
             (Condition''foldCondition-3p this, lt, rt)
             (let [
-                #_"Boolean" equal (ConstantReflectionProvider'''constantEquals-3 HotSpot'constantReflection, lt, rt)
+                #_"Boolean" equal (ConstantReflection'constantEquals-2 lt, rt)
             ]
                 (when (some? equal) => (throw! (str "could not fold " lt " " this " " rt))
                     (condp = this
@@ -40010,7 +40400,7 @@ ZeroExtendNode'new-4
                     #_"TypeReference" constantType (StampTool'typeReferenceOrNull-1 (:stamp object))
                 ]
                     (when (and (some? constantType) (:exactReference constantType)) => read
-                        (ConstantNode'forConstant-2s (:stamp read), (ConstantReflectionProvider'''asObjectHub-2 HotSpot'constantReflection, (:type constantType)))
+                        (ConstantNode'forConstant-2s (:stamp read), (ConstantReflection'asObjectHub-1 (:type constantType)))
                     )
                 )
             )
@@ -40024,7 +40414,7 @@ ZeroExtendNode'new-4
                     #_"TypeReference" constantType (StampTool'typeReferenceOrNull-1 (:stamp object))
                 ]
                     (when (and (some? constantType) (:exactReference constantType)) => read
-                        (ConstantNode'forConstant-2s (:stamp read), (HotSpotConstant'''compress-1 (ConstantReflectionProvider'''asObjectHub-2 HotSpot'constantReflection, (:type constantType))))
+                        (ConstantNode'forConstant-2s (:stamp read), (HotSpotConstant'''compress-1 (ConstantReflection'asObjectHub-1 (:type constantType))))
                     )
                 )
             )
@@ -46160,7 +46550,7 @@ ZeroExtendNode'new-4
     (defn- #_"boolean" IfNode'valuesDistinct-3 [#_"SimplifierTool" tool, #_"ValueNode" a, #_"ValueNode" b]
         (when (and (satisfies? ConstantNode a) (satisfies? ConstantNode b))
             (let [
-                #_"Boolean" equal (ConstantReflectionProvider'''constantEquals-3 HotSpot'constantReflection, (:value a), (:value b))
+                #_"Boolean" equal (ConstantReflection'constantEquals-2 (:value a), (:value b))
             ]
                 (when (some? equal)
                     (§ return (not (#_"Boolean" .booleanValue equal)))
@@ -46769,7 +47159,7 @@ ZeroExtendNode'new-4
                             (= (:stableDimension (:array loadIndexed)) 1)
                             (:isDefaultStable (:array loadIndexed))
                             (let [
-                                #_"Integer" optionalArrayLength (ConstantReflectionProvider'''readArrayLength-2 HotSpot'constantReflection, arrayConstant)
+                                #_"Integer" optionalArrayLength (ConstantReflection'readArrayLength-1 arrayConstant)
                             ]
                                 ;; => Loading a constant value can be denied by the VM.
                                 (and (some? optionalArrayLength)
@@ -46780,7 +47170,7 @@ ZeroExtendNode'new-4
                                         (and
                                             (loop-when [#_"int" i 0] (< i arrayLength) => true
                                                 (let [
-                                                    #_"JavaConstant" elementConstant (ConstantReflectionProvider'''readArrayElement-3 HotSpot'constantReflection, arrayConstant, i)
+                                                    #_"JavaConstant" elementConstant (ConstantReflection'readArrayElement-2 arrayConstant, i)
                                                 ]
                                                     ;; => Loading a constant value can be denied by the VM.
                                                     (and (some? elementConstant) (= (JavaConstant'''getJavaKind-1 elementConstant) :JavaKind'Int)
@@ -48468,7 +48858,7 @@ ZeroExtendNode'new-4
             ]
                 (when (and (some? arrayConstant) (pos? (:stableDimension array)))
                     (let [
-                        #_"JavaConstant" constant (ConstantReflectionProvider'''readArrayElement-3 HotSpot'constantReflection, arrayConstant, (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 index)))
+                        #_"JavaConstant" constant (ConstantReflection'readArrayElement-2 arrayConstant, (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 index)))
                     ]
                         (when (and (some? constant) (or (:isDefaultStable array) (not (Constant'''isDefaultForKind-1 constant))))
                             (ConstantNode'forConstant-3c constant, (dec (:stableDimension array)), (:isDefaultStable array))
@@ -48620,7 +49010,7 @@ ZeroExtendNode'new-4
     (defn #_"boolean" AccessFieldNode''isVolatile-1 [#_"AccessFieldNode" this] (ResolvedJavaField''isVolatile-1 (:field this)))
 
     (defn- #_"ValueNode" AccessFieldNode'staticFieldBase-2 [#_"Graph" graph, #_"ResolvedJavaField" field]
-        (ConstantNode'forConstant-2c (ConstantReflectionProvider'''asJavaClass-2 HotSpot'constantReflection, (JavaField'''getDeclaringType-1 field)), graph)
+        (ConstantNode'forConstant-2c (ConstantReflection'asJavaClass-1 (JavaField'''getDeclaringType-1 field)), graph)
     )
 
     (defn- #_"this" AccessFieldNode''lowerLoadFieldNode-2 [#_"LoadFieldNode" this, #_"LoweringTool" lowerer]
@@ -48872,13 +49262,13 @@ ZeroExtendNode'new-4
         (let [
             #_"ValueNode" array (GraphUtil'unproxify-1n originalArray)
         ]
-            (when (and (some? HotSpot'constantReflection) (satisfies? ConstantNode array) (not (ValueNode''isNullConstant-1 array)))
+            (when (and (satisfies? ConstantNode array) (not (ValueNode''isNullConstant-1 array)))
                 (let [
                     #_"JavaConstant" constantValue (ValueNode''asJavaConstant-1 array)
                 ]
                     (when (and (some? constantValue) (JavaConstant''isNonNull-1 constantValue))
                         (let [
-                            #_"Integer" constantLength (ConstantReflectionProvider'''readArrayLength-2 HotSpot'constantReflection, constantValue)
+                            #_"Integer" constantLength (ConstantReflection'readArrayLength-1 constantValue)
                         ]
                             (when (some? constantLength)
                                 (ConstantNode'forInt-1 constantLength)
@@ -49197,7 +49587,7 @@ ZeroExtendNode'new-4
                                                         [#_"AddressNode" address #_"BarrierType" barrierType]
                                                             (if (satisfies? VirtualInstanceNode virtual)
                                                                 (let [
-                                                                    #_"long" offset (HotSpotResolvedJavaField'''offset-1 (VirtualInstanceNode''field-2 virtual, i))
+                                                                    #_"long" offset (ResolvedJavaField'''getOffset-1 (VirtualInstanceNode''field-2 virtual, i))
                                                                 ]
                                                                     (when (<= 0 offset)
                                                                         [(Lowerer'createOffsetAddress-3 (:graph this), newObject, offset) (Lowerer'fieldInitializationBarrier-1 entryKind)]
@@ -50163,7 +50553,7 @@ ZeroExtendNode'new-4
                     ]
                         (when (or (:immutable location) (pos? stableDimension))
                             (let [
-                                #_"Constant" constant (Stamp'''readConstant-4 (:stamp read), HotSpot'memoryAccess, (:value object), displacement)
+                                #_"Constant" constant (Stamp'''readConstant-3 (:stamp read), (:value object), displacement)
                                 #_"boolean" isDefaultStable (or (:immutable location) (:isDefaultStable object))
                             ]
                                 (when (and (some? constant) (or isDefaultStable (not (Constant'''isDefaultForKind-1 constant))))
@@ -51323,7 +51713,7 @@ ZeroExtendNode'new-4
                                                 (when (pos? stableDimension)
                                                     (let [
                                                         #_"long" offset (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:offset this)))
-                                                        #_"Constant" constant (Stamp'''readConstant-4 (:stamp this), HotSpot'memoryAccess, array, offset)
+                                                        #_"Constant" constant (Stamp'''readConstant-3 (:stamp this), array, offset)
                                                         #_"boolean" isDefaultStable (:isDefaultStable object)
                                                     ]
                                                         (when (and (some? constant) (or isDefaultStable (not (Constant'''isDefaultForKind-1 constant))))
@@ -53488,9 +53878,9 @@ ZeroExtendNode'new-4
             (condp satisfies? clazz
                 ConstantNode
                     (let [
-                        #_"ResolvedJavaType" exact (ConstantReflectionProvider'''asJavaType-2 HotSpot'constantReflection, (ValueNode''asJavaConstant-1 clazz))
+                        #_"ResolvedJavaType" exact (ConstantReflection'asJavaType-1 (ValueNode''asJavaConstant-1 clazz))
                     ]
-                        (ConstantNode'forConstant-2s stamp, (if (ResolvedJavaType'''isPrimitive-1 exact) JavaConstant'NULL_POINTER (ConstantReflectionProvider'''asObjectHub-2 HotSpot'constantReflection, exact)))
+                        (ConstantNode'forConstant-2s stamp, (if (ResolvedJavaType'''isPrimitive-1 exact) JavaConstant'NULL_POINTER (ConstantReflection'asObjectHub-1 exact)))
                     )
                 GetClassNode
                     (LoadHubNode'new-2 KlassPointerStamp'KLASS_NON_NULL, (:object clazz))
@@ -53537,14 +53927,14 @@ ZeroExtendNode'new-4
 
         (#_"Constant" ConvertNode'''convert-2 [#_"ClassGetHubNode" this, #_"Constant" constant]
             (let [
-                #_"ResolvedJavaType" exact (ConstantReflectionProvider'''asJavaType-2 HotSpot'constantReflection, constant)
+                #_"ResolvedJavaType" exact (ConstantReflection'asJavaType-1 constant)
             ]
-                (if (ResolvedJavaType'''isPrimitive-1 exact) JavaConstant'NULL_POINTER (ConstantReflectionProvider'''asObjectHub-2 HotSpot'constantReflection, exact))
+                (if (ResolvedJavaType'''isPrimitive-1 exact) JavaConstant'NULL_POINTER (ConstantReflection'asObjectHub-1 exact))
             )
         )
 
         (#_"Constant" ConvertNode'''reverse-2 [#_"ClassGetHubNode" this, #_"Constant" constant]
-            (ConstantReflectionProvider'''asJavaClass-2 HotSpot'constantReflection, (ConstantReflectionProvider'''asJavaType-2 HotSpot'constantReflection, constant))
+            (ConstantReflection'asJavaClass-1 (ConstantReflection'asJavaType-1 constant))
         )
 
         (#_"boolean" ConvertNode'''isLossless-1 [#_"ClassGetHubNode" this]
@@ -53565,7 +53955,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"boolean" ConvertNode'''preservesOrder-3 [#_"ClassGetHubNode" this, #_"CanonicalCondition" op, #_"Constant" value]
-            (not (ResolvedJavaType'''isPrimitive-1 (ConstantReflectionProvider'''asJavaType-2 HotSpot'constantReflection, value)))
+            (not (ResolvedJavaType'''isPrimitive-1 (ConstantReflection'asJavaType-1 value)))
         )
     )
 )
@@ -54515,7 +54905,7 @@ ZeroExtendNode'new-4
 
     (defn #_"ValueNode" GetClassNode'tryFold-1 [#_"ValueNode" object]
         (when (and (some? object) (satisfies? ObjectStamp (:stamp object)) (AbstractObjectStamp''isExactType-1 (:stamp object)))
-            (ConstantNode'forConstant-1 (ConstantReflectionProvider'''asJavaClass-2 HotSpot'constantReflection, (:type (:stamp object))))
+            (ConstantNode'forConstant-1 (ConstantReflection'asJavaClass-1 (:type (:stamp object))))
         )
     )
 
@@ -54533,7 +54923,7 @@ ZeroExtendNode'new-4
                 #_"ValueNode" alias (VirtualizerTool'''getAlias-2 tool, (:object this))
             ]
                 (when (satisfies? VirtualObjectNode alias) => tool
-                    (VirtualizerTool'''replaceWithValue-2 tool, (ConstantNode'forConstant-3s (:stamp this), (ConstantReflectionProvider'''asJavaClass-2 HotSpot'constantReflection, (VirtualObjectNode'''type-1 alias)), (:graph this)))
+                    (VirtualizerTool'''replaceWithValue-2 tool, (ConstantNode'forConstant-3s (:stamp this), (ConstantReflection'asJavaClass-1 (VirtualObjectNode'''type-1 alias)), (:graph this)))
                 )
             )
         )
@@ -54575,10 +54965,10 @@ ZeroExtendNode'new-4
             (when-not (and (CanonicalizerTool'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
                 (when (satisfies? ConstantNode (:hub this)) => this
                     (let [
-                        #_"ResolvedJavaType" exact (ConstantReflectionProvider'''asJavaType-2 HotSpot'constantReflection, (:value (:hub this)))
+                        #_"ResolvedJavaType" exact (ConstantReflection'asJavaType-1 (:value (:hub this)))
                     ]
                         (when (some? exact) => this
-                            (ConstantNode'forConstant-1 (ConstantReflectionProvider'''asJavaClass-2 HotSpot'constantReflection, exact))
+                            (ConstantNode'forConstant-1 (ConstantReflection'asJavaClass-1 exact))
                         )
                     )
                 )
@@ -54610,7 +55000,7 @@ ZeroExtendNode'new-4
         (#_"Constant" ConvertNode'''convert-2 [#_"HubGetClassNode" this, #_"Constant" constant]
             (if (= JavaConstant'NULL_POINTER constant)
                 constant
-                (ConstantReflectionProvider'''asJavaClass-2 HotSpot'constantReflection, (ConstantReflectionProvider'''asJavaType-2 HotSpot'constantReflection, constant))
+                (ConstantReflection'asJavaClass-1 (ConstantReflection'asJavaType-1 constant))
             )
         )
 
@@ -54618,11 +55008,11 @@ ZeroExtendNode'new-4
             (if (= JavaConstant'NULL_POINTER constant)
                 constant
                 (let [
-                    #_"ResolvedJavaType" type (ConstantReflectionProvider'''asJavaType-2 HotSpot'constantReflection, constant)
+                    #_"ResolvedJavaType" type (ConstantReflection'asJavaType-1 constant)
                 ]
                     (if (ResolvedJavaType'''isPrimitive-1 type)
                         JavaConstant'NULL_POINTER
-                        (ConstantReflectionProvider'''asObjectHub-2 HotSpot'constantReflection, type)
+                        (ConstantReflection'asObjectHub-1 type)
                     )
                 )
             )
@@ -54702,7 +55092,7 @@ ZeroExtendNode'new-4
             #_"TypeReference" type (StampTool'typeReferenceOrNull-1 (:stamp curValue))
         ]
             (when (and (some? type) (:exactReference type))
-                (ConstantNode'forConstant-2s stamp, (ConstantReflectionProvider'''asObjectHub-2 HotSpot'constantReflection, (:type type)))
+                (ConstantNode'forConstant-2s stamp, (ConstantReflection'asObjectHub-1 (:type type)))
             )
         )
     )
@@ -54713,7 +55103,7 @@ ZeroExtendNode'new-4
                 #_"TypeReference" type (StampTool'typeReferenceOrNull-1 (:stamp (VirtualizerTool'''getAlias-2 tool, (:value this))))
             ]
                 (when (and (some? type) (:exactReference type)) => tool
-                    (VirtualizerTool'''replaceWithValue-2 tool, (ConstantNode'forConstant-3s (:stamp this), (ConstantReflectionProvider'''asObjectHub-2 HotSpot'constantReflection, (:type type)), (:graph this)))
+                    (VirtualizerTool'''replaceWithValue-2 tool, (ConstantNode'forConstant-3s (:stamp this), (ConstantReflection'asObjectHub-1 (:type type)), (:graph this)))
                 )
             )
         )
@@ -54819,7 +55209,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"LogicNode" CompareNode'tryConstantFold-3 [#_"CanonicalCondition" condition, #_"ValueNode" forX, #_"ValueNode" forY]
-        (when (and (satisfies? ConstantNode forX) (satisfies? ConstantNode forY) (or (some? HotSpot'constantReflection) (satisfies? PrimitiveConstant (:value forX))))
+        (when (and (satisfies? ConstantNode forX) (satisfies? ConstantNode forY))
             (LogicConstantNode'forBoolean-1 (Condition''foldCondition-3c (:canonical condition), (:value forX), (:value forY)))
         )
     )
@@ -55252,7 +55642,7 @@ ZeroExtendNode'new-4
     (defn- #_"LogicNode" InstanceOfDynamicNode'findSynonym-4 [#_"ValueNode" forMirror, #_"ValueNode" forObject, #_"boolean" allow-nil?, #_"boolean" exact?]
         (when (satisfies? ConstantNode forMirror)
             (let [
-                #_"ResolvedJavaType" t (ConstantReflectionProvider'''asJavaType-2 HotSpot'constantReflection, (:value forMirror))
+                #_"ResolvedJavaType" t (ConstantReflection'asJavaType-1 (:value forMirror))
             ]
                 (when (some? t)
                     (if (ResolvedJavaType'''isPrimitive-1 t)
@@ -61999,9 +62389,9 @@ ZeroExtendNode'new-4
             (ValueKindTool'getNarrowOopKind-0)
         )
 
-        (#_"Constant" Stamp'''readConstant-4 [#_"NarrowOopStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
+        (#_"Constant" Stamp'''readConstant-3 [#_"NarrowOopStamp" this, #_"Constant" base, #_"long" displacement]
             (try
-                (HotSpotMemoryAccessProvider'''readNarrowOopConstant-3 provider, base, displacement)
+                (MemoryReflection'readNarrowOopConstant-2 base, displacement)
                 (catch IllegalArgumentException _
                     nil
                 )
@@ -62074,9 +62464,9 @@ ZeroExtendNode'new-4
             (ValueKindTool'getObjectKind-0)
         )
 
-        (#_"Constant" Stamp'''readConstant-4 [#_"ObjectStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
+        (#_"Constant" Stamp'''readConstant-3 [#_"ObjectStamp" this, #_"Constant" base, #_"long" displacement]
             (try
-                (MemoryAccessProvider'''readObjectConstant-3 provider, base, displacement)
+                (MemoryReflection'readObjectConstant-2 base, displacement)
                 (catch IllegalArgumentException _
                     nil ;; it's possible that the base and displacement aren't valid together, so simply return nil
                 )
@@ -62152,7 +62542,7 @@ ZeroExtendNode'new-4
 
         (#_"boolean" Stamp'''isCompatible-2c [#_"KlassPointerStamp" this, #_"Constant" constant]
             (if (satisfies? MetaspaceConstant constant)
-                (some? (MetaspaceConstant'''asResolvedJavaType-1 constant))
+                (some? (MetaspaceConstant''asResolvedJavaType-1 constant))
                 (Constant'''isDefaultForKind-1 constant)
             )
         )
@@ -62202,10 +62592,10 @@ ZeroExtendNode'new-4
     )
 
     (defm KlassPointerStamp Stamp
-        (#_"Constant" Stamp'''readConstant-4 [#_"KlassPointerStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
+        (#_"Constant" Stamp'''readConstant-3 [#_"KlassPointerStamp" this, #_"Constant" base, #_"long" displacement]
             (if (KlassPointerStamp''isCompressed-1 this)
-                (HotSpotMemoryAccessProvider'''readNarrowKlassPointerConstant-3 provider, base, displacement)
-                (HotSpotMemoryAccessProvider'''readKlassPointerConstant-3 provider, base, displacement)
+                (MemoryReflection'readNarrowKlassPointerConstant-2 base, displacement)
+                (MemoryReflection'readKlassPointerConstant-2 base, displacement)
             )
         )
     )
@@ -62275,7 +62665,7 @@ ZeroExtendNode'new-4
             (and (satisfies? PrimitiveConstant constant) (JavaKind'isNumericInteger-1 (JavaConstant'''getJavaKind-1 constant)))
         )
 
-        (#_"Constant" Stamp'''readConstant-4 [#_"RawPointerStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
+        (#_"Constant" Stamp'''readConstant-3 [#_"RawPointerStamp" this, #_"Constant" base, #_"long" displacement]
             (throw! "can't read raw pointer")
         )
     )
@@ -62322,9 +62712,9 @@ ZeroExtendNode'new-4
     )
 
     (defm PrimitiveStamp Stamp
-        (#_"Constant" Stamp'''readConstant-4 [#_"PrimitiveStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
+        (#_"Constant" Stamp'''readConstant-3 [#_"PrimitiveStamp" this, #_"Constant" base, #_"long" displacement]
             (try
-                (MemoryAccessProvider'''readPrimitiveConstant-5 provider, (Stamp'''getStackKind-1 this), base, displacement, (:bits this))
+                (MemoryReflection'readPrimitiveConstant-4 (Stamp'''getStackKind-1 this), base, displacement, (:bits this))
                 (catch IllegalArgumentException _
                     nil ;; it's possible that the base and displacement aren't valid together, so simply return nil
                 )
@@ -63658,7 +64048,7 @@ ZeroExtendNode'new-4
             this
         )
 
-        (#_"Constant" Stamp'''readConstant-4 [#_"IllegalStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
+        (#_"Constant" Stamp'''readConstant-3 [#_"IllegalStamp" this, #_"Constant" base, #_"long" displacement]
             (throw! "can't read values of illegal stamp")
         )
     )
@@ -63728,7 +64118,7 @@ ZeroExtendNode'new-4
             false
         )
 
-        (#_"Constant" Stamp'''readConstant-4 [#_"VoidStamp" this, #_"MemoryAccessProvider" provider, #_"Constant" base, #_"long" displacement]
+        (#_"Constant" Stamp'''readConstant-3 [#_"VoidStamp" this, #_"Constant" base, #_"long" displacement]
             (throw! "can't read values of void stamp")
         )
 
@@ -67492,159 +67882,5 @@ public enum DeoptimizationReason
     ArithmeticException,
     RuntimeConstraint,
     LoopLimitCheck
-)
-)
-
-(§ package jdk.vm.ci.hotspot
-
-import java.lang.reflect.Array
-import java.util.Objects
-
-;;;
- ; HotSpot implementation of {@link ConstantReflectionProvider}.
- ;;
-public class HotSpotConstantReflectionProvider implements ConstantReflectionProvider
-(§
-    protected final #_"HotSpotMemoryAccessProviderImpl" memoryAccess
-
-    public HotSpotConstantReflectionProvider(#_"HotSpotJVMCIRuntimeProvider" runtime)
-    (§
-        this.memoryAccess = new HotSpotMemoryAccessProviderImpl(runtime)
-    )
-
-    @Override
-    public #_"MemoryAccessProvider" ConstantReflectionProvider'''getMemoryAccessProvider-1()
-    (§
-        return memoryAccess
-    )
-
-    @Override
-    public Boolean ConstantReflectionProvider'''constantEquals-3(#_"Constant" x, #_"Constant" y)
-    (§
-        if (x == y)
-        (§
-            return true
-        )
-        else if (x instanceof ObjectConstantImpl)
-        (§
-            return y instanceof ObjectConstantImpl && ((ObjectConstantImpl) x).object() == ((ObjectConstantImpl) y).object()
-        )
-        else
-        (§
-            return Objects.equals(x, y)
-        )
-    )
-
-    @Override
-    public Integer ConstantReflectionProvider'''readArrayLength-2(#_"JavaConstant" array)
-    (§
-        if (array == nil || JavaConstant'''getJavaKind-1(array) != :JavaKind'Object || JavaConstant'''isNull-1(array))
-        (§
-            return nil
-        )
-
-        #_"Object" arrayObject = ((ObjectConstantImpl) array).object()
-        if (!arrayObject.getClass().isArray())
-        (§
-            return nil
-        )
-        return Array.getLength(arrayObject)
-    )
-
-    @Override
-    public #_"JavaConstant" ConstantReflectionProvider'''readArrayElement-3(#_"JavaConstant" array, #_"int" index)
-    (§
-        if (array == nil || JavaConstant'''getJavaKind-1(array) != :JavaKind'Object || JavaConstant'''isNull-1(array))
-        (§
-            return nil
-        )
-        #_"Object" a = ((ObjectConstantImpl) array).object()
-
-        if (!a.getClass().isArray() || index < 0 || index >= Array.getLength(a))
-        (§
-            return nil
-        )
-
-        if (a instanceof Object[])
-        (§
-            Object #_"element" = ((Object[]) a)[index]
-            return ObjectConstantImpl.forObject(element)
-        )
-        else
-        (§
-            return JavaConstant.forBoxedPrimitive(Array.get(a, index))
-        )
-    )
-
-    public #_"JavaConstant" forObject(#_"Object" value)
-    (§
-        return ObjectConstantImpl.forObject(value)
-    )
-
-    @Override
-    public #_"ResolvedJavaType" ConstantReflectionProvider'''asJavaType-2(#_"Constant" constant)
-    (§
-        if (satisfies? ObjectConstant constant)
-        (§
-            #_"Object" obj = ((ObjectConstantImpl) constant).object()
-            if (obj instanceof Class)
-            (§
-                return HotSpot'metaAccess.MetaAccessProvider'''lookupJavaType-2c((Class<?>) obj)
-            )
-        )
-        if (satisfies? MetaspaceConstant constant)
-        (§
-            #_"MetaspaceWrapperObject" obj = MetaspaceConstantImpl.getMetaspaceObject(constant)
-            if (obj instanceof HotSpotResolvedObjectTypeImpl)
-            (§
-                return (ResolvedJavaType) obj
-            )
-        )
-        return nil
-    )
-
-    public #_"JavaConstant" ConstantReflectionProvider'''readFieldValue-3(#_"ResolvedJavaField" field, #_"JavaConstant" receiver)
-    (§
-        #_"HotSpotResolvedJavaField" hotspotField = (HotSpotResolvedJavaField) field
-        if (hotspotField.ResolvedJavaField''isStatic-1())
-        (§
-            #_"HotSpotResolvedJavaType" holder = (HotSpotResolvedJavaType) hotspotField.JavaField'''getDeclaringType-1()
-            if (holder.ResolvedJavaType'''isInitialized-1())
-            (§
-                return memoryAccess.ConstantReflectionProvider'''readFieldValue-3(hotspotField, holder.mirror())
-            )
-        )
-        else
-        (§
-            if (receiver.JavaConstant''isNonNull-1())
-            (§
-                #_"Object" object = ((ObjectConstantImpl) receiver).object()
-                if (hotspotField.HotSpotResolvedJavaField'''isInObject-2(object))
-                (§
-                    return memoryAccess.ConstantReflectionProvider'''readFieldValue-3(hotspotField, object)
-                )
-            )
-        )
-        return nil
-    )
-
-    @Override
-    public #_"JavaConstant" ConstantReflectionProvider'''asJavaClass-2(#_"ResolvedJavaType" type)
-    (§
-        return ObjectConstantImpl.forObject(((HotSpotResolvedJavaType) type).mirror())
-    )
-
-    @Override
-    public #_"Constant" ConstantReflectionProvider'''asObjectHub-2(#_"ResolvedJavaType" type)
-    (§
-        if (satisfies? HotSpotResolvedObjectType type)
-        (§
-            return ((HotSpotResolvedObjectType) type).HotSpotResolvedObjectType'''klass-1()
-        )
-        else
-        (§
-            (throw! "unimplemented")
-        )
-    )
 )
 )
