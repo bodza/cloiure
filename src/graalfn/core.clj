@@ -124,11 +124,10 @@
     [java.nio ByteBuffer ByteOrder]
     [java.util BitSet Iterator List ListIterator]
 
-    [jdk.vm.ci.code CodeCacheProvider InstalledCode]
+    [jdk.vm.ci.code InstalledCode]
     [jdk.vm.ci.code.site ConstantReference DataPatch DataSectionReference Mark Site]
-    [jdk.vm.ci.hotspot HotSpotCompiledCode HotSpotJVMCIRuntime HotSpotVMConfigAccess MetaspaceWrapperObject]
+    [jdk.vm.ci.hotspot CompilerToVM HotSpotCompiledCode HotSpotJVMCIRuntime HotSpotNmethod HotSpotRuntimeStub HotSpotVMConfig MetaspaceWrapperObject]
     [jdk.vm.ci.meta ConstantPool]
-    [jdk.vm.ci.runtime JVMCIBackend]
 
     [sun.misc Unsafe]
 )
@@ -979,7 +978,7 @@ CompilationResult'new-1
 Compiler'compileGraph-1
 Compiler'compileMethod-1
 Compiler'createCompiledCode-1
-Compiler'createInstalledCode-4
+Compiler'createInstalledCode-3
 Compiler'emitBackEnd-2
 Compiler'emitFrontEnd-3
 Compiler'emitLIR-2
@@ -1547,10 +1546,14 @@ HotSpot'cardTableAddress
 HotSpot'cardTableAddressMark
 HotSpot'cardTableShift
 HotSpot'classMirrorOffset
-HotSpot'codeCache
 HotSpot'codeCacheHighBound
 HotSpot'codeCacheLowBound
 HotSpot'codeEntryAlignment
+HotSpot'codeInstallResultCacheFull
+HotSpot'codeInstallResultCodeTooLarge
+HotSpot'codeInstallResultDependenciesFailed
+HotSpot'codeInstallResultDependenciesInvalid
+HotSpot'codeInstallResultOk
 HotSpot'config
 HotSpot'deoptActionMakeNotCompilable
 HotSpot'deoptActionMakeNotEntrant
@@ -1616,6 +1619,7 @@ HotSpot'narrowKlassShift
 HotSpot'narrowKlassSize
 HotSpot'narrowOopBase
 HotSpot'narrowOopShift
+HotSpot'native
 HotSpot'newArrayAddress
 HotSpot'newInstanceAddress
 HotSpot'nonOopBits
@@ -1635,6 +1639,7 @@ HotSpot'pollNearMark
 HotSpot'pollReturnFarMark
 HotSpot'pollReturnNearMark
 HotSpot'prototypeMarkWordOffset
+HotSpot'runtimeCallStackSize
 HotSpot'safepointPollingAddress
 HotSpot'secondarySuperCacheOffset
 HotSpot'secondarySupersOffset
@@ -1839,7 +1844,6 @@ IsNullNode'new-1
 IsNullNode'tryCanonicalize-1
 IterativeConditionalEliminationPhase'new-2
 JSRData'new-0
-JVMCI'backend
 JVMCI'runtime
 JavaConstant''isNonNull-1
 JavaConstant'COMPRESSED_NULL
@@ -6858,7 +6862,7 @@ ZeroExtendNode'new-4
         (let [
             #_"Object" object (if (satisfies? MetaspaceConstant base) (MetaspaceConstant''asResolvedJavaType-1 base) (:object base))
         ]
-            (#_"CompilerToVM" .getResolvedJavaType (#_"HotSpotJVMCIRuntime" .getCompilerToVM JVMCI'runtime), object, displacement, compressed?)
+            (#_"CompilerToVM" .getResolvedJavaType HotSpot'native, object, displacement, compressed?)
         )
     )
 
@@ -7002,7 +7006,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"ResolvedJavaMethod" MetaReflection'lookupJavaMethod-1 [#_"Executable" executable]
         (when (some? executable) => (throw! "executable is nil")
-            (#_"CompilerToVM" .asResolvedJavaMethod (#_"HotSpotJVMCIRuntime" .getCompilerToVM JVMCI'runtime), executable)
+            (#_"CompilerToVM" .asResolvedJavaMethod HotSpot'native, executable)
         )
     )
 )
@@ -7827,11 +7831,9 @@ ZeroExtendNode'new-4
 
 (value-ns HotSpot
     (def #_"HotSpotJVMCIRuntime" JVMCI'runtime (HotSpotJVMCIRuntime/runtime))
-    (def #_"JVMCIBackend"        JVMCI'backend (#_"HotSpotJVMCIRuntime" .getHostJVMCIBackend JVMCI'runtime))
 
-    (def #_"CodeCacheProvider" HotSpot'codeCache (#_"JVMCIBackend" .getCodeCache JVMCI'backend))
-
-    (def #_"HotSpotVMConfigAccess" HotSpot'config (HotSpotVMConfigAccess. (#_"HotSpotJVMCIRuntime" .getConfigStore JVMCI'runtime)))
+    (def #_"CompilerToVM"    HotSpot'native (#_"HotSpotJVMCIRuntime" .getCompilerToVM JVMCI'runtime))
+    (def #_"HotSpotVMConfig" HotSpot'config (#_"HotSpotJVMCIRuntime" .getConfig       JVMCI'runtime))
 
     (def #_"boolean" HotSpot'useFastLocking          (.getFlag HotSpot'config, "JVMCIUseFastLocking",    Boolean))
     (def #_"boolean" HotSpot'foldStableValues        (.getFlag HotSpot'config, "FoldStableValues",       Boolean))
@@ -7870,6 +7872,8 @@ ZeroExtendNode'new-4
     (def #_"boolean" HotSpot'useStackBanging (.getFlag HotSpot'config, "UseStackBanging", Boolean))
     (def #_"int" HotSpot'stackShadowPages    (.getFlag HotSpot'config, "StackShadowPages", Integer))
     (def #_"int" HotSpot'stackBias           (.getConstant HotSpot'config, "STACK_BIAS", Integer))
+
+    (def #_"int" HotSpot'runtimeCallStackSize (.getConstant HotSpot'config, "frame::arg_reg_save_area_bytes", Integer))
 
     (def #_"int" HotSpot'markOffset (.getFieldOffset HotSpot'config, "oopDesc::_mark",            Integer, "markOop"))
     (def #_"int" HotSpot'hubOffset  (.getFieldOffset HotSpot'config, "oopDesc::_metadata._klass", Integer, "Klass*"))
@@ -7996,6 +8000,12 @@ ZeroExtendNode'new-4
 
     (def #_"boolean" HotSpot'useCountLeadingZerosInstruction  (.getFlag HotSpot'config, "UseCountLeadingZerosInstruction",  Boolean))
     (def #_"boolean" HotSpot'useCountTrailingZerosInstruction (.getFlag HotSpot'config, "UseCountTrailingZerosInstruction", Boolean))
+
+    (def #_"int" HotSpot'codeInstallResultOk                  (.getConstant HotSpot'config, "JVMCIEnv::ok", Integer))
+    (def #_"int" HotSpot'codeInstallResultDependenciesFailed  (.getConstant HotSpot'config, "JVMCIEnv::dependencies_failed", Integer))
+    (def #_"int" HotSpot'codeInstallResultDependenciesInvalid (.getConstant HotSpot'config, "JVMCIEnv::dependencies_invalid", Integer))
+    (def #_"int" HotSpot'codeInstallResultCacheFull           (.getConstant HotSpot'config, "JVMCIEnv::cache_full", Integer))
+    (def #_"int" HotSpot'codeInstallResultCodeTooLarge        (.getConstant HotSpot'config, "JVMCIEnv::code_too_large", Integer))
 
     (def #_"int" HotSpot'deoptReasonNone                        (.getConstant HotSpot'config, "Deoptimization::Reason_none",                           Integer))
     (def #_"int" HotSpot'deoptReasonNullCheck                   (.getConstant HotSpot'config, "Deoptimization::Reason_null_check",                     Integer))
@@ -30346,7 +30356,7 @@ ZeroExtendNode'new-4
      ; or -1 when not applicable. Intended for determining the required size of address/offset fields.
      ;;
     (defn #_"long" ForeignCallLinkage''getMaxCallTargetOffset-1 [#_"ForeignCallLinkage" this]
-        (#_"CodeCacheProvider" .getMaxCallTargetOffset HotSpot'codeCache, (:address this))
+        (#_"CompilerToVM" .getMaxCallTargetOffset HotSpot'native, (:address this))
     )
 
     ;;;
@@ -30644,7 +30654,7 @@ ZeroExtendNode'new-4
  ; the size of a normal spill slot or the word size.
  ;
  ; A runtime can reserve space at the beginning of the overflow argument area. The calling convention can specify that the first
- ; overflow stack argument is not at offset 0, but at a specified offset. Use CodeCacheProvider#getMinimumOutgoingSize() to make sure
+ ; overflow stack argument is not at offset 0, but at a specified offset. Use CodeCacheProvider#getMinimumOutgoingSize() to make sure
  ; that call-free methods also have this space reserved. Then the VM can use the memory at offset 0 relative to the stack pointer.
  ;;
 (class-ns FrameMap []
@@ -30668,7 +30678,7 @@ ZeroExtendNode'new-4
                  ; Size of the area occupied by outgoing overflow arguments. This value is adjusted as calling conventions for outgoing
                  ; calls are retrieved. On some platforms, there is a minimum outgoing size even if no overflow arguments are on the stack.
                  ;;
-                #_"int" :outgoingSize (#_"CodeCacheProvider" .getMinimumOutgoingSize HotSpot'codeCache)
+                #_"int" :outgoingSize HotSpot'runtimeCallStackSize
                 ;;;
                  ; Determines if this frame has values on the stack for outgoing calls.
                  ;;
@@ -67437,19 +67447,41 @@ ZeroExtendNode'new-4
         )
     )
 
+    (defn- #_"String" Compiler'getCodeInstallResultDescription [#_"int" codeInstallResult]
+        (case codeInstallResult
+            HotSpot'codeInstallResultOk                  "ok"
+            HotSpot'codeInstallResultDependenciesFailed  "dependencies failed"
+            HotSpot'codeInstallResultDependenciesInvalid "dependencies invalid"
+            HotSpot'codeInstallResultCacheFull           "code cache is full"
+            HotSpot'codeInstallResultCodeTooLarge        "code is too large"
+                                                         "unknown"
+        )
+    )
+
     ;;;
      ; Installs code based on a given compilation result.
      ;
-     ; @param method the method compiled to produce {@code compiledCode} or nil if the input
-     ;            to {@code result} was not a ResolvedJavaMethod
+     ; @param method the method compiled to produce {@code compiledCode} or nil if the input to {@code result} was not a ResolvedJavaMethod
      ; @param result the code to be installed
-     ; @param predefinedInstalledCode a pre-allocated InstalledCode object to use as a reference
-     ;            to the installed code. If nil, a new InstalledCode object will be created.
      ; @return a reference to the compiled and ready-to-run installed code
      ;;
     #_unused
-    (defn #_"InstalledCode" Compiler'createInstalledCode-4 [#_"ResolvedJavaMethod" method, #_"CompilationResult" result, #_"InstalledCode" predefinedInstalledCode, #_"boolean" default?]
-        (#_"CodeCacheProvider" .installCode HotSpot'codeCache, method, (Compiler'createCompiledCode-1 result), predefinedInstalledCode, nil, default?)
+    (defn #_"InstalledCode" Compiler'createInstalledCode-3 [#_"ResolvedJavaMethod" method, #_"CompilationResult" result, #_"boolean" default?]
+        (let [
+            #_"TargetDescription" target (#_"JVMCIBackend" .getTarget (#_"JVMCIRuntime" .getJVMCIBackend JVMCI'runtime, jdk.vm.ci.amd64.AMD64))
+            #_"HotSpotCompiledCode" compiledCode (Compiler'createCompiledCode-1 result)
+            #_"String" name (#_"HotSpotCompiledCode" .getName compiledCode)
+            #_"InstalledCode" installedCode
+                (if (some? method)
+                    (HotSpotNmethod. (§ cast #_"HotSpotResolvedJavaMethod" method), name, default?)
+                    (HotSpotRuntimeStub. name)
+                )
+            #_"int" result' (#_"CompilerToVM" .installCode HotSpot'native, target, compiledCode, installedCode, nil)
+        ]
+            (when (= result' HotSpot'codeInstallResultOk) => (throw! (str "error installing " name ": " (Compiler'getCodeInstallResultDescription result')))
+                installedCode
+            )
+        )
     )
 )
 
@@ -67577,357 +67609,6 @@ public abstract class Site
     public Site(#_"int" pos)
     (§
         this.pcOffset = pos
-    )
-)
-)
-
-(§ package jdk.vm.ci.hotspot
-
-;;;
- ; Access to VM configuration data.
- ;;
-public class HotSpotVMConfigAccess
-(§
-    ;;;
-     ; Gets the available configuration data.
-     ;;
-    public #_"HotSpotVMConfigStore" getStore()
-    (§
-        return store
-    )
-
-    ;;;
-     ; Gets the address of a C++ symbol.
-     ;
-     ; @param name name of C++ symbol
-     ; @param notPresent if non-null and the symbol is not present then this value is returned
-     ; @return the address of the symbol
-     ;;
-    public #_"long" getAddress(#_"String" name, #_"Long" notPresent)
-    (§
-        #_"Long" entry = store.vmAddresses.get(name)
-        if (entry == nil)
-        (§
-            if (notPresent != nil)
-            (§
-                return notPresent
-            )
-            throw new JVMCIError("expected VM symbol not found: " + name)
-        )
-        return entry
-    )
-
-    ;;;
-     ; Gets the address of a C++ symbol.
-     ;
-     ; @param name name of C++ symbol
-     ; @return the address of the symbol
-     ;;
-    public #_"long" getAddress(#_"String" name)
-    (§
-        return getAddress(name, nil)
-    )
-
-    ;;;
-     ; Gets the value of a C++ constant.
-     ;
-     ; @param name name of the constant (e.g., {@code "frame::arg_reg_save_area_bytes"})
-     ; @param type the boxed type to which the constant value will be converted
-     ; @param notPresent if non-null and the constant is not present then this value is returned
-     ; @return the constant value converted to {@code type}
-     ;;
-    public #_"<T> T" getConstant(#_"String" name, #_"Class<T>" type, #_"T" notPresent)
-    (§
-        #_"Long" c = store.vmConstants.get(name)
-        if (c == nil)
-        (§
-            if (notPresent != nil)
-            (§
-                return notPresent
-            )
-            throw new JVMCIError("expected VM constant not found: " + name)
-        )
-        return type.cast(convertValue(name, type, c, nil))
-    )
-
-    ;;;
-     ; Gets the value of a C++ constant.
-     ;
-     ; @param name name of the constant (e.g., {@code "frame::arg_reg_save_area_bytes"})
-     ; @param type the boxed type to which the constant value will be converted
-     ; @return the constant value converted to {@code type}
-     ;;
-    public #_"<T> T" getConstant(#_"String" name, #_"Class<T>" type)
-    (§
-        return getConstant(name, type, nil)
-    )
-
-    ;;;
-     ; Gets the offset of a non-static C++ field.
-     ;
-     ; @param name fully qualified name of the field
-     ; @param type the boxed type to which the offset value will be converted (must be
-     ;            {@link Integer} or {@link Long})
-     ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
-     ; @param notPresent if non-null and the field is not present then this value is returned
-     ; @return the offset in bytes of the requested field
-     ;;
-    public #_"<T> T" getFieldOffset(#_"String" name, #_"Class<T>" type, #_"String" cppType, #_"T" notPresent)
-    (§
-        #_"VMField" entry = getField(name, cppType, notPresent == nil)
-        if (entry == nil)
-        (§
-            return notPresent
-        )
-        if (entry.address != 0)
-        (§
-            throw new JVMCIError("cannot get offset of static field " + name)
-        )
-        return type.cast(convertValue(name, type, entry.offset, cppType))
-    )
-
-    ;;;
-     ; Gets the offset of a non-static C++ field.
-     ;
-     ; @param name fully qualified name of the field
-     ; @param type the boxed type to which the offset value will be converted (must be
-     ;            {@link Integer} or {@link Long})
-     ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
-     ; @return the offset in bytes of the requested field
-     ;;
-    public #_"<T> T" getFieldOffset(#_"String" name, #_"Class<T>" type, #_"String" cppType)
-    (§
-        return getFieldOffset(name, type, cppType, nil)
-    )
-
-    ;;;
-     ; Gets the offset of a non-static C++ field.
-     ;
-     ; @param name fully qualified name of the field
-     ; @param type the boxed type to which the offset value will be converted (must be
-     ;            {@link Integer} or {@link Long})
-     ; @return the offset in bytes of the requested field
-     ;;
-    public #_"<T> T" getFieldOffset(#_"String" name, #_"Class<T>" type)
-    (§
-        return getFieldOffset(name, type, nil, nil)
-    )
-
-    ;;;
-     ; Gets the address of a static C++ field.
-     ;
-     ; @param name fully qualified name of the field
-     ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
-     ; @param notPresent if non-null and the field is not present then this value is returned
-     ; @return the address of the requested field
-     ;;
-    public #_"long" getFieldAddress(#_"String" name, #_"String" cppType, #_"Long" notPresent)
-    (§
-        #_"VMField" entry = getField(name, cppType, notPresent == nil)
-        if (entry == nil)
-        (§
-            return notPresent
-        )
-        if (entry.address == 0)
-        (§
-            throw new JVMCIError(name + " is not a static field")
-        )
-        return entry.address
-    )
-
-    ;;;
-     ; Gets the address of a static C++ field.
-     ;
-     ; @param name fully qualified name of the field
-     ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
-     ; @return the address of the requested field
-     ;;
-    public #_"long" getFieldAddress(#_"String" name, #_"String" cppType)
-    (§
-        return getFieldAddress(name, cppType, nil)
-    )
-
-    ;;;
-     ; Gets the value of a static C++ field.
-     ;
-     ; @param name fully qualified name of the field
-     ; @param type the boxed type to which the constant value will be converted
-     ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
-     ; @param notPresent if non-null and the field is not present then this value is returned
-     ; @return the value of the requested field
-     ;;
-    public #_"<T> T" getFieldValue(#_"String" name, #_"Class<T>" type, #_"String" cppType, #_"T" notPresent)
-    (§
-        #_"VMField" entry = getField(name, cppType, notPresent == nil)
-        if (entry == nil)
-        (§
-            return notPresent
-        )
-        if (entry.value == nil)
-        (§
-            throw new JVMCIError(name + " is not a static field")
-        )
-        return type.cast(convertValue(name, type, entry.value, cppType))
-    )
-
-    ;;;
-     ; Gets the value of a static C++ field.
-     ;
-     ; @param name fully qualified name of the field
-     ; @param type the boxed type to which the constant value will be converted
-     ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
-     ; @return the value of the requested field
-     ;;
-    public #_"<T> T" getFieldValue(#_"String" name, #_"Class<T>" type, #_"String" cppType)
-    (§
-        return getFieldValue(name, type, cppType, nil)
-    )
-
-    ;;;
-     ; Gets the value of a static C++ field.
-     ;
-     ; @param name fully qualified name of the field
-     ; @param type the boxed type to which the constant value will be converted
-     ; @return the value of the requested field
-     ;;
-    public #_"<T> T" getFieldValue(#_"String" name, #_"Class<T>" type)
-    (§
-        return getFieldValue(name, type, nil, nil)
-    )
-
-    ;;;
-     ; Gets a C++ field.
-     ;
-     ; @param name fully qualified name of the field
-     ; @param cppType if non-null, the expected C++ type of the field (e.g., {@code "HeapWord*"})
-     ; @param required specifies if the field must be present
-     ; @return the field
-     ;;
-    private #_"VMField" getField(#_"String" name, #_"String" cppType, #_"boolean" required)
-    (§
-        #_"VMField" entry = store.vmFields.get(name)
-        if (entry == nil)
-        (§
-            if (!required)
-            (§
-                return nil
-            )
-            throw new JVMCIError("expected VM field not found: " + name)
-        )
-
-        ;; Make sure the native type is still the type we expect.
-        if (cppType != nil && !cppType.equals(entry.type))
-        (§
-            throw new JVMCIError("expected type " + cppType + " but VM field " + name + " is of type " + entry.type)
-        )
-        return entry
-    )
-
-    ;;;
-     ; Gets a VM flag value.
-     ;
-     ; @param name name of the flag (e.g., {@code "CompileTheWorldStartAt"})
-     ; @param type the boxed type to which the flag's value will be converted
-     ; @return the flag's value converted to {@code type} or {@code notPresent} if the flag is not present
-     ;;
-    public #_"<T> T" getFlag(#_"String" name, #_"Class<T>" type)
-    (§
-        return getFlag(name, type, nil)
-    )
-
-    ;;;
-     ; Gets a VM flag value.
-     ;
-     ; @param name name of the flag (e.g., {@code "CompileTheWorldStartAt"})
-     ; @param type the boxed type to which the flag's value will be converted
-     ; @param notPresent if non-null and the flag is not present then this value is returned
-     ; @return the flag's value converted to {@code type} or {@code notPresent} if the flag is not present
-     ;;
-    public #_"<T> T" getFlag(#_"String" name, #_"Class<T>" type, #_"T" notPresent)
-    (§
-        #_"VMFlag" entry = store.vmFlags.get(name)
-        #_"Object" value
-        #_"String" cppType
-        if (entry == nil)
-        (§
-            ;; Fall back to VM call
-            value = store.compilerToVm.getFlagValue(name)
-            if (value == store.compilerToVm)
-            (§
-                if (notPresent != nil)
-                (§
-                    return notPresent
-                )
-                throw new JVMCIError("expected VM flag not found: " + name)
-            )
-            else
-            (§
-                cppType = nil
-            )
-        )
-        else
-        (§
-            value = entry.value
-            cppType = entry.type
-        )
-        return type.cast(convertValue(name, type, value, cppType))
-    )
-
-    private static #_"<T> Object" convertValue(#_"String" name, #_"Class<T>" toType, #_"Object" value, #_"String" cppType)
-    (§
-        if (toType == Boolean.class)
-        (§
-            if (value instanceof String)
-            (§
-                return Boolean.valueOf((String) value)
-            )
-            else if (value instanceof Boolean)
-            (§
-                return value
-            )
-            else if (value instanceof Long)
-            (§
-                return ((long) value) != 0
-            )
-        )
-        else if (toType == Byte.class)
-        (§
-            if (value instanceof Long)
-            (§
-                return (byte) (long) value
-            )
-        )
-        else if (toType == Integer.class)
-        (§
-            if (value instanceof Integer)
-            (§
-                return value
-            )
-            else if (value instanceof Long)
-            (§
-                return (int) (long) value
-            )
-        )
-        else if (toType == String.class)
-        (§
-            if (value == nil || value instanceof String)
-            (§
-                return value
-            )
-        )
-        else if (toType == Long.class)
-        (§
-            return value
-        )
-
-        throw new JVMCIError("cannot convert " + name + " of type " + value.getClass().getSimpleName() + (cppType == nil ? "" (§ colon ) " [" + cppType + "]") + " to " + toType.getSimpleName())
-    )
-
-    private final #_"HotSpotVMConfigStore" store
-
-    public HotSpotVMConfigAccess(#_"HotSpotVMConfigStore" store)
-    (§
-        this.store = store
     )
 )
 )
