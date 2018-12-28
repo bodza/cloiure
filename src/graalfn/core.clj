@@ -126,8 +126,8 @@
 
     [jdk.vm.ci.code CodeCacheProvider InstalledCode]
     [jdk.vm.ci.code.site ConstantReference DataPatch DataSectionReference Mark Site]
-    [jdk.vm.ci.hotspot HotSpotCompiledCode HotSpotJVMCIRuntime HotSpotVMConfigAccess]
-    [jdk.vm.ci.meta ConstantPool DeoptimizationAction DeoptimizationReason]
+    [jdk.vm.ci.hotspot HotSpotCompiledCode HotSpotJVMCIRuntime HotSpotVMConfigAccess MetaspaceWrapperObject]
+    [jdk.vm.ci.meta ConstantPool]
     [jdk.vm.ci.runtime JVMCIBackend]
 
     [sun.misc Unsafe]
@@ -1179,13 +1179,14 @@ DefUseTree'new-2
 DefaultLoopPolicies'new-0
 DefaultSimplifierTool'new-0
 DeferredExit'new-2
+DeoptimizationAction'SET
 DeoptimizationGroupingPhase'new-0
+DeoptimizationReason'SET
 DeoptimizeCallerNode'new-2
 DeoptimizeCallerOp'new-0
-DeoptimizeNode'DEFAULT_DEBUG_ID
 DeoptimizeNode'new-2
 DeoptimizeNode'new-3
-DeoptimizeNode'new-5
+DeoptimizeNode'new-4
 DeoptimizingFixedWithNextNode'new-1
 DerivedConvertedInductionVariable'new-4
 DerivedInductionVariable''getBase-1
@@ -1551,7 +1552,32 @@ HotSpot'codeCacheHighBound
 HotSpot'codeCacheLowBound
 HotSpot'codeEntryAlignment
 HotSpot'config
+HotSpot'deoptActionMakeNotCompilable
+HotSpot'deoptActionMakeNotEntrant
+HotSpot'deoptActionMaybeRecompile
+HotSpot'deoptActionNone
+HotSpot'deoptActionReinterpret
 HotSpot'deoptHandlerEntryMark
+HotSpot'deoptReasonAliasing
+HotSpot'deoptReasonArrayCheck
+HotSpot'deoptReasonClassCheck
+HotSpot'deoptReasonConstraint
+HotSpot'deoptReasonDiv0Check
+HotSpot'deoptReasonJsrMismatch
+HotSpot'deoptReasonLoopLimitCheck
+HotSpot'deoptReasonNone
+HotSpot'deoptReasonNotCompiledExceptionHandler
+HotSpot'deoptReasonNullCheck
+HotSpot'deoptReasonOptimizedTypeCheck
+HotSpot'deoptReasonRangeCheck
+HotSpot'deoptReasonTransferToInterpreter
+HotSpot'deoptReasonTypeCheckInlining
+HotSpot'deoptReasonUnreached0
+HotSpot'deoptReasonUnresolved
+HotSpot'deoptimizationActionBits
+HotSpot'deoptimizationActionShift
+HotSpot'deoptimizationReasonBits
+HotSpot'deoptimizationReasonShift
 HotSpot'dirtyCardValue
 HotSpot'epochMaskInPlace
 HotSpot'foldStableValues
@@ -1580,7 +1606,6 @@ HotSpot'lockDisplacedMarkOffset
 HotSpot'logOfHeapRegionGrainBytes
 HotSpot'logOfHeapRegionGrainBytesMark
 HotSpot'markOffset
-HotSpot'metaAccess
 HotSpot'metaspaceArrayBaseOffset
 HotSpot'metaspaceArrayLengthOffset
 HotSpot'monitorMask
@@ -2371,6 +2396,12 @@ MergeProcessor''setNewState-2
 MergeProcessor''setPhiInput-4
 MergeProcessor''setStateIndexes-2
 MergeProcessor'new-1
+MetaReflection'encodeDeoptActionAndReason-2
+MetaReflection'decodeDeoptReason-1
+MetaReflection'decodeDeoptAction-1
+MetaReflection'lookupJavaType-1c
+MetaReflection'lookupJavaType-1j
+MetaReflection'lookupJavaMethod-1
 MetaspaceConstant''asResolvedJavaType-1
 MetaspaceConstant'new-2
 MetaspaceOpcode'SET
@@ -3765,7 +3796,7 @@ ZeroExtendNode'new-4
      ; Note that it is not necessary to delete floating nodes that have no more usages
      ; this way - they will be deleted automatically.
      ;
-     ; @param tool provides access to runtime interfaces like MetaAccessProvider
+     ; @param tool provides access to runtime interfaces like MetaAccessProvider
      ;;
     (#_"Node" Canonicalizable'''canonical-2 [#_"Canonicalizable" this, #_"CanonicalizerTool" tool])
 )
@@ -4952,44 +4983,6 @@ ZeroExtendNode'new-4
     (#_"this" MergeProcessor'''merge-2 [#_"MergeProcessor" this, #_"EffectsBlockState*" states])
 )
 
-;;;
- ; Provides access to the metadata of a class typically provided in a class file.
- ;;
-(defp MetaAccessProvider
-    ;;;
-     ; Returns the resolved Java type representing a given Java class.
-     ;;
-    (#_"ResolvedJavaType" MetaAccessProvider'''lookupJavaType-2c [#_"MetaAccessProvider" this, #_"Class" clazz])
-    ;;;
-     ; Provides the {@link ResolvedJavaMethod} for a {@link Method} or {@link Constructor} obtained
-     ; via reflection.
-     ;;
-    (#_"ResolvedJavaMethod" MetaAccessProvider'''lookupJavaMethod-2 [#_"MetaAccessProvider" this, #_"Executable" reflectionMethod])
-    ;;;
-     ; Provides the {@link ResolvedJavaField} for a {@link Field} obtained via reflection.
-     ;;
-    (#_"ResolvedJavaField" MetaAccessProvider'''lookupJavaField-2 [#_"MetaAccessProvider" this, #_"Field" reflectionField])
-    ;;;
-     ; Returns the resolved Java type of the given {@link JavaConstant} object.
-     ;
-     ; @return {@code nil} if {@code constant.isNull() || !constant.kind.isObject()}
-     ;;
-    (#_"ResolvedJavaType" MetaAccessProvider'''lookupJavaType-2j [#_"MetaAccessProvider" this, #_"JavaConstant" constant])
-    ;;;
-     ; Encodes a deoptimization action and a deoptimization reason in an integer value.
-     ;
-     ; @param debugId an integer that can be used to track the origin of a deoptimization at
-     ;            runtime. There is no guarantee that the runtime will use this value. The runtime
-     ;            may even keep fewer than 32 bits.
-     ;
-     ; @return the encoded value as an integer
-     ;;
-    (#_"JavaConstant" MetaAccessProvider'''encodeDeoptActionAndReason-4 [#_"MetaAccessProvider" this, #_"DeoptimizationAction" action, #_"DeoptimizationReason" reason, #_"int" debugId])
-    (#_"DeoptimizationReason" MetaAccessProvider'''decodeDeoptReason-2 [#_"MetaAccessProvider" this, #_"JavaConstant" constant])
-    (#_"DeoptimizationAction" MetaAccessProvider'''decodeDeoptAction-2 [#_"MetaAccessProvider" this, #_"JavaConstant" constant])
-    (#_"int" MetaAccessProvider'''decodeDebugId-2 [#_"MetaAccessProvider" this, #_"JavaConstant" constant])
-)
-
 (defp MetaspaceConstant)
 (defp MethodCallOp)
 (defp MethodCallTargetNode)
@@ -5911,8 +5904,8 @@ ZeroExtendNode'new-4
         (if (and (some? (:speculation this)) (JavaConstant''isNonNull-1 (:speculation this)))
             :GuardPriority'Speculation
             (condp =? (:action this)
-                [DeoptimizationAction/InvalidateReprofile DeoptimizationAction/InvalidateRecompile]                                    :GuardPriority'Profile
-                [DeoptimizationAction/RecompileIfTooManyDeopts DeoptimizationAction/InvalidateStopCompiling DeoptimizationAction/None] :GuardPriority'None
+                [:DeoptimizationAction'InvalidateReprofile :DeoptimizationAction'InvalidateRecompile]                                     :GuardPriority'Profile
+                [:DeoptimizationAction'RecompileIfTooManyDeopts :DeoptimizationAction'InvalidateStopCompiling :DeoptimizationAction'None] :GuardPriority'None
             )
         )
     )
@@ -6377,6 +6370,74 @@ ZeroExtendNode'new-4
 (defp ZeroExtendNode)
 
 ;;;
+ ; Specifies the action that should be taken by the runtime in case a certain deoptimization is triggered.
+ ;;
+(value-ns DeoptimizationAction
+    #_unused
+    (def #_"ordered {DeoptimizationAction}" DeoptimizationAction'SET
+        (ordered-set
+            ;;;
+             ; Do not invalidate the machine code. This is typically used when deoptimizing at a point where
+             ; it's highly likely nothing will change the likelihood of the deoptimization happening again.
+             ; For example, a compiled array allocation where the size is negative.
+             ;;
+            :DeoptimizationAction'None
+            ;;;
+             ; Do not invalidate the machine code, but schedule a recompilation if this deoptimization is
+             ; triggered too often.
+             ;;
+            :DeoptimizationAction'RecompileIfTooManyDeopts
+            ;;;
+             ; Invalidate the machine code and reset the profiling information.
+             ;;
+            :DeoptimizationAction'InvalidateReprofile
+            ;;;
+             ; Invalidate the machine code and immediately schedule a recompilation. This is typically used
+             ; when deoptimizing to resolve an unresolved symbol in which case extra profiling is not
+             ; required to determine that the deoptimization will not re-occur.
+             ;;
+            :DeoptimizationAction'InvalidateRecompile
+            ;;;
+             ; Invalidate the machine code and stop compiling the outermost method of this compilation.
+             ;;
+            :DeoptimizationAction'InvalidateStopCompiling
+        )
+    )
+)
+
+;;;
+ ; Enumeration of reasons for why a deoptimization is happening.
+ ;;
+(value-ns DeoptimizationReason
+    #_unused
+    (def #_"ordered {DeoptimizationReason}" DeoptimizationReason'SET
+        (ordered-set
+            :DeoptimizationReason'None
+            :DeoptimizationReason'NullCheckException
+            :DeoptimizationReason'BoundsCheckException
+            :DeoptimizationReason'ClassCastException
+            :DeoptimizationReason'ArrayStoreException
+            :DeoptimizationReason'UnreachedCode
+            #_unused
+            :DeoptimizationReason'TypeCheckedInliningViolated
+            #_unused
+            :DeoptimizationReason'OptimizedTypeCheckViolated
+            #_unused
+            :DeoptimizationReason'NotCompiledExceptionHandler
+            :DeoptimizationReason'Unresolved
+            :DeoptimizationReason'JavaSubroutineMismatch
+            :DeoptimizationReason'ArithmeticException
+            :DeoptimizationReason'RuntimeConstraint
+            :DeoptimizationReason'LoopLimitCheck
+            #_unused
+            :DeoptimizationReason'Aliasing
+            #_unused
+            :DeoptimizationReason'TransferToInterpreter
+        )
+    )
+)
+
+;;;
  ; Denotes the basic kinds of types including all the Java primitive types,
  ; e.g. {@link JavaKind#Int} for {@code int} and {@link JavaKind#Object} for all object types.
  ; A kind has a single character short name, a Java name, and a set of flags further describing its behavior.
@@ -6562,20 +6623,23 @@ ZeroExtendNode'new-4
 ;;;
  ; Provides memory access operations for the VM.
  ;;
-(value-ns MemoryReflection
+(value-ns MemoryReflection
     ;;;
      ; Offset of injected {@code java.lang.Class::oop_size} field.
      ;;
     (def- #_"int" MemoryReflection'oopSizeOffset
-        (let [
-            #_"ResolvedJavaType" staticType (§ soon MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, Class)
+        (§ soon let [
+            #_"ResolvedJavaType" staticType (MetaReflection'lookupJavaType-1c Class)
         ]
-            (doseq [#_"ResolvedJavaField" f (§ soon ResolvedJavaType'''getInstanceFields-2 staticType, false)]
-                (when (= (JavaField'''getName-1 f) "oop_size")
-                    (§ return (ResolvedJavaField'''getOffset-1 f))
+            (loop-when [#_"seq" s (seq (ResolvedJavaType'''getInstanceFields-2 staticType, false))] (some? s) => (throw! "could not find injected java.lang.Class::oop_size field")
+                (let [
+                    #_"ResolvedJavaField" f (first s)
+                ]
+                    (when (= (JavaField'''getName-1 f) "oop_size") => (recur (next s))
+                        (ResolvedJavaField'''getOffset-1 f)
+                    )
                 )
             )
-            (§ soon throw! "could not find injected java.lang.Class::oop_size field")
         )
     )
 
@@ -6616,7 +6680,7 @@ ZeroExtendNode'new-4
                     field
                         (when (and (nil? field) (instance? Class object)) => field
                             (let [
-                                #_"HotSpotResolvedObjectTypeImpl" staticFieldsHolder (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, object)
+                                #_"HotSpotResolvedObjectTypeImpl" staticFieldsHolder (MetaReflection'lookupJavaType-1c object)
                             ]
                                 (ß HotSpotResolvedObjectTypeImpl''findStaticFieldWithOffset-3 staticFieldsHolder, displacement, :JavaKind'Object)
                             )
@@ -6655,7 +6719,7 @@ ZeroExtendNode'new-4
     (defn- #_"long" MemoryReflection'asRawPointer-1 [#_"Constant" base]
         (condp satisfies? base
             MetaspaceConstant
-                (.getMetaspacePointer (:metaspaceObject base))
+                (#_"MetaspaceWrapperObject" .getMetaspacePointer (:metaspaceObject base))
             PrimitiveConstant
                 (when (JavaKind'isNumericInteger-1 (JavaConstant'''getJavaKind-1 base)) => (throw! (str base))
                     (JavaConstant'''asLong-1 base)
@@ -6744,7 +6808,7 @@ ZeroExtendNode'new-4
                     :JavaKind'Long    (JavaConstant'forLong-1                rawValue)
                 )
             )
-            (catch NullPointerException _
+            (catch NullPointerException _
                 nil
             )
         )
@@ -6769,11 +6833,11 @@ ZeroExtendNode'new-4
                 )
             MetaspaceConstant
                 (let [
-                    #_"MetaspaceWrapperObject" metaspaceObject (:metaspaceObject base)
+                    #_"MetaspaceWrapperObject" metaspaceObject (:metaspaceObject base)
                 ]
                     (§ soon condp instance? metaspaceObject
                         HotSpotResolvedObjectTypeImpl
-                            (when (= displacement HotSpot'classMirrorHandleOffset)
+                            (when (= displacement HotSpot'classMirrorOffset)
                                 ;; Klass::_java_mirror is valid for all Klass* values
                                 (ObjectConstant'forObject-1 (#_"HotSpotResolvedObjectTypeImpl" .mirror metaspaceObject))
                             )
@@ -6794,7 +6858,7 @@ ZeroExtendNode'new-4
         (let [
             #_"Object" object (if (satisfies? MetaspaceConstant base) (MetaspaceConstant''asResolvedJavaType-1 base) (:object base))
         ]
-            (.getResolvedJavaType (.getCompilerToVM JVMCI'runtime), object, displacement, compressed?)
+            (#_"CompilerToVM" .getResolvedJavaType (#_"HotSpotJVMCIRuntime" .getCompilerToVM JVMCI'runtime), object, displacement, compressed?)
         )
     )
 
@@ -6820,13 +6884,137 @@ ZeroExtendNode'new-4
 )
 
 ;;;
+ ; Provides access to the metadata of a class typically provided in a class file.
+ ;;
+(value-ns MetaReflection
+    (defn- #_"int" MetaReflection'intMaskRight-1 [#_"int" n]
+        (if (= n 32) -1 (dec (<< 1 n)))
+    )
+
+    (defn- #_"int" MetaReflection'convertDeoptAction-1 [#_"DeoptimizationAction" action]
+        (case action
+            :DeoptimizationAction'None                     HotSpot'deoptActionNone
+            :DeoptimizationAction'RecompileIfTooManyDeopts HotSpot'deoptActionMaybeRecompile
+            :DeoptimizationAction'InvalidateReprofile      HotSpot'deoptActionReinterpret
+            :DeoptimizationAction'InvalidateRecompile      HotSpot'deoptActionMakeNotEntrant
+            :DeoptimizationAction'InvalidateStopCompiling  HotSpot'deoptActionMakeNotCompilable
+        )
+    )
+
+    (defn- #_"DeoptimizationAction" MetaReflection'convertDeoptAction-1 [#_"int" action]
+        (case action
+            HotSpot'deoptActionNone              :DeoptimizationAction'None
+            HotSpot'deoptActionMaybeRecompile    :DeoptimizationAction'RecompileIfTooManyDeopts
+            HotSpot'deoptActionReinterpret       :DeoptimizationAction'InvalidateReprofile
+            HotSpot'deoptActionMakeNotEntrant    :DeoptimizationAction'InvalidateRecompile
+            HotSpot'deoptActionMakeNotCompilable :DeoptimizationAction'InvalidateStopCompiling
+        )
+    )
+
+    (defn- #_"int" MetaReflection'convertDeoptReason-1 [#_"DeoptimizationReason" reason]
+        (case reason
+            :DeoptimizationReason'None                        HotSpot'deoptReasonNone
+            :DeoptimizationReason'NullCheckException          HotSpot'deoptReasonNullCheck
+            :DeoptimizationReason'BoundsCheckException        HotSpot'deoptReasonRangeCheck
+            :DeoptimizationReason'ClassCastException          HotSpot'deoptReasonClassCheck
+            :DeoptimizationReason'ArrayStoreException         HotSpot'deoptReasonArrayCheck
+            :DeoptimizationReason'UnreachedCode               HotSpot'deoptReasonUnreached0
+            :DeoptimizationReason'TypeCheckedInliningViolated HotSpot'deoptReasonTypeCheckInlining
+            :DeoptimizationReason'OptimizedTypeCheckViolated  HotSpot'deoptReasonOptimizedTypeCheck
+            :DeoptimizationReason'NotCompiledExceptionHandler HotSpot'deoptReasonNotCompiledExceptionHandler
+            :DeoptimizationReason'Unresolved                  HotSpot'deoptReasonUnresolved
+            :DeoptimizationReason'JavaSubroutineMismatch      HotSpot'deoptReasonJsrMismatch
+            :DeoptimizationReason'ArithmeticException         HotSpot'deoptReasonDiv0Check
+            :DeoptimizationReason'RuntimeConstraint           HotSpot'deoptReasonConstraint
+            :DeoptimizationReason'LoopLimitCheck              HotSpot'deoptReasonLoopLimitCheck
+            :DeoptimizationReason'Aliasing                    HotSpot'deoptReasonAliasing
+            :DeoptimizationReason'TransferToInterpreter       HotSpot'deoptReasonTransferToInterpreter
+        )
+    )
+
+    (defn- #_"DeoptimizationReason" MetaReflection'convertDeoptReason-1 [#_"int" reason]
+        (case reason
+            HotSpot'deoptReasonNone                        :DeoptimizationReason'None
+            HotSpot'deoptReasonNullCheck                   :DeoptimizationReason'NullCheckException
+            HotSpot'deoptReasonRangeCheck                  :DeoptimizationReason'BoundsCheckException
+            HotSpot'deoptReasonClassCheck                  :DeoptimizationReason'ClassCastException
+            HotSpot'deoptReasonArrayCheck                  :DeoptimizationReason'ArrayStoreException
+            HotSpot'deoptReasonUnreached0                  :DeoptimizationReason'UnreachedCode
+            HotSpot'deoptReasonTypeCheckInlining           :DeoptimizationReason'TypeCheckedInliningViolated
+            HotSpot'deoptReasonOptimizedTypeCheck          :DeoptimizationReason'OptimizedTypeCheckViolated
+            HotSpot'deoptReasonNotCompiledExceptionHandler :DeoptimizationReason'NotCompiledExceptionHandler
+            HotSpot'deoptReasonUnresolved                  :DeoptimizationReason'Unresolved
+            HotSpot'deoptReasonJsrMismatch                 :DeoptimizationReason'JavaSubroutineMismatch
+            HotSpot'deoptReasonDiv0Check                   :DeoptimizationReason'ArithmeticException
+            HotSpot'deoptReasonConstraint                  :DeoptimizationReason'RuntimeConstraint
+            HotSpot'deoptReasonLoopLimitCheck              :DeoptimizationReason'LoopLimitCheck
+            HotSpot'deoptReasonAliasing                    :DeoptimizationReason'Aliasing
+            HotSpot'deoptReasonTransferToInterpreter       :DeoptimizationReason'TransferToInterpreter
+        )
+    )
+
+    ;;;
+     ; Encodes a deoptimization action and a deoptimization reason in an integer value.
+     ;;
+    (defn #_"JavaConstant" MetaReflection'encodeDeoptActionAndReason-2 [#_"DeoptimizationAction" action, #_"DeoptimizationReason" reason]
+        (let [
+            #_"int" actionValue (MetaReflection'convertDeoptAction-1 action)
+            #_"int" reasonValue (MetaReflection'convertDeoptReason-1 reason)
+        ]
+            (JavaConstant'forInt-1 (bit-not (bit-or (<< reasonValue HotSpot'deoptimizationReasonShift) (<< actionValue HotSpot'deoptimizationActionShift))))
+        )
+    )
+
+    (defn #_"DeoptimizationReason" MetaReflection'decodeDeoptReason-1 [#_"JavaConstant" constant]
+        (MetaReflection'convertDeoptReason-1
+            (bit-and (>> (bit-not (JavaConstant'''asInt-1 constant)) HotSpot'deoptimizationReasonShift) (MetaReflection'intMaskRight-1 HotSpot'deoptimizationReasonBits))
+        )
+    )
+
+    (defn #_"DeoptimizationAction" MetaReflection'decodeDeoptAction-1 [#_"JavaConstant" constant]
+        (MetaReflection'convertDeoptAction-1
+            (bit-and (>> (bit-not (JavaConstant'''asInt-1 constant)) HotSpot'deoptimizationActionShift) (MetaReflection'intMaskRight-1 HotSpot'deoptimizationActionBits))
+        )
+    )
+
+    ;;;
+     ; Returns the resolved Java type representing a given Java class.
+     ;;
+    (defn #_"ResolvedJavaType" MetaReflection'lookupJavaType-1c [#_"Class" class]
+        (when (some? class) => (throw! "class is nil")
+            (#_"HotSpotJVMCIRuntime" .fromClass JVMCI'runtime, class)
+        )
+    )
+
+    ;;;
+     ; Returns the resolved Java type of the given {@link JavaConstant} object.
+     ;
+     ; @return {@code nil} if {@code constant.isNull() || !constant.kind.isObject()}
+     ;;
+    (defn #_"ResolvedJavaType" MetaReflection'lookupJavaType-1j [#_"JavaConstant" constant]
+        (when (and (not (JavaConstant'''isNull-1 constant)) (satisfies? ObjectConstant constant))
+            (ObjectConstant''getType-1 constant)
+        )
+    )
+
+    ;;;
+     ; Provides the {@link ResolvedJavaMethod} for a {@link Method} or {@link Constructor} obtained via reflection.
+     ;;
+    (defn #_"ResolvedJavaMethod" MetaReflection'lookupJavaMethod-1 [#_"Executable" executable]
+        (when (some? executable) => (throw! "executable is nil")
+            (#_"CompilerToVM" .asResolvedJavaMethod (#_"HotSpotJVMCIRuntime" .getCompilerToVM JVMCI'runtime), executable)
+        )
+    )
+)
+
+;;;
  ; Reflection operations on values represented as {@linkplain JavaConstant constants}. All methods in this interface
  ; require the VM to access the actual object encapsulated in {@link JavaKind#Object object} constants. This access
  ; is not always possible, depending on kind of VM and the state that the VM is in. Therefore, all methods can return
  ; {@code nil} at any time, to indicate that the result is not available at this point. The caller is responsible to
  ; check for {@code nil} results and handle them properly, e.g. not perform an optimization.
  ;;
-(value-ns ConstantReflection
+(value-ns ConstantReflection
     ;;;
      ; Compares two constants for equality. The equality relationship is symmetric. Returns {@link Boolean#TRUE true}
      ; if the two constants represent the same run time value, {@link Boolean#FALSE false} if they are different.
@@ -6915,12 +7103,12 @@ ZeroExtendNode'new-4
                     #_"Object" object (:object constant)
                 ]
                     (when (instance? Class object)
-                        (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, object)
+                        (MetaReflection'lookupJavaType-1c object)
                     )
                 )
             MetaspaceConstant
                 (let [
-                    #_"MetaspaceWrapperObject" object (:metaspaceObject constant)
+                    #_"MetaspaceWrapperObject" object (:metaspaceObject constant)
                 ]
                     (when (§ soon instance? HotSpotResolvedObjectTypeImpl object)
                         object
@@ -7641,8 +7829,7 @@ ZeroExtendNode'new-4
     (def #_"HotSpotJVMCIRuntime" JVMCI'runtime (HotSpotJVMCIRuntime/runtime))
     (def #_"JVMCIBackend"        JVMCI'backend (#_"HotSpotJVMCIRuntime" .getHostJVMCIBackend JVMCI'runtime))
 
-    (def #_"CodeCacheProvider"  HotSpot'codeCache  (#_"JVMCIBackend" .getCodeCache  JVMCI'backend))
-    (def #_"MetaAccessProvider" HotSpot'metaAccess (#_"JVMCIBackend" .getMetaAccess JVMCI'backend))
+    (def #_"CodeCacheProvider" HotSpot'codeCache (#_"JVMCIBackend" .getCodeCache JVMCI'backend))
 
     (def #_"HotSpotVMConfigAccess" HotSpot'config (HotSpotVMConfigAccess. (#_"HotSpotJVMCIRuntime" .getConfigStore JVMCI'runtime)))
 
@@ -7807,8 +7994,36 @@ ZeroExtendNode'new-4
     (def #_"int" HotSpot'cardTableAddressMark          (.getConstant HotSpot'config, "CodeInstaller::CARD_TABLE_ADDRESS",             Integer))
     (def #_"int" HotSpot'logOfHeapRegionGrainBytesMark (.getConstant HotSpot'config, "CodeInstaller::LOG_OF_HEAP_REGION_GRAIN_BYTES", Integer))
 
-    (def #_"boolean" HotSpot'useCountLeadingZerosInstruction  (.getFlag HotSpot'config, "UseCountLeadingZerosInstruction", Boolean))
+    (def #_"boolean" HotSpot'useCountLeadingZerosInstruction  (.getFlag HotSpot'config, "UseCountLeadingZerosInstruction",  Boolean))
     (def #_"boolean" HotSpot'useCountTrailingZerosInstruction (.getFlag HotSpot'config, "UseCountTrailingZerosInstruction", Boolean))
+
+    (def #_"int" HotSpot'deoptReasonNone                        (.getConstant HotSpot'config, "Deoptimization::Reason_none",                           Integer))
+    (def #_"int" HotSpot'deoptReasonNullCheck                   (.getConstant HotSpot'config, "Deoptimization::Reason_null_check",                     Integer))
+    (def #_"int" HotSpot'deoptReasonRangeCheck                  (.getConstant HotSpot'config, "Deoptimization::Reason_range_check",                    Integer))
+    (def #_"int" HotSpot'deoptReasonClassCheck                  (.getConstant HotSpot'config, "Deoptimization::Reason_class_check",                    Integer))
+    (def #_"int" HotSpot'deoptReasonArrayCheck                  (.getConstant HotSpot'config, "Deoptimization::Reason_array_check",                    Integer))
+    (def #_"int" HotSpot'deoptReasonUnreached0                  (.getConstant HotSpot'config, "Deoptimization::Reason_unreached0",                     Integer))
+    (def #_"int" HotSpot'deoptReasonTypeCheckInlining           (.getConstant HotSpot'config, "Deoptimization::Reason_type_checked_inlining",          Integer))
+    (def #_"int" HotSpot'deoptReasonOptimizedTypeCheck          (.getConstant HotSpot'config, "Deoptimization::Reason_optimized_type_check",           Integer))
+    (def #_"int" HotSpot'deoptReasonNotCompiledExceptionHandler (.getConstant HotSpot'config, "Deoptimization::Reason_not_compiled_exception_handler", Integer))
+    (def #_"int" HotSpot'deoptReasonUnresolved                  (.getConstant HotSpot'config, "Deoptimization::Reason_unresolved",                     Integer))
+    (def #_"int" HotSpot'deoptReasonJsrMismatch                 (.getConstant HotSpot'config, "Deoptimization::Reason_jsr_mismatch",                   Integer))
+    (def #_"int" HotSpot'deoptReasonDiv0Check                   (.getConstant HotSpot'config, "Deoptimization::Reason_div0_check",                     Integer))
+    (def #_"int" HotSpot'deoptReasonConstraint                  (.getConstant HotSpot'config, "Deoptimization::Reason_constraint",                     Integer))
+    (def #_"int" HotSpot'deoptReasonLoopLimitCheck              (.getConstant HotSpot'config, "Deoptimization::Reason_loop_limit_check",               Integer))
+    (def #_"int" HotSpot'deoptReasonAliasing                    (.getConstant HotSpot'config, "Deoptimization::Reason_aliasing",                       Integer))
+    (def #_"int" HotSpot'deoptReasonTransferToInterpreter       (.getConstant HotSpot'config, "Deoptimization::Reason_transfer_to_interpreter",        Integer))
+
+    (def #_"int" HotSpot'deoptActionNone              (.getConstant HotSpot'config, "Deoptimization::Action_none",                Integer))
+    (def #_"int" HotSpot'deoptActionMaybeRecompile    (.getConstant HotSpot'config, "Deoptimization::Action_maybe_recompile",     Integer))
+    (def #_"int" HotSpot'deoptActionReinterpret       (.getConstant HotSpot'config, "Deoptimization::Action_reinterpret",         Integer))
+    (def #_"int" HotSpot'deoptActionMakeNotEntrant    (.getConstant HotSpot'config, "Deoptimization::Action_make_not_entrant",    Integer))
+    (def #_"int" HotSpot'deoptActionMakeNotCompilable (.getConstant HotSpot'config, "Deoptimization::Action_make_not_compilable", Integer))
+
+    (def #_"int" HotSpot'deoptimizationActionBits  (.getConstant HotSpot'config, "Deoptimization::_action_bits",  Integer))
+    (def #_"int" HotSpot'deoptimizationReasonBits  (.getConstant HotSpot'config, "Deoptimization::_reason_bits",  Integer))
+    (def #_"int" HotSpot'deoptimizationActionShift (.getConstant HotSpot'config, "Deoptimization::_action_shift", Integer))
+    (def #_"int" HotSpot'deoptimizationReasonShift (.getConstant HotSpot'config, "Deoptimization::_reason_shift", Integer))
 
     (defn- #_"?" peep [#_"Class" class #_"String" field] (let [#_"Field" f (.getDeclaredField class, field)] (.setAccessible f, true) (.get f, class)))
 
@@ -8863,8 +9078,8 @@ ZeroExtendNode'new-4
  ; Implements the logic that decides whether a field read should be constant folded.
  ;;
 (value-ns ConstantFields
-    (def- #_"ResolvedJavaType" ConstantFields'hotSpotType   (§ soon MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, (ß HotSpot)))
-    (def- #_"ResolvedJavaType" ConstantFields'nodeClassType (§ soon MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, NodeClass'iface))
+    (def- #_"ResolvedJavaType" ConstantFields'hotSpotType   (§ soon MetaReflection'lookupJavaType-1c (ß HotSpot)))
+    (def- #_"ResolvedJavaType" ConstantFields'nodeClassType (§ soon MetaReflection'lookupJavaType-1c NodeClass'iface))
 
     (defn #_"boolean" ConstantFields'isStableField-1 [#_"ResolvedJavaField" field]
         (and HotSpot'foldStableValues
@@ -9296,7 +9511,7 @@ ZeroExtendNode'new-4
                                     ;; slow-path runtime-call
                                     (StubForeignCallNode'monitorenter-4 ForeignCallDescriptor'MONITORENTER, thread, object, lock)
                                     (when (some? (ReplacementsUtil'clearPendingException-1 thread))
-                                        (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
+                                        (DeoptimizeCallerNode'deopt-2 :DeoptimizationAction'None, :DeoptimizationReason'RuntimeConstraint)
                                     )
                                     true
                                 )
@@ -9406,7 +9621,7 @@ ZeroExtendNode'new-4
                     ]
                         (StubForeignCallNode'monitorenter-4 ForeignCallDescriptor'MONITORENTER, thread, object, lock)
                         (when (some? (ReplacementsUtil'clearPendingException-1 thread))
-                            (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
+                            (DeoptimizeCallerNode'deopt-2 :DeoptimizationAction'None, :DeoptimizationReason'RuntimeConstraint)
                         )
                     )
                 )
@@ -9419,14 +9634,14 @@ ZeroExtendNode'new-4
      ; Calls straight out to the monitorenter stub.
      ;;
     (§ snippet! #_"void" #_"MonitorSnippets" "monitorenterStub" [#_"Object" object, #_"int" lockDepth]
-        (when (some? object) => (DeoptimizeNode'deopt-2 DeoptimizationAction/InvalidateReprofile, DeoptimizationReason/NullCheckException)
+        (when (some? object) => (DeoptimizeNode'deopt-2 :DeoptimizationAction'InvalidateReprofile, :DeoptimizationReason'NullCheckException)
             (let [
                 #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
             ]
                 ;; BeginLockScope nodes do not read from object, so a use of object cannot float about the nil-check above.
                 (StubForeignCallNode'monitorenter-4 ForeignCallDescriptor'MONITORENTER, thread, object, (BeginLockScopeNode'beginLockScope-1 lockDepth))
                 (when (some? (ReplacementsUtil'clearPendingException-1 thread))
-                    (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
+                    (DeoptimizeCallerNode'deopt-2 :DeoptimizationAction'None, :DeoptimizationReason'RuntimeConstraint)
                 )
             )
         )
@@ -9471,7 +9686,7 @@ ZeroExtendNode'new-4
                     (do
                         (StubForeignCallNode'monitorexit-4 ForeignCallDescriptor'MONITOREXIT, thread, object, lock)
                         (when (some? (ReplacementsUtil'clearPendingException-1 thread))
-                            (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
+                            (DeoptimizeCallerNode'deopt-2 :DeoptimizationAction'None, :DeoptimizationReason'RuntimeConstraint)
                         )
                     )
                 )
@@ -9504,7 +9719,7 @@ ZeroExtendNode'new-4
                                 ;; the object's mark word was not pointing to the displaced header
                                 (StubForeignCallNode'monitorexit-4 ForeignCallDescriptor'MONITOREXIT, thread, object, lock)
                                 (when (some? (ReplacementsUtil'clearPendingException-1 thread))
-                                    (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
+                                    (DeoptimizeCallerNode'deopt-2 :DeoptimizationAction'None, :DeoptimizationReason'RuntimeConstraint)
                                 )
                             )
                         )
@@ -9526,7 +9741,7 @@ ZeroExtendNode'new-4
         ]
             (StubForeignCallNode'monitorexit-4 ForeignCallDescriptor'MONITOREXIT, thread, object, lock)
             (when (some? (ReplacementsUtil'clearPendingException-1 thread))
-                (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
+                (DeoptimizeCallerNode'deopt-2 :DeoptimizationAction'None, :DeoptimizationReason'RuntimeConstraint)
             )
             (EndLockScopeNode'endLockScope-0)
         )
@@ -9653,7 +9868,7 @@ ZeroExtendNode'new-4
                             (StubForeignCallNode'newInstance-3 ForeignCallDescriptor'NEW_INSTANCE, thread, hub)
                             (when (some? (ReplacementsUtil'clearPendingException-1 thread))
                                 (ReplacementsUtil'getAndClearObjectResult-1 thread)
-                                (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
+                                (DeoptimizeCallerNode'deopt-2 :DeoptimizationAction'None, :DeoptimizationReason'RuntimeConstraint)
                             )
                             (ReplacementsUtil'getAndClearObjectResult-1 thread)
                         )
@@ -9723,7 +9938,7 @@ ZeroExtendNode'new-4
                             (StubForeignCallNode'newArray-4 ForeignCallDescriptor'NEW_ARRAY, thread, hub, length)
                             (when (some? (ReplacementsUtil'clearPendingException-1 thread))
                                 (ReplacementsUtil'getAndClearObjectResult-1 thread)
-                                (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
+                                (DeoptimizeCallerNode'deopt-2 :DeoptimizationAction'None, :DeoptimizationReason'RuntimeConstraint)
                             )
                             (ReplacementsUtil'getAndClearObjectResult-1 thread)
                         )
@@ -9849,7 +10064,7 @@ ZeroExtendNode'new-4
                                 (do
                                     (StubForeignCallNode'g1PreBarrier-3 ForeignCallDescriptor'G1WBPRECALL, thread, (Word''toObject-1 previousOop))
                                     (when (some? (ReplacementsUtil'clearPendingException-1 thread))
-                                        (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
+                                        (DeoptimizeCallerNode'deopt-2 :DeoptimizationAction'None, :DeoptimizationReason'RuntimeConstraint)
                                     )
                                 )
                             )
@@ -9910,7 +10125,7 @@ ZeroExtendNode'new-4
                                         (do
                                             (StubForeignCallNode'g1PostBarrier-3 ForeignCallDescriptor'G1WBPOSTCALL, thread, cardAddress)
                                             (when (some? (ReplacementsUtil'clearPendingException-1 thread))
-                                                (DeoptimizeCallerNode'deopt-2 DeoptimizationAction/None, DeoptimizationReason/RuntimeConstraint)
+                                                (DeoptimizeCallerNode'deopt-2 :DeoptimizationAction'None, :DeoptimizationReason'RuntimeConstraint)
                                             )
                                         )
                                     )
@@ -9940,8 +10155,8 @@ ZeroExtendNode'new-4
 )
 
 (value-ns WordTypes
-    (def #_"ResolvedJavaType" WordTypes'word         (§ soon MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, Word'iface))
-    (def #_"ResolvedJavaType" WordTypes'klassPointer (§ soon MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, #_"KlassPointer" Word'iface))
+    (def #_"ResolvedJavaType" WordTypes'word         (§ soon MetaReflection'lookupJavaType-1c Word'iface))
+    (def #_"ResolvedJavaType" WordTypes'klassPointer (§ soon MetaReflection'lookupJavaType-1c #_"KlassPointer" Word'iface))
 
     ;;;
      ; Determines if a given type is a word type.
@@ -11429,7 +11644,7 @@ ZeroExtendNode'new-4
     (defn #_"ResolvedJavaType" StampTool'objectTypeOrNull-1 [#_"Stamp" stamp]
         (when (and (satisfies? AbstractObjectStamp stamp) (Stamp'''hasValues-1 stamp))
             (or (:type stamp)
-                (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, Object)
+                (MetaReflection'lookupJavaType-1c Object)
             )
         )
     )
@@ -12536,7 +12751,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"BarrierType" Lowerer'fieldLoadBarrierType-1 [#_"ResolvedJavaField" field]
-        (if (and HotSpot'useG1GC (= (JavaField''getJavaKind-1 field) :JavaKind'Object) (= (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, Reference) (JavaField'''getDeclaringType-1 field)) (= (JavaField'''getName-1 field) "referent"))
+        (if (and HotSpot'useG1GC (= (JavaField''getJavaKind-1 field) :JavaKind'Object) (= (MetaReflection'lookupJavaType-1c Reference) (JavaField'''getDeclaringType-1 field)) (= (JavaField'''getName-1 field) "referent"))
             :BarrierType'PRECISE
             :BarrierType'NONE
         )
@@ -12665,14 +12880,14 @@ ZeroExtendNode'new-4
             #_"LogicNode" boundsCheck (IntegerBelowNode'create-2 (AccessIndexedNode''index-1 node), arrayLength)
         ]
             (when-not (LogicNode''isTautology-1 boundsCheck)
-                (LoweringTool''createGuard-5 lowerer, node, (Graph''addOrUniqueWithInputs-2 (:graph node), boundsCheck), DeoptimizationReason/BoundsCheckException, DeoptimizationAction/InvalidateReprofile)
+                (LoweringTool''createGuard-5 lowerer, node, (Graph''addOrUniqueWithInputs-2 (:graph node), boundsCheck), :DeoptimizationReason'BoundsCheckException, :DeoptimizationAction'InvalidateReprofile)
             )
         )
     )
 
     (defn #_"GuardingNode" Lowerer'createNullCheck-3 [#_"ValueNode" object, #_"FixedNode" before, #_"LoweringTool" lowerer]
         (when-not (StampTool'isPointerNeverNull-1 (:stamp object))
-            (LoweringTool''createGuard-7 lowerer, before, (Graph''add-2 (:graph before), (IsNullNode'create-1 object)), DeoptimizationReason/NullCheckException, DeoptimizationAction/InvalidateReprofile, JavaConstant'NULL_POINTER, true)
+            (LoweringTool''createGuard-7 lowerer, before, (Graph''add-2 (:graph before), (IsNullNode'create-1 object)), :DeoptimizationReason'NullCheckException, :DeoptimizationAction'InvalidateReprofile, JavaConstant'NULL_POINTER, true)
         )
     )
 
@@ -13224,7 +13439,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"SnippetInfo" AbstractTemplates'snippet-3* [#_"Class<Snippets>" declaringClass, #_"String" methodName & #_"LocationIdentity..." privateLocations]
         (let [
-            #_"ResolvedJavaMethod" method (MetaAccessProvider'''lookupJavaMethod-2 HotSpot'metaAccess, (AbstractTemplates'findMethod-3 declaringClass, methodName))
+            #_"ResolvedJavaMethod" method (MetaReflection'lookupJavaMethod-1 (AbstractTemplates'findMethod-3 declaringClass, methodName))
         ]
             (SnippetInfo'new-2 method, privateLocations)
         )
@@ -19485,7 +19700,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"FixedNode" BytecodeParser''createTarget-4 [#_"BytecodeParser" this, #_"double" probability, #_"BciBlock" block, #_"FrameStateBuilder" state]
         (if (BytecodeParser''isNeverExecutedCode-2 this, probability)
-            (Graph''add-2 (:graph this), (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateReprofile, DeoptimizationReason/UnreachedCode))
+            (Graph''add-2 (:graph this), (DeoptimizeNode'new-2 :DeoptimizationAction'InvalidateReprofile, :DeoptimizationReason'UnreachedCode))
             (BytecodeParser''createTarget-3 this, block, state)
         )
     )
@@ -19563,7 +19778,7 @@ ZeroExtendNode'new-4
      ; @param type the unresolved type of the constant
      ;;
     (defn- #_"this" BytecodeParser''handleUnresolvedLoadConstant-2 [#_"BytecodeParser" this, #_"JavaType" type]
-        (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
+        (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 :DeoptimizationAction'InvalidateRecompile, :DeoptimizationReason'Unresolved))
         this
     )
 
@@ -19572,7 +19787,7 @@ ZeroExtendNode'new-4
      ; @param object the object value whose type is being checked against {@code type}
      ;;
     (defn- #_"this" BytecodeParser''handleUnresolvedCheckCast-3 [#_"BytecodeParser" this, #_"JavaType" type, #_"ValueNode" object]
-        (BytecodeParser''append-2 this, (FixedGuardNode'new-3 (Graph''addOrUniqueWithInputs-2 (:graph this), (IsNullNode'create-1 object)), DeoptimizationReason/Unresolved, DeoptimizationAction/InvalidateRecompile))
+        (BytecodeParser''append-2 this, (FixedGuardNode'new-3 (Graph''addOrUniqueWithInputs-2 (:graph this), (IsNullNode'create-1 object)), :DeoptimizationReason'Unresolved, :DeoptimizationAction'InvalidateRecompile))
         (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (ConstantNode'forConstant-2c JavaConstant'NULL_POINTER, (:graph this)))
     )
 
@@ -19583,7 +19798,7 @@ ZeroExtendNode'new-4
     (defn- #_"this" BytecodeParser''handleUnresolvedInstanceOf-3 [#_"BytecodeParser" this, #_"JavaType" type, #_"ValueNode" object]
         (let [
             #_"AbstractBeginNode" successor (Graph''add-2 (:graph this), (BeginNode'new-0))
-            #_"DeoptimizeNode" deopt (Graph''add-2 (:graph this), (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
+            #_"DeoptimizeNode" deopt (Graph''add-2 (:graph this), (DeoptimizeNode'new-2 :DeoptimizationAction'InvalidateRecompile, :DeoptimizationReason'Unresolved))
         ]
             (BytecodeParser''append-2 this, (IfNode'new-4b (Graph''addOrUniqueWithInputs-2 (:graph this), (IsNullNode'create-1 object)), successor, deopt, 1))
             (let [
@@ -19598,7 +19813,7 @@ ZeroExtendNode'new-4
      ; @param type the type being instantiated
      ;;
     (defn- #_"this" BytecodeParser''handleUnresolvedNewInstance-2 [#_"BytecodeParser" this, #_"JavaType" type]
-        (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
+        (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 :DeoptimizationAction'InvalidateRecompile, :DeoptimizationReason'Unresolved))
         this
     )
 
@@ -19607,7 +19822,7 @@ ZeroExtendNode'new-4
      ; @param length the length of the array
      ;;
     (defn- #_"this" BytecodeParser''handleUnresolvedNewObjectArray-3 [#_"BytecodeParser" this, #_"JavaType" type, #_"ValueNode" length]
-        (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
+        (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 :DeoptimizationAction'InvalidateRecompile, :DeoptimizationReason'Unresolved))
         this
     )
 
@@ -19616,7 +19831,7 @@ ZeroExtendNode'new-4
      ; @param receiver the object containing the field or nil if {@code field} is static
      ;;
     (defn- #_"this" BytecodeParser''handleUnresolvedLoadField-3 [#_"BytecodeParser" this, #_"JavaField" field, #_"ValueNode" receiver]
-        (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
+        (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 :DeoptimizationAction'InvalidateRecompile, :DeoptimizationReason'Unresolved))
         this
     )
 
@@ -19626,12 +19841,12 @@ ZeroExtendNode'new-4
      ; @param receiver the object containing the field or nil if {@code field} is static
      ;;
     (defn- #_"this" BytecodeParser''handleUnresolvedStoreField-4 [#_"BytecodeParser" this, #_"JavaField" field, #_"ValueNode" value, #_"ValueNode" receiver]
-        (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
+        (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 :DeoptimizationAction'InvalidateRecompile, :DeoptimizationReason'Unresolved))
         this
     )
 
     (defn- #_"this" BytecodeParser''handleUnresolvedInvoke-3 [#_"BytecodeParser" this, #_"JavaMethod" javaMethod, #_"InvokeKind" invokeKind]
-        (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/Unresolved))
+        (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 :DeoptimizationAction'InvalidateRecompile, :DeoptimizationReason'Unresolved))
         this
     )
 
@@ -19745,7 +19960,7 @@ ZeroExtendNode'new-4
                     #_"ValueNode" receiver (nth args 0)
                     #_"TypeReference" checkedType (TypeReference'createTrusted-1 callingClass)
                     #_"LogicNode" logic (BytecodeParser''genUnique-2 this, (InstanceOfNode'create-2 checkedType, receiver))
-                    #_"FixedGuardNode" fixedGuard (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, DeoptimizationReason/ClassCastException, DeoptimizationAction/None, false))
+                    #_"FixedGuardNode" fixedGuard (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, :DeoptimizationReason'ClassCastException, :DeoptimizationAction'None, false))
                 ]
                     (assoc' args 0 (BytecodeParser''append-2 this, (PiNode'create-3 receiver, (StampFactory'object-2 checkedType, true), fixedGuard)))
                 )
@@ -19815,7 +20030,7 @@ ZeroExtendNode'new-4
                     nil
                 (and (not (= invokeKind :InvokeKind'Static)) (ValueNode''isNullConstant-1 (nth args 0)))
                 (do
-                    (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateRecompile, DeoptimizationReason/NullCheckException))
+                    (BytecodeParser''append-2 this, (DeoptimizeNode'new-2 :DeoptimizationAction'InvalidateRecompile, :DeoptimizationReason'NullCheckException))
                     nil
                 )
                 :else
@@ -19924,7 +20139,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"LogicNode" logic (Graph''add-2 (:graph this), (IsNullNode'create-1 value))
                 #_"Stamp" stamp (Stamp'''join-2 (:stamp value), StampFactory'objectNonNullStamp)
-                #_"FixedGuardNode" fixedGuard (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, DeoptimizationReason/NullCheckException, action, true))
+                #_"FixedGuardNode" fixedGuard (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, :DeoptimizationReason'NullCheckException, action, true))
                 #_"ValueNode" nonNullReceiver (Graph''addOrUniqueWithInputs-2 (:graph this), (PiNode'create-3 value, stamp, fixedGuard))
             ]
                 ;; TODO Propogating the non-nil into the frame state would remove subsequent nil-checks on the same value.
@@ -19937,7 +20152,7 @@ ZeroExtendNode'new-4
 
     #_unused
     (defn- #_"ValueNode" BytecodeParser''nullCheckedValue-2 [#_"BytecodeParser" this, #_"ValueNode" value]
-        (BytecodeParser''nullCheckedValue-3 this, value, DeoptimizationAction/InvalidateReprofile)
+        (BytecodeParser''nullCheckedValue-3 this, value, :DeoptimizationAction'InvalidateReprofile)
     )
 
     (defn- #_"ValueNode" BytecodeParser''genLoadField-3 [#_"BytecodeParser" this, #_"ValueNode" receiver, #_"ResolvedJavaField" field]
@@ -20125,7 +20340,7 @@ ZeroExtendNode'new-4
             #_"ConstantNode" returnBciNode (BytecodeParser''getJsrConstant-2 this, retAddress)
             #_"LogicNode" guard (Graph''addOrUniqueWithInputs-2 (:graph this), (IntegerEqualsNode'create-3 nil, local, returnBciNode))
         ]
-            (BytecodeParser''append-2 this, (FixedGuardNode'new-3 guard, DeoptimizationReason/JavaSubroutineMismatch, DeoptimizationAction/InvalidateReprofile))
+            (BytecodeParser''append-2 this, (FixedGuardNode'new-3 guard, :DeoptimizationReason'JavaSubroutineMismatch, :DeoptimizationAction'InvalidateReprofile))
             (when (= (BciBlock''getJsrScope-1 successor) (JsrScope''pop-1 scope)) => (throw! "unstructured control flow (ret leaves more than one scope)")
                 (BytecodeParser''appendGoto-2 this, successor)
             )
@@ -20283,12 +20498,12 @@ ZeroExtendNode'new-4
                     (cond
                         (BytecodeParser''isNeverExecutedCode-2 this, probability)
                             (do
-                                (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, DeoptimizationReason/UnreachedCode, DeoptimizationAction/InvalidateReprofile, true))
+                                (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, :DeoptimizationReason'UnreachedCode, :DeoptimizationAction'InvalidateReprofile, true))
                                 (BytecodeParser''appendGoto-2 this, falseBlock)
                             )
                         (BytecodeParser''isNeverExecutedCode-2 this, (- 1.0 probability))
                             (do
-                                (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, DeoptimizationReason/UnreachedCode, DeoptimizationAction/InvalidateReprofile, false))
+                                (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, :DeoptimizationReason'UnreachedCode, :DeoptimizationAction'InvalidateReprofile, false))
                                 (BytecodeParser''appendGoto-2 this, trueBlock)
                             )
                         :else
@@ -20604,7 +20819,7 @@ ZeroExtendNode'new-4
                                     ]
                                         (if (LogicNode''isTautology-1 logic)
                                             object
-                                            (BytecodeParser''append-2 this, (PiNode'create-3 object, (StampFactory'object-2 checkedType, (:never-nil? (:stamp object))), (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, DeoptimizationReason/ClassCastException, DeoptimizationAction/InvalidateReprofile, false))))
+                                            (BytecodeParser''append-2 this, (PiNode'create-3 object, (StampFactory'object-2 checkedType, (:never-nil? (:stamp object))), (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, :DeoptimizationReason'ClassCastException, :DeoptimizationAction'InvalidateReprofile, false))))
                                         )
                                     )
                             ]
@@ -20696,7 +20911,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" BytecodeParser''genNewPrimitiveArray-2 [#_"BytecodeParser" this, #_"int" typeCode]
         (let [
-            #_"ResolvedJavaType" elementType (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, (BytecodeParser'arrayTypeCodeToClass-1 typeCode))
+            #_"ResolvedJavaType" elementType (MetaReflection'lookupJavaType-1c (BytecodeParser'arrayTypeCodeToClass-1 typeCode))
             #_"ValueNode" length (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Int)
         ]
             (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (BytecodeParser''append-2 this, (NewArrayNode'new-2 elementType, length)))
@@ -22458,7 +22673,7 @@ ZeroExtendNode'new-4
  ; It bypasses all VM parsing and verification of the class file and assumes the class files are well formed.
  ; As such, it should only be used for classes from a trusted source such as the boot class (or module) path.
  ;
- ; A combination of Class#forName(String) and an existing MetaAccessProvider is used to resolve
+ ; A combination of Class#forName(String) and an existing MetaAccessProvider is used to resolve
  ; constant pool references. This opens up the opportunity for linkage errors if the referee is structurally
  ; changed through redefinition (e.g. a referred to method is renamed or deleted). This will result in an
  ; appropriate LinkageError being thrown. The only way to avoid this is to have a completely isolated
@@ -22497,7 +22712,7 @@ ZeroExtendNode'new-4
         (locking this
             (or (get (:classfiles this) c)
                 (let [
-                    #_"ResolvedJavaType" type (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, c)
+                    #_"ResolvedJavaType" type (MetaReflection'lookupJavaType-1c c)
                     #_"InputStream" in (BytecodeProvider'getClassfileAsStream-1 c)
                 ]
                     (when (some? in) => (throw! (str "NoClassDefFoundError: " (#_"Class" .getName c)))
@@ -22675,7 +22890,7 @@ ZeroExtendNode'new-4
 
     (defn #_"ResolvedJavaType" ClassRef''resolve-2 [#_"ClassRef" this, #_"ClassfileConstantPool" cp]
         (when (nil? (:type this))
-            (§ ass! this (assoc this :type (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, (BytecodeProvider''resolveToClass-2 (:context cp), (:value (ClassfileConstantPool''get-3 cp, Utf8'iface, (:nameIndex this)))))))
+            (§ ass! this (assoc this :type (MetaReflection'lookupJavaType-1c (BytecodeProvider''resolveToClass-2 (:context cp), (:value (ClassfileConstantPool''get-3 cp, Utf8'iface, (:nameIndex this)))))))
         )
         (:type this)
     )
@@ -24502,10 +24717,10 @@ ZeroExtendNode'new-4
 
     (defn- #_"DeoptimizationAction" ConditionalEliminationInstance'mergeActions-2 [#_"DeoptimizationAction" a1, #_"DeoptimizationAction" a2]
         (when-not (= a1 a2) => a1
-            (when (or (and (= a1 DeoptimizationAction/InvalidateRecompile) (= a2 DeoptimizationAction/InvalidateReprofile))
-                      (and (= a1 DeoptimizationAction/InvalidateReprofile) (= a2 DeoptimizationAction/InvalidateRecompile))
+            (when (or (and (= a1 :DeoptimizationAction'InvalidateRecompile) (= a2 :DeoptimizationAction'InvalidateReprofile))
+                      (and (= a1 :DeoptimizationAction'InvalidateReprofile) (= a2 :DeoptimizationAction'InvalidateRecompile))
                   )
-                DeoptimizationAction/InvalidateReprofile
+                :DeoptimizationAction'InvalidateReprofile
             )
         )
     )
@@ -26307,7 +26522,7 @@ ZeroExtendNode'new-4
     (defm ConvertDeoptimizeToGuardPhase Phase
         (#_"Graph" Phase'''run-3 [#_"ConvertDeoptimizeToGuardPhase" this, #_"Graph" graph, #_"PhaseContext" context]
             (doseq [#_"DeoptimizeNode" d (Graph''getNodes-2 graph, DeoptimizeNode)]
-                (when-not (= (:action d) DeoptimizationAction/None)
+                (when-not (= (:action d) :DeoptimizationAction'None)
                     (ConvertDeoptimizeToGuardPhase''propagateFixed-3 this, d, d)
                 )
             )
@@ -26471,7 +26686,7 @@ ZeroExtendNode'new-4
                             (Graph''add-2 graph, (IntegerLessThanNode'new-2 (:end this), (if (:oneOff this) (MathUtil'add-3 graph, v1, one) v1)))
                         )
                     )
-                #_"GuardingNode" overflowGuard (Graph''add-2 graph, (GuardNode'new-6 cond, (AbstractBeginNode'prevBegin-1 (LoopEx''entryPoint-1 (:loop this))), DeoptimizationReason/LoopLimitCheck, DeoptimizationAction/InvalidateRecompile, true, JavaConstant'NULL_POINTER))
+                #_"GuardingNode" overflowGuard (Graph''add-2 graph, (GuardNode'new-6 cond, (AbstractBeginNode'prevBegin-1 (LoopEx''entryPoint-1 (:loop this))), :DeoptimizationReason'LoopLimitCheck, :DeoptimizationAction'InvalidateRecompile, true, JavaConstant'NULL_POINTER))
                 _ (§ ass! (LoopEx''loopBegin-1 (:loop this)) (LoopBeginNode''setOverflowGuard-2 (LoopEx''loopBegin-1 (:loop this)), overflowGuard))
             ]
                 overflowGuard
@@ -30099,10 +30314,10 @@ ZeroExtendNode'new-4
 
     (defn- #_"JavaType" ForeignCallLinkage'asJavaType-1 [#_"Class" type]
         (let [
-            #_"ResolvedJavaType" javaType (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, type)
+            #_"ResolvedJavaType" javaType (MetaReflection'lookupJavaType-1c type)
         ]
             (when (WordTypes'isWord-1j javaType) => javaType
-                (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, (JavaKind'toJavaClass-1 :JavaKind'Long))
+                (MetaReflection'lookupJavaType-1c (JavaKind'toJavaClass-1 :JavaKind'Long))
             )
         )
     )
@@ -34803,7 +35018,7 @@ ZeroExtendNode'new-4
 
     (defn #_"this" LIRGenerator''emitDeoptimizeCaller-3 [#_"LIRGenerator" this, #_"DeoptimizationAction" action, #_"DeoptimizationReason" reason]
         (let [
-            #_"Value" actionAndReason (LIRGenerator''emitJavaConstant-2 this, (MetaAccessProvider'''encodeDeoptActionAndReason-4 HotSpot'metaAccess, action, reason, 0))
+            #_"Value" actionAndReason (LIRGenerator''emitJavaConstant-2 this, (MetaReflection'encodeDeoptActionAndReason-2 action, reason))
             #_"Value" nullValue (LIRGenerator''emitConstant-3 this, (ValueKind'reference-1 :WordSize'64bits), JavaConstant'NULL_POINTER)
             this (LIRGenerator''moveDeoptValuesToThread-3 this, actionAndReason, nullValue)
         ]
@@ -45436,25 +45651,22 @@ ZeroExtendNode'new-4
 )
 
 (class-ns DeoptimizeNode [AbstractDeoptimizeNode, ControlSinkNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, LIRLowerable, StaticDeoptimizingNode]
-    (def #_"int" DeoptimizeNode'DEFAULT_DEBUG_ID 0)
-
     (§ intrinsic! #_"void" DeoptimizeNode'deopt-2 [#_"DeoptimizationAction" action, #_"DeoptimizationReason" reason])
 
     #_intrinsifier
     (defn #_"DeoptimizeNode" DeoptimizeNode'new-2 [#_"DeoptimizationAction" action, #_"DeoptimizationReason" reason]
-        (DeoptimizeNode'new-5 action, reason, DeoptimizeNode'DEFAULT_DEBUG_ID, JavaConstant'NULL_POINTER, nil)
+        (DeoptimizeNode'new-4 action, reason, JavaConstant'NULL_POINTER, nil)
     )
 
     (defn #_"DeoptimizeNode" DeoptimizeNode'new-3 [#_"DeoptimizationAction" action, #_"DeoptimizationReason" reason, #_"JavaConstant" speculation]
-        (DeoptimizeNode'new-5 action, reason, DeoptimizeNode'DEFAULT_DEBUG_ID, speculation, nil)
+        (DeoptimizeNode'new-4 action, reason, speculation, nil)
     )
 
-    (defn #_"DeoptimizeNode" DeoptimizeNode'new-5 [#_"DeoptimizationAction" action, #_"DeoptimizationReason" reason, #_"int" debugId, #_"JavaConstant" speculation, #_"FrameState" stateBefore]
+    (defn #_"DeoptimizeNode" DeoptimizeNode'new-4 [#_"DeoptimizationAction" action, #_"DeoptimizationReason" reason, #_"JavaConstant" speculation, #_"FrameState" stateBefore]
         (merge (DeoptimizeNode'class.) (AbstractDeoptimizeNode'new-1 stateBefore)
             (hash-map
                 #_"DeoptimizationAction" :action action
                 #_"DeoptimizationReason" :reason reason
-                #_"int" :debugId debugId
                 #_"JavaConstant" :speculation speculation
             )
         )
@@ -45469,7 +45681,7 @@ ZeroExtendNode'new-4
     (defm DeoptimizeNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"DeoptimizeNode" this, #_"LIRBuilder" builder]
             (let [
-                #_"Value" actionAndReason (LIRGenerator''emitJavaConstant-2 (:gen builder), (MetaAccessProvider'''encodeDeoptActionAndReason-4 HotSpot'metaAccess, (:action this), (:reason this), (:debugId this)))
+                #_"Value" actionAndReason (LIRGenerator''emitJavaConstant-2 (:gen builder), (MetaReflection'encodeDeoptActionAndReason-2 (:action this), (:reason this)))
                 #_"Value" speculationValue (LIRGenerator''emitJavaConstant-2 (:gen builder), (:speculation this))
             ]
                 (update builder :gen LIRGenerator''emitDeoptimize-3 actionAndReason, speculationValue)
@@ -45479,7 +45691,7 @@ ZeroExtendNode'new-4
 
     (defm DeoptimizeNode AbstractDeoptimizeNode
         (#_"ValueNode" AbstractDeoptimizeNode'''getActionAndReason-1 [#_"DeoptimizeNode" this]
-            (ConstantNode'forConstant-2c (MetaAccessProvider'''encodeDeoptActionAndReason-4 HotSpot'metaAccess, (:action this), (:reason this), (:debugId this)), (:graph this))
+            (ConstantNode'forConstant-2c (MetaReflection'encodeDeoptActionAndReason-2 (:action this), (:reason this)), (:graph this))
         )
 
         (#_"ValueNode" AbstractDeoptimizeNode'''getSpeculation-1 [#_"DeoptimizeNode" this]
@@ -45528,7 +45740,7 @@ ZeroExtendNode'new-4
                 (let [
                     #_"JavaConstant" constant (ValueNode''asJavaConstant-1 (:actionAndReason this))
                 ]
-                    (DeoptimizeNode'new-5 (MetaAccessProvider'''decodeDeoptAction-2 HotSpot'metaAccess, constant), (MetaAccessProvider'''decodeDeoptReason-2 HotSpot'metaAccess, constant), (MetaAccessProvider'''decodeDebugId-2 HotSpot'metaAccess, constant), (ValueNode''asJavaConstant-1 (:speculation this)), (:stateBefore this))
+                    (DeoptimizeNode'new-4 (MetaReflection'decodeDeoptAction-1 constant), (MetaReflection'decodeDeoptReason-1 constant), (ValueNode''asJavaConstant-1 (:speculation this)), (:stateBefore this))
                 )
             )
         )
@@ -46774,7 +46986,7 @@ ZeroExtendNode'new-4
                 #_"FixedWithNextNode" previous (:lastFixedNode lowerer)
                 #_"FixedNode" _next (:next previous)
                 _ (§ ass! previous (FixedWithNextNode''setNext-2 previous, nil))
-                #_"DeoptimizeNode" deopt (Graph''add-2 (:graph node), (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateReprofile, DeoptimizationReason/ArithmeticException))
+                #_"DeoptimizeNode" deopt (Graph''add-2 (:graph node), (DeoptimizeNode'new-2 :DeoptimizationAction'InvalidateReprofile, :DeoptimizationReason'ArithmeticException))
                 #_"AbstractBeginNode" normalBegin (Graph''add-2 (:graph node), (BeginNode'new-0))
                 _ (§ ass! normalBegin (FixedWithNextNode''setNext-2 normalBegin, _next))
                 #_"IntegerExactArithmeticSplitNode" split (IntegerExactArithmeticNode'''createSplit-3 node, normalBegin, (BeginNode'begin-1 deopt))
@@ -47213,7 +47425,7 @@ ZeroExtendNode'new-4
                                                 ;; We remove the array load, but we still need to preserve exception semantics by keeping
                                                 ;; the bounds check. Fortunately the array length is a constant.
                                                 #_"LogicNode" boundsCheck (Graph''add-2 (:graph this), (IntegerBelowNode'new-2 newValue, (ConstantNode'forInt-2 arrayLength, (:graph this))))
-                                                _ (Graph''addBeforeFixed-3 (:graph this), this, (Graph''add-2 (:graph this), (FixedGuardNode'new-3 boundsCheck, DeoptimizationReason/BoundsCheckException, DeoptimizationAction/InvalidateReprofile)))
+                                                _ (Graph''addBeforeFixed-3 (:graph this), this, (Graph''add-2 (:graph this), (FixedGuardNode'new-3 boundsCheck, :DeoptimizationReason'BoundsCheckException, :DeoptimizationAction'InvalidateReprofile)))
                                                 ;; Build the low-level representation of the new switch keys and replace ourself with a new node.
                                                 _ (§ ass! this (IntegerSwitchNode''doReplace-6 this, newValue, newKeyDatas, newSuccessors, newDefaultSuccessor, newDefaultProbability))
                                                 ;; The array load is now unnecessary.
@@ -48791,7 +49003,7 @@ ZeroExtendNode'new-4
             memoryWrite (GuardedNode'''setGuard-2 memoryWrite, boundsCheck)
             _
                 (when (some? logic)
-                    (LoweringTool''createGuard-5 lowerer, this, logic, DeoptimizationReason/ArrayStoreException, DeoptimizationAction/InvalidateReprofile)
+                    (LoweringTool''createGuard-5 lowerer, this, logic, :DeoptimizationReason'ArrayStoreException, :DeoptimizationAction'InvalidateReprofile)
                 )
             memoryWrite (StateSplit'''setStateAfter-2 memoryWrite, (:stateAfter this))
         ]
@@ -49110,7 +49322,7 @@ ZeroExtendNode'new-4
                 )
             )
             (if (and (some? self) (not (ResolvedJavaField''isStatic-1 field)) (ValueNode''isNullConstant-1 forObject))
-                (DeoptimizeNode'new-2 DeoptimizationAction/InvalidateReprofile, DeoptimizationReason/NullCheckException)
+                (DeoptimizeNode'new-2 :DeoptimizationAction'InvalidateReprofile, :DeoptimizationReason'NullCheckException)
                 (or self (LoadFieldNode'new-3 stamp, forObject, field))
             )
         )
@@ -50037,7 +50249,7 @@ ZeroExtendNode'new-4
     (defm FixedGuardNode Lowerable
         (#_"this" Lowerable'''lower-2 [#_"FixedGuardNode" this, #_"LoweringTool" lowerer]
             (if (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph this)))
-                (when-not (= (:action this) DeoptimizationAction/None) => this
+                (when-not (= (:action this) :DeoptimizationAction'None) => this
                     (let [
                         #_"ValueNode" guard (LoweringTool''createGuard-7 lowerer, this, (:logic this), (:reason this), (:action this), (:speculation this), (:negated? this))
                         this (Node''replaceAtUsages-2 this, guard)
@@ -50159,7 +50371,7 @@ ZeroExtendNode'new-4
                             (let [
                                 #_"LogicNode" lengthNegativeCondition (CompareNode'createCompareNode-4g (:graph this), CanonicalCondition'LT, (ArrayLengthProvider'''length-1 this), (ConstantNode'forInt-2 0, (:graph this)))
                                 ;; we do not have a non-deopting path for that at the moment so action is None.
-                                #_"FixedGuardNode" guard (Graph''add-2 (:graph this), (FixedGuardNode'new-4 lengthNegativeCondition, DeoptimizationReason/RuntimeConstraint, DeoptimizationAction/None, true))
+                                #_"FixedGuardNode" guard (Graph''add-2 (:graph this), (FixedGuardNode'new-4 lengthNegativeCondition, :DeoptimizationReason'RuntimeConstraint, :DeoptimizationAction'None, true))
                             ]
                                 (update this :graph Graph''replaceFixedWithFixed-3 this, guard)
                             )
@@ -50198,7 +50410,7 @@ ZeroExtendNode'new-4
     (defm NewInstanceNode Virtualizable
         (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"NewInstanceNode" this, #_"VirtualizerTool" tool]
             ;; Reference objects can escape into their ReferenceQueue at any safepoint, therefore they're excluded from escape analysis.
-            (when-not (ResolvedJavaType'''isAssignableFrom-2 (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, Reference), (:instanceClass this)) => tool
+            (when-not (ResolvedJavaType'''isAssignableFrom-2 (MetaReflection'lookupJavaType-1c Reference), (:instanceClass this)) => tool
                 (let [
                     #_"VirtualInstanceNode" virtualObject (NewInstanceNode''createVirtualInstanceNode-2 this, true)
                     #_"[ValueNode]" state (vec (map #(NewInstanceNode''defaultFieldValue-2 this, %) (VirtualInstanceNode''getFields-1 virtualObject)))
@@ -54952,7 +55164,7 @@ ZeroExtendNode'new-4
  ;;
 (class-ns HubGetClassNode [FloatingNode, ValueNode, Node, Lowerable, Canonicalizable, ConvertNode]
     (defn #_"HubGetClassNode" HubGetClassNode'new-1 [#_"ValueNode" hub]
-        (merge (HubGetClassNode'class.) (FloatingNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'create-1 (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, Class))))
+        (merge (HubGetClassNode'class.) (FloatingNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'create-1 (MetaReflection'lookupJavaType-1c Class))))
             (hash-map
                 ; @Input
                 #_"ValueNode" :hub hub
@@ -55601,7 +55813,7 @@ ZeroExtendNode'new-4
                                 (let [
                                     #_"ResolvedJavaType" type (VirtualObjectNode'''type-1 xVirtual)
                                 ]
-                                    (when (and (= type (VirtualObjectNode'''type-1 yVirtual)) (any = type (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, Integer) (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, Long))) => tool
+                                    (when (and (= type (VirtualObjectNode'''type-1 yVirtual)) (any = type (MetaReflection'lookupJavaType-1c Integer) (MetaReflection'lookupJavaType-1c Long))) => tool
                                         ;; both are virtual without identity: check contents
                                         (let [
                                             #_"IntegerEqualsNode" equals (IntegerEqualsNode'new-2 (VirtualizerTool'''getEntry-3 tool, xVirtual, 0), (VirtualizerTool'''getEntry-3 tool, yVirtual, 0))
@@ -61275,7 +61487,7 @@ ZeroExtendNode'new-4
         (let [
             #_"Graph" graph (:graph guard)
             #_"AbstractBeginNode" fastPath (Graph''add-2 graph, (BeginNode'new-0))
-            #_"DeoptimizeNode" deopt (Graph''add-2 graph, (DeoptimizeNode'new-5 (:action guard), (:reason guard), DeoptimizeNode'DEFAULT_DEBUG_ID, (:speculation guard), nil))
+            #_"DeoptimizeNode" deopt (Graph''add-2 graph, (DeoptimizeNode'new-4 (:action guard), (:reason guard), (:speculation guard), nil))
             #_"AbstractBeginNode" deoptBranch (BeginNode'begin-1 deopt)
             _ (LowerGuards''insertLoopExits-2 this, deopt)
             [#_"AbstractBeginNode" then #_"AbstractBeginNode" else] (if (:negated? guard) [deoptBranch fastPath] [fastPath deoptBranch])
@@ -62125,7 +62337,7 @@ ZeroExtendNode'new-4
 
         (#_"Stamp" Stamp'''constant-2 [#_"AbstractObjectStamp" this, #_"Constant" c]
             (let [
-                #_"ResolvedJavaType" constType (when-not (JavaConstant'''isNull-1 c) (MetaAccessProvider'''lookupJavaType-2j HotSpot'metaAccess, c))
+                #_"ResolvedJavaType" constType (when-not (JavaConstant'''isNull-1 c) (MetaReflection'lookupJavaType-1j c))
             ]
                 (AbstractObjectStamp'''copyWith-5 this, constType, (JavaConstant''isNonNull-1 c), (JavaConstant''isNonNull-1 c), (JavaConstant'''isNull-1 c))
             )
@@ -62140,7 +62352,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"ResolvedJavaType" Stamp'''javaType-1 [#_"AbstractObjectStamp" this]
-            (or (:type this) (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, Object))
+            (or (:type this) (MetaReflection'lookupJavaType-1c Object))
         )
     )
 
@@ -62854,9 +63066,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"ResolvedJavaType" Stamp'''javaType-1 [#_"IntegerStamp" this]
-            (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess,
-                (case (:bits this) 1 boolean'class 8 byte'class 16 short'class 32 int'class 64 long'class)
-            )
+            (MetaReflection'lookupJavaType-1c (case (:bits this) 1 boolean'class 8 byte'class 16 short'class 32 int'class 64 long'class))
         )
 
         (#_"boolean" Stamp'''isUnrestricted-1 [#_"IntegerStamp" this]
@@ -64086,7 +64296,7 @@ ZeroExtendNode'new-4
         )
 
         (#_"ResolvedJavaType" Stamp'''javaType-1 [#_"VoidStamp" this]
-            (MetaAccessProvider'''lookupJavaType-2c HotSpot'metaAccess, void'class)
+            (MetaReflection'lookupJavaType-1c void'class)
         )
 
         (#_"boolean" Stamp'''alwaysDistinct-2 [#_"VoidStamp" this, #_"Stamp" other]
@@ -64900,7 +65110,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"void" UseTrappingNullChecksPhase'tryUseTrappingNullCheck-5 [#_"AbstractDeoptimizeNode" deopt, #_"Node" predecessor, #_"DeoptimizationReason" deoptimizationReason, #_"JavaConstant" speculation, #_"long" implicitNullCheckLimit]
-        (when (and (any = deoptimizationReason DeoptimizationReason/NullCheckException DeoptimizationReason/UnreachedCode)
+        (when (and (any = deoptimizationReason :DeoptimizationReason'NullCheckException :DeoptimizationReason'UnreachedCode)
                    (or (nil? speculation) (= speculation JavaConstant'NULL_POINTER))
               )
             (condp satisfies? predecessor
@@ -64950,7 +65160,7 @@ ZeroExtendNode'new-4
                                     i (if (some? speculations) (inc i) i)
                                 ]
                                     (when (and (satisfies? ConstantNode thisReason) (satisfies? ConstantNode thisSpeculation) (= (:value thisSpeculation) JavaConstant'NULL_POINTER))
-                                        (UseTrappingNullChecksPhase'tryUseTrappingNullCheck-5 deopt, (:predecessor end), (MetaAccessProvider'''decodeDeoptReason-2 HotSpot'metaAccess, (ValueNode''asJavaConstant-1 thisReason)), nil, implicitNullCheckLimit)
+                                        (UseTrappingNullChecksPhase'tryUseTrappingNullCheck-5 deopt, (:predecessor end), (MetaReflection'decodeDeoptReason-1 (ValueNode''asJavaConstant-1 thisReason)), nil, implicitNullCheckLimit)
                                     )
                                     (recur i (next s))
                                 )
@@ -67015,7 +67225,7 @@ ZeroExtendNode'new-4
     (defn #_"Stamp" StampFactory'forConstant-1 [#_"JavaConstant" value]
         (when (= (JavaConstant'''getJavaKind-1 value) :JavaKind'Object) => (StampFactory'forPrimitiveConstant-1 value)
             (let [
-                #_"ResolvedJavaType" type (when-not (JavaConstant'''isNull-1 value) (MetaAccessProvider'''lookupJavaType-2j HotSpot'metaAccess, value))
+                #_"ResolvedJavaType" type (when-not (JavaConstant'''isNull-1 value) (MetaReflection'lookupJavaType-1j value))
             ]
                 (ObjectStamp'new-4 type, (JavaConstant''isNonNull-1 value), (JavaConstant''isNonNull-1 value), (JavaConstant'''isNull-1 value))
             )
@@ -67809,78 +68019,5 @@ public interface ConstantPool
      ; @return the appendix if it exists and is resolved or {@code null}
      ;;
     #_"JavaConstant" lookupAppendix(#_"int" cpi, #_"int" opcode)
-)
-)
-
-(§ package jdk.vm.ci.meta
-
-;;;
- ; Specifies the action that should be taken by the runtime in case a certain deoptimization is
- ; triggered.
- ;;
-public enum DeoptimizationAction
-(§
-    ;;;
-     ; Do not invalidate the machine code. This is typically used when deoptimizing at a point where
-     ; it's highly likely nothing will change the likelihood of the deoptimization happening again.
-     ; For example, a compiled array allocation where the size is negative.
-     ;;
-    None(false),
-
-    ;;;
-     ; Do not invalidate the machine code, but schedule a recompilation if this deoptimization is
-     ; triggered too often.
-     ;;
-    RecompileIfTooManyDeopts(true),
-
-    ;;;
-     ; Invalidate the machine code and reset the profiling information.
-     ;;
-    InvalidateReprofile(true),
-
-    ;;;
-     ; Invalidate the machine code and immediately schedule a recompilation. This is typically used
-     ; when deoptimizing to resolve an unresolved symbol in which case extra profiling is not
-     ; required to determine that the deoptimization will not re-occur.
-     ;;
-    InvalidateRecompile(true),
-
-    ;;;
-     ; Invalidate the machine code and stop compiling the outermost method of this compilation.
-     ;;
-    InvalidateStopCompiling(true)
-
-    private final #_"boolean" invalidatesCompilation
-
-    DeoptimizationAction(#_"boolean" invalidatesCompilation)
-    (§
-        this.invalidatesCompilation = invalidatesCompilation
-    )
-
-    public #_"boolean" doesInvalidateCompilation()
-    (§
-        return invalidatesCompilation
-    )
-)
-)
-
-(§ package jdk.vm.ci.meta
-
-;;;
- ; Enumeration of reasons for why a deoptimization is happening.
- ;;
-public enum DeoptimizationReason
-(§
-    None,
-    NullCheckException,
-    BoundsCheckException,
-    ClassCastException,
-    ArrayStoreException,
-    UnreachedCode,
-    Unresolved,
-    JavaSubroutineMismatch,
-    ArithmeticException,
-    RuntimeConstraint,
-    LoopLimitCheck
 )
 )
