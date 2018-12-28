@@ -138,7 +138,6 @@ BarrierType
 Def
 Flags
 GraalDirectives'UNLIKELY_PROBABILITY
-GuardPriority
 GuardsStage''ordinal-1
 InjectedNodeParameter
 Input
@@ -360,7 +359,6 @@ AbstractBeginNode'new-1
 AbstractBeginNode'prevBegin-1
 AbstractCompareAndSwapNode''getNewValue-1
 AbstractCompareAndSwapNode'new-6
-AbstractDeoptimizeNode'new-1
 AbstractEndNode'new-0
 AbstractLocalNode''index-1
 AbstractLocalNode'new-2
@@ -1136,7 +1134,6 @@ ControlFlowGraph'strictlyDominates-2
 ControlFlowOptimizer'new-0
 ControlSinkNode'new-1
 ControlSplitNode'new-1
-ConvertDeoptimizeToGuardPhase'new-0
 CountLeadingZerosNode'new-1
 CountLeadingZerosNode'tryFold-1
 CountTrailingZerosNode'computeStamp-2
@@ -1175,16 +1172,12 @@ DefUseTree''getVariable-1
 DefUseTree''usageCount-1
 DefUseTree'new-2
 DefaultLoopPolicies'new-0
-DefaultSimplifierTool'new-0
 DeferredExit'new-2
 DeoptimizationAction'SET
-DeoptimizationGroupingPhase'new-0
 DeoptimizationReason'SET
 DeoptimizeCallerNode'new-2
 DeoptimizeCallerOp'new-0
 DeoptimizeNode'new-2
-DeoptimizeNode'new-3
-DeoptimizeNode'new-4
 DeoptimizingFixedWithNextNode'new-1
 DerivedConvertedInductionVariable'new-4
 DerivedInductionVariable''getBase-1
@@ -1203,7 +1196,6 @@ Direction''opposite-1
 Div'new-2
 DivRemOp'SET
 DummyGuardHandle'new-1
-DynamicDeoptimizeNode'new-2
 EMOptimizer''optimizeMovesAtBlockBegin-2
 EMOptimizer''optimizeMovesAtBlockEnd-2
 EMOptimizer'new-1
@@ -1269,7 +1261,6 @@ FixedAccessNode'new-4
 FixedBinaryNode'new-3
 FixedGuardNode'new-3
 FixedGuardNode'new-4
-FixedGuardNode'new-5
 FixedNode'new-1
 FixedTarget'new-2
 FixedValueAnchorNode'new-1
@@ -1392,7 +1383,6 @@ GraalOptions'fullUnroll
 GraalOptions'fullUnrollMaxIterations
 GraalOptions'fullUnrollMaxNodes
 GraalOptions'genLoopSafepoints
-GraalOptions'guardPriorities
 GraalOptions'lirOptLSRAEliminateSpillMoves
 GraalOptions'lirOptLSRAOptimizeSpillPosition
 GraalOptions'lirOptimization
@@ -1409,8 +1399,6 @@ GraalOptions'maximumEscapeAnalysisArrayLength
 GraalOptions'minimumPeelProbability
 GraalOptions'mitigateSpeculativeExecutionAttacks
 GraalOptions'optClearNonLiveLocals
-GraalOptions'optConvertDeoptsToGuards
-GraalOptions'optDeoptimizationGrouping
 GraalOptions'optEarlyReadElimination
 GraalOptions'optEliminateGuards
 GraalOptions'optFloatingReads
@@ -1507,14 +1495,7 @@ GraphUtil'unlinkFixedNode-1
 GraphUtil'unproxify-1n
 GraphUtil'unproxify-1p
 GuardLoweringPhase'new-0
-GuardNode'new-6
-GuardOrder'resortGuards-2
-GuardPhiNode'new-1
-GuardPriority'SET
-GuardPriority'highest-0
-GuardPriority'isHigherPriorityThan-2
-GuardPriority'isLowerPriorityThan-2
-GuardProxyNode'new-2
+GuardNode'new-5
 GuardsStage'SET
 GuardsStage'allowsFloatingGuards-1
 GuardsStage'areDeoptsFixed-1
@@ -1553,13 +1534,10 @@ HotSpot'codeInstallResultDependenciesFailed
 HotSpot'codeInstallResultDependenciesInvalid
 HotSpot'codeInstallResultOk
 HotSpot'config
-HotSpot'deoptActionMakeNotCompilable
 HotSpot'deoptActionMakeNotEntrant
-HotSpot'deoptActionMaybeRecompile
 HotSpot'deoptActionNone
 HotSpot'deoptActionReinterpret
 HotSpot'deoptHandlerEntryMark
-HotSpot'deoptReasonAliasing
 HotSpot'deoptReasonArrayCheck
 HotSpot'deoptReasonClassCheck
 HotSpot'deoptReasonConstraint
@@ -1567,17 +1545,11 @@ HotSpot'deoptReasonDiv0Check
 HotSpot'deoptReasonJsrMismatch
 HotSpot'deoptReasonLoopLimitCheck
 HotSpot'deoptReasonNone
-HotSpot'deoptReasonNotCompiledExceptionHandler
 HotSpot'deoptReasonNullCheck
-HotSpot'deoptReasonOptimizedTypeCheck
 HotSpot'deoptReasonRangeCheck
-HotSpot'deoptReasonTransferToInterpreter
-HotSpot'deoptReasonTypeCheckInlining
 HotSpot'deoptReasonUnreached0
 HotSpot'deoptReasonUnresolved
-HotSpot'deoptimizationActionBits
 HotSpot'deoptimizationActionShift
-HotSpot'deoptimizationReasonBits
 HotSpot'deoptimizationReasonShift
 HotSpot'dirtyCardValue
 HotSpot'epochMaskInPlace
@@ -1630,7 +1602,6 @@ HotSpot'objectResultOffset
 HotSpot'oopEncoding
 HotSpot'pendingDeoptimizationOffset
 HotSpot'pendingExceptionOffset
-HotSpot'pendingFailedSpeculationOffset
 HotSpot'plugins
 HotSpot'pollFarMark
 HotSpot'pollNearMark
@@ -2341,7 +2312,7 @@ LoweringPhase'processBlockBounded-1
 LoweringRound'new-1
 LoweringStage'SET
 LoweringTool''createGuard-5
-LoweringTool''createGuard-7
+LoweringTool''createGuard-6
 LoweringTool''setLastFixedNode-2
 LoweringTool'new-4
 MOp'new-4
@@ -2399,8 +2370,6 @@ MergeProcessor''setPhiInput-4
 MergeProcessor''setStateIndexes-2
 MergeProcessor'new-1
 MetaReflection'encodeDeoptActionAndReason-2
-MetaReflection'decodeDeoptReason-1
-MetaReflection'decodeDeoptAction-1
 MetaReflection'lookupJavaType-1c
 MetaReflection'lookupJavaType-1j
 MetaReflection'lookupJavaMethod-1
@@ -2747,9 +2716,6 @@ ProcessFrame''postprocess-1
 ProcessFrame''preprocess-1
 ProcessFrame'new-5
 PropagateDeoptimizeProbabilityPhase'new-0
-ProxyNode'forGuard-3
-ProxyNode'forValue-3
-ProxyNode'new-2
 RMEOptimization''doOptimize-2
 RMEOptimization'new-1
 RMIOp'new-5
@@ -2821,8 +2787,6 @@ Rem'new-2
 RemNode'create-2
 RemNode'new-2
 RemoveValueProxyPhase'new-0
-Replacements'createSnippet-1
-Replacements'new-0
 ReplacementsUtil'REFERENT_OFFSET
 ReplacementsUtil'clearPendingException-1
 ReplacementsUtil'getAndClearObjectResult-1
@@ -2876,7 +2840,6 @@ ScheduledNodeIterator''processNodes-3
 ScheduledNodeIterator''replaceCurrent-2
 ScheduledNodeIterator'new-0
 SchedulingStrategy'SET
-SchedulingStrategy'isEarliest-1
 SequentialStrategy'new-2
 SerialWriteBarrier'new-2
 ShiftNode''getOp-2
@@ -3456,17 +3419,6 @@ ZeroExtendNode'new-4
 
 (defp AbstractCompareAndSwapNode)
 
-;;;
- ; This node represents an unconditional explicit request for immediate deoptimization.
- ;
- ; After this node, execution will continue using a fallback execution engine (such as an
- ; interpreter) at the position described by the {@link #stateBefore() deoptimization state}.
- ;;
-(defp AbstractDeoptimizeNode
-    (#_"ValueNode" AbstractDeoptimizeNode'''getActionAndReason-1 [#_"AbstractDeoptimizeNode" this])
-    (#_"ValueNode" AbstractDeoptimizeNode'''getSpeculation-1 [#_"AbstractDeoptimizeNode" this])
-)
-
 (defp AbstractEndNode
     (#_"AbstractMergeNode" AbstractEndNode'''merge-1 [#_"AbstractEndNode" this])
 )
@@ -3936,8 +3888,6 @@ ZeroExtendNode'new-4
     (#_"int" ControlSplitNode'''getSuccessorCount-1 [#_"ControlSplitNode" this])
 )
 
-(defp ConvertDeoptimizeToGuardPhase)
-
 ;;;
  ; Represents a conversion between primitive types.
  ;;
@@ -3994,7 +3944,6 @@ ZeroExtendNode'new-4
 (defp DataTwoOp)
 (defp DefUseTree)
 (defp DefaultLoopPolicies)
-(defp DefaultSimplifierTool)
 (defp DeferredExit)
 
 ;;;
@@ -4027,7 +3976,6 @@ ZeroExtendNode'new-4
     (#_"this" DeoptDuring'''computeStateDuring-2 [#_"DeoptDuring" this, #_"FrameState" stateAfter])
 )
 
-(defp DeoptimizationGroupingPhase)
 (defp DeoptimizeCallerNode)
 (defp DeoptimizeCallerOp)
 (defp DeoptimizeNode)
@@ -4064,7 +4012,6 @@ ZeroExtendNode'new-4
     (#_"Node" DuplicationReplacement'''replacement-2 [#_"DuplicationReplacement" this, #_"Node" original])
 )
 
-(defp DynamicDeoptimizeNode)
 (defp EMOptimizer)
 (defp EarlyReadEliminationPhase)
 (defp EdgeInfo)
@@ -4176,8 +4123,6 @@ ZeroExtendNode'new-4
 (defp GraphEffects)
 (defp GuardLoweringPhase)
 (defp GuardNode)
-(defp GuardPhiNode)
-(defp GuardProxyNode)
 
 (defp GuardRewirer
     ;;;
@@ -4301,22 +4246,6 @@ ZeroExtendNode'new-4
 )
 
 (defp InfoElement)
-
-;;;
- ; Plugin for specifying what is inlined during graph parsing. This plugin is also notified
- ; {@link #notifyBeforeInline before} and #notifyAfterInline the inlining, as well as of
- ; {@link #notifyNotInlined non-inlined} invocations (i.e. those for which an InvokeNode
- ; is created).
- ;;
-(defp InlineInvokePlugin
-    ;;;
-     ; Notifies this plugin of the InvokeNode created for a method that was not inlined per #shouldInlineInvoke.
-     ;
-     ; @param method the method that was not inlined
-     ; @param invoke the invoke node created for the call to {@code method}
-     ;;
-    (#_"void" InlineInvokePlugin'''notifyNotInlined-4 [#_"InlineInvokePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"InvokeNode" invoke])
-)
 
 (defp InplaceUpdateClosure
     (#_"Node" InplaceUpdateClosure'''replacement-3 [#_"InplaceUpdateClosure" this, #_"Node" node, #_"EdgesType" type])
@@ -5324,7 +5253,6 @@ ZeroExtendNode'new-4
     (#_"Node" Proxy'''getOriginalNode-1 [#_"Proxy" this])
 )
 
-(defp ProxyNode)
 (defp RMEOptimization)
 (defp RMIOp)
 (defp RMOp)
@@ -5360,7 +5288,6 @@ ZeroExtendNode'new-4
 (defp Rem)
 (defp RemNode)
 (defp RemoveValueProxyPhase)
-(defp Replacements)
 
 ;;;
  ; Represents a reference to a resolved Java field. Fields, like methods and types, are resolved
@@ -5896,20 +5823,6 @@ ZeroExtendNode'new-4
 )
 
 (defp StateSplitProxyNode)
-(defp StaticDeoptimizingNode)
-
-(value-ns StaticDeoptimizingNode
-    (defn #_"GuardPriority" StaticDeoptimizingNode''computePriority-1 [#_"StaticDeoptimizingNode" this]
-        (if (and (some? (:speculation this)) (JavaConstant''isNonNull-1 (:speculation this)))
-            :GuardPriority'Speculation
-            (condp =? (:action this)
-                [:DeoptimizationAction'InvalidateReprofile :DeoptimizationAction'InvalidateRecompile]                                     :GuardPriority'Profile
-                [:DeoptimizationAction'RecompileIfTooManyDeopts :DeoptimizationAction'InvalidateStopCompiling :DeoptimizationAction'None] :GuardPriority'None
-            )
-        )
-    )
-)
-
 (defp StoreFieldNode)
 (defp StoreHubNode)
 (defp StoreIndexedNode)
@@ -6382,11 +6295,6 @@ ZeroExtendNode'new-4
              ;;
             :DeoptimizationAction'None
             ;;;
-             ; Do not invalidate the machine code, but schedule a recompilation if this deoptimization is
-             ; triggered too often.
-             ;;
-            :DeoptimizationAction'RecompileIfTooManyDeopts
-            ;;;
              ; Invalidate the machine code and reset the profiling information.
              ;;
             :DeoptimizationAction'InvalidateReprofile
@@ -6396,10 +6304,6 @@ ZeroExtendNode'new-4
              ; required to determine that the deoptimization will not re-occur.
              ;;
             :DeoptimizationAction'InvalidateRecompile
-            ;;;
-             ; Invalidate the machine code and stop compiling the outermost method of this compilation.
-             ;;
-            :DeoptimizationAction'InvalidateStopCompiling
         )
     )
 )
@@ -6417,21 +6321,11 @@ ZeroExtendNode'new-4
             :DeoptimizationReason'ClassCastException
             :DeoptimizationReason'ArrayStoreException
             :DeoptimizationReason'UnreachedCode
-            #_unused
-            :DeoptimizationReason'TypeCheckedInliningViolated
-            #_unused
-            :DeoptimizationReason'OptimizedTypeCheckViolated
-            #_unused
-            :DeoptimizationReason'NotCompiledExceptionHandler
             :DeoptimizationReason'Unresolved
             :DeoptimizationReason'JavaSubroutineMismatch
             :DeoptimizationReason'ArithmeticException
             :DeoptimizationReason'RuntimeConstraint
             :DeoptimizationReason'LoopLimitCheck
-            #_unused
-            :DeoptimizationReason'Aliasing
-            #_unused
-            :DeoptimizationReason'TransferToInterpreter
         )
     )
 )
@@ -6681,7 +6575,7 @@ ZeroExtendNode'new-4
                             (let [
                                 #_"HotSpotResolvedObjectTypeImpl" staticFieldsHolder (MetaReflection'lookupJavaType-1c object)
                             ]
-                                (ß HotSpotResolvedObjectTypeImpl''findStaticFieldWithOffset-3 staticFieldsHolder, displacement, :JavaKind'Object)
+                                (ß HotSpotResolvedObjectTypeImpl''findStaticFieldWithOffset-3 staticFieldsHolder, displacement, :JavaKind'Object)
                             )
                         )
                 ]
@@ -6718,7 +6612,7 @@ ZeroExtendNode'new-4
     (defn- #_"long" MemoryReflection'asRawPointer-1 [#_"Constant" base]
         (condp satisfies? base
             MetaspaceConstant
-                (#_"MetaspaceWrapperObject" .getMetaspacePointer (:metaspaceObject base))
+                (#_"MetaspaceWrapperObject" .getMetaspacePointer (:metaspaceObject base))
             PrimitiveConstant
                 (when (JavaKind'isNumericInteger-1 (JavaConstant'''getJavaKind-1 base)) => (throw! (str base))
                     (JavaConstant'''asLong-1 base)
@@ -6807,7 +6701,7 @@ ZeroExtendNode'new-4
                     :JavaKind'Long    (JavaConstant'forLong-1                rawValue)
                 )
             )
-            (catch NullPointerException _
+            (catch NullPointerException _
                 nil
             )
         )
@@ -6838,7 +6732,7 @@ ZeroExtendNode'new-4
                         HotSpotResolvedObjectTypeImpl
                             (when (= displacement HotSpot'classMirrorOffset)
                                 ;; Klass::_java_mirror is valid for all Klass* values
-                                (ObjectConstant'forObject-1 (#_"HotSpotResolvedObjectTypeImpl" .mirror metaspaceObject))
+                                (ObjectConstant'forObject-1 (#_"HotSpotResolvedObjectTypeImpl" .mirror metaspaceObject))
                             )
                     )
                 )
@@ -6886,69 +6780,27 @@ ZeroExtendNode'new-4
  ; Provides access to the metadata of a class typically provided in a class file.
  ;;
 (value-ns MetaReflection
-    (defn- #_"int" MetaReflection'intMaskRight-1 [#_"int" n]
-        (if (= n 32) -1 (dec (<< 1 n)))
-    )
-
     (defn- #_"int" MetaReflection'convertDeoptAction-1 [#_"DeoptimizationAction" action]
         (case action
             :DeoptimizationAction'None                     HotSpot'deoptActionNone
-            :DeoptimizationAction'RecompileIfTooManyDeopts HotSpot'deoptActionMaybeRecompile
             :DeoptimizationAction'InvalidateReprofile      HotSpot'deoptActionReinterpret
             :DeoptimizationAction'InvalidateRecompile      HotSpot'deoptActionMakeNotEntrant
-            :DeoptimizationAction'InvalidateStopCompiling  HotSpot'deoptActionMakeNotCompilable
-        )
-    )
-
-    (defn- #_"DeoptimizationAction" MetaReflection'convertDeoptAction-1 [#_"int" action]
-        (case action
-            HotSpot'deoptActionNone              :DeoptimizationAction'None
-            HotSpot'deoptActionMaybeRecompile    :DeoptimizationAction'RecompileIfTooManyDeopts
-            HotSpot'deoptActionReinterpret       :DeoptimizationAction'InvalidateReprofile
-            HotSpot'deoptActionMakeNotEntrant    :DeoptimizationAction'InvalidateRecompile
-            HotSpot'deoptActionMakeNotCompilable :DeoptimizationAction'InvalidateStopCompiling
         )
     )
 
     (defn- #_"int" MetaReflection'convertDeoptReason-1 [#_"DeoptimizationReason" reason]
         (case reason
-            :DeoptimizationReason'None                        HotSpot'deoptReasonNone
-            :DeoptimizationReason'NullCheckException          HotSpot'deoptReasonNullCheck
-            :DeoptimizationReason'BoundsCheckException        HotSpot'deoptReasonRangeCheck
-            :DeoptimizationReason'ClassCastException          HotSpot'deoptReasonClassCheck
-            :DeoptimizationReason'ArrayStoreException         HotSpot'deoptReasonArrayCheck
-            :DeoptimizationReason'UnreachedCode               HotSpot'deoptReasonUnreached0
-            :DeoptimizationReason'TypeCheckedInliningViolated HotSpot'deoptReasonTypeCheckInlining
-            :DeoptimizationReason'OptimizedTypeCheckViolated  HotSpot'deoptReasonOptimizedTypeCheck
-            :DeoptimizationReason'NotCompiledExceptionHandler HotSpot'deoptReasonNotCompiledExceptionHandler
-            :DeoptimizationReason'Unresolved                  HotSpot'deoptReasonUnresolved
-            :DeoptimizationReason'JavaSubroutineMismatch      HotSpot'deoptReasonJsrMismatch
-            :DeoptimizationReason'ArithmeticException         HotSpot'deoptReasonDiv0Check
-            :DeoptimizationReason'RuntimeConstraint           HotSpot'deoptReasonConstraint
-            :DeoptimizationReason'LoopLimitCheck              HotSpot'deoptReasonLoopLimitCheck
-            :DeoptimizationReason'Aliasing                    HotSpot'deoptReasonAliasing
-            :DeoptimizationReason'TransferToInterpreter       HotSpot'deoptReasonTransferToInterpreter
-        )
-    )
-
-    (defn- #_"DeoptimizationReason" MetaReflection'convertDeoptReason-1 [#_"int" reason]
-        (case reason
-            HotSpot'deoptReasonNone                        :DeoptimizationReason'None
-            HotSpot'deoptReasonNullCheck                   :DeoptimizationReason'NullCheckException
-            HotSpot'deoptReasonRangeCheck                  :DeoptimizationReason'BoundsCheckException
-            HotSpot'deoptReasonClassCheck                  :DeoptimizationReason'ClassCastException
-            HotSpot'deoptReasonArrayCheck                  :DeoptimizationReason'ArrayStoreException
-            HotSpot'deoptReasonUnreached0                  :DeoptimizationReason'UnreachedCode
-            HotSpot'deoptReasonTypeCheckInlining           :DeoptimizationReason'TypeCheckedInliningViolated
-            HotSpot'deoptReasonOptimizedTypeCheck          :DeoptimizationReason'OptimizedTypeCheckViolated
-            HotSpot'deoptReasonNotCompiledExceptionHandler :DeoptimizationReason'NotCompiledExceptionHandler
-            HotSpot'deoptReasonUnresolved                  :DeoptimizationReason'Unresolved
-            HotSpot'deoptReasonJsrMismatch                 :DeoptimizationReason'JavaSubroutineMismatch
-            HotSpot'deoptReasonDiv0Check                   :DeoptimizationReason'ArithmeticException
-            HotSpot'deoptReasonConstraint                  :DeoptimizationReason'RuntimeConstraint
-            HotSpot'deoptReasonLoopLimitCheck              :DeoptimizationReason'LoopLimitCheck
-            HotSpot'deoptReasonAliasing                    :DeoptimizationReason'Aliasing
-            HotSpot'deoptReasonTransferToInterpreter       :DeoptimizationReason'TransferToInterpreter
+            :DeoptimizationReason'None                   HotSpot'deoptReasonNone
+            :DeoptimizationReason'NullCheckException     HotSpot'deoptReasonNullCheck
+            :DeoptimizationReason'BoundsCheckException   HotSpot'deoptReasonRangeCheck
+            :DeoptimizationReason'ClassCastException     HotSpot'deoptReasonClassCheck
+            :DeoptimizationReason'ArrayStoreException    HotSpot'deoptReasonArrayCheck
+            :DeoptimizationReason'UnreachedCode          HotSpot'deoptReasonUnreached0
+            :DeoptimizationReason'Unresolved             HotSpot'deoptReasonUnresolved
+            :DeoptimizationReason'JavaSubroutineMismatch HotSpot'deoptReasonJsrMismatch
+            :DeoptimizationReason'ArithmeticException    HotSpot'deoptReasonDiv0Check
+            :DeoptimizationReason'RuntimeConstraint      HotSpot'deoptReasonConstraint
+            :DeoptimizationReason'LoopLimitCheck         HotSpot'deoptReasonLoopLimitCheck
         )
     )
 
@@ -6964,24 +6816,12 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"DeoptimizationReason" MetaReflection'decodeDeoptReason-1 [#_"JavaConstant" constant]
-        (MetaReflection'convertDeoptReason-1
-            (bit-and (>> (bit-not (JavaConstant'''asInt-1 constant)) HotSpot'deoptimizationReasonShift) (MetaReflection'intMaskRight-1 HotSpot'deoptimizationReasonBits))
-        )
-    )
-
-    (defn #_"DeoptimizationAction" MetaReflection'decodeDeoptAction-1 [#_"JavaConstant" constant]
-        (MetaReflection'convertDeoptAction-1
-            (bit-and (>> (bit-not (JavaConstant'''asInt-1 constant)) HotSpot'deoptimizationActionShift) (MetaReflection'intMaskRight-1 HotSpot'deoptimizationActionBits))
-        )
-    )
-
     ;;;
      ; Returns the resolved Java type representing a given Java class.
      ;;
     (defn #_"ResolvedJavaType" MetaReflection'lookupJavaType-1c [#_"Class" class]
         (when (some? class) => (throw! "class is nil")
-            (#_"HotSpotJVMCIRuntime" .fromClass JVMCI'runtime, class)
+            (#_"HotSpotJVMCIRuntime" .fromClass JVMCI'runtime, class)
         )
     )
 
@@ -7076,7 +6916,7 @@ ZeroExtendNode'new-4
                     #_"HotSpotResolvedJavaType" holder (JavaField'''getDeclaringType-1 field)
                 ]
                     (when (ResolvedJavaType'''isInitialized-1 holder)
-                        (MemoryReflection'readFieldValue-2 field, (#_"HotSpotResolvedJavaType" .mirror holder))
+                        (MemoryReflection'readFieldValue-2 field, (#_"HotSpotResolvedJavaType" .mirror holder))
                     )
                 )
             (JavaConstant''isNonNull-1 receiver)
@@ -7121,7 +6961,7 @@ ZeroExtendNode'new-4
      ; Gets the runtime representation of the {@link Class} object of this type.
      ;;
     (defn #_"JavaConstant" ConstantReflection'asJavaClass-1 [#_"ResolvedJavaType" type]
-        (ObjectConstant'forObject-1 (#_"HotSpotResolvedJavaType" .mirror type))
+        (ObjectConstant'forObject-1 (#_"HotSpotResolvedJavaType" .mirror type))
     )
 
     ;;;
@@ -7319,7 +7159,7 @@ ZeroExtendNode'new-4
      ; Gets the resolved Java type of the object represented by this constant.
      ;;
     (defn #_"HotSpotResolvedObjectType" ObjectConstant''getType-1 [#_"ObjectConstant" this]
-        (ß HotSpotResolvedObjectTypeImpl'fromObjectClass-1 (#_"Object" .getClass (:object this)))
+        (ß HotSpotResolvedObjectTypeImpl'fromObjectClass-1 (#_"Object" .getClass (:object this)))
     )
 
     ;;;
@@ -7895,9 +7735,8 @@ ZeroExtendNode'new-4
     ;;;
      ; This field is used to pass exception objects into and out of the runtime system during exception handling for compiled code.
      ;;
-    (def #_"int" HotSpot'pendingExceptionOffset         (.getFieldOffset HotSpot'config, "ThreadShadow::_pending_exception",        Integer, "oop"))
-    (def #_"int" HotSpot'pendingDeoptimizationOffset    (.getFieldOffset HotSpot'config, "JavaThread::_pending_deoptimization",     Integer, "int"))
-    (def #_"int" HotSpot'pendingFailedSpeculationOffset (.getFieldOffset HotSpot'config, "JavaThread::_pending_failed_speculation", Integer, "oop"))
+    (def #_"int" HotSpot'pendingExceptionOffset      (.getFieldOffset HotSpot'config, "ThreadShadow::_pending_exception",        Integer, "oop"))
+    (def #_"int" HotSpot'pendingDeoptimizationOffset (.getFieldOffset HotSpot'config, "JavaThread::_pending_deoptimization",     Integer, "int"))
 
     (def #_"int" HotSpot'threadLastJavaSpOffset (+ HotSpot'javaThreadAnchorOffset (.getFieldOffset HotSpot'config, "JavaFrameAnchor::_last_Java_sp", Integer, "intptr_t*")))
     (def #_"int" HotSpot'threadLastJavaPcOffset (+ HotSpot'javaThreadAnchorOffset (.getFieldOffset HotSpot'config, "JavaFrameAnchor::_last_Java_pc", Integer, "address")))
@@ -7996,37 +7835,28 @@ ZeroExtendNode'new-4
     (def #_"boolean" HotSpot'useCountLeadingZerosInstruction  (.getFlag HotSpot'config, "UseCountLeadingZerosInstruction",  Boolean))
     (def #_"boolean" HotSpot'useCountTrailingZerosInstruction (.getFlag HotSpot'config, "UseCountTrailingZerosInstruction", Boolean))
 
-    (def #_"int" HotSpot'codeInstallResultOk                  (.getConstant HotSpot'config, "JVMCIEnv::ok", Integer))
-    (def #_"int" HotSpot'codeInstallResultDependenciesFailed  (.getConstant HotSpot'config, "JVMCIEnv::dependencies_failed", Integer))
+    (def #_"int" HotSpot'codeInstallResultOk                  (.getConstant HotSpot'config, "JVMCIEnv::ok",                   Integer))
+    (def #_"int" HotSpot'codeInstallResultDependenciesFailed  (.getConstant HotSpot'config, "JVMCIEnv::dependencies_failed",  Integer))
     (def #_"int" HotSpot'codeInstallResultDependenciesInvalid (.getConstant HotSpot'config, "JVMCIEnv::dependencies_invalid", Integer))
-    (def #_"int" HotSpot'codeInstallResultCacheFull           (.getConstant HotSpot'config, "JVMCIEnv::cache_full", Integer))
-    (def #_"int" HotSpot'codeInstallResultCodeTooLarge        (.getConstant HotSpot'config, "JVMCIEnv::code_too_large", Integer))
+    (def #_"int" HotSpot'codeInstallResultCacheFull           (.getConstant HotSpot'config, "JVMCIEnv::cache_full",           Integer))
+    (def #_"int" HotSpot'codeInstallResultCodeTooLarge        (.getConstant HotSpot'config, "JVMCIEnv::code_too_large",       Integer))
 
-    (def #_"int" HotSpot'deoptReasonNone                        (.getConstant HotSpot'config, "Deoptimization::Reason_none",                           Integer))
-    (def #_"int" HotSpot'deoptReasonNullCheck                   (.getConstant HotSpot'config, "Deoptimization::Reason_null_check",                     Integer))
-    (def #_"int" HotSpot'deoptReasonRangeCheck                  (.getConstant HotSpot'config, "Deoptimization::Reason_range_check",                    Integer))
-    (def #_"int" HotSpot'deoptReasonClassCheck                  (.getConstant HotSpot'config, "Deoptimization::Reason_class_check",                    Integer))
-    (def #_"int" HotSpot'deoptReasonArrayCheck                  (.getConstant HotSpot'config, "Deoptimization::Reason_array_check",                    Integer))
-    (def #_"int" HotSpot'deoptReasonUnreached0                  (.getConstant HotSpot'config, "Deoptimization::Reason_unreached0",                     Integer))
-    (def #_"int" HotSpot'deoptReasonTypeCheckInlining           (.getConstant HotSpot'config, "Deoptimization::Reason_type_checked_inlining",          Integer))
-    (def #_"int" HotSpot'deoptReasonOptimizedTypeCheck          (.getConstant HotSpot'config, "Deoptimization::Reason_optimized_type_check",           Integer))
-    (def #_"int" HotSpot'deoptReasonNotCompiledExceptionHandler (.getConstant HotSpot'config, "Deoptimization::Reason_not_compiled_exception_handler", Integer))
-    (def #_"int" HotSpot'deoptReasonUnresolved                  (.getConstant HotSpot'config, "Deoptimization::Reason_unresolved",                     Integer))
-    (def #_"int" HotSpot'deoptReasonJsrMismatch                 (.getConstant HotSpot'config, "Deoptimization::Reason_jsr_mismatch",                   Integer))
-    (def #_"int" HotSpot'deoptReasonDiv0Check                   (.getConstant HotSpot'config, "Deoptimization::Reason_div0_check",                     Integer))
-    (def #_"int" HotSpot'deoptReasonConstraint                  (.getConstant HotSpot'config, "Deoptimization::Reason_constraint",                     Integer))
-    (def #_"int" HotSpot'deoptReasonLoopLimitCheck              (.getConstant HotSpot'config, "Deoptimization::Reason_loop_limit_check",               Integer))
-    (def #_"int" HotSpot'deoptReasonAliasing                    (.getConstant HotSpot'config, "Deoptimization::Reason_aliasing",                       Integer))
-    (def #_"int" HotSpot'deoptReasonTransferToInterpreter       (.getConstant HotSpot'config, "Deoptimization::Reason_transfer_to_interpreter",        Integer))
+    (def #_"int" HotSpot'deoptReasonNone           (.getConstant HotSpot'config, "Deoptimization::Reason_none",             Integer))
+    (def #_"int" HotSpot'deoptReasonNullCheck      (.getConstant HotSpot'config, "Deoptimization::Reason_null_check",       Integer))
+    (def #_"int" HotSpot'deoptReasonRangeCheck     (.getConstant HotSpot'config, "Deoptimization::Reason_range_check",      Integer))
+    (def #_"int" HotSpot'deoptReasonClassCheck     (.getConstant HotSpot'config, "Deoptimization::Reason_class_check",      Integer))
+    (def #_"int" HotSpot'deoptReasonArrayCheck     (.getConstant HotSpot'config, "Deoptimization::Reason_array_check",      Integer))
+    (def #_"int" HotSpot'deoptReasonUnreached0     (.getConstant HotSpot'config, "Deoptimization::Reason_unreached0",       Integer))
+    (def #_"int" HotSpot'deoptReasonUnresolved     (.getConstant HotSpot'config, "Deoptimization::Reason_unresolved",       Integer))
+    (def #_"int" HotSpot'deoptReasonJsrMismatch    (.getConstant HotSpot'config, "Deoptimization::Reason_jsr_mismatch",     Integer))
+    (def #_"int" HotSpot'deoptReasonDiv0Check      (.getConstant HotSpot'config, "Deoptimization::Reason_div0_check",       Integer))
+    (def #_"int" HotSpot'deoptReasonConstraint     (.getConstant HotSpot'config, "Deoptimization::Reason_constraint",       Integer))
+    (def #_"int" HotSpot'deoptReasonLoopLimitCheck (.getConstant HotSpot'config, "Deoptimization::Reason_loop_limit_check", Integer))
 
-    (def #_"int" HotSpot'deoptActionNone              (.getConstant HotSpot'config, "Deoptimization::Action_none",                Integer))
-    (def #_"int" HotSpot'deoptActionMaybeRecompile    (.getConstant HotSpot'config, "Deoptimization::Action_maybe_recompile",     Integer))
-    (def #_"int" HotSpot'deoptActionReinterpret       (.getConstant HotSpot'config, "Deoptimization::Action_reinterpret",         Integer))
-    (def #_"int" HotSpot'deoptActionMakeNotEntrant    (.getConstant HotSpot'config, "Deoptimization::Action_make_not_entrant",    Integer))
-    (def #_"int" HotSpot'deoptActionMakeNotCompilable (.getConstant HotSpot'config, "Deoptimization::Action_make_not_compilable", Integer))
+    (def #_"int" HotSpot'deoptActionNone           (.getConstant HotSpot'config, "Deoptimization::Action_none",             Integer))
+    (def #_"int" HotSpot'deoptActionReinterpret    (.getConstant HotSpot'config, "Deoptimization::Action_reinterpret",      Integer))
+    (def #_"int" HotSpot'deoptActionMakeNotEntrant (.getConstant HotSpot'config, "Deoptimization::Action_make_not_entrant", Integer))
 
-    (def #_"int" HotSpot'deoptimizationActionBits  (.getConstant HotSpot'config, "Deoptimization::_action_bits",  Integer))
-    (def #_"int" HotSpot'deoptimizationReasonBits  (.getConstant HotSpot'config, "Deoptimization::_reason_bits",  Integer))
     (def #_"int" HotSpot'deoptimizationActionShift (.getConstant HotSpot'config, "Deoptimization::_action_shift", Integer))
     (def #_"int" HotSpot'deoptimizationReasonShift (.getConstant HotSpot'config, "Deoptimization::_reason_shift", Integer))
 
@@ -8846,12 +8676,9 @@ ZeroExtendNode'new-4
     (def #_"boolean" GraalOptions'canOmitFrame true)
 
     ;; runtime settings
-    (def #_"boolean" GraalOptions'optConvertDeoptsToGuards true)
     (def #_"boolean" GraalOptions'optReadElimination true)
     (def #_"int" GraalOptions'readEliminationMaxLoopVisits 5)
-    (def #_"boolean" GraalOptions'optDeoptimizationGrouping true)
     (def #_"boolean" GraalOptions'optScheduleOutOfLoops true)
-    (def #_"boolean" GraalOptions'guardPriorities true)
     (def #_"boolean" GraalOptions'optEliminateGuards true)
     (def #_"boolean" GraalOptions'optImplicitNullChecks true)
     (def #_"boolean" GraalOptions'optClearNonLiveLocals true)
@@ -10175,6 +10002,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Determines if a given node has a word type.
      ;;
+    #_unused
     (defn #_"boolean" WordTypes'isWord-1v [#_"ValueNode" node]
         (WordTypes'isWord-1j (StampTool'typeOrNull-1 (:stamp node)))
     )
@@ -11423,34 +11251,6 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Describes how much information is gathered when deoptimization triggers.
- ;
- ; This enum is Comparable and orders its element from highest priority to lowest priority.
- ;;
-(value-ns GuardPriority (§ implements Comparable #_"<GuardPriority>")
-    #_unused
-    (def #_"ordered {GuardPriority}" GuardPriority'SET
-        (ordered-set
-            :GuardPriority'Speculation
-            :GuardPriority'Profile
-            :GuardPriority'None
-        )
-    )
-
-    (defn #_"boolean" GuardPriority'isHigherPriorityThan-2 [#_"GuardPriority" a, #_"GuardPriority" b]
-        (neg? (#_"Comparable" .compareTo a, b))
-    )
-
-    (defn #_"boolean" GuardPriority'isLowerPriorityThan-2 [#_"GuardPriority" a, #_"GuardPriority" b]
-        (pos? (#_"Comparable" .compareTo a, b))
-    )
-
-    (defn #_"GuardPriority" GuardPriority'highest-0 []
-        :GuardPriority'Speculation
-    )
-)
-
-;;;
  ; The type of events sent to a NodeEventListener.
  ;;
 (value-ns NodeEvent
@@ -11897,7 +11697,7 @@ ZeroExtendNode'new-4
                         (doseq [#_"PhiNode" phi (§ snap (filter #(satisfies? PhiNode %) (:nodeUsages phiNode)))]
                             (GraphUtil'checkRedundantPhi-1 phi)
                         )
-                        (doseq [#_"ProxyNode" proxy (§ snap (filter #(satisfies? ProxyNode %) (:nodeUsages phiNode)))]
+                        (doseq [#_"ValueProxyNode" proxy (§ snap (filter #(satisfies? ValueProxyNode %) (:nodeUsages phiNode)))]
                             (GraphUtil'checkRedundantProxy-1 proxy)
                         )
                     )
@@ -11907,7 +11707,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"void" GraphUtil'checkRedundantProxy-1 [#_"ProxyNode" vpn]
+    (defn #_"void" GraphUtil'checkRedundantProxy-1 [#_"ValueProxyNode" vpn]
         (when-not (Node''isDeleted-1 vpn)
             (let [
                 #_"AbstractBeginNode" proxyPoint (:loopExit vpn)
@@ -11932,7 +11732,7 @@ ZeroExtendNode'new-4
                                         (doseq [#_"PhiNode" phi (§ snap (filter #(satisfies? PhiNode %) (:nodeUsages vpn)))]
                                             (GraphUtil'checkRedundantPhi-1 phi)
                                         )
-                                        (doseq [#_"ProxyNode" proxy (§ snap (filter #(satisfies? ProxyNode %) (:nodeUsages vpn)))]
+                                        (doseq [#_"ValueProxyNode" proxy (§ snap (filter #(satisfies? ValueProxyNode %) (:nodeUsages vpn)))]
                                             (GraphUtil'checkRedundantProxy-1 proxy)
                                         )
                                     )
@@ -11951,10 +11751,8 @@ ZeroExtendNode'new-4
         (doseq [#_"PhiNode" phi (§ snap (AbstractMergeNode''phis-1 begin))]
             (GraphUtil'checkRedundantPhi-1 phi)
         )
-        (doseq [#_"LoopExitNode" exit (LoopBeginNode''loopExits-1 begin)]
-            (doseq [#_"ProxyNode" vpn (§ snap (LoopExitNode''proxies-1 exit))]
-                (GraphUtil'checkRedundantProxy-1 vpn)
-            )
+        (doseq [#_"LoopExitNode" exit (LoopBeginNode''loopExits-1 begin) #_"ValueProxyNode" vpn (§ snap (LoopExitNode''proxies-1 exit))]
+            (GraphUtil'checkRedundantProxy-1 vpn)
         )
         nil
     )
@@ -12465,184 +12263,11 @@ ZeroExtendNode'new-4
     #_unused
     (def #_"ordered {SchedulingStrategy}" SchedulingStrategy'SET
         (ordered-set
-            :SchedulingStrategy'EARLIEST_WITH_GUARD_ORDER
             :SchedulingStrategy'EARLIEST
             :SchedulingStrategy'LATEST
             :SchedulingStrategy'LATEST_OUT_OF_LOOPS
             :SchedulingStrategy'FINAL_SCHEDULE
         )
-    )
-
-    (defn #_"boolean" SchedulingStrategy'isEarliest-1 [#_"SchedulingStrategy" self]
-        (any = self :SchedulingStrategy'EARLIEST :SchedulingStrategy'EARLIEST_WITH_GUARD_ORDER)
-    )
-)
-
-(value-ns GuardOrder
-    ;;;
-     ; This fills in a map of transitive priorities ({@code priorities}). It also marks the
-     ; nodes from this micro-block in {@code sorted}.
-     ;
-     ; The transitive priority of a guard is the highest of its priority and the priority of
-     ; the guards that depend on it (transitively).
-     ;
-     ; This method returns false if no re-ordering is necessary in this micro-block.
-     ;;
-    (defn- #_"sorted {Node}" GuardOrder'propagatePriority-1 [#_"MicroBlock" block]
-        (let [
-            [#_"GuardPriority" lowest #_"(Node)" stack #_"{Node GuardPriority}" priorities #_"sorted {Node}" sorted]
-                (loop-when [lowest (GuardPriority'highest-0) stack nil priorities {} sorted (sorted-set) #_"NodeEntry" e (:head block)] (some? e) => [lowest stack priorities sorted]
-                    (let [
-                        sorted (conj sorted (:node e))
-                        [lowest stack priorities]
-                            (when (satisfies? GuardNode (:node e)) => [lowest stack priorities]
-                                (let [
-                                    #_"GuardNode" guard (:node e)
-                                    #_"GuardPriority" priority (StaticDeoptimizingNode''computePriority-1 guard)
-                                    lowest
-                                        (when (some? lowest)
-                                            (cond
-                                                (GuardPriority'isLowerPriorityThan-2 priority, lowest)  priority
-                                                (GuardPriority'isHigherPriorityThan-2 priority, lowest) nil
-                                                :else                                                   lowest
-                                            )
-                                        )
-                                ]
-                                    [lowest (cons guard stack) (assoc priorities guard priority)]
-                                )
-                            )
-                    ]
-                        (recur lowest stack priorities sorted (:next e))
-                    )
-                )
-        ]
-            (when (nil? lowest)
-                (loop [stack stack priorities priorities]
-                    (let [
-                        [#_"Node" node & stack] stack
-                        #_"GuardPriority" priority (get priorities node)
-                        [stack priorities]
-                            (loop-when [stack stack priorities priorities #_"seq" s (seq (Node''inputs-1 node))] (some? s) => [stack priorities]
-                                (let [
-                                    #_"Node" input (first s)
-                                    [stack priorities]
-                                        (when (contains? sorted input) => [stack priorities]
-                                            (let [
-                                                #_"GuardPriority" ip (get priorities input)
-                                            ]
-                                                (when (or (nil? ip) (GuardPriority'isLowerPriorityThan-2 ip, priority)) => [stack priorities]
-                                                    [(cons input stack) (assoc priorities input priority)]
-                                                )
-                                            )
-                                        )
-                                ]
-                                    (recur stack priorities (next s))
-                                )
-                            )
-                    ]
-                        (recur-if (seq stack) [stack priorities] => sorted)
-                    )
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Add a node to the re-sorted micro-block. This also pushes nodes that need to be
-     ; (re-)examined on the stack.
-     ;;
-    (defn- #_"(Node)" GuardOrder'addNodeToResort-5 [#_"Node" node, #_"(Node)" stack, #_"{Node}" sorted, #_"MicroBlock" newBlock, #_"boolean" pushUsages]
-        (let [
-            _ (§ ass! sorted (conj sorted node))
-            _ (§ ass! newBlock (MicroBlock''add-2 newBlock, node))
-        ]
-            (when pushUsages => stack
-                (into stack (remove #(contains? sorted %) (:nodeUsages node)))
-            )
-        )
-    )
-
-    ;;;
-     ; This checks if {@code node} can be scheduled, if it is the case, it schedules it now
-     ; by calling #addNodeToResort(Node, (Node), {Node}, MicroBlock, boolean).
-     ;;
-    (defn- #_"(Node)" GuardOrder'checkIfAvailable-6 [#_"Node" node, #_"(Node)" stack, #_"{Node}" sorted, #_"MicroBlock" newBlock, #_"sorted {GuardNode}" guards, #_"boolean" pushUsages]
-        (when-not (contains? sorted node) => stack
-            (loop [stack stack #_"seq" s (seq (Node''inputs-1 node))]
-                (if (some? s)
-                    (when (contains? sorted (first s)) => stack
-                        (recur stack (next s))
-                    )
-                    (when (satisfies? GuardNode node) => (GuardOrder'addNodeToResort-5 node, stack, sorted, newBlock, pushUsages)
-                        (§ ass! guards (conj guards node))
-                        stack
-                    )
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Re-sort guards within one micro-block.
-     ;;
-    (defn- #_"MicroBlock" GuardOrder'resortGuards-1 [#_"MicroBlock" block]
-        (let [
-            #_"sorted {Node}" sorted (GuardOrder'propagatePriority-1 block)
-        ]
-            (when (some? sorted)
-                (let [
-                    sorted (ß NodeBitMap''invert-1 sorted)
-                    #_"MicroBlock" newBlock (MicroBlock'new-1 (:id block))
-                    #_"sorted {GuardNode}" guards
-                        (sorted-set
-                            (-> (ß Comparator/comparing #(get priorities %))
-                                (ß #_"Comparator" .thenComparing StaticDeoptimizingNode''computePriority-1)
-                                (ß #_"Comparator" .thenComparingInt #(#_"Object" .hashCode %))
-                            )
-                        )
-                    #_"(Node)" stack
-                        (loop-when-recur [stack nil #_"NodeEntry" e (:head block)]
-                                        (some? e)
-                                        [(GuardOrder'checkIfAvailable-6 (:node e), stack, sorted, newBlock, guards, false) (:next e)]
-                                    => stack
-                        )
-                ]
-                    (loop [stack stack guards guards]
-                        (let [
-                            stack (loop-when-recur stack (seq stack) (GuardOrder'checkIfAvailable-6 (first stack), (next stack), sorted, newBlock, guards, true) => stack)
-                            [stack guards]
-                                (when (seq guards) => [stack guards]
-                                    [(GuardOrder'addNodeToResort-5 (first guards), stack, sorted, newBlock, true) (next guards)]
-                                )
-                        ]
-                            (recur-if (or (seq stack) (seq guards)) [stack guards])
-                        )
-                    )
-                    newBlock
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; After an earliest schedule, re-sort guards to honor their
-     ; {@linkplain StaticDeoptimizingNode#computePriority() priority}.
-     ;
-     ; Note that this only changes the order of nodes within {@linkplain MicroBlock micro-blocks},
-     ; nodes will not be moved from one micro-block to another.
-     ;;
-    (defn #_"void" GuardOrder'resortGuards-2 [#_"Graph" graph, #_"{Node MicroBlock}" mapping]
-        (doseq [#_"MicroBlock" block (set (map #(get mapping %) (Graph''getNodes-2 graph, GuardNode)))]
-            (let [
-                #_"MicroBlock" newBlock (GuardOrder'resortGuards-1 block)
-            ]
-                (when (some? newBlock)
-                    (§ ass! block (assoc block :head (:head newBlock)))
-                    (§ ass! block (assoc block :tail (:tail newBlock)))
-                )
-            )
-        )
-        nil
     )
 )
 
@@ -12889,7 +12514,7 @@ ZeroExtendNode'new-4
 
     (defn #_"GuardingNode" Lowerer'createNullCheck-3 [#_"ValueNode" object, #_"FixedNode" before, #_"LoweringTool" lowerer]
         (when-not (StampTool'isPointerNeverNull-1 (:stamp object))
-            (LoweringTool''createGuard-7 lowerer, before, (Graph''add-2 (:graph before), (IsNullNode'create-1 object)), :DeoptimizationReason'NullCheckException, :DeoptimizationAction'InvalidateReprofile, JavaConstant'NULL_POINTER, true)
+            (LoweringTool''createGuard-6 lowerer, before, (Graph''add-2 (:graph before), (IsNullNode'create-1 object)), :DeoptimizationReason'NullCheckException, :DeoptimizationAction'InvalidateReprofile, true)
         )
     )
 
@@ -17997,7 +17622,7 @@ ZeroExtendNode'new-4
                                 (when (satisfies? LoopExitNode node)
                                     (loop-when-recur [#_"seq" s (seq (LoopExitNode''proxies-1 node))] (some? s) [(next s)]
                                         (let [
-                                            #_"ProxyNode" proxy (first s)
+                                            #_"ValueProxyNode" proxy (first s)
                                         ]
                                             (§ ass! this (update this :aliases assoc proxy nil))
                                             (§ ass! this (assoc this :changed? (or (:changed? this) (and (EffectsClosure'''processNode-5 this, proxy, state, effects, lastFixedNode) (EffectsClosure'isSignificantNode-1 node)))))
@@ -18597,7 +18222,7 @@ ZeroExtendNode'new-4
                 (when-not (or (satisfies? VirtualObjectNode value) (satisfies? ConstantNode value))
                     (when-not (and (not (AbstractMergeNode''isPhiAtMerge-2 (:loopBegin exitNode), value)) (some? initialObjState) (ObjectState''isVirtual-1 initialObjState) (= (ObjectState''getEntry-2 initialObjState, i) value))
                         (let [
-                            #_"ProxyNode" proxy (ValueProxyNode'new-2 value, exitNode)
+                            #_"ValueProxyNode" proxy (ValueProxyNode'new-2 value, exitNode)
                             _ (§ ass! exitState (PartialEscapeBlockState''setEntry-4 exitState, object, i, proxy))
                             _ (§ ass! effects (GraphEffects''addFloatingNode-2 effects, proxy))
                         ]
@@ -18609,10 +18234,10 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" PartialEscapeClosure'processMaterializedAtLoopExit-7 [#_"LoopExitNode" exitNode, #_"GraphEffects" effects, #_"{Integer ProxyNode}" proxies, #_"int" object, #_"ObjectState" exitObjState, #_"ObjectState" initialObjState, #_"PartialEscapeBlockState" exitState]
+    (defn- #_"void" PartialEscapeClosure'processMaterializedAtLoopExit-7 [#_"LoopExitNode" exitNode, #_"GraphEffects" effects, #_"{Integer ValueProxyNode}" proxies, #_"int" object, #_"ObjectState" exitObjState, #_"ObjectState" initialObjState, #_"PartialEscapeBlockState" exitState]
         (when (or (nil? initialObjState) (ObjectState''isVirtual-1 initialObjState))
             (let [
-                #_"ProxyNode" proxy (get proxies object)
+                #_"ValueProxyNode" proxy (get proxies object)
                 proxy
                     (if (nil? proxy)
                         (let [
@@ -18639,10 +18264,10 @@ ZeroExtendNode'new-4
         (#_"void" EffectsClosure'''processLoopExit-5 [#_"PartialEscapeClosure" this, #_"LoopExitNode" exitNode, #_"PartialEscapeBlockState" initialState, #_"PartialEscapeBlockState" exitState, #_"GraphEffects" effects]
             (when (:hasValueProxies (:graph exitNode))
                 (let [
-                    #_"{Integer ProxyNode}" proxies
+                    #_"{Integer ValueProxyNode}" proxies
                         (loop-when [proxies {} #_"seq" s (seq (LoopExitNode''proxies-1 exitNode))] (some? s) => proxies
                             (let [
-                                #_"ProxyNode" proxy (first s)
+                                #_"ValueProxyNode" proxy (first s)
                                 #_"ValueNode" alias (PartialEscapeClosure''getAlias-2 this, (:value proxy))
                                 proxies
                                     (when (satisfies? VirtualObjectNode alias) => proxies
@@ -19055,9 +18680,9 @@ ZeroExtendNode'new-4
                         (let [
                             #_"ValueNode" value (PEReadEliminationBlockState''getReadCache-6 exitState, (:object k), (:identity k), (:index k), (:kind k), this)
                         ]
-                            (when-not (and (satisfies? ProxyNode value) (= (:loopExit value) exitNode))
+                            (when-not (and (satisfies? ValueProxyNode value) (= (:loopExit value) exitNode))
                                 (let [
-                                    #_"ProxyNode" proxy (ValueProxyNode'new-2 value, exitNode)
+                                    #_"ValueProxyNode" proxy (ValueProxyNode'new-2 value, exitNode)
                                     _ (§ ass! effects (GraphEffects''addFloatingNode-2 effects, proxy))
                                     _ (§ ass! exitState (update exitState :readCache assoc k proxy))
                                 ]
@@ -19353,7 +18978,7 @@ ZeroExtendNode'new-4
                 (doseq [[#_"CacheEntry" k #_"ValueNode" v] (:readCache exitState)]
                     (when-not (= (get (:readCache initialState) k) v)
                         (let [
-                            #_"ProxyNode" proxy (ValueProxyNode'new-2 (ReadEliminationBlockState''getCacheEntry-2 exitState, k), exitNode)
+                            #_"ValueProxyNode" proxy (ValueProxyNode'new-2 (ReadEliminationBlockState''getCacheEntry-2 exitState, k), exitNode)
                             _ (§ ass! effects (GraphEffects''addFloatingNode-2 effects, proxy))
                             _ (§ ass! exitState (update exitState :readCache assoc k proxy))
                         ]
@@ -19962,7 +19587,7 @@ ZeroExtendNode'new-4
                     #_"ValueNode" receiver (nth args 0)
                     #_"TypeReference" checkedType (TypeReference'createTrusted-1 callingClass)
                     #_"LogicNode" logic (BytecodeParser''genUnique-2 this, (InstanceOfNode'create-2 checkedType, receiver))
-                    #_"FixedGuardNode" fixedGuard (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, :DeoptimizationReason'ClassCastException, :DeoptimizationAction'None, false))
+                    #_"FixedGuardNode" fixedGuard (BytecodeParser''append-2 this, (FixedGuardNode'new-3 logic, :DeoptimizationReason'ClassCastException, :DeoptimizationAction'None))
                 ]
                     (assoc' args 0 (BytecodeParser''append-2 this, (PiNode'create-3 receiver, (StampFactory'object-2 checkedType, true), fixedGuard)))
                 )
@@ -19996,13 +19621,8 @@ ZeroExtendNode'new-4
                     (StampFactory'forDeclaredType-2 returnType, false)
                 )
             #_"MethodCallTargetNode" callTarget (Graph''add-2 (:graph this), (MethodCallTargetNode'new-4 invokeKind, targetMethod, invokeArgs, returnStamp))
-            #_"InvokeNode" invoke (BytecodeParser''createInvoke-4 this, invokeBci, callTarget, resultType)
         ]
-            (doseq [#_"InlineInvokePlugin" plugin (:inlineInvokePlugins HotSpot'plugins)]
-                (InlineInvokePlugin'''notifyNotInlined-4 plugin, this, targetMethod, invoke)
-            )
-
-            invoke
+            (BytecodeParser''createInvoke-4 this, invokeBci, callTarget, resultType)
         )
     )
 
@@ -20821,7 +20441,7 @@ ZeroExtendNode'new-4
                                     ]
                                         (if (LogicNode''isTautology-1 logic)
                                             object
-                                            (BytecodeParser''append-2 this, (PiNode'create-3 object, (StampFactory'object-2 checkedType, (:never-nil? (:stamp object))), (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, :DeoptimizationReason'ClassCastException, :DeoptimizationAction'InvalidateReprofile, false))))
+                                            (BytecodeParser''append-2 this, (PiNode'create-3 object, (StampFactory'object-2 checkedType, (:never-nil? (:stamp object))), (BytecodeParser''append-2 this, (FixedGuardNode'new-3 logic, :DeoptimizationReason'ClassCastException, :DeoptimizationAction'InvalidateReprofile))))
                                         )
                                     )
                             ]
@@ -24731,7 +24351,7 @@ ZeroExtendNode'new-4
         (let [
             #_"DeoptimizationAction" action (ConditionalEliminationInstance'mergeActions-2 (:action otherGuard), (:action thisGuard))
         ]
-            (and (some? action) (= (:speculation otherGuard) (:speculation thisGuard))
+            (and (some? action)
                 (let [
                     #_"LogicNode" logic (Node''copyWithInputs-1 (:logic thisGuard))
                     ;; We have ...; guard(C1); guard(C2); ...
@@ -25139,7 +24759,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"boolean" ConditionalEliminationInstance'maybeMultipleUsages-1 [#_"ValueNode" value]
-        (or (Node''hasMoreThanOneUsage-1 value) (satisfies? ProxyNode value) (satisfies? PiNode value) (satisfies? StampInverter value))
+        (or (Node''hasMoreThanOneUsage-1 value) (satisfies? ValueProxyNode value) (satisfies? PiNode value) (satisfies? StampInverter value))
     )
 
     (defn- #_"this" ConditionalEliminationInstance''registerNewCondition-4 [#_"ConditionalEliminationInstance" this, #_"LogicNode" logic, #_"boolean" negated?, #_"GuardingNode" guard]
@@ -25238,7 +24858,7 @@ ZeroExtendNode'new-4
                         (#_"boolean" GuardRewirer'''rewire-5 [#_"GuardRewirer" _, #_"GuardingNode" guard, #_"boolean" result, #_"Stamp" guardedValueStamp, #_"ValueNode" newInput]
                             (if (= result (:negated? node))
                                 (let [
-                                    #_"DeoptimizeNode" deopt (Graph''add-2 (:graph node), (DeoptimizeNode'new-3 (:action node), (:reason node), (:speculation node)))
+                                    #_"DeoptimizeNode" deopt (Graph''add-2 (:graph node), (DeoptimizeNode'new-2 (:action node), (:reason node)))
                                     deopt (DeoptBefore'''setStateBefore-2 deopt, (:stateBefore node))
                                 ]
                                     (Node''replaceAtPredecessor-2 node, deopt)
@@ -25270,7 +24890,7 @@ ZeroExtendNode'new-4
                         (#_"boolean" GuardRewirer'''rewire-5 [#_"GuardRewirer" _, #_"GuardingNode" guard, #_"boolean" result, #_"Stamp" guardedValueStamp, #_"ValueNode" newInput]
                             (when (= result (:negated? node)) => (§ ass! node (Node''replaceAndDelete-2 node, guard))
                                 (let [
-                                    #_"DeoptimizeNode" deopt (Graph''add-2 (:graph node), (DeoptimizeNode'new-3 (:action node), (:reason node), (:speculation node)))
+                                    #_"DeoptimizeNode" deopt (Graph''add-2 (:graph node), (DeoptimizeNode'new-2 (:action node), (:reason node)))
                                     #_"AbstractBeginNode" beginNode (FloatingAnchoredNode''getAnchor-1 node)
                                     #_"FixedNode" _next (:next beginNode)
                                     _ (§ ass! beginNode (FixedWithNextNode''setNext-2 beginNode, deopt))
@@ -25472,7 +25092,7 @@ ZeroExtendNode'new-4
                 [cfg #_"{Block Node*}" block->nodes #_"{Node Block}" node->block]
                     (when (:fullSchedule this) => [cfg nil (:node->block cfg)]
                         (ControlFlowGraph''visitDominatorTree-3 cfg, (MoveGuardsUpwards'new-0), (:hasValueProxies graph))
-                        (§ ass! graph (Schedule''run-1 (Schedule'new-3 cfg, graph, :SchedulingStrategy'EARLIEST_WITH_GUARD_ORDER)))
+                        (§ ass! graph (Schedule''run-1 (Schedule'new-3 cfg, graph, :SchedulingStrategy'EARLIEST)))
                         [(:cfg (:lastSchedule graph)) (:block->nodes (:lastSchedule graph)) (:node->block (:lastSchedule graph))]
                     )
             ]
@@ -26383,161 +26003,6 @@ ZeroExtendNode'new-4
     )
 )
 
-;;;
- ; This phase will find branches which always end with a DeoptimizeNode and replace their
- ; ControlSplitNodes with FixedGuardNodes.
- ;
- ; This is useful because FixedGuardNodes will be lowered to GuardNodes, which can later
- ; be optimized more aggressively than control-flow constructs.
- ;
- ; This is currently only done for branches that start from a IfNode. If it encounters
- ; a branch starting at an other kind of ControlSplitNode, it will only bring the
- ; DeoptimizeNode as close to the ControlSplitNode as possible.
- ;;
-(class-ns ConvertDeoptimizeToGuardPhase [Phase]
-    (defn #_"ConvertDeoptimizeToGuardPhase" ConvertDeoptimizeToGuardPhase'new-0 []
-        (ConvertDeoptimizeToGuardPhase'class.)
-    )
-
-    (defn- #_"void" ConvertDeoptimizeToGuardPhase'moveAsDeoptAfter-2 [#_"FixedWithNextNode" node, #_"StaticDeoptimizingNode" deopt]
-        (let [
-            #_"FixedNode" _next (:next node)
-        ]
-            (when-not (= _next deopt)
-                (§ ass! node (FixedWithNextNode''setNext-2 node, (Graph''add-2 (:graph node), (DeoptimizeNode'new-3 (:action deopt), (:reason deopt), (:speculation deopt)))))
-                (GraphUtil'killCFG-1 _next)
-            )
-        )
-        nil
-    )
-
-    (defn- #_"void" ConvertDeoptimizeToGuardPhase''propagateFixed-3 [#_"ConvertDeoptimizeToGuardPhase" this, #_"FixedNode" from, #_"StaticDeoptimizingNode" deopt]
-        (loop-when [#_"Node" node from] (some? node)
-            (let [
-                #_"Node" predecessor (:predecessor node)
-            ]
-                (if (and GraalOptions'guardPriorities (satisfies? FixedGuardNode node))
-                    (when (GuardPriority'isHigherPriorityThan-2 (StaticDeoptimizingNode''computePriority-1 node), (StaticDeoptimizingNode''computePriority-1 deopt)) => (recur predecessor)
-                        (ConvertDeoptimizeToGuardPhase'moveAsDeoptAfter-2 node, deopt)
-                    )
-                    (when (satisfies? AbstractBeginNode node) => (recur predecessor)
-                        (cond
-                            (satisfies? AbstractMergeNode node)
-                                (let [
-                                    #_"FixedNode" _next (:next node)
-                                ]
-                                    (while (Node''isAlive-1 node)
-                                        (ConvertDeoptimizeToGuardPhase''propagateFixed-3 this, (first (:ends node)), deopt)
-                                    )
-                                    (ConvertDeoptimizeToGuardPhase''propagateFixed-3 this, _next, deopt)
-                                )
-                            (satisfies? IfNode predecessor)
-                                (let [
-                                    ;; prioritize the source position of the IfNode
-                                    #_"Graph" graph (:graph predecessor)
-                                    #_"boolean" negateGuardCondition (= node (:trueSuccessor predecessor))
-                                    #_"FixedGuardNode" guard (Graph''add-2 graph, (FixedGuardNode'new-5 (:logic predecessor), (:reason deopt), (:action deopt), (:speculation deopt), negateGuardCondition))
-                                    #_"FixedWithNextNode" pred (:predecessor predecessor)
-                                    #_"AbstractBeginNode" survivingSuccessor (if negateGuardCondition (:falseSuccessor predecessor) (:trueSuccessor predecessor))
-                                    _ (Graph''removeSplitPropagate-3 graph, predecessor, survivingSuccessor)
-                                    #_"Node" newGuard (if (satisfies? LoopExitNode survivingSuccessor) (ProxyNode'forGuard-3 guard, survivingSuccessor, graph) guard)
-                                    _ (Node''replaceAtUsages-3 survivingSuccessor, :InputType'Guard, newGuard)
-                                    #_"FixedNode" _next (:next pred)
-                                    _ (§ ass! pred (FixedWithNextNode''setNext-2 pred, guard))
-                                    _ (§ ass! guard (FixedWithNextNode''setNext-2 guard, _next))
-                                    _ (§ ass! survivingSuccessor (Simplifiable'''simplify-2 survivingSuccessor, (DefaultSimplifierTool'new-0)))
-                                ]
-                                )
-                            :else
-                                (when (or (nil? predecessor) (satisfies? ControlSplitNode predecessor)) => (recur predecessor)
-                                    (ConvertDeoptimizeToGuardPhase'moveAsDeoptAfter-2 (§ cast #_"AbstractBeginNode" node), deopt)
-                                )
-                        )
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (defn- #_"void" ConvertDeoptimizeToGuardPhase''processFixedGuardAndMerge-8 [#_"ConvertDeoptimizeToGuardPhase" this, #_"FixedGuardNode" fixedGuard, #_"CompareNode" compare, #_"ValueNode" x, #_"ValuePhiNode" xPhi, #_"ValueNode" y, #_"ValuePhiNode" yPhi, #_"AbstractMergeNode" merge]
-        (let [
-            #_"EndNode*" predecessors (§ snap (Node'''cfgPredecessors-1 merge))
-        ]
-            (loop-when [#_"int" i 0] (< i (count predecessors))
-                (let [
-                    #_"AbstractEndNode" pred (nth predecessors i)
-                ]
-                    (when (Node''isAlive-1 pred)
-                        (let [
-                            #_"Constant" xs (ValueNode''asConstant-1 (if (some? xPhi) (PhiNode''valueAt-2n xPhi, pred) x))
-                            #_"Constant" ys (ValueNode''asConstant-1 (if (some? yPhi) (PhiNode''valueAt-2n yPhi, pred) y))
-                        ]
-                            (when (and (some? xs) (some? ys) (= (Condition''foldCondition-3c (:condition compare), xs, ys) (:negated? fixedGuard)))
-                                (ConvertDeoptimizeToGuardPhase''propagateFixed-3 this, pred, fixedGuard)
-                            )
-                            (recur (inc i))
-                        )
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (defn- #_"void" ConvertDeoptimizeToGuardPhase''processFixedGuardAndPhis-7 [#_"ConvertDeoptimizeToGuardPhase" this, #_"FixedGuardNode" fixedGuard, #_"CompareNode" compare, #_"ValueNode" x, #_"ValuePhiNode" xPhi, #_"ValueNode" y, #_"ValuePhiNode" yPhi]
-        (let [
-            #_"AbstractBeginNode" pred (AbstractBeginNode'prevBegin-1 fixedGuard)
-        ]
-            (when (and (satisfies? AbstractMergeNode pred) (or (nil? xPhi) (= (:merge xPhi) pred)) (or (nil? yPhi) (= (:merge yPhi) pred)))
-                (ConvertDeoptimizeToGuardPhase''processFixedGuardAndMerge-8 this, fixedGuard, compare, x, xPhi, y, yPhi, pred)
-            )
-        )
-        nil
-    )
-
-    (defn- #_"void" ConvertDeoptimizeToGuardPhase''trySplitFixedGuard-2 [#_"ConvertDeoptimizeToGuardPhase" this, #_"FixedGuardNode" fixedGuard]
-        (let [
-            #_"LogicNode" logic (:logic fixedGuard)
-        ]
-            (when (satisfies? CompareNode logic)
-                (let [
-                    #_"ValueNode" x (:x logic)
-                    #_"ValuePhiNode" xPhi (when (satisfies? ValuePhiNode x) x)
-                ]
-                    (when (or (satisfies? ConstantNode x) (some? xPhi))
-                        (let [
-                            #_"ValueNode" y (:y logic)
-                            #_"ValuePhiNode" yPhi (when (satisfies? ValuePhiNode y) y)
-                        ]
-                            (when (or (satisfies? ConstantNode y) (some? yPhi))
-                                (ConvertDeoptimizeToGuardPhase''processFixedGuardAndPhis-7 this, fixedGuard, logic, x, xPhi, y, yPhi)
-                            )
-                        )
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (defm ConvertDeoptimizeToGuardPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"ConvertDeoptimizeToGuardPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (doseq [#_"DeoptimizeNode" d (Graph''getNodes-2 graph, DeoptimizeNode)]
-                (when-not (= (:action d) :DeoptimizationAction'None)
-                    (ConvertDeoptimizeToGuardPhase''propagateFixed-3 this, d, d)
-                )
-            )
-            (when (some? context)
-                (doseq [#_"FixedGuardNode" fixedGuard (Graph''getNodes-2 graph, FixedGuardNode)]
-                    (ConvertDeoptimizeToGuardPhase''trySplitFixedGuard-2 this, fixedGuard)
-                )
-            )
-            graph
-        )
-    )
-)
-
 (class-ns CountedLoopInfo []
     (defn #_"CountedLoopInfo" CountedLoopInfo'new-6 [#_"LoopEx" _loop, #_"InductionVariable" iv, #_"IfNode" ifNode, #_"ValueNode" end, #_"boolean" oneOff, #_"AbstractBeginNode" body]
         (merge (CountedLoopInfo'class.)
@@ -26688,7 +26153,7 @@ ZeroExtendNode'new-4
                             (Graph''add-2 graph, (IntegerLessThanNode'new-2 (:end this), (if (:oneOff this) (MathUtil'add-3 graph, v1, one) v1)))
                         )
                     )
-                #_"GuardingNode" overflowGuard (Graph''add-2 graph, (GuardNode'new-6 cond, (AbstractBeginNode'prevBegin-1 (LoopEx''entryPoint-1 (:loop this))), :DeoptimizationReason'LoopLimitCheck, :DeoptimizationAction'InvalidateRecompile, true, JavaConstant'NULL_POINTER))
+                #_"GuardingNode" overflowGuard (Graph''add-2 graph, (GuardNode'new-5 cond, (AbstractBeginNode'prevBegin-1 (LoopEx''entryPoint-1 (:loop this))), :DeoptimizationReason'LoopLimitCheck, :DeoptimizationAction'InvalidateRecompile, true))
                 _ (§ ass! (LoopEx''loopBegin-1 (:loop this)) (LoopBeginNode''setOverflowGuard-2 (LoopEx''loopBegin-1 (:loop this)), overflowGuard))
             ]
                 overflowGuard
@@ -27033,49 +26498,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns DefaultSimplifierTool [SimplifierTool, CanonicalizerTool]
-    (defn #_"DefaultSimplifierTool" DefaultSimplifierTool'new-0 []
-        (DefaultSimplifierTool'class.)
-    )
-
-    (defm DefaultSimplifierTool CanonicalizerTool
-        (#_"boolean" CanonicalizerTool'''canonicalizeReads-1 [#_"DefaultSimplifierTool" this]
-            false
-        )
-
-        (#_"boolean" CanonicalizerTool'''allUsagesAvailable-1 [#_"DefaultSimplifierTool" this]
-            true
-        )
-    )
-
-    (defm DefaultSimplifierTool SimplifierTool
-        (#_"void" SimplifierTool'''deleteBranch-2 [#_"DefaultSimplifierTool" this, #_"Node" branch]
-            (Node''replaceFirstSuccessor-3 (:predecessor branch), branch, nil)
-            (GraphUtil'killCFG-1 branch)
-            nil
-        )
-
-        (#_"void" SimplifierTool'''removeIfUnused-2 [#_"DefaultSimplifierTool" this, #_"Node" node]
-            (GraphUtil'tryKillUnused-1 node)
-            nil
-        )
-
-        (#_"this" SimplifierTool'''addToWorkList-2n [#_"DefaultSimplifierTool" this, #_"Node" node]
-            this
-        )
-
-        (#_"this" SimplifierTool'''addToWorkList-2s [#_"DefaultSimplifierTool" this, #_"Node*" nodes]
-            this
-        )
-    )
-
-    (defm DefaultSimplifierTool CanonicalizerTool
-        (#_"Integer" CanonicalizerTool'''smallestCompareWidth-1 [#_"DefaultSimplifierTool" this]
-            (Lowerer'smallestCompareWidth-0)
-        )
-    )
-)
-
 (class-ns DeferredExit []
     (defn #_"DeferredExit" DeferredExit'new-2 [#_"Block" block, #_"DeferredExit" _next]
         (merge (DeferredExit'class.)
@@ -27083,87 +26505,6 @@ ZeroExtendNode'new-4
                 #_"Block" :block block
                 #_"DeferredExit" :next _next
             )
-        )
-    )
-)
-
-;;;
- ; This phase tries to find {@link AbstractDeoptimizeNode DeoptimizeNodes} which use the same
- ; FrameState and merges them together.
- ;;
-(class-ns DeoptimizationGroupingPhase [Phase]
-    (defn #_"DeoptimizationGroupingPhase" DeoptimizationGroupingPhase'new-0 []
-        (DeoptimizationGroupingPhase'class.)
-    )
-
-    (defn- #_"void" DeoptimizationGroupingPhase'exitLoops-3 [#_"AbstractDeoptimizeNode" deopt, #_"EndNode" end, #_"ControlFlowGraph" cfg]
-        (loop-when-recur [#_"Loop" _loop (:loop (ControlFlowGraph''blockFor-2 cfg, deopt))] (some? _loop) [(:parent _loop)]
-            (Graph''addBeforeFixed-3 (:graph end), end, (Graph''add-2 (:graph end), (LoopExitNode'new-1 (:beginNode (:header _loop)))))
-        )
-        nil
-    )
-
-    (defm DeoptimizationGroupingPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"DeoptimizationGroupingPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (loop-when [#_"ControlFlowGraph" cfg nil #_"seq" s (seq (Graph''getNodes-2 graph, FrameState))] (some? s)
-                (let [
-                    #_"FrameState" fs (first s)
-                    [cfg #_"FixedNode" target #_"[AbstractDeoptimizeNode]" obsoletes]
-                        (loop-when [cfg cfg target nil obsoletes nil #_"seq" s (seq (filter #(satisfies? AbstractDeoptimizeNode %) (:nodeUsages fs)))] (some? s) => [cfg target obsoletes]
-                            (let [
-                                #_"AbstractDeoptimizeNode" deopt (first s)
-                                [cfg target obsoletes]
-                                    (when (some? target) => [cfg deopt obsoletes]
-                                        (let [
-                                            cfg (or cfg (ControlFlowGraph'compute-3 graph, false, false))
-                                            [target obsoletes #_"PhiNode" reasonActionPhi #_"PhiNode" speculationPhi]
-                                                (when (satisfies? AbstractDeoptimizeNode target) => [target obsoletes nil nil]
-                                                    (let [
-                                                        #_"AbstractMergeNode" merge (Graph''add-2 graph, (MergeNode'new-0))
-                                                        #_"EndNode" firstEnd (Graph''add-2 graph, (EndNode'new-0))
-                                                        #_"ValueNode" actionAndReason (AbstractDeoptimizeNode'''getActionAndReason-1 target)
-                                                        #_"ValueNode" speculation (AbstractDeoptimizeNode'''getSpeculation-1 target)
-                                                        reasonActionPhi (Graph''add-2 graph, (ValuePhiNode'new-2 (StampFactory'forKind-1 (ValueNode''getStackKind-1 actionAndReason)), merge))
-                                                        speculationPhi (Graph''add-2 graph, (ValuePhiNode'new-2 (StampFactory'forKind-1 (ValueNode''getStackKind-1 speculation)), merge))
-                                                        _ (§ ass! merge (AbstractMergeNode''addForwardEnd-2 merge, firstEnd))
-                                                        _ (§ ass! reasonActionPhi (PhiNode''addInput-2 reasonActionPhi, actionAndReason))
-                                                        _ (§ ass! speculationPhi (PhiNode''addInput-2 speculationPhi, speculation))
-                                                    ]
-                                                        (Node''replaceAtPredecessor-2 target, firstEnd)
-                                                        (DeoptimizationGroupingPhase'exitLoops-3 target, firstEnd, cfg)
-                                                        (let [
-                                                            merge (FixedWithNextNode''setNext-2 merge, (Graph''add-2 graph, (DynamicDeoptimizeNode'new-2 reasonActionPhi, speculationPhi)))
-                                                        ]
-                                                            [merge [ target ] reasonActionPhi speculationPhi]
-                                                        )
-                                                    )
-                                                )
-                                            #_"EndNode" newEnd (Graph''add-2 graph, (EndNode'new-0))
-                                            _ (§ ass! target (AbstractMergeNode''addForwardEnd-2 target, newEnd))
-                                            _ (§ ass! reasonActionPhi (PhiNode''addInput-2 reasonActionPhi, (AbstractDeoptimizeNode'''getActionAndReason-1 deopt)))
-                                            _ (§ ass! speculationPhi (PhiNode''addInput-2 speculationPhi, (AbstractDeoptimizeNode'''getSpeculation-1 deopt)))
-                                        ]
-                                            (Node''replaceAtPredecessor-2 deopt, newEnd)
-                                            (DeoptimizationGroupingPhase'exitLoops-3 deopt, newEnd, cfg)
-                                            [cfg target (conj' obsoletes deopt)]
-                                        )
-                                    )
-                            ]
-                                (recur cfg target obsoletes (next s))
-                            )
-                        )
-                    _
-                        (when (some? obsoletes)
-                            (§ ass! target (update target :next DeoptBefore'''setStateBefore-2 fs))
-                            (doseq [#_"AbstractDeoptimizeNode" obsolete obsoletes]
-                                (§ ass! obsolete (Node''safeDelete-1 obsolete))
-                            )
-                        )
-                ]
-                    (recur cfg (next s))
-                )
-            )
-            graph
         )
     )
 )
@@ -30963,7 +30304,7 @@ ZeroExtendNode'new-4
             f'proxy
                 (fn #_"ValueNode" [#_"ValueNode" value]
                     (when (and (some? value) (not= value :FrameState'TWO_SLOT_MARKER) (or (not (FrameStateBuilder''contains-2 loopEntryState, value)) (AbstractMergeNode''isPhiAtMerge-2 (:loopBegin loopExit), value))) => value
-                        (ProxyNode'forValue-3 value, loopExit, (:graph this))
+                        (Graph''add-2 (:graph this), (ValueProxyNode'new-2 value, loopExit))
                     )
                 )
         ]
@@ -31641,7 +30982,7 @@ ZeroExtendNode'new-4
         (#_"Graph" Phase'''run-3 [#_"GuardLoweringPhase" this, #_"Graph" graph, #_"PhaseContext" context]
             (when (GuardsStage'allowsFloatingGuards-1 (:guardsStage graph)) => graph
                 (let [
-                    graph (Phase'''run-3 (SchedulePhase'new-1 :SchedulingStrategy'EARLIEST_WITH_GUARD_ORDER), graph, nil)
+                    graph (Phase'''run-3 (SchedulePhase'new-1 :SchedulingStrategy'EARLIEST), graph, nil)
                 ]
                     (doseq [#_"Block" block (:reversePostOrder (:cfg (:lastSchedule graph)))]
                         (let [
@@ -31662,7 +31003,7 @@ ZeroExtendNode'new-4
  ;
  ; Word-type rewriting for {@link BytecodeParser#parsingIntrinsic intrinsic} functions (snippets and
  ; method substitutions), by forwarding to the WordOperationPlugin. Note that we forward the NodePlugin
- ; and TypePlugin methods, but not the InlineInvokePlugin methods implemented by WordOperationPlugin.
+ ; and TypePlugin methods, but not the InlineInvokePlugin methods implemented by WordOperationPlugin.
  ; The latter is not necessary because HotSpot only uses the Word type in methods that are force-inlined,
  ; i.e. there are never non-inlined invokes that involve the Word type.
  ;
@@ -34908,16 +34249,14 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"this" LIRGenerator''moveDeoptValuesToThread-3 [#_"LIRGenerator" this, #_"Value" actionAndReason, #_"Value" speculation]
-        (-> this
-            (LIRGenerator''moveValueToThread-3 actionAndReason, HotSpot'pendingDeoptimizationOffset)
-            (LIRGenerator''moveValueToThread-3 speculation, HotSpot'pendingFailedSpeculationOffset)
-        )
+    (defn- #_"this" LIRGenerator''moveDeoptValuesToThread-2 [#_"LIRGenerator" this, #_"Value" actionAndReason]
+        (LIRGenerator''moveValueToThread-3 this, actionAndReason, HotSpot'pendingDeoptimizationOffset)
     )
 
-    (defn #_"this" LIRGenerator''emitDeoptimize-3 [#_"LIRGenerator" this, #_"Value" actionAndReason, #_"Value" speculation]
+    (defn #_"this" LIRGenerator''emitDeoptimize-3 [#_"LIRGenerator" this, #_"DeoptimizationAction" action, #_"DeoptimizationReason" reason]
         (let [
-            this (LIRGenerator''moveDeoptValuesToThread-3 this, actionAndReason, speculation)
+            #_"Value" actionAndReason (LIRGenerator''emitJavaConstant-2 this, (MetaReflection'encodeDeoptActionAndReason-2 action, reason))
+            this (LIRGenerator''moveDeoptValuesToThread-2 this, actionAndReason)
         ]
             (LIRGenerator''append-2 this, (AMD64DeoptimizeOp'new-0))
         )
@@ -34926,8 +34265,7 @@ ZeroExtendNode'new-4
     (defn #_"this" LIRGenerator''emitDeoptimizeCaller-3 [#_"LIRGenerator" this, #_"DeoptimizationAction" action, #_"DeoptimizationReason" reason]
         (let [
             #_"Value" actionAndReason (LIRGenerator''emitJavaConstant-2 this, (MetaReflection'encodeDeoptActionAndReason-2 action, reason))
-            #_"Value" nullValue (LIRGenerator''emitConstant-3 this, (ValueKind'reference-1 :WordSize'64bits), JavaConstant'NULL_POINTER)
-            this (LIRGenerator''moveDeoptValuesToThread-3 this, actionAndReason, nullValue)
+            this (LIRGenerator''moveDeoptValuesToThread-2 this, actionAndReason)
         ]
             (LIRGenerator''append-2 this, (DeoptimizeCallerOp'new-0))
         )
@@ -41386,7 +40724,7 @@ ZeroExtendNode'new-4
                                     )
                                 )
                             )
-                            (doseq [#_"ProxyNode" proxy (LoopExitNode''proxies-1 earlyExit)]
+                            (doseq [#_"ValueProxyNode" proxy (LoopExitNode''proxies-1 earlyExit)]
                                 (§ ass! nodes (conj nodes proxy))
                             )
                         )
@@ -41507,7 +40845,7 @@ ZeroExtendNode'new-4
                                     (let [
                                         #_"boolean" newEarlyExitIsLoopExit (satisfies? LoopExitNode newEarlyExit)
                                     ]
-                                        (doseq [#_"ProxyNode" vpn (§ snap (LoopExitNode''proxies-1 earlyExit))]
+                                        (doseq [#_"ValueProxyNode" vpn (§ snap (LoopExitNode''proxies-1 earlyExit))]
                                             (cond
                                                 (Node''hasNoUsages-1 vpn)  nil
                                                 (nil? (:value vpn)) (§ ass! vpn (Node''replaceAtUsages-2 vpn, nil))
@@ -41520,7 +40858,6 @@ ZeroExtendNode'new-4
                                                                     #_"PhiNode" phi
                                                                         (condp satisfies? vpn
                                                                             ValueProxyNode (ValuePhiNode'new-2 (:stamp vpn), merge)
-                                                                            GuardProxyNode (GuardPhiNode'new-1 merge)
                                                                         )
                                                                     _ (Graph''add-2 graph, phi)
                                                                     phi (PhiNode''addInput-2 phi, vpn)
@@ -41583,7 +40920,6 @@ ZeroExtendNode'new-4
             #_"PhiNode" ret
                 (condp satisfies? phi
                     ValuePhiNode  (ValuePhiNode'new-2 (:stamp phi), merge)
-                    GuardPhiNode  (GuardPhiNode'new-1 merge)
                     MemoryPhiNode (MemoryPhiNode'new-2 merge, (:locationIdentity phi))
                 )
         ]
@@ -41995,7 +41331,7 @@ ZeroExtendNode'new-4
                         (let [
                             _ (§ ass! this (LoopFragmentInside''clearStateNodes-2 this, exit))
                         ]
-                            (doseq [#_"ProxyNode" proxy (LoopExitNode''proxies-1 exit)]
+                            (doseq [#_"ValueProxyNode" proxy (LoopExitNode''proxies-1 exit)]
                                 (§ ass! this (update this :fragmentNodes disj proxy))
                             )
                         )
@@ -42856,10 +42192,10 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"GuardingNode" LoweringTool''createGuard-5 [#_"LoweringTool" this, #_"FixedNode" before, #_"LogicNode" logic, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action]
-        (LoweringTool''createGuard-7 this, before, logic, reason, action, JavaConstant'NULL_POINTER, false)
+        (LoweringTool''createGuard-6 this, before, logic, reason, action, false)
     )
 
-    (defn #_"GuardingNode" LoweringTool''createGuard-7 [#_"LoweringTool" this, #_"FixedNode" before, #_"LogicNode" logic, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action, #_"JavaConstant" speculation, #_"boolean" negated?]
+    (defn #_"GuardingNode" LoweringTool''createGuard-6 [#_"LoweringTool" this, #_"FixedNode" before, #_"LogicNode" logic, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action, #_"boolean" negated?]
         (let [
             #_"Graph" graph (:graph before)
         ]
@@ -42877,7 +42213,7 @@ ZeroExtendNode'new-4
             )
             (if (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph logic)))
                 (let [
-                    #_"GuardNode" newGuard (Graph''add-2 graph, (GuardNode'new-6 logic, (:guardAnchor this), reason, action, negated?, speculation))
+                    #_"GuardNode" newGuard (Graph''add-2 graph, (GuardNode'new-5 logic, (:guardAnchor this), reason, action, negated?))
                     _
                         (when GraalOptions'optEliminateGuards
                             (§ ass! this (update this :activeGuards conj newGuard))
@@ -42886,7 +42222,7 @@ ZeroExtendNode'new-4
                     newGuard
                 )
                 (let [
-                    #_"FixedGuardNode" fixedGuard (Graph''add-2 graph, (FixedGuardNode'new-5 logic, reason, action, speculation, negated?))
+                    #_"FixedGuardNode" fixedGuard (Graph''add-2 graph, (FixedGuardNode'new-4 logic, reason, action, negated?))
                     _ (Graph''addBeforeFixed-3 graph, before, fixedGuard)
                     #_"DummyGuardHandle" handle (Graph''add-2 graph, (DummyGuardHandle'new-1 fixedGuard))
                     _ (§ ass! fixedGuard (Lowerable'''lower-2 fixedGuard, this))
@@ -44069,7 +43405,7 @@ ZeroExtendNode'new-4
                 _
                     (when (and (satisfies? AbstractMergeNode begin) (not= (:anchorBlock this) block))
                         (doseq [#_"GuardNode" guard (§ snap (AbstractBeginNode''guards-1 begin))]
-                            (§ ass! guard (Node''replaceAndDelete-2 guard, (Graph''add-2 (:graph begin), (GuardNode'new-6 (:logic guard), (:beginNode (:anchorBlock this)), (:reason guard), (:action guard), (:negated? guard), (:speculation guard)))))
+                            (§ ass! guard (Node''replaceAndDelete-2 guard, (Graph''add-2 (:graph begin), (GuardNode'new-5 (:logic guard), (:beginNode (:anchorBlock this)), (:reason guard), (:action guard), (:negated? guard)))))
                         )
                     )
                 #_"FixedNode" end (:endNode block)
@@ -44096,15 +43432,7 @@ ZeroExtendNode'new-4
                                 ]
                                     (when (and (some? other) (= (:negated? guard) (:negated? other)))
                                         (let [
-                                            #_"JavaConstant" speculation
-                                                (cond
-                                                    (nil? (:speculation other))                                                    (:speculation guard)
-                                                    (or (nil? (:speculation guard)) (= (:speculation guard) (:speculation other))) (:speculation other)
-                                                    :else
-                                                        ;; Cannot optimize due to different speculations.
-                                                        (§ continue )
-                                                )
-                                            #_"GuardNode" newGuard (Graph''add-2 (:graph end), (GuardNode'new-6 (:logic guard), (:beginNode (:anchorBlock this)), (:reason guard), (:action guard), (:negated? guard), speculation))
+                                            #_"GuardNode" newGuard (Graph''add-2 (:graph end), (GuardNode'new-5 (:logic guard), (:beginNode (:anchorBlock this)), (:reason guard), (:action guard), (:negated? guard)))
                                             _
                                                 (when (Node''isAlive-1 other)
                                                     (§ ass! other (Node''replaceAndDelete-2 other, newGuard))
@@ -45525,49 +44853,37 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AbstractDeoptimizeNode [ControlSinkNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState]
-    (defn #_"AbstractDeoptimizeNode" AbstractDeoptimizeNode'new-1 [#_"FrameState" stateBefore]
-        (merge (AbstractDeoptimizeNode'class.) (ControlSinkNode'new-1 VoidStamp'instance)
-            (hash-map
-                ; @OptionalInput
-                #_"FrameState" :stateBefore stateBefore
-            )
-        )
-    )
-
-    (defm AbstractDeoptimizeNode DeoptimizingNode
-        (#_"boolean" DeoptimizingNode'''canDeoptimize-1 [#_"AbstractDeoptimizeNode" this]
-            true
-        )
-    )
-
-    (defm AbstractDeoptimizeNode DeoptBefore
-        (#_"this" DeoptBefore'''setStateBefore-2 [#_"AbstractDeoptimizeNode" this, #_"FrameState" f]
-            (Node''updateUsages-3 this, (:stateBefore this), f)
-            (assoc this :stateBefore f)
-        )
-    )
-)
-
-(class-ns DeoptimizeNode [AbstractDeoptimizeNode, ControlSinkNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, LIRLowerable, StaticDeoptimizingNode]
+;;;
+ ; This node represents an unconditional explicit request for immediate deoptimization.
+ ;
+ ; After this node, execution will continue using a fallback execution engine (such as an
+ ; interpreter) at the position described by the {@link #stateBefore() deoptimization state}.
+ ;;
+(class-ns DeoptimizeNode [ControlSinkNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, LIRLowerable]
     (§ intrinsic! #_"void" DeoptimizeNode'deopt-2 [#_"DeoptimizationAction" action, #_"DeoptimizationReason" reason])
 
     #_intrinsifier
     (defn #_"DeoptimizeNode" DeoptimizeNode'new-2 [#_"DeoptimizationAction" action, #_"DeoptimizationReason" reason]
-        (DeoptimizeNode'new-4 action, reason, JavaConstant'NULL_POINTER, nil)
-    )
-
-    (defn #_"DeoptimizeNode" DeoptimizeNode'new-3 [#_"DeoptimizationAction" action, #_"DeoptimizationReason" reason, #_"JavaConstant" speculation]
-        (DeoptimizeNode'new-4 action, reason, speculation, nil)
-    )
-
-    (defn #_"DeoptimizeNode" DeoptimizeNode'new-4 [#_"DeoptimizationAction" action, #_"DeoptimizationReason" reason, #_"JavaConstant" speculation, #_"FrameState" stateBefore]
-        (merge (DeoptimizeNode'class.) (AbstractDeoptimizeNode'new-1 stateBefore)
+        (merge (DeoptimizeNode'class.) (ControlSinkNode'new-1 VoidStamp'instance)
             (hash-map
+                ; @OptionalInput
+                #_"FrameState" :stateBefore nil
                 #_"DeoptimizationAction" :action action
                 #_"DeoptimizationReason" :reason reason
-                #_"JavaConstant" :speculation speculation
             )
+        )
+    )
+
+    (defm DeoptimizeNode DeoptimizingNode
+        (#_"boolean" DeoptimizingNode'''canDeoptimize-1 [#_"DeoptimizeNode" this]
+            true
+        )
+    )
+
+    (defm DeoptimizeNode DeoptBefore
+        (#_"this" DeoptBefore'''setStateBefore-2 [#_"DeoptimizeNode" this, #_"FrameState" state]
+            (Node''updateUsages-3 this, (:stateBefore this), state)
+            (assoc this :stateBefore state)
         )
     )
 
@@ -45579,69 +44895,7 @@ ZeroExtendNode'new-4
 
     (defm DeoptimizeNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"DeoptimizeNode" this, #_"LIRBuilder" builder]
-            (let [
-                #_"Value" actionAndReason (LIRGenerator''emitJavaConstant-2 (:gen builder), (MetaReflection'encodeDeoptActionAndReason-2 (:action this), (:reason this)))
-                #_"Value" speculationValue (LIRGenerator''emitJavaConstant-2 (:gen builder), (:speculation this))
-            ]
-                (update builder :gen LIRGenerator''emitDeoptimize-3 actionAndReason, speculationValue)
-            )
-        )
-    )
-
-    (defm DeoptimizeNode AbstractDeoptimizeNode
-        (#_"ValueNode" AbstractDeoptimizeNode'''getActionAndReason-1 [#_"DeoptimizeNode" this]
-            (ConstantNode'forConstant-2c (MetaReflection'encodeDeoptActionAndReason-2 (:action this), (:reason this)), (:graph this))
-        )
-
-        (#_"ValueNode" AbstractDeoptimizeNode'''getSpeculation-1 [#_"DeoptimizeNode" this]
-            (ConstantNode'forConstant-2c (:speculation this), (:graph this))
-        )
-    )
-)
-
-(class-ns DynamicDeoptimizeNode [AbstractDeoptimizeNode, ControlSinkNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, LIRLowerable, Lowerable, Canonicalizable]
-    (defn #_"DynamicDeoptimizeNode" DynamicDeoptimizeNode'new-2 [#_"ValueNode" actionAndReason, #_"ValueNode" speculation]
-        (merge (DynamicDeoptimizeNode'class.) (AbstractDeoptimizeNode'new-1 nil)
-            (hash-map
-                ; @Input
-                #_"ValueNode" :actionAndReason actionAndReason
-                ; @Input
-                #_"ValueNode" :speculation speculation
-            )
-        )
-    )
-
-    (defm DynamicDeoptimizeNode AbstractDeoptimizeNode
-        (#_"ValueNode" AbstractDeoptimizeNode'''getActionAndReason-1 [#_"DynamicDeoptimizeNode" this]
-            (:actionAndReason this)
-        )
-
-        (#_"ValueNode" AbstractDeoptimizeNode'''getSpeculation-1 [#_"DynamicDeoptimizeNode" this]
-            (:speculation this)
-        )
-    )
-
-    (defm DynamicDeoptimizeNode Lowerable
-        (#_"this" Lowerable'''lower-2 [#_"DynamicDeoptimizeNode" this, #_"LoweringTool" lowerer]
-            this ;; No lowering, we generate LIR directly for this node.
-        )
-    )
-
-    (defm DynamicDeoptimizeNode LIRLowerable
-        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"DynamicDeoptimizeNode" this, #_"LIRBuilder" builder]
-            (update builder :gen LIRGenerator''emitDeoptimize-3 (LIRBuilder''operand-2 builder, (:actionAndReason this)), (LIRBuilder''operand-2 builder, (:speculation this)))
-        )
-    )
-
-    (defm DynamicDeoptimizeNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"DynamicDeoptimizeNode" this, #_"CanonicalizerTool" tool]
-            (when (and (satisfies? ConstantNode (:actionAndReason this)) (satisfies? ConstantNode (:speculation this))) => this
-                (let [
-                    #_"JavaConstant" constant (ValueNode''asJavaConstant-1 (:actionAndReason this))
-                ]
-                    (DeoptimizeNode'new-4 (MetaReflection'decodeDeoptAction-1 constant), (MetaReflection'decodeDeoptReason-1 constant), (ValueNode''asJavaConstant-1 (:speculation this)), (:stateBefore this))
-                )
-            )
+            (update builder :gen LIRGenerator''emitDeoptimize-3 (:action this), (:reason this))
         )
     )
 )
@@ -46495,7 +45749,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" IfNode'transferProxies-2 [#_"AbstractBeginNode" successor, #_"MergeNode" falseMerge]
         (when (and (satisfies? LoopExitNode successor) (some? falseMerge))
-            (doseq [#_"ProxyNode" proxy (§ snap (LoopExitNode''proxies-1 successor))]
+            (doseq [#_"ValueProxyNode" proxy (§ snap (LoopExitNode''proxies-1 successor))]
                 (Node''replaceFirstInput-3 proxy, successor, falseMerge)
             )
         )
@@ -48198,7 +47452,7 @@ ZeroExtendNode'new-4
 
     (defm LoopExitNode AbstractBeginNode
         (#_"Node*" AbstractBeginNode'''anchored-1 [#_"LoopExitNode" this]
-            (remove #(and (satisfies? ProxyNode %) (= (:loopExit %) this)) (AbstractBeginNode'''anchored-1 (§ super #_"BeginStateSplitNode")))
+            (remove #(and (satisfies? ValueProxyNode %) (= (:loopExit %) this)) (AbstractBeginNode'''anchored-1 (§ super #_"BeginStateSplitNode")))
         )
 
         (#_"void" AbstractBeginNode'''prepareDelete-2 [#_"LoopExitNode" this, #_"FixedNode" evacuateFrom]
@@ -48213,7 +47467,7 @@ ZeroExtendNode'new-4
             (while
                 (loop-when [#_"seq" s (seq (§ snap (LoopExitNode''proxies-1 this)))] (some? s)
                     (let [
-                        #_"ProxyNode" vpn (first s)
+                        #_"ValueProxyNode" vpn (first s)
                         #_"ValueNode" value (:value vpn)
                         _ (§ ass! vpn (Node''replaceAtUsagesAndDelete-2 vpn, value))
                     ]
@@ -48226,8 +47480,8 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"ProxyNode*" LoopExitNode''proxies-1 [#_"LoopExitNode" this]
-        (filter #(and (satisfies? ProxyNode %) (= (:loopExit %) this)) (:nodeUsages this))
+    (defn #_"ValueProxyNode*" LoopExitNode''proxies-1 [#_"LoopExitNode" this]
+        (filter #(and (satisfies? ValueProxyNode %) (= (:loopExit %) this)) (:nodeUsages this))
     )
 
     (defm LoopExitNode Simplifiable
@@ -50045,23 +49299,18 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FixedGuardNode [DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Simplifiable, GuardingNode, DeoptimizingGuard, StaticDeoptimizingNode, Lowerable]
+(class-ns FixedGuardNode [DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Simplifiable, GuardingNode, DeoptimizingGuard, Lowerable]
     (defn #_"FixedGuardNode" FixedGuardNode'new-3 [#_"LogicNode" logic, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action]
-        (FixedGuardNode'new-5 logic, reason, action, JavaConstant'NULL_POINTER, false)
+        (FixedGuardNode'new-4 logic, reason, action, false)
     )
 
     (defn #_"FixedGuardNode" FixedGuardNode'new-4 [#_"LogicNode" logic, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action, #_"boolean" negated?]
-        (FixedGuardNode'new-5 logic, reason, action, JavaConstant'NULL_POINTER, negated?)
-    )
-
-    (defn #_"FixedGuardNode" FixedGuardNode'new-5 [#_"LogicNode" logic, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action, #_"JavaConstant" speculation, #_"boolean" negated?]
         (merge (FixedGuardNode'class.) (DeoptimizingFixedWithNextNode'new-1 VoidStamp'instance)
             (hash-map
                 ; @Input
                 #_"LogicNode" :logic logic
                 #_"DeoptimizationReason" :reason reason
                 #_"DeoptimizationAction" :action action
-                #_"JavaConstant" :speculation speculation
                 #_"boolean" :negated? negated?
             )
         )
@@ -50096,7 +49345,7 @@ ZeroExtendNode'new-4
                                             (when (some? currentNext)
                                                 (SimplifierTool'''deleteBranch-2 tool, currentNext)
                                             )
-                                        #_"DeoptimizeNode" deopt (Graph''add-2 (:graph this), (DeoptimizeNode'new-3 (:action this), (:reason this), (:speculation this)))
+                                        #_"DeoptimizeNode" deopt (Graph''add-2 (:graph this), (DeoptimizeNode'new-2 (:action this), (:reason this)))
                                         deopt (DeoptBefore'''setStateBefore-2 deopt, (:stateBefore this))
                                     ]
                                         (FixedWithNextNode''setNext-2 this, deopt)
@@ -50109,8 +49358,8 @@ ZeroExtendNode'new-4
                         )
                     ShortCircuitOrNode
                         (when (and (:negated? this) (Node''hasNoUsages-1 this)) => this
-                            (Graph''addAfterFixed-3 (:graph this), this, (Graph''add-2 (:graph this), (FixedGuardNode'new-5 (:y logic), (:reason this), (:action this), (:speculation this), (not (:yNegated logic)))))
-                            (update this :graph Graph''replaceFixedWithFixed-3 this, (Graph''add-2 (:graph this), (FixedGuardNode'new-5 (:x logic), (:reason this), (:action this), (:speculation this), (not (:xNegated logic)))))
+                            (Graph''addAfterFixed-3 (:graph this), this, (Graph''add-2 (:graph this), (FixedGuardNode'new-4 (:y logic), (:reason this), (:action this), (not (:yNegated logic)))))
+                            (update this :graph Graph''replaceFixedWithFixed-3 this, (Graph''add-2 (:graph this), (FixedGuardNode'new-4 (:x logic), (:reason this), (:action this), (not (:xNegated logic)))))
                         )
                     this
                 )
@@ -50122,7 +49371,7 @@ ZeroExtendNode'new-4
         (let [
             #_"FixedNode" currentNext (:next this)
             _ (§ ass! this (FixedWithNextNode''setNext-2 this, nil))
-            #_"DeoptimizeNode" deopt (Graph''add-2 (:graph this), (DeoptimizeNode'new-3 (:action this), (:reason this), (:speculation this)))
+            #_"DeoptimizeNode" deopt (Graph''add-2 (:graph this), (DeoptimizeNode'new-2 (:action this), (:reason this)))
             deopt (DeoptBefore'''setStateBefore-2 deopt, (:stateBefore this))
             [#_"IfNode" ifNode #_"AbstractBeginNode" noDeoptSuccessor]
                 (if (:negated? this)
@@ -50150,7 +49399,7 @@ ZeroExtendNode'new-4
             (if (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph this)))
                 (when-not (= (:action this) :DeoptimizationAction'None) => this
                     (let [
-                        #_"ValueNode" guard (LoweringTool''createGuard-7 lowerer, this, (:logic this), (:reason this), (:action this), (:speculation this), (:negated? this))
+                        #_"ValueNode" guard (LoweringTool''createGuard-6 lowerer, this, (:logic this), (:reason this), (:action this), (:negated? this))
                         this (Node''replaceAtUsages-2 this, guard)
                     ]
                         (Graph''removeFixed-2 (:graph this), this)
@@ -50268,9 +49517,9 @@ ZeroExtendNode'new-4
                         ;; should be areFrameStatesAtSideEffects, but currently SVM will complain about RuntimeConstraint
                         (when (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph this))) => this
                             (let [
-                                #_"LogicNode" lengthNegativeCondition (CompareNode'createCompareNode-4g (:graph this), CanonicalCondition'LT, (ArrayLengthProvider'''length-1 this), (ConstantNode'forInt-2 0, (:graph this)))
+                                #_"LogicNode" logic (CompareNode'createCompareNode-4g (:graph this), CanonicalCondition'LT, (ArrayLengthProvider'''length-1 this), (ConstantNode'forInt-2 0, (:graph this)))
                                 ;; we do not have a non-deopting path for that at the moment so action is None.
-                                #_"FixedGuardNode" guard (Graph''add-2 (:graph this), (FixedGuardNode'new-4 lengthNegativeCondition, :DeoptimizationReason'RuntimeConstraint, :DeoptimizationAction'None, true))
+                                #_"FixedGuardNode" guard (Graph''add-2 (:graph this), (FixedGuardNode'new-4 logic, :DeoptimizationReason'RuntimeConstraint, :DeoptimizationAction'None, true))
                             ]
                                 (update this :graph Graph''replaceFixedWithFixed-3 this, guard)
                             )
@@ -54604,15 +53853,14 @@ ZeroExtendNode'new-4
  ; maximum flexibility for the guard node and guarantees that deoptimization occurs only if the
  ; control flow would have reached the guarded node (without taking exceptions into account).
  ;;
-(class-ns GuardNode [FloatingAnchoredNode, FloatingNode, ValueNode, Node, Canonicalizable, GuardingNode, DeoptimizingGuard, StaticDeoptimizingNode]
-    (defn #_"GuardNode" GuardNode'new-6 [#_"LogicNode" logic, #_"AnchoringNode" anchor, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action, #_"boolean" negated?, #_"JavaConstant" speculation]
+(class-ns GuardNode [FloatingAnchoredNode, FloatingNode, ValueNode, Node, Canonicalizable, GuardingNode, DeoptimizingGuard]
+    (defn #_"GuardNode" GuardNode'new-5 [#_"LogicNode" logic, #_"AnchoringNode" anchor, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action, #_"boolean" negated?]
         (merge (GuardNode'class.) (FloatingAnchoredNode'new-2 VoidStamp'instance, anchor)
             (hash-map
                 ; @Input
                 #_"LogicNode" :logic logic
                 #_"DeoptimizationReason" :reason reason
                 #_"DeoptimizationAction" :action action
-                #_"JavaConstant" :speculation speculation
                 #_"boolean" :negated? negated?
             )
         )
@@ -54635,7 +53883,7 @@ ZeroExtendNode'new-4
             ]
                 (cond
                     (satisfies? LogicNegationNode logic)
-                        (GuardNode'new-6 (Unary'''getValue-1 logic), (FloatingAnchoredNode''getAnchor-1 this), (:reason this), (:action this), (not (:negated? this)), (:speculation this))
+                        (GuardNode'new-5 (Unary'''getValue-1 logic), (FloatingAnchoredNode''getAnchor-1 this), (:reason this), (:action this), (not (:negated? this)))
                     (or (not (satisfies? LogicConstantNode logic)) (= (:value logic) (:negated? this)))
                         this
                 )
@@ -56587,7 +55835,7 @@ ZeroExtendNode'new-4
 
     ;;;
      ; If all inputs are the same value, this value is returned, otherwise {@code this}.
-     ; Note that nil is a valid return value, since GuardPhiNodes can have nil inputs.
+     ; Note that nil is a valid return value, since GuardPhiNodes can have nil inputs.
      ;;
     (defn #_"ValueNode" PhiNode''singleValueOrThis-1 [#_"PhiNode" this]
         (let [
@@ -56601,7 +55849,7 @@ ZeroExtendNode'new-4
 
     ;;;
      ; If all inputs (but the first one) are the same value, the value is returned, otherwise {@code this}.
-     ; Note that nil is a valid return value, since GuardPhiNodes can have nil inputs.
+     ; Note that nil is a valid return value, since GuardPhiNodes can have nil inputs.
      ;;
     (defn #_"ValueNode" PhiNode''singleBackValueOrThis-1 [#_"PhiNode" this]
         (let [
@@ -56650,20 +55898,6 @@ ZeroExtendNode'new-4
 
     (defn #_"boolean" PhiNode''isLoopPhi-1 [#_"PhiNode" this]
         (satisfies? LoopBeginNode (:merge this))
-    )
-)
-
-;;;
- ; Guard PhiNodes merge guard dependencies at control flow merges.
- ;;
-(class-ns GuardPhiNode [PhiNode, FloatingNode, ValueNode, Node, Canonicalizable, GuardingNode]
-    (defn #_"GuardPhiNode" GuardPhiNode'new-1 [#_"AbstractMergeNode" merge]
-        (merge (GuardPhiNode'class.) (PhiNode'new-2 VoidStamp'instance, merge)
-            (hash-map
-                ; @OptionalInput(InputType'Guard)
-                #_"[ValueNode]" :phiValues []
-            )
-        )
     )
 )
 
@@ -56767,60 +56001,12 @@ ZeroExtendNode'new-4
  ; A proxy is inserted at loop exits for any value that is created inside the loop (i.e. was not
  ; live on entry to the loop) and is (potentially) used after the loop.
  ;;
-(class-ns ProxyNode [FloatingNode, ValueNode, Node]
-    (defn #_"ProxyNode" ProxyNode'new-2 [#_"Stamp" stamp, #_"LoopExitNode" proxyPoint]
-        (merge (ProxyNode'class.) (FloatingNode'new-1 stamp)
+(class-ns ValueProxyNode [FloatingNode, ValueNode, Node, Canonicalizable, Virtualizable, ValueProxy, LimitedValueProxy, Proxy]
+    (defn #_"ValueProxyNode" ValueProxyNode'new-2 [#_"ValueNode" value, #_"LoopExitNode" loopExit]
+        (merge (ValueProxyNode'class.) (FloatingNode'new-1 (:stamp value))
             (hash-map
                 ; @Input
-                #_"LoopExitNode" :loopExit proxyPoint
-            )
-        )
-    )
-
-    (defn #_"ValueProxyNode" ProxyNode'forValue-3 [#_"ValueNode" value, #_"LoopExitNode" exit, #_"Graph" graph]
-        (Graph''add-2 graph, (ValueProxyNode'new-2 value, exit))
-    )
-
-    (defn #_"GuardProxyNode" ProxyNode'forGuard-3 [#_"GuardingNode" value, #_"LoopExitNode" exit, #_"Graph" graph]
-        (Graph''add-2 graph, (GuardProxyNode'new-2 value, exit))
-    )
-)
-
-(class-ns GuardProxyNode [ProxyNode, FloatingNode, ValueNode, Node, GuardingNode, Proxy, LIRLowerable, Canonicalizable]
-    (defn #_"GuardProxyNode" GuardProxyNode'new-2 [#_"GuardingNode" value, #_"LoopExitNode" proxyPoint]
-        (merge (GuardProxyNode'class.) (ProxyNode'new-2 VoidStamp'instance, proxyPoint)
-            (hash-map
-                ; @OptionalInput(InputType'Guard)
-                #_"GuardingNode" :value value
-            )
-        )
-    )
-
-    (defm GuardProxyNode LIRLowerable
-        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"GuardProxyNode" this, #_"LIRBuilder" builder]
-            builder
-        )
-    )
-
-    (defm GuardProxyNode Proxy
-        (#_"Node" Proxy'''getOriginalNode-1 [#_"GuardProxyNode" this]
-            (:value this)
-        )
-    )
-
-    (defm GuardProxyNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"GuardProxyNode" this, #_"CanonicalizerTool" tool]
-            (when (some? (:value this))
-                this
-            )
-        )
-    )
-)
-
-(class-ns ValueProxyNode [ProxyNode, FloatingNode, ValueNode, Node, Canonicalizable, Virtualizable, ValueProxy, LimitedValueProxy, Proxy]
-    (defn #_"ValueProxyNode" ValueProxyNode'new-2 [#_"ValueNode" value, #_"LoopExitNode" loopExit]
-        (merge (ValueProxyNode'class.) (ProxyNode'new-2 (:stamp value), loopExit)
-            (hash-map
+                #_"LoopExitNode" :loopExit loopExit
                 ; @Input
                 #_"ValueNode" :value value
                 #_"boolean" :loopPhiProxy (AbstractMergeNode''isPhiAtMerge-2 (:loopBegin loopExit), value)
@@ -58920,10 +58106,6 @@ ZeroExtendNode'new-4
             #_"LoopPolicies" loopPolicies (DefaultLoopPolicies'new-0)
             this (PhaseSuite''appendPhase-2 this, canonicalizer)
             this
-                (when GraalOptions'optConvertDeoptsToGuards => this
-                    (PhaseSuite''appendPhase-2 this, (IncrementalCanonicalizerPhase'new-2 canonicalizer, (ConvertDeoptimizeToGuardPhase'new-0)))
-                )
-            this
                 (when GraalOptions'conditionalElimination => this
                     (PhaseSuite''appendPhase-2 this, (IterativeConditionalEliminationPhase'new-2 canonicalizer, false))
                 )
@@ -59046,10 +58228,6 @@ ZeroExtendNode'new-4
                 (when GraalOptions'reassociateInvariants => this
                     (PhaseSuite''appendPhase-2 this, (ReassociateInvariantPhase'new-0))
                 )
-            this
-                (when GraalOptions'optDeoptimizationGrouping => this
-                    (PhaseSuite''appendPhase-2 this, (DeoptimizationGroupingPhase'new-0))
-                )
             this (PhaseSuite''appendPhase-2 this, canonicalizer)
             this (PhaseSuite''appendPhase-2 this, (WriteBarrierAdditionPhase'new-0))
         ]
@@ -59082,14 +58260,12 @@ ZeroExtendNode'new-4
             (hash-map
                 #_"TypePlugin*" :typePlugins nil
                 #_"NodePlugin*" :nodePlugins nil
-                #_"InlineInvokePlugin*" :inlineInvokePlugins nil
             )
         )
     )
 
-    (defn- #_"this" Plugins''appendTypePlugin-2         [#_"Plugins" this, #_"TypePlugin"         plugin] (update this :typePlugins         conj' plugin))
-    (defn- #_"this" Plugins''appendNodePlugin-2         [#_"Plugins" this, #_"NodePlugin"         plugin] (update this :nodePlugins         conj' plugin))
-    (defn- #_"this" Plugins''appendInlineInvokePlugin-2 [#_"Plugins" this, #_"InlineInvokePlugin" plugin] (update this :inlineInvokePlugins conj' plugin))
+    (defn- #_"this" Plugins''appendTypePlugin-2 [#_"Plugins" this, #_"TypePlugin" plugin] (update this :typePlugins conj' plugin))
+    (defn- #_"this" Plugins''appendNodePlugin-2 [#_"Plugins" this, #_"NodePlugin" plugin] (update this :nodePlugins conj' plugin))
 
     ;;;
      ; Creates a new set of plugins.
@@ -59101,7 +58277,6 @@ ZeroExtendNode'new-4
             (-> (Plugins'new-0)
                 (Plugins''appendTypePlugin-2 nodePlugin)
                 (Plugins''appendNodePlugin-2 nodePlugin)
-                (Plugins''appendInlineInvokePlugin-2 (Replacements'new-0))
             )
         )
     )
@@ -59240,7 +58415,7 @@ ZeroExtendNode'new-4
             (let [
                 ;; Mark all control flow nodes that are post-dominated by a deoptimization.
                 #_"{ControlSplitNode {AbstractBeginNode}}" splits
-                    (loop-when [splits {} #_"seq" s (seq (Graph''getNodes-2 graph, AbstractDeoptimizeNode))] (some? s) => splits
+                    (loop-when [splits {} #_"seq" s (seq (Graph''getNodes-2 graph, DeoptimizeNode))] (some? s) => splits
                         (let [
                             splits
                                 (loop-when [splits splits #_"Node*" stack (list (AbstractBeginNode'prevBegin-1 (first s)))] (seq stack) => splits
@@ -60409,7 +59584,7 @@ ZeroExtendNode'new-4
                     (doseq [#_"LoopExitNode" exit (Graph''getNodes-2 graph, LoopExitNode)]
                         (let [
                             _
-                                (doseq [#_"ProxyNode" vpn (§ snap (LoopExitNode''proxies-1 exit))]
+                                (doseq [#_"ValueProxyNode" vpn (§ snap (LoopExitNode''proxies-1 exit))]
                                     (§ ass! vpn (Node''replaceAtUsagesAndDelete-2 vpn, (:value vpn)))
                                 )
                             #_"FrameState" stateAfter (:stateAfter exit)
@@ -60426,52 +59601,6 @@ ZeroExtendNode'new-4
                 (Graph''setHasValueProxies-2 graph, false)
             )
         )
-    )
-)
-
-(class-ns Replacements [InlineInvokePlugin]
-    (defn #_"Replacements" Replacements'new-0 []
-        (Replacements'class.)
-    )
-
-    ;;;
-     ; Determines whether a given method should be inlined based on whether it has a substitution or
-     ; whether the inlining context is already within a substitution.
-     ;
-     ; @return an object specifying how {@code method} is to be inlined or nil if it should not be
-     ;         inlined based on substitution related criteria
-     ;;
-    (defm Replacements InlineInvokePlugin
-        (#_"void" InlineInvokePlugin'''notifyNotInlined-4 [#_"Replacements" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"InvokeNode" invoke]
-            nil
-        )
-    )
-
-    ;;;
-     ; Builds the initial graph for a replacement.
-     ;;
-    (defn- #_"Graph" Replacements'buildInitialGraph-1 [#_"ResolvedJavaMethod" method]
-        (let [
-            #_"Graph" graph (Graph'new-1 method)
-            graph (Phase'''run-3 (GraphBuilderInstance'new-1 OptimisticOptimizations'NONE), graph, nil)
-            graph (Phase'''run-3 (CanonicalizerPhase'new-0), graph, nil)
-        ]
-            graph
-        )
-    )
-
-    ;;;
-     ; Does final processing of a snippet graph.
-     ;;
-    (defn- #_"Graph" Replacements'finalizeGraph-1 [#_"Graph" graph]
-        (Phase'''run-3 (ConvertDeoptimizeToGuardPhase'new-0), graph, nil)
-    )
-
-    ;;;
-     ; Creates a preprocessed graph for a snippet.
-     ;;
-    (defn #_"Graph" Replacements'createSnippet-1 [#_"ResolvedJavaMethod" method]
-        (Replacements'finalizeGraph-1 (Replacements'buildInitialGraph-1 method))
     )
 )
 
@@ -60583,7 +59712,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"[this Node*]" Schedule''processStackProxy-4 [#_"Schedule" this, #_"Node*" stack, #_"ProxyNode" proxy, #_"{Node MicroBlock}" mapping]
+    (defn- #_"[this Node*]" Schedule''processStackProxy-4 [#_"Schedule" this, #_"Node*" stack, #_"ValueProxyNode" proxy, #_"{Node MicroBlock}" mapping]
         (when-not (contains? (:agenda this) proxy) => [this stack]
             (let [
                 this (update this :counter inc)
@@ -60626,8 +59755,8 @@ ZeroExtendNode'new-4
                 node (first stack)
                 [this stack]
                     (condp satisfies? node
-                        PhiNode   (Schedule''processStackPhi-4 this, (next stack), node, mapping)
-                        ProxyNode (Schedule''processStackProxy-4 this, (next stack), node, mapping)
+                        PhiNode        (Schedule''processStackPhi-4 this, (next stack), node, mapping)
+                        ValueProxyNode (Schedule''processStackProxy-4 this, (next stack), node, mapping)
                         (when (nil? (get mapping node)) => [this (next stack)]
                             (let [
                                 #_"MicroBlock" earliest (Schedule'processInputs-4 start, stack, node, mapping)
@@ -60695,25 +59824,14 @@ ZeroExtendNode'new-4
                         (recur this start mapping i (next s))
                     )
                 )
+            ;; Now process guards.
             this
                 (when (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph this))) => this
                     (let [
                         #_"GuardNode*" guards (Graph''getNodes-2 (:graph this), GuardNode)
                     ]
                         (when (seq guards) => this
-                            ;; Now process guards.
-                            (when (and GraalOptions'guardPriorities (= (:strategy this) :SchedulingStrategy'EARLIEST_WITH_GUARD_ORDER)) => (Schedule''processNodes-4 this, guards, start, mapping)
-                                ;; 'EnumMap.values' returns values in "natural" key order.
-                                (let [
-                                    this
-                                        (reduce #(Schedule''processNodes-4 %1, %2, start, mapping) this
-                                            (vals (reduce #(update %1 (StaticDeoptimizingNode''computePriority-1 %2) conj' %2) (sorted-map) guards))
-                                        )
-                                ]
-                                    (GuardOrder'resortGuards-2 (:graph this), mapping)
-                                    this
-                                )
-                            )
+                            (Schedule''processNodes-4 this, guards, start, mapping)
                         )
                     )
                 )
@@ -60877,7 +59995,7 @@ ZeroExtendNode'new-4
             #_else
                 ;; All other types of usages: Put the input into the same block as the usage.
                 (let [
-                    #_"Block" otherBlock (get (:node->block this) (if (satisfies? ProxyNode usage) (:loopExit usage) usage))
+                    #_"Block" otherBlock (get (:node->block this) (if (satisfies? ValueProxyNode usage) (:loopExit usage) usage))
                 ]
                     (ControlFlowGraph'commonDominator-2 block, otherBlock)
                 )
@@ -61058,7 +60176,7 @@ ZeroExtendNode'new-4
                         )
                     )
                 nodes
-                    (when-not (satisfies? ProxyNode node) => nodes ;; skip proxy nodes
+                    (when-not (satisfies? ValueProxyNode node) => nodes ;; skip proxy nodes
                         (conj' nodes node)
                     )
             ]
@@ -61138,7 +60256,7 @@ ZeroExtendNode'new-4
                 (when (satisfies? LoopExitNode (:beginNode block)) => [this nil]
                     (loop-when [this this nodes nil #_"seq" s (seq (LoopExitNode''proxies-1 (:beginNode block)))] (some? s) => [this nodes]
                         (let [
-                            #_"ProxyNode" proxy (first s)
+                            #_"ValueProxyNode" proxy (first s)
                             this (update this :agenda disj proxy)
                             [this nodes]
                                 (let [
@@ -61212,7 +60330,7 @@ ZeroExtendNode'new-4
         (let [
             [this #_"{Block Node*}" earliest] (Schedule''scheduleEarliestIterative-1 this)
             this
-                (when-not (SchedulingStrategy'isEarliest-1 (:strategy this)) => (assoc this :block->nodes earliest)
+                (when-not (= (:strategy this) :SchedulingStrategy'EARLIEST) => (assoc this :block->nodes earliest)
                     ;; For non-earliest schedules, we need to do a second pass.
                     (let [
                         [this #_"{Block Node*}" latest] (Schedule''calcLatestBlocks-2 this, earliest)
@@ -61380,7 +60498,7 @@ ZeroExtendNode'new-4
         (let [
             #_"Graph" graph (:graph guard)
             #_"AbstractBeginNode" fastPath (Graph''add-2 graph, (BeginNode'new-0))
-            #_"DeoptimizeNode" deopt (Graph''add-2 graph, (DeoptimizeNode'new-4 (:action guard), (:reason guard), (:speculation guard), nil))
+            #_"DeoptimizeNode" deopt (Graph''add-2 graph, (DeoptimizeNode'new-2 (:action guard), (:reason guard)))
             #_"AbstractBeginNode" deoptBranch (BeginNode'begin-1 deopt)
             _ (LowerGuards''insertLoopExits-2 this, deopt)
             [#_"AbstractBeginNode" then #_"AbstractBeginNode" else] (if (:negated? guard) [deoptBranch fastPath] [fastPath deoptBranch])
@@ -61492,7 +60610,9 @@ ZeroExtendNode'new-4
                     )
                 )
             #_"ResolvedJavaMethod" method (:method (:info args))
-            #_"Graph" graph (Replacements'createSnippet-1 method)
+            #_"Graph" graph (Graph'new-1 method)
+            graph (Phase'''run-3 (GraphBuilderInstance'new-1 OptimisticOptimizations'NONE), graph, nil)
+            graph (Phase'''run-3 (CanonicalizerPhase'new-0), graph, nil)
             ;; copy snippet graph replacing constant parameters with given arguments
             #_"Graph" snippet (Graph'new-1 method)
             _ (Graph''addDuplicates-4m snippet, (Graph''getNodes-1 graph), graph, { (:start graph) (:start snippet) })
@@ -64929,7 +64049,7 @@ ZeroExtendNode'new-4
         (UseTrappingNullChecksPhase'class.)
     )
 
-    (defn- #_"void" UseTrappingNullChecksPhase'replaceWithTrappingNullCheck-5 [#_"AbstractDeoptimizeNode" deopt, #_"IfNode" ifNode, #_"LogicNode" logic, #_"DeoptimizationReason" deoptimizationReason, #_"long" implicitNullCheckLimit]
+    (defn- #_"void" UseTrappingNullChecksPhase'replaceWithTrappingNullCheck-5 [#_"DeoptimizeNode" deopt, #_"IfNode" ifNode, #_"LogicNode" logic, #_"DeoptimizationReason" deoptimizationReason, #_"long" implicitNullCheckLimit]
         (let [
             #_"AbstractBeginNode" nonTrappingContinuation (:falseSuccessor ifNode)
             #_"AbstractBeginNode" trappingContinuation (:trueSuccessor ifNode)
@@ -64984,7 +64104,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" UseTrappingNullChecksPhase'checkPredecessor-4 [#_"AbstractDeoptimizeNode" deopt, #_"Node" predecessor, #_"DeoptimizationReason" deoptimizationReason, #_"long" implicitNullCheckLimit]
+    (defn- #_"void" UseTrappingNullChecksPhase'checkPredecessor-4 [#_"DeoptimizeNode" deopt, #_"Node" predecessor, #_"DeoptimizationReason" deoptimizationReason, #_"long" implicitNullCheckLimit]
         (let [
             [#_"Node" node #_"AbstractBeginNode" branch]
                 (loop-when [node predecessor branch nil] (satisfies? AbstractBeginNode node) => [node branch]
@@ -65001,10 +64121,8 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" UseTrappingNullChecksPhase'tryUseTrappingNullCheck-5 [#_"AbstractDeoptimizeNode" deopt, #_"Node" predecessor, #_"DeoptimizationReason" deoptimizationReason, #_"JavaConstant" speculation, #_"long" implicitNullCheckLimit]
-        (when (and (any = deoptimizationReason :DeoptimizationReason'NullCheckException :DeoptimizationReason'UnreachedCode)
-                   (or (nil? speculation) (= speculation JavaConstant'NULL_POINTER))
-              )
+    (defn- #_"void" UseTrappingNullChecksPhase'tryUseTrappingNullCheck-4 [#_"DeoptimizeNode" deopt, #_"Node" predecessor, #_"DeoptimizationReason" deoptimizationReason, #_"long" implicitNullCheckLimit]
+        (when (any = deoptimizationReason :DeoptimizationReason'NullCheckException :DeoptimizationReason'UnreachedCode)
             (condp satisfies? predecessor
                 AbstractMergeNode
                     (when (empty? (AbstractMergeNode''phis-1 predecessor))
@@ -65020,59 +64138,11 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" UseTrappingNullChecksPhase'tryUseTrappingNullCheck-2 [#_"DynamicDeoptimizeNode" deopt, #_"long" implicitNullCheckLimit]
-        (when (satisfies? AbstractMergeNode (:predecessor deopt))
-            (let [
-                #_"AbstractMergeNode" merge (:predecessor deopt)
-                ;; Process each predecessor at the merge, unpacking the reasons and speculations as needed.
-                #_"ValueNode" reason (:actionAndReason deopt)
-                [#_"[ValueNode]" reasons #_"int" expectedPhis]
-                    (condp satisfies? reason
-                        ValuePhiNode (when (= (:merge reason) merge) [(§ snap (:phiValues reason)) 1])
-                        ConstantNode [nil 0]
-                        nil
-                    )
-            ]
-                (when (some? expectedPhis)
-                    (let [
-                        #_"ValueNode" speculation (:speculation deopt)
-                        [#_"[ValueNode]" speculations expectedPhis]
-                            (when (satisfies? ValuePhiNode speculation) => [nil expectedPhis]
-                                (when (= (:merge speculation) merge)
-                                    [(§ snap (:phiValues speculation)) (inc expectedPhis)]
-                                )
-                            )
-                    ]
-                        (when (and (some? expectedPhis) (= (count (AbstractMergeNode''phis-1 merge)) expectedPhis))
-                            (loop-when [#_"int" i 0 #_"seq" s (seq (§ snap (Node'''cfgPredecessors-1 merge)))] (some? s)
-                                (let [
-                                    #_"AbstractEndNode" end (first s)
-                                    #_"ValueNode" thisReason (if (some? reasons) (nth reasons i) reason)
-                                    #_"ValueNode" thisSpeculation (if (some? speculations) (nth speculations i) speculation)
-                                    i (if (some? speculations) (inc i) i)
-                                ]
-                                    (when (and (satisfies? ConstantNode thisReason) (satisfies? ConstantNode thisSpeculation) (= (:value thisSpeculation) JavaConstant'NULL_POINTER))
-                                        (UseTrappingNullChecksPhase'tryUseTrappingNullCheck-5 deopt, (:predecessor end), (MetaReflection'decodeDeoptReason-1 (ValueNode''asJavaConstant-1 thisReason)), nil, implicitNullCheckLimit)
-                                    )
-                                    (recur i (next s))
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-        nil
-    )
-
     (defm UseTrappingNullChecksPhase Phase
         (#_"Graph" Phase'''run-3 [#_"UseTrappingNullChecksPhase" this, #_"Graph" graph, #_"PhaseContext" context]
             (when (and GraalOptions'useTrappingNullChecks (pos? AMD64'implicitNullCheckLimit))
                 (doseq [#_"DeoptimizeNode" deopt (Graph''getNodes-2 graph, DeoptimizeNode)]
-                    (UseTrappingNullChecksPhase'tryUseTrappingNullCheck-5 deopt, (:predecessor deopt), (:reason deopt), (:speculation deopt), AMD64'implicitNullCheckLimit)
-                )
-                (doseq [#_"DynamicDeoptimizeNode" deopt (Graph''getNodes-2 graph, DynamicDeoptimizeNode)]
-                    (UseTrappingNullChecksPhase'tryUseTrappingNullCheck-2 deopt, AMD64'implicitNullCheckLimit)
+                    (UseTrappingNullChecksPhase'tryUseTrappingNullCheck-4 deopt, (:predecessor deopt), (:reason deopt), AMD64'implicitNullCheckLimit)
                 )
             )
             graph
@@ -66478,7 +65548,7 @@ ZeroExtendNode'new-4
 ;;;
  ; A plugin for calls to word operations, as well as all other nodes that need special handling for Word types.
  ;;
-(class-ns WordOperationPlugin [NodePlugin, TypePlugin, InlineInvokePlugin]
+(class-ns WordOperationPlugin [NodePlugin, TypePlugin]
     #_unused
     (defn #_"WordOperationPlugin" WordOperationPlugin'new-0 []
         (WordOperationPlugin'class.)
@@ -66764,15 +65834,6 @@ ZeroExtendNode'new-4
                         (StampFactory'object-2 (TypeReference'createTrusted-1 type), never-nil?)
                 )
             )
-        )
-    )
-
-    (defm WordOperationPlugin InlineInvokePlugin
-        (#_"void" InlineInvokePlugin'''notifyNotInlined-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"InvokeNode" invoke]
-            (when (WordTypes'isWord-1v invoke)
-                (§ ass! invoke (ValueNode''setStamp-2 invoke, (WordTypes'getWordStamp-1 (StampTool'typeOrNull-1 (:stamp invoke)))))
-            )
-            nil
         )
     )
 
