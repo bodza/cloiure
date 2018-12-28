@@ -1169,7 +1169,6 @@ DataSection'lcm-2
 DataSection'new-0
 DataTwoOp'new-5
 DataTwoOp'new-6
-DeadCodeEliminationPhase'new-1
 DefUseTree''addUsage-4
 DefUseTree''getConstant-1
 DefUseTree''getVariable-1
@@ -1424,7 +1423,6 @@ GraalOptions'partialUnroll
 GraalOptions'rawConditionalElimination
 GraalOptions'readEliminationMaxLoopVisits
 GraalOptions'reassociateInvariants
-GraalOptions'reduceDCE
 GraalOptions'removeNeverExecutedCode
 GraalOptions'replaceInputsWithConstantsBasedOnStamps
 GraalOptions'simpleFastInflatedLocking
@@ -2516,7 +2514,6 @@ NoOp''replace-3
 NoOp'new-2
 Node''addUsage-2
 Node''applyInputs-2
-Node''applySuccessors-2
 Node''clearInputs-1
 Node''clearSuccessors-1
 Node''clone-3
@@ -2554,7 +2551,6 @@ Node'INITIAL_ID
 Node'NODE_LIST
 Node'new-0
 NodeClass''applyInputs-3
-NodeClass''applySuccessors-3
 NodeClass''equalInputs-3
 NodeClass''equalSuccessors-3
 NodeClass''getEdges-2
@@ -3996,7 +3992,6 @@ ZeroExtendNode'new-4
 
 (defp DataSection)
 (defp DataTwoOp)
-(defp DeadCodeEliminationPhase)
 (defp DefUseTree)
 (defp DefaultLoopPolicies)
 (defp DefaultSimplifierTool)
@@ -8899,9 +8894,6 @@ ZeroExtendNode'new-4
     (def #_"int" GraalOptions'exactPartialUnrollMaxNodes 200)
 
     (def #_"int" GraalOptions'unrollMaxIterations 16)
-
-    ;; @Option "Disable optional dead code eliminations."
-    (def #_"boolean" GraalOptions'reduceDCE true)
 
     ;; @Option "Use traps for nil-checks instead of explicit nil-checks."
     (def #_"boolean" GraalOptions'useTrappingNullChecks true)
@@ -26541,7 +26533,7 @@ ZeroExtendNode'new-4
                     (ConvertDeoptimizeToGuardPhase''trySplitFixedGuard-2 this, fixedGuard)
                 )
             )
-            (Phase'''run-3 (DeadCodeEliminationPhase'new-1 true), graph, nil)
+            graph
         )
     )
 )
@@ -26857,95 +26849,6 @@ ZeroExtendNode'new-4
         ]
             (#_"ByteBuffer" .position buffer, (+ start (:sectionSize this)))
             patches
-        )
-    )
-)
-
-(class-ns DeadCodeEliminationPhase [Phase]
-    ;;;
-     ; Creates a dead code elimination phase that will be run only if it is non-optional or GraalOptions#reduceDCE is false.
-     ;;
-    (defn #_"DeadCodeEliminationPhase" DeadCodeEliminationPhase'new-1 [#_"boolean" optional?]
-        (merge (DeadCodeEliminationPhase'class.)
-            (hash-map
-                #_"boolean" :optional? optional?
-            )
-        )
-    )
-
-    (defm DeadCodeEliminationPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"DeadCodeEliminationPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (when-not (and (:optional? this) GraalOptions'reduceDCE)
-                (let [
-                    #_"int" totalNodeCount (Graph''getNodeCount-1 graph)
-                    #_"{Node}'" v'flood (volatile! #{ (:start graph) })
-                    f'mark- (fn #_"{Node}" [#_"{Node}" flood, #_"Node" node] (if (some? node) (conj flood node) flood))
-                    #_"EdgeVisitor" f'marker
-                        (reify EdgeVisitor
-                            (#_"Node" EdgeVisitor'''apply-3 [#_"EdgeVisitor" _, #_"Node" source, #_"Node" target]
-                                (vswap! v'flood f'mark- target)
-                                target
-                            )
-                        )
-                    _
-                        (doseq [#_"Node" node @v'flood]
-                            (if (satisfies? AbstractEndNode node)
-                                (vswap! v'flood f'mark- (AbstractEndNode'''merge-1 node))
-                                (do
-                                    (Node''applySuccessors-2 node, f'marker)
-                                    (Node''applyInputs-2 node, f'marker)
-                                )
-                            )
-                        )
-                    #_"boolean" changed?
-                        (loop-when [changed? false #_"seq" s (seq (Graph''getNodes-2 graph, GuardNode))] (some? s) => changed?
-                            (let [
-                                #_"GuardNode" guard (first s)
-                                changed?
-                                    (when (contains? @v'flood (FloatingAnchoredNode''getAnchor-1 guard)) => changed?
-                                        (vswap! v'flood f'mark- guard)
-                                        true
-                                    )
-                            ]
-                                (recur changed? (next s))
-                            )
-                        )
-                    _
-                        (when changed?
-                            (doseq [#_"Node" node @v'flood]
-                                (if (satisfies? AbstractEndNode node)
-                                    (vswap! v'flood f'mark- (AbstractEndNode'''merge-1 node))
-                                    (do
-                                        (Node''applySuccessors-2 node, f'marker)
-                                        (Node''applyInputs-2 node, f'marker)
-                                    )
-                                )
-                            )
-                        )
-                ]
-                    (when-not (= (count @v'flood) totalNodeCount)
-                        ;; some nodes are not marked alive and therefore dead
-                        (let [
-                            #_"EdgeVisitor" f'eraser
-                                (reify EdgeVisitor
-                                    (#_"Node" EdgeVisitor'''apply-3 [#_"EdgeVisitor" _, #_"Node" source, #_"Node" target]
-                                        (when (and (Node''isAlive-1 target) (contains? @v'flood target)) => target
-                                            (Node''removeUsage-2 target, source)
-                                        )
-                                    )
-                                )
-                        ]
-                            (doseq [#_"Node" node (Graph''getNodes-1 graph)]
-                                (when-not (contains? @v'flood node)
-                                    (§ ass! node (Node''markDeleted-1 node))
-                                    (Node''applyInputs-2 node, f'eraser)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-            graph
         )
     )
 )
@@ -27839,7 +27742,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Replaces the given node at its usages without deleting it. If the current node is a fixed
      ; node it will be disconnected from the control flow, so that it will be deleted by a
-     ; subsequent DeadCodeEliminationPhase
+     ; subsequent DeadCodeEliminationPhase.
      ;
      ; @param node The node to be replaced.
      ; @param replacement The node that should replace the original value. If the replacement is a
@@ -28362,7 +28265,6 @@ ZeroExtendNode'new-4
                                 (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 graph, listener)])
                                     (EffectsClosure'''applyEffects-1 closure)
                                 )
-                            _ (§ ass! graph (Phase'''run-3 (DeadCodeEliminationPhase'new-1 false), graph, nil))
                             #_"{Node}" changedNodes (:changedNodes listener)
                             _
                                 (doseq [#_"Node" node (Graph''getNodes-1 graph)]
@@ -29189,11 +29091,6 @@ ZeroExtendNode'new-4
                 )
             )
         )
-        nil
-    )
-
-    (defn #_"void" NodeClass''applySuccessors-3 [#_"NodeClass" this, #_"Node" node, #_"EdgeVisitor" consumer]
-        (NodeClass'applyEdges-3 node, consumer, (:successorIteration this))
         nil
     )
 
@@ -44875,14 +44772,6 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Applies the given visitor to all successors of this node.
-     ;;
-    (defn #_"void" Node''applySuccessors-2 [#_"Node" this, #_"EdgeVisitor" visitor]
-        (NodeClass''applySuccessors-3 (:nodeClass this), this, visitor)
-        nil
-    )
-
-    ;;;
      ; Checks whether this node has no usages.
      ;;
     (defn #_"boolean" Node''hasNoUsages-1 [#_"Node" this]
@@ -59121,7 +59010,6 @@ ZeroExtendNode'new-4
             this (PhaseSuite''appendPhase-2 this, (AddressLoweringPhase'new-1 (AddressLowering'new-1 HotSpot'heapBaseRegister)))
             this (PhaseSuite''appendPhase-2 this, (CanonicalizerPhase'new-0))
             this (PhaseSuite''appendPhase-2 this, (UseTrappingNullChecksPhase'new-0))
-            this (PhaseSuite''appendPhase-2 this, (DeadCodeEliminationPhase'new-1 false))
             this (PhaseSuite''appendPhase-2 this, (PropagateDeoptimizeProbabilityPhase'new-0))
             this (PhaseSuite''appendPhase-2 this, (SchedulePhase'new-1 :SchedulingStrategy'FINAL_SCHEDULE))
         ]
@@ -60576,12 +60464,7 @@ ZeroExtendNode'new-4
      ; Does final processing of a snippet graph.
      ;;
     (defn- #_"Graph" Replacements'finalizeGraph-1 [#_"Graph" graph]
-        (let [
-            graph (Phase'''run-3 (ConvertDeoptimizeToGuardPhase'new-0), graph, nil)
-            graph (Phase'''run-3 (DeadCodeEliminationPhase'new-1 false), graph, nil)
-        ]
-            graph
-        )
+        (Phase'''run-3 (ConvertDeoptimizeToGuardPhase'new-0), graph, nil)
     )
 
     ;;;
@@ -61655,7 +61538,6 @@ ZeroExtendNode'new-4
                 (for [#_"Node" node (Graph''getNodes-1 snippet) :when (and (satisfies? DeoptimizingNode node) (DeoptimizingNode'''canDeoptimize-1 node))]
                     node
                 )
-            snippet (Phase'''run-3 (DeadCodeEliminationPhase'new-1 false), snippet, nil)
             snippet (Phase'''run-3 (FloatingReadPhase'new-2 true, true), snippet, nil)
             snippet (Phase'''run-3 (RemoveValueProxyPhase'new-0), snippet, nil)
             #_"MemoryAnchorNode" anchor (Graph''add-2 snippet, (MemoryAnchorNode'new-0))
@@ -67324,12 +67206,7 @@ ZeroExtendNode'new-4
             #_"PhaseContext" context (PhaseContext'new-1 optimisticOpts)
             graph
                 (when (nil? (:next (:start graph))) => graph
-                    (let [
-                        graph (Phase'''run-3 HotSpot'graphBuilderSuite, graph, context)
-                        graph (Phase'''run-3 (DeadCodeEliminationPhase'new-1 true), graph, nil)
-                    ]
-                        graph
-                    )
+                    (Phase'''run-3 HotSpot'graphBuilderSuite, graph, context)
                 )
             graph (Phase'''run-3 (:highTier suites), graph, context)
             graph (Phase'''run-3 (:midTier suites), graph, context)
