@@ -124,10 +124,9 @@
     [java.nio ByteBuffer ByteOrder]
     [java.util BitSet Iterator List ListIterator]
 
-    [jdk.vm.ci.code InstalledCode]
+    [jdk.vm.ci.code InstalledCode InvalidInstalledCodeException]
     [jdk.vm.ci.code.site ConstantReference DataPatch DataSectionReference Mark Site]
-    [jdk.vm.ci.hotspot CompilerToVM HotSpotCompiledCode HotSpotJVMCIRuntime HotSpotNmethod HotSpotRuntimeStub HotSpotVMConfig MetaspaceWrapperObject]
-    [jdk.vm.ci.meta ConstantPool]
+    [jdk.vm.ci.hotspot CompilerToVM HotSpotCompiledCode HotSpotInstalledCode HotSpotJVMCIRuntime HotSpotVMConfig MetaspaceWrapperObject]
 
     [sun.misc Unsafe]
 )
@@ -240,7 +239,6 @@ AMD64Address'new-1
 AMD64Address'new-2
 AMD64Address'new-3
 AMD64Address'new-4
-AMD64AddressNode''canonicalizeIndex-2
 AMD64AddressNode''setBase-2
 AMD64AddressNode''setDisplacement-2
 AMD64AddressNode''setIndex-2
@@ -707,7 +705,7 @@ BytecodeParser''addPush-3
 BytecodeParser''append-2
 BytecodeParser''buildRootMethod-1
 BytecodeParser''push-3
-BytecodeParser'new-2
+BytecodeParser'new-1
 BytecodeProvider''findField-5
 BytecodeProvider''findMethod-5
 BytecodeProvider''getBytecode-2
@@ -901,9 +899,8 @@ CanonicalCondition'EQ
 CanonicalCondition'LT
 CanonicalizableLocation'foldIndirection-3
 CanonicalizableLocation'new-1
-CanonicalizerInstance'new-3
-CanonicalizerPhase''applyIncremental-3i
-CanonicalizerPhase''applyIncremental-3m
+CanonicalizerInstance'new-2
+CanonicalizerPhase''applyIncremental-3
 CanonicalizerPhase'new-0
 ChainedNodeEventListener'new-2
 ClassGetHubNode'canonical-4
@@ -933,8 +930,6 @@ ClassfileConstant'CONSTANT_Utf8
 ClassfileConstant'new-1
 ClassfileConstant'resolveField-5
 ClassfileConstant'resolveMethod-5
-ClassfileConstantPool''get-3
-ClassfileConstantPool'new-2
 CodeBuffer''close-1
 CodeBuffer''emitByte-2
 CodeBuffer''emitByte-3
@@ -973,11 +968,7 @@ CompilationResult'new-1
 Compiler'compileGraph-1
 Compiler'compileMethod-1
 Compiler'createCompiledCode-1
-Compiler'createInstalledCode-3
-Compiler'emitBackEnd-2
-Compiler'emitFrontEnd-3
-Compiler'emitLIR-2
-Compiler'emitLowLevel-3
+Compiler'createInstalledCode-1
 Compiler'emitStackOverflowCheck-1
 CompositeValue'new-1
 CompressEncoding''hasBase-1
@@ -990,9 +981,6 @@ CompressionNode'uncompress-2
 CompressionOp'SET
 ComputeBlockOrder'computeCodeEmittingOrder-1
 ComputeBlockOrder'computeLinearScanOrder-1
-ComputeLoopFrequenciesClosure'PHASE_INSTANCE
-ComputeLoopFrequenciesClosure'compute-1
-ComputeLoopFrequencyPhase'new-0
 ComputeObjectAddressNode'new-2
 CondMoveOp'new-4
 CondSetOp'new-2
@@ -1085,6 +1073,16 @@ ConstantNode'forPrimitive-2s
 ConstantNode'forPrimitive-3
 ConstantNode'forShort-2
 ConstantNode'new-2
+ConstantPool''get-3
+ConstantPool''length-1
+ConstantPool''loadReferencedType-3
+ConstantPool''lookupAppendix-3
+ConstantPool''lookupConstant-2
+ConstantPool''lookupField-4
+ConstantPool''lookupMethod-3
+ConstantPool''lookupType-3
+ConstantPool''lookupUtf8-2
+ConstantPool'new-2
 ConstantReflection'constantEquals-2
 ConstantReflection'readArrayLength-1
 ConstantReflection'readArrayElement-2
@@ -1368,7 +1366,6 @@ GraalOptions'optScheduleOutOfLoops
 GraalOptions'partialEscapeAnalysis
 GraalOptions'rawConditionalElimination
 GraalOptions'readEliminationMaxLoopVisits
-GraalOptions'removeNeverExecutedCode
 GraalOptions'replaceInputsWithConstantsBasedOnStamps
 GraalOptions'simpleFastInflatedLocking
 GraalOptions'trustFinalDefaultFields
@@ -1386,7 +1383,6 @@ Graph''getInvokes-1
 Graph''getNodeCount-1
 Graph''getNodes-1
 Graph''getNodes-2
-Graph''getNodesSince-2
 Graph''getParameter-2
 Graph''getReturnStamp-1
 Graph''hasLoops-1
@@ -1413,7 +1409,6 @@ Graph''setHasValueProxies-2
 Graph''setStart-2
 Graph''unregister-2
 Graph'new-1
-GraphBuilderInstance'new-1
 GraphBuilderPhase'new-0
 GraphEffects''add-2
 GraphEffects''addAll-2
@@ -1500,7 +1495,6 @@ HotSpot'deoptReasonJsrMismatch
 HotSpot'deoptReasonNone
 HotSpot'deoptReasonNullCheck
 HotSpot'deoptReasonRangeCheck
-HotSpot'deoptReasonUnreached0
 HotSpot'deoptReasonUnresolved
 HotSpot'deoptimizationActionShift
 HotSpot'deoptimizationReasonShift
@@ -1514,7 +1508,6 @@ HotSpot'g1SATBQueueBufferOffset
 HotSpot'g1SATBQueueIndexOffset
 HotSpot'g1SATBQueueMarkingOffset
 HotSpot'g1YoungCardValue
-HotSpot'graphBuilderSuite
 HotSpot'handleDeoptStub
 HotSpot'heapBaseRegister
 HotSpot'heapWordSize
@@ -2479,10 +2472,6 @@ OpaqueNode'new-1
 OperandFlag'SET
 OperandMode'SET
 OperandModeAnnotation'new-0
-OptimisticOptimizations''removeNeverExecutedCode-1
-OptimisticOptimizations'ALL
-OptimisticOptimizations'NONE
-Optimization'SET
 OptimizingLinearScanWalker'new-3
 Or'new-2
 OrNode'create-2
@@ -2517,7 +2506,6 @@ PartialEscapeClosure'updateStatesForMaterialized-3
 PartialEscapeMergeProcessor'new-2
 PartialEscapePhase'new-2
 PartialEscapePhase'new-3
-PhaseContext'new-1
 PhaseSuite''appendPhase-2
 PhaseSuite'new-0
 PhiInfoElement''get-2
@@ -2817,8 +2805,6 @@ SubNode'create-2
 SubNode'new-2
 SuccessorEdges'new-2
 SuccessorInfo'new-1
-Suites'createGraphBuilderSuite-0
-Suites'createSuites-0
 SwitchNode''defaultSuccessor-1
 SwitchNode''defaultSuccessorIndex-1
 SwitchNode''keyProbability-2
@@ -3653,10 +3639,9 @@ ZeroExtendNode'new-4
     ;;;
      ; Loads the type, if any, referenced at a specified entry.
      ;;
-    (#_"void" ClassfileConstant'''loadReferencedType-4 [#_"ClassfileConstant" this, #_"ClassfileConstantPool" cp, #_"int" index, #_"int" opcode])
+    (#_"void" ClassfileConstant'''loadReferencedType-4 [#_"ClassfileConstant" this, #_"ConstantPool" cp, #_"int" index, #_"int" opcode])
 )
 
-(defp ClassfileConstantPool)
 (defp CodeBuffer)
 (defp CollectVirtualObjectsClosure)
 (defp CommitAllocationNode)
@@ -3693,8 +3678,6 @@ ZeroExtendNode'new-4
 (defp CompressEncoding)
 (defp CompressPointerOp)
 (defp CompressionNode)
-(defp ComputeLoopFrequenciesClosure)
-(defp ComputeLoopFrequencyPhase)
 (defp ComputeObjectAddressNode)
 (defp CondMoveOp)
 (defp CondSetOp)
@@ -3717,6 +3700,7 @@ ZeroExtendNode'new-4
 
 (defp ConstantLoadOptimization)
 (defp ConstantNode)
+(defp ConstantPool)
 (defp ConstantTree)
 (defp ConstantTreeAnalyzer)
 (defp ConstantValue)
@@ -3980,7 +3964,6 @@ ZeroExtendNode'new-4
 (defp GetClassNode)
 (defp GetObjectAddressNode)
 (defp Graph)
-(defp GraphBuilderInstance)
 (defp GraphBuilderPhase)
 (defp GraphEffects)
 (defp GuardLoweringPhase)
@@ -4956,7 +4939,6 @@ ZeroExtendNode'new-4
 (defp OffsetAddressNode)
 (defp OpaqueNode)
 (defp OperandModeAnnotation)
-(defp OptimisticOptimizations)
 (defp OptimizingLinearScanWalker)
 (defp Or)
 (defp OrNode)
@@ -4975,14 +4957,12 @@ ZeroExtendNode'new-4
 
 ;;;
  ; Base for all compiler phases. Subclasses should be stateless. There will be one global instance
- ; for each phase that is shared for all compilations. VM-, target- and compilation-specific data
- ; can be passed with a context object.
+ ; for each phase that is shared for all compilations.
  ;;
 (defp Phase
-    (#_"Graph" Phase'''run-3 [#_"Phase" this, #_"Graph" graph, #_"PhaseContext" context])
+    (#_"Graph" Phase'''run-2 [#_"Phase" this, #_"Graph" graph])
 )
 
-(defp PhaseContext)
 (defp PhaseSuite)
 (defp PhiInfoElement)
 
@@ -5620,7 +5600,6 @@ ZeroExtendNode'new-4
 (defp SubNode)
 (defp SuccessorEdges)
 (defp SuccessorInfo)
-(defp Suites)
 
 (defp SwitchClosure
     ;;;
@@ -6090,7 +6069,6 @@ ZeroExtendNode'new-4
             :DeoptimizationReason'BoundsCheckException
             :DeoptimizationReason'ClassCastException
             :DeoptimizationReason'ArrayStoreException
-            :DeoptimizationReason'UnreachedCode
             :DeoptimizationReason'Unresolved
             :DeoptimizationReason'JavaSubroutineMismatch
             :DeoptimizationReason'ArithmeticException
@@ -6564,7 +6542,6 @@ ZeroExtendNode'new-4
             :DeoptimizationReason'BoundsCheckException   HotSpot'deoptReasonRangeCheck
             :DeoptimizationReason'ClassCastException     HotSpot'deoptReasonClassCheck
             :DeoptimizationReason'ArrayStoreException    HotSpot'deoptReasonArrayCheck
-            :DeoptimizationReason'UnreachedCode          HotSpot'deoptReasonUnreached0
             :DeoptimizationReason'Unresolved             HotSpot'deoptReasonUnresolved
             :DeoptimizationReason'JavaSubroutineMismatch HotSpot'deoptReasonJsrMismatch
             :DeoptimizationReason'ArithmeticException    HotSpot'deoptReasonDiv0Check
@@ -7614,7 +7591,6 @@ ZeroExtendNode'new-4
     (def #_"int" HotSpot'deoptReasonRangeCheck  (.getConstant HotSpot'config, "Deoptimization::Reason_range_check",  Integer))
     (def #_"int" HotSpot'deoptReasonClassCheck  (.getConstant HotSpot'config, "Deoptimization::Reason_class_check",  Integer))
     (def #_"int" HotSpot'deoptReasonArrayCheck  (.getConstant HotSpot'config, "Deoptimization::Reason_array_check",  Integer))
-    (def #_"int" HotSpot'deoptReasonUnreached0  (.getConstant HotSpot'config, "Deoptimization::Reason_unreached0",   Integer))
     (def #_"int" HotSpot'deoptReasonUnresolved  (.getConstant HotSpot'config, "Deoptimization::Reason_unresolved",   Integer))
     (def #_"int" HotSpot'deoptReasonJsrMismatch (.getConstant HotSpot'config, "Deoptimization::Reason_jsr_mismatch", Integer))
     (def #_"int" HotSpot'deoptReasonDiv0Check   (.getConstant HotSpot'config, "Deoptimization::Reason_div0_check",   Integer))
@@ -7682,8 +7658,6 @@ ZeroExtendNode'new-4
 
     (§ def #_"ForeignCalls" HotSpot'foreignCalls (ForeignCalls'new-0))
     (§ def #_"Plugins"      HotSpot'plugins      (Plugins'create-0))
-
-    (§ def #_"PhaseSuite" HotSpot'graphBuilderSuite (Suites'createGraphBuilderSuite-0))
 )
 
 ;;;
@@ -8427,7 +8401,6 @@ ZeroExtendNode'new-4
     (def #_"boolean" GraalOptions'conditionalElimination true)
     (def #_"boolean" GraalOptions'rawConditionalElimination true)
     (def #_"boolean" GraalOptions'replaceInputsWithConstantsBasedOnStamps true)
-    (def #_"boolean" GraalOptions'removeNeverExecutedCode true)
     (def #_"boolean" GraalOptions'canOmitFrame true)
 
     ;; runtime settings
@@ -11533,14 +11506,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(value-ns Optimization
-    (def #_"ordered {Optimization}" Optimization'SET
-        (ordered-set
-            :Optimization'RemoveNeverExecutedCode
-        )
-    )
-)
-
 (value-ns SchedulingStrategy
     #_unused
     (def #_"ordered {SchedulingStrategy}" SchedulingStrategy'SET
@@ -13007,7 +12972,7 @@ ZeroExtendNode'new-4
     )
 
     (defm AddressLoweringPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"AddressLoweringPhase" this, #_"Graph" graph, #_"PhaseContext" context]
+        (#_"Graph" Phase'''run-2 [#_"AddressLoweringPhase" this, #_"Graph" graph]
             (AddressLowering'preProcess-1 graph)
             (loop-when-recur [#_"seq" s (seq (Graph''getNodes-1 graph))] (some? s) [(next s)]
                 (let [
@@ -18322,14 +18287,12 @@ ZeroExtendNode'new-4
 )
 
 (class-ns BytecodeParser []
-    (defn #_"BytecodeParser" BytecodeParser'new-2 [#_"GraphBuilderInstance" builder, #_"Graph" graph]
+    (defn #_"BytecodeParser" BytecodeParser'new-1 [#_"Graph" graph]
         (let [
             #_"Bytecode" code (BytecodeProvider''getBytecode-2 HotSpot'bytecodeProvider, (:rootMethod graph))
         ]
             (merge (BytecodeParser'class.)
                 (hash-map
-                    #_"GraphBuilderInstance" :graphBuilderInstance builder
-                    #_"OptimisticOptimizations" :optimisticOpts (:optimisticOpts builder)
                     #_"Graph" :graph graph
                     #_"Bytecode" :bytecode code
                     #_"ResolvedJavaMethod" :method (:method code)
@@ -18503,22 +18466,11 @@ ZeroExtendNode'new-4
         (BytecodeParser''createTarget-5 this, block, state, false, false)
     )
 
-    (defn- #_"boolean" BytecodeParser''isNeverExecutedCode-2 [#_"BytecodeParser" this, #_"double" probability]
-        (and (zero? probability) (OptimisticOptimizations''removeNeverExecutedCode-1 (:optimisticOpts this)))
-    )
-
-    (defn- #_"FixedNode" BytecodeParser''createTarget-4 [#_"BytecodeParser" this, #_"double" probability, #_"BciBlock" block, #_"FrameStateBuilder" state]
-        (if (BytecodeParser''isNeverExecutedCode-2 this, probability)
-            (Graph''add-2 (:graph this), (DeoptimizeNode'new-2 :DeoptimizationAction'InvalidateReprofile, :DeoptimizationReason'UnreachedCode))
-            (BytecodeParser''createTarget-3 this, block, state)
-        )
-    )
-
     ;;;
-     ; Returns a block begin node with the specified state. If the specified probability is 0, the block deoptimizes immediately.
+     ; Returns a block begin node with the specified state.
      ;;
-    (defn- #_"AbstractBeginNode" BytecodeParser''createBlockTarget-4 [#_"BytecodeParser" this, #_"double" probability, #_"BciBlock" block, #_"FrameStateBuilder" state]
-        (BeginNode'begin-1 (BytecodeParser''createTarget-4 this, probability, block, state))
+    (defn- #_"AbstractBeginNode" BytecodeParser''createBlockTarget-3 [#_"BytecodeParser" this, #_"BciBlock" block, #_"FrameStateBuilder" state]
+        (BeginNode'begin-1 (BytecodeParser''createTarget-3 this, block, state))
     )
 
     ;;;
@@ -18694,19 +18646,19 @@ ZeroExtendNode'new-4
         ;; to mitigate the potential for class initialization related deadlock being caused by
         ;; the compiler (e.g. https://github.com/graalvm/graal-core/pull/232/files#r90788550).
         (locking BytecodeParser'iface
-            (#_"ConstantPool" .loadReferencedType (:constantPool this), cpi, bytecode)
+            (ConstantPool''loadReferencedType-3 (:constantPool this), cpi, bytecode)
         )
         nil
     )
 
     (defn- #_"JavaType" BytecodeParser''lookupType-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" bytecode]
         (BytecodeParser''maybeEagerlyResolve-3 this, cpi, bytecode)
-        (#_"ConstantPool" .lookupType (:constantPool this), cpi, bytecode)
+        (ConstantPool''lookupType-3 (:constantPool this), cpi, bytecode)
     )
 
     (defn- #_"JavaMethod" BytecodeParser''lookupMethod-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
         (BytecodeParser''maybeEagerlyResolve-3 this, cpi, opcode)
-        (#_"ConstantPool" .lookupMethod (:constantPool this), cpi, opcode)
+        (ConstantPool''lookupMethod-3 (:constantPool this), cpi, opcode)
     )
 
     (defn- #_"void" BytecodeParser'initialize-1 [#_"ResolvedJavaType" resolvedType]
@@ -18722,7 +18674,7 @@ ZeroExtendNode'new-4
     (defn- #_"JavaField" BytecodeParser''lookupField-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
         (BytecodeParser''maybeEagerlyResolve-3 this, cpi, opcode)
         (let [
-            #_"JavaField" result (#_"ConstantPool" .lookupField (:constantPool this), cpi, (:method this), opcode)
+            #_"JavaField" result (ConstantPool''lookupField-4 (:constantPool this), cpi, (:method this), opcode)
         ]
             (when (satisfies? ResolvedJavaField result)
                 (let [
@@ -18740,7 +18692,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"Object" BytecodeParser''lookupConstant-3 [#_"BytecodeParser" this, #_"int" cpi, #_"int" opcode]
         (BytecodeParser''maybeEagerlyResolve-3 this, cpi, opcode)
-        (#_"ConstantPool" .lookupConstant (:constantPool this), cpi)
+        (ConstantPool''lookupConstant-2 (:constantPool this), cpi)
     )
 
     (defn- #_"LogicNode" BytecodeParser''genUnique-2 [#_"BytecodeParser" this, #_"LogicNode" x]
@@ -18874,7 +18826,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"boolean" BytecodeParser''genDynamicInvokeHelper-4 [#_"BytecodeParser" this, #_"ResolvedJavaMethod" target, #_"int" cpi, #_"int" opcode]
         (let [
-            #_"JavaConstant" appendix (#_"ConstantPool" .lookupAppendix (:constantPool this), cpi, opcode)
+            #_"JavaConstant" appendix (ConstantPool''lookupAppendix-3 (:constantPool this), cpi, opcode)
             _
                 (when (some? appendix)
                     (§ ass! this (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, (ConstantNode'forConstant-2c appendix, (:graph this))))
@@ -19151,15 +19103,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; Helper function that sums up the probabilities of all keys that lead to a specific successor.
-     ;
-     ; @return an array of size successorCount with the accumulated probability for each successor
-     ;;
-    (defn- #_"[double]" BytecodeParser'successorProbabilites-3 [#_"int" successorCount, #_"int*" keySuccessors, #_"double*" probabilities]
-        (reduce #(update' %1 (nth keySuccessors %2) + (nth probabilities %2)) (vec (repeat successorCount 0.0)) (range (count keySuccessors)))
-    )
-
     (defn- #_"this" BytecodeParser''genIntegerSwitch-6 [#_"BytecodeParser" this, #_"ValueNode" value, #_"BciBlock*" actualSuccessors, #_"[int]" keys, #_"[double]" probabilities, #_"[int]" keySuccessors]
         (if (satisfies? ConstantNode value)
             (let [
@@ -19170,11 +19113,10 @@ ZeroExtendNode'new-4
             )
             (let [
                 this (assoc this :controlFlowSplit true)
-                #_"[double]" successorProbabilities (BytecodeParser'successorProbabilites-3 (count actualSuccessors), keySuccessors, probabilities)
                 #_"IntegerSwitchNode" switchNode (BytecodeParser''append-2 this, (IntegerSwitchNode'new-5i value, (count actualSuccessors), keys, probabilities, keySuccessors))
                 _
                     (dotimes [#_"int" i (count actualSuccessors)]
-                        (§ ass! switchNode (SwitchNode''setBlockSuccessor-3 switchNode, i, (BytecodeParser''createBlockTarget-4 this, (nth successorProbabilities i), (nth actualSuccessors i), (:frameState this))))
+                        (§ ass! switchNode (SwitchNode''setBlockSuccessor-3 switchNode, i, (BytecodeParser''createBlockTarget-3 this, (nth actualSuccessors i), (:frameState this))))
                     )
             ]
                 this
@@ -19298,43 +19240,27 @@ ZeroExtendNode'new-4
             (when-not (satisfies? LogicConstantNode logic) => (BytecodeParser''genConstantTargetIf-4 this, trueBlock, falseBlock, logic)
                 (let [
                     logic (if (nil? (:graph logic)) (BytecodeParser''genUnique-2 this, logic) logic)
+                    #_"int" oldBci (:curBCI (:stream this))
+                    #_"int" trueBlockInt (BytecodeParser''checkPositiveIntConstantPushed-2 this, trueBlock)
                 ]
-                    (cond
-                        (BytecodeParser''isNeverExecutedCode-2 this, probability)
-                            (do
-                                (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, :DeoptimizationReason'UnreachedCode, :DeoptimizationAction'InvalidateReprofile, true))
-                                (BytecodeParser''appendGoto-2 this, falseBlock)
-                            )
-                        (BytecodeParser''isNeverExecutedCode-2 this, (- 1.0 probability))
-                            (do
-                                (BytecodeParser''append-2 this, (FixedGuardNode'new-4 logic, :DeoptimizationReason'UnreachedCode, :DeoptimizationAction'InvalidateReprofile, false))
-                                (BytecodeParser''appendGoto-2 this, trueBlock)
-                            )
-                        :else
-                            (let [
-                                #_"int" oldBci (:curBCI (:stream this))
-                                #_"int" trueBlockInt (BytecodeParser''checkPositiveIntConstantPushed-2 this, trueBlock)
-                            ]
-                                (when-not (= trueBlockInt -1)
-                                    (let [
-                                        #_"int" falseBlockInt (BytecodeParser''checkPositiveIntConstantPushed-2 this, falseBlock)
-                                    ]
-                                        (when-not (= falseBlockInt -1)
-                                            (when (BytecodeParser''tryGenConditionalForIf-7 this, trueBlock, falseBlock, logic, oldBci, trueBlockInt, falseBlockInt)
-                                                (§ return this)
-                                            )
-                                        )
-                                    )
-                                )
-                                (let [
-                                    this (assoc this :controlFlowSplit true)
-                                    #_"FixedNode" trueSuccessor (BytecodeParser''createTarget-5 this, trueBlock, (:frameState this), false, false)
-                                    #_"FixedNode" falseSuccessor (BytecodeParser''createTarget-5 this, falseBlock, (:frameState this), false, true)
-                                ]
-                                    (BytecodeParser''append-2 this, (IfNode'new-4f logic, trueSuccessor, falseSuccessor, probability))
-                                    this
+                    (when-not (= trueBlockInt -1)
+                        (let [
+                            #_"int" falseBlockInt (BytecodeParser''checkPositiveIntConstantPushed-2 this, falseBlock)
+                        ]
+                            (when-not (= falseBlockInt -1)
+                                (when (BytecodeParser''tryGenConditionalForIf-7 this, trueBlock, falseBlock, logic, oldBci, trueBlockInt, falseBlockInt)
+                                    (§ return this)
                                 )
                             )
+                        )
+                    )
+                    (let [
+                        this (assoc this :controlFlowSplit true)
+                        #_"FixedNode" trueSuccessor (BytecodeParser''createTarget-5 this, trueBlock, (:frameState this), false, false)
+                        #_"FixedNode" falseSuccessor (BytecodeParser''createTarget-5 this, falseBlock, (:frameState this), false, true)
+                    ]
+                        (BytecodeParser''append-2 this, (IfNode'new-4f logic, trueSuccessor, falseSuccessor, probability))
+                        this
                     )
                 )
             )
@@ -19346,9 +19272,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"double" BytecodeParser''clampProbability-2 [#_"BytecodeParser" this, #_"double" probability]
-        (when-not (OptimisticOptimizations''removeNeverExecutedCode-1 (:optimisticOpts this)) => probability
-            (case probability 0.0 0.0000001 1.0 0.999999 probability)
-        )
+        (case probability 0.0 0.0000001 1.0 0.999999 probability)
     )
 
     (defn- #_"this" BytecodeParser''genIf-4 [#_"BytecodeParser" this, #_"ValueNode" x, #_"Condition" condition, #_"ValueNode" y]
@@ -19864,35 +19788,20 @@ ZeroExtendNode'new-4
                                 (§ ass! keys (assoc' keys i (BytecodeSwitch'''keyAt-2 switch, i)))
                             )
                         [deoptSuccessorIndex nextSuccessorIndex]
-                            (if (and (not (satisfies? ConstantNode value)) (BytecodeParser''isNeverExecutedCode-2 this, (nth probabilities i)))
-                                (let [
-                                    [deoptSuccessorIndex nextSuccessorIndex]
-                                        (when (neg? deoptSuccessorIndex) => [deoptSuccessorIndex nextSuccessorIndex]
-                                            (let [
-                                                _ (§ ass! actualSuccessors (conj' actualSuccessors nil))
-                                            ]
-                                                [nextSuccessorIndex (inc nextSuccessorIndex)]
-                                            )
+                            (let [
+                                #_"int" targetBci (if (< i n) (BytecodeSwitch''targetAt-2 switch, i) (BytecodeSwitch''defaultTarget-1 switch))
+                                #_"SuccessorInfo" info (get bciToBlockSuccessorIndex targetBci)
+                                [info nextSuccessorIndex]
+                                    (when (neg? (:actualIndex info)) => [info nextSuccessorIndex]
+                                        (let [
+                                            _ (§ ass! actualSuccessors (conj' actualSuccessors (BciBlock''getSuccessor-2 (:currentBlock this), (:blockIndex info))))
+                                        ]
+                                            [(assoc info :actualIndex nextSuccessorIndex) (inc nextSuccessorIndex)]
                                         )
-                                    _ (§ ass! keySuccessors (assoc' keySuccessors i deoptSuccessorIndex))
-                                ]
-                                    [deoptSuccessorIndex nextSuccessorIndex]
-                                )
-                                (let [
-                                    #_"int" targetBci (if (< i n) (BytecodeSwitch''targetAt-2 switch, i) (BytecodeSwitch''defaultTarget-1 switch))
-                                    #_"SuccessorInfo" info (get bciToBlockSuccessorIndex targetBci)
-                                    [info nextSuccessorIndex]
-                                        (when (neg? (:actualIndex info)) => [info nextSuccessorIndex]
-                                            (let [
-                                                _ (§ ass! actualSuccessors (conj' actualSuccessors (BciBlock''getSuccessor-2 (:currentBlock this), (:blockIndex info))))
-                                            ]
-                                                [(assoc info :actualIndex nextSuccessorIndex) (inc nextSuccessorIndex)]
-                                            )
-                                        )
-                                    _ (§ ass! keySuccessors (assoc' keySuccessors i (:actualIndex info)))
-                                ]
-                                    [deoptSuccessorIndex nextSuccessorIndex]
-                                )
+                                    )
+                                _ (§ ass! keySuccessors (assoc' keySuccessors i (:actualIndex info)))
+                            ]
+                                [deoptSuccessorIndex nextSuccessorIndex]
                             )
                     ]
                         (recur deoptSuccessorIndex nextSuccessorIndex (inc i))
@@ -20269,16 +20178,13 @@ ZeroExtendNode'new-4
         )
     )
 
-    ; @SuppressWarnings("try")
     (defn #_"this" BytecodeParser''buildRootMethod-1 [#_"BytecodeParser" this]
         (let [
             #_"FrameStateBuilder" startFrameState (FrameStateBuilder'new-3 this, (:bytecode this), (:graph this))
             startFrameState (FrameStateBuilder''initializeForMethodStart-1 startFrameState)
             this (BytecodeParser''build-3 this, (:start (:graph this)), startFrameState)
-            this (BytecodeParser''cleanupFinalGraph-1 this)
         ]
-            (ComputeLoopFrequenciesClosure'compute-1 (:graph this))
-            this
+            (BytecodeParser''cleanupFinalGraph-1 this)
         )
     )
 )
@@ -20996,12 +20902,11 @@ ZeroExtendNode'new-4
 )
 
 (class-ns CanonicalizerInstance [Phase, SimplifierTool, CanonicalizerTool]
-    (defn #_"CanonicalizerInstance" CanonicalizerInstance'new-3 [#_"CanonicalizerPhase" phase, #_"Node*" workingSet, #_"int" newNodesMark]
+    (defn #_"CanonicalizerInstance" CanonicalizerInstance'new-2 [#_"CanonicalizerPhase" phase, #_"Node*" workingSet]
         (merge (CanonicalizerInstance'class.)
             (hash-map
                 #_"CanonicalizerPhase" :phase phase
                 #_"Node*" :initWorkingSet workingSet
-                #_"int" :newNodesMark newNodesMark
                 #_"ordered {Node}" :worklist nil
             )
         )
@@ -21235,19 +21140,10 @@ ZeroExtendNode'new-4
     )
 
     (defm CanonicalizerInstance Phase
-        (#_"Graph" Phase'''run-3 [#_"CanonicalizerInstance" this, #_"Graph" graph, #_"PhaseContext" context]
+        (#_"Graph" Phase'''run-2 [#_"CanonicalizerInstance" this, #_"Graph" graph]
             (let [
-                #_"boolean" whole-graph? (zero? (:newNodesMark this))
                 _ (§ ass! this (assoc this :worklist (ordered-set)))
-                _
-                    (cond
-                        (some? (:initWorkingSet this)) (§ ass! this (update this :worklist CanonicalizerInstance'addAll-2 (:initWorkingSet this)))
-                        whole-graph?                   (§ ass! this (update this :worklist CanonicalizerInstance'addAll-2 (Graph''getNodes-1 graph)))
-                    )
-                _
-                    (when-not whole-graph?
-                        (§ ass! this (update this :worklist CanonicalizerInstance'addAll-2 (Graph''getNodesSince-2 graph, (:newNodesMark this))))
-                    )
+                _ (§ ass! this (update this :worklist CanonicalizerInstance'addAll-2 (or (:initWorkingSet this) (Graph''getNodes-1 graph))))
                 _ (§ ass! this (CanonicalizerInstance''processWorkSet-2 this, graph))
             ]
                 graph
@@ -21262,24 +21158,16 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; @param newNodesMark only the {@linkplain Graph#getNodesSince(int) new nodes} specified by this mark are processed
-     ;;
-    (defn #_"void" CanonicalizerPhase''applyIncremental-3m [#_"CanonicalizerPhase" this, #_"Graph" graph, #_"int" newNodesMark]
-        (§ ass! graph (Phase'''run-3 (CanonicalizerInstance'new-3 this, nil, newNodesMark), graph, nil))
-        nil
-    )
-
-    ;;;
      ; @param workingSet the initial working set of nodes on which the canonicalizer works, should be an auto-grow node bitmap
      ;;
-    (defn #_"void" CanonicalizerPhase''applyIncremental-3i [#_"CanonicalizerPhase" this, #_"Graph" graph, #_"Node*" workingSet]
-        (§ ass! graph (Phase'''run-3 (CanonicalizerInstance'new-3 this, workingSet, 0), graph, nil))
+    (defn #_"void" CanonicalizerPhase''applyIncremental-3 [#_"CanonicalizerPhase" this, #_"Graph" graph, #_"Node*" workingSet]
+        (§ ass! graph (Phase'''run-2 (CanonicalizerInstance'new-2 this, workingSet), graph))
         nil
     )
 
     (defm CanonicalizerPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"CanonicalizerPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (Phase'''run-3 (CanonicalizerInstance'new-3 this, nil, 0), graph, nil)
+        (#_"Graph" Phase'''run-2 [#_"CanonicalizerPhase" this, #_"Graph" graph]
+            (Phase'''run-2 (CanonicalizerInstance'new-2 this, nil), graph)
         )
     )
 )
@@ -21332,13 +21220,13 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"Bytecode" Classfile'findCodeAttribute-6 [#_"DataInputStream" stream, #_"ClassfileConstantPool" cp, #_"ResolvedJavaType" type, #_"String" name, #_"String" descriptor, #_"boolean" static?]
+    (defn- #_"Bytecode" Classfile'findCodeAttribute-6 [#_"DataInputStream" stream, #_"ConstantPool" cp, #_"ResolvedJavaType" type, #_"String" name, #_"String" descriptor, #_"boolean" static?]
         (let [
             #_"int" attributesCount (#_"DataInputStream" .readUnsignedShort stream)
         ]
             (loop-when [#_"Bytecode" code nil #_"int" i 0] (< i attributesCount) => code
                 (let [
-                    #_"String" attributeName (:value (ClassfileConstantPool''get-3 cp, Utf8'iface, (#_"DataInputStream" .readUnsignedShort stream)))
+                    #_"String" attributeName (:value (ConstantPool''get-3 cp, Utf8'iface, (#_"DataInputStream" .readUnsignedShort stream)))
                     #_"int" attributeLength (#_"DataInputStream" .readInt stream)
                     code
                         (if (and (nil? code) (= attributeName "Code"))
@@ -21364,7 +21252,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"[Bytecode]" Classfile'readMethods-3 [#_"DataInputStream" stream, #_"ClassfileConstantPool" cp, #_"ResolvedJavaType" type]
+    (defn- #_"[Bytecode]" Classfile'readMethods-3 [#_"DataInputStream" stream, #_"ConstantPool" cp, #_"ResolvedJavaType" type]
         (let [
             #_"int" n (#_"DataInputStream" .readUnsignedShort stream)
             #_"[Bytecode]" methods []
@@ -21373,8 +21261,8 @@ ZeroExtendNode'new-4
                     (let [
                         #_"int" accessFlags (#_"DataInputStream" .readUnsignedShort stream)
                         #_"boolean" static? (Modifier/isStatic accessFlags)
-                        #_"String" name (:value (ClassfileConstantPool''get-3 cp, Utf8'iface, (#_"DataInputStream" .readUnsignedShort stream)))
-                        #_"String" descriptor (:value (ClassfileConstantPool''get-3 cp, Utf8'iface, (#_"DataInputStream" .readUnsignedShort stream)))
+                        #_"String" name (:value (ConstantPool''get-3 cp, Utf8'iface, (#_"DataInputStream" .readUnsignedShort stream)))
+                        #_"String" descriptor (:value (ConstantPool''get-3 cp, Utf8'iface, (#_"DataInputStream" .readUnsignedShort stream)))
                         #_"Bytecode" code (Classfile'findCodeAttribute-6 stream, cp, type, name, descriptor, static?)
                     ]
                         (when (some? code)
@@ -21399,7 +21287,7 @@ ZeroExtendNode'new-4
                 (when-not (<= Classfile'MAJOR_VERSION_JAVA_MIN major Classfile'MAJOR_VERSION_JAVA_MAX)
                     (throw! (str "unsupported class file version: " major "." minor))
                 )
-            #_"ClassfileConstantPool" cp (ClassfileConstantPool'new-2 stream, context)
+            #_"ConstantPool" cp (ConstantPool'new-2 stream, context)
             _ (Classfile'skipFully-2 stream, 6)                                                     ;; access_flags, this_class, super_class
             _ (Classfile'skipFully-2 stream, (* (#_"DataInputStream" .readUnsignedShort stream) 2)) ;; interfaces
             _ (Classfile'skipFields-1 stream)                                                       ;; fields
@@ -21447,7 +21335,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"Bytecode" Bytecode'new-3 [#_"ResolvedJavaMethod" method, #_"DataInputStream" stream, #_"ClassfileConstantPool" constantPool]
+    (defn #_"Bytecode" Bytecode'new-3 [#_"ResolvedJavaMethod" method, #_"DataInputStream" stream, #_"ConstantPool" constantPool]
         (let [
             _ (#_"DataInputStream" .readUnsignedShort stream)
             #_"int" maxLocals (#_"DataInputStream" .readUnsignedShort stream)
@@ -21461,7 +21349,7 @@ ZeroExtendNode'new-4
             (merge (Bytecode'class.)
                 (hash-map
                     #_"ResolvedJavaMethod" :method method
-                    #_"ClassfileConstantPool" :constantPool constantPool
+                    #_"ConstantPool" :constantPool constantPool
                     #_"[byte]" :code (vec code!)
                     #_"int" :maxLocals maxLocals
                 )
@@ -21643,7 +21531,7 @@ ZeroExtendNode'new-4
     )
 
     (defm ClassfileConstant ClassfileConstant
-        (#_"void" ClassfileConstant'''loadReferencedType-4 [#_"ClassfileConstant" this, #_"ClassfileConstantPool" cp, #_"int" index, #_"int" opcode]
+        (#_"void" ClassfileConstant'''loadReferencedType-4 [#_"ClassfileConstant" this, #_"ConstantPool" cp, #_"int" index, #_"int" opcode]
             nil
         )
     )
@@ -21686,15 +21574,15 @@ ZeroExtendNode'new-4
     )
 
     (defm ClassRef ClassfileConstant
-        (#_"void" ClassfileConstant'''loadReferencedType-4 [#_"ClassRef" this, #_"ClassfileConstantPool" cp, #_"int" index, #_"int" opcode]
+        (#_"void" ClassfileConstant'''loadReferencedType-4 [#_"ClassRef" this, #_"ConstantPool" cp, #_"int" index, #_"int" opcode]
             (ClassRef''resolve-2 this, cp)
             nil
         )
     )
 
-    (defn #_"ResolvedJavaType" ClassRef''resolve-2 [#_"ClassRef" this, #_"ClassfileConstantPool" cp]
+    (defn #_"ResolvedJavaType" ClassRef''resolve-2 [#_"ClassRef" this, #_"ConstantPool" cp]
         (when (nil? (:type this))
-            (§ ass! this (assoc this :type (MetaReflection'lookupJavaType-1c (BytecodeProvider''resolveToClass-2 (:context cp), (:value (ClassfileConstantPool''get-3 cp, Utf8'iface, (:nameIndex this)))))))
+            (§ ass! this (assoc this :type (MetaReflection'lookupJavaType-1c (BytecodeProvider''resolveToClass-2 (:context cp), (:value (ConstantPool''get-3 cp, Utf8'iface, (:nameIndex this)))))))
         )
         (:type this)
     )
@@ -21711,8 +21599,8 @@ ZeroExtendNode'new-4
     )
 
     (defm MemberRef ClassfileConstant
-        (#_"void" ClassfileConstant'''loadReferencedType-4 [#_"MemberRef" this, #_"ClassfileConstantPool" cp, #_"int" index, #_"int" opcode]
-            (ClassfileConstant'''loadReferencedType-4 (ClassfileConstantPool''get-3 cp, ClassRef'iface, (:classIndex this)), cp, (:classIndex this), opcode)
+        (#_"void" ClassfileConstant'''loadReferencedType-4 [#_"MemberRef" this, #_"ConstantPool" cp, #_"int" index, #_"int" opcode]
+            (ClassfileConstant'''loadReferencedType-4 (ConstantPool''get-3 cp, ClassRef'iface, (:classIndex this)), cp, (:classIndex this), opcode)
             nil
         )
     )
@@ -21727,11 +21615,11 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"ResolvedJavaMethod" ExecutableRef''resolve-3 [#_"ExecutableRef" this, #_"ClassfileConstantPool" cp, #_"int" opcode]
+    (defn #_"ResolvedJavaMethod" ExecutableRef''resolve-3 [#_"ExecutableRef" this, #_"ConstantPool" cp, #_"int" opcode]
         (when (nil? (:method this))
             (let [
-                #_"ResolvedJavaType" cls (ClassRef''resolve-2 (ClassfileConstantPool''get-3 cp, ClassRef'iface, (:classIndex this)), cp)
-                #_"NameAndType" nameAndType (ClassfileConstantPool''get-3 cp, NameAndType'iface, (:nameAndTypeIndex this))
+                #_"ResolvedJavaType" cls (ClassRef''resolve-2 (ConstantPool''get-3 cp, ClassRef'iface, (:classIndex this)), cp)
+                #_"NameAndType" nameAndType (ConstantPool''get-3 cp, NameAndType'iface, (:nameAndTypeIndex this))
                 #_"String" name (NameAndType''getName-2 nameAndType, cp)
                 #_"String" type (NameAndType''getType-2 nameAndType, cp)
             ]
@@ -21791,11 +21679,11 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"ResolvedJavaField" FieldRef''resolve-3 [#_"FieldRef" this, #_"ClassfileConstantPool" cp, #_"int" opcode]
+    (defn #_"ResolvedJavaField" FieldRef''resolve-3 [#_"FieldRef" this, #_"ConstantPool" cp, #_"int" opcode]
         (when (nil? (:field this))
             (let [
-                #_"ResolvedJavaType" cls (ClassRef''resolve-2 (ClassfileConstantPool''get-3 cp, ClassRef'iface, (:classIndex this)), cp)
-                #_"NameAndType" nameAndType (ClassfileConstantPool''get-3 cp, NameAndType'iface, (:nameAndTypeIndex this))
+                #_"ResolvedJavaType" cls (ClassRef''resolve-2 (ConstantPool''get-3 cp, ClassRef'iface, (:classIndex this)), cp)
+                #_"NameAndType" nameAndType (ConstantPool''get-3 cp, NameAndType'iface, (:nameAndTypeIndex this))
                 #_"String" name (NameAndType''getName-2 nameAndType, cp)
                 #_"String" type (NameAndType''getType-2 nameAndType, cp)
                 _ (§ ass! this (assoc this :field (ClassfileConstant'resolveField-5 (:context cp), cls, name, type, (any = opcode Bytecodes'GETSTATIC Bytecodes'PUTSTATIC))))
@@ -21821,16 +21709,16 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"String" NameAndType''getName-2 [#_"NameAndType" this, #_"ClassfileConstantPool" cp]
+    (defn #_"String" NameAndType''getName-2 [#_"NameAndType" this, #_"ConstantPool" cp]
         (when (nil? (:name this))
-            (§ ass! this (assoc this :name (:value (ClassfileConstantPool''get-3 cp, Utf8'iface, (:nameIndex this)))))
+            (§ ass! this (assoc this :name (:value (ConstantPool''get-3 cp, Utf8'iface, (:nameIndex this)))))
         )
         (:name this)
     )
 
-    (defn #_"String" NameAndType''getType-2 [#_"NameAndType" this, #_"ClassfileConstantPool" cp]
+    (defn #_"String" NameAndType''getType-2 [#_"NameAndType" this, #_"ConstantPool" cp]
         (when (nil? (:type this))
-            (§ ass! this (assoc this :type (:value (ClassfileConstantPool''get-3 cp, Utf8'iface, (:typeIndex this)))))
+            (§ ass! this (assoc this :type (:value (ConstantPool''get-3 cp, Utf8'iface, (:typeIndex this)))))
         )
         (:type this)
     )
@@ -21856,9 +21744,9 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"JavaConstant" StringRef''getValue-2 [#_"StringRef" this, #_"ClassfileConstantPool" pool]
+    (defn #_"JavaConstant" StringRef''getValue-2 [#_"StringRef" this, #_"ConstantPool" pool]
         (when (nil? (:value this))
-            (§ ass! this (assoc this :value (SnippetReflection'forObject-1 (#_"ConstantPool" .lookupUtf8 pool, (:stringIndex this)))))
+            (§ ass! this (assoc this :value (SnippetReflection'forObject-1 (ConstantPool''lookupUtf8-2 pool, (:stringIndex this)))))
         )
         (:value this)
     )
@@ -21874,7 +21762,7 @@ ZeroExtendNode'new-4
     )
 
     (defm Unsupported ClassfileConstant
-        (#_"void" ClassfileConstant'''loadReferencedType-4 [#_"Unsupported" this, #_"ClassfileConstantPool" cp, #_"int" index, #_"int" opcode]
+        (#_"void" ClassfileConstant'''loadReferencedType-4 [#_"Unsupported" this, #_"ConstantPool" cp, #_"int" index, #_"int" opcode]
             (throw! (str "Resolution of " (:name this) " constant pool entries not supported by " (#_"Class" .getSimpleName BytecodeProvider'iface)))
         )
     )
@@ -21890,8 +21778,13 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ClassfileConstantPool [#_"ConstantPool"]
-    (defn- #_"ClassfileConstant" ClassfileConstantPool'readConstant-1 [#_"DataInputStream" stream]
+;;;
+ ; Runtime representation of the constant pool that is used by the compiler when parsing bytecode.
+ ; Provides methods to look up a constant pool entry without performing resolution.
+ ; They are used during compilation.
+ ;;
+(class-ns ConstantPool []
+    (defn- #_"ClassfileConstant" ConstantPool'readConstant-1 [#_"DataInputStream" stream]
         (let [
             #_"byte" tag (#_"DataInputStream" .readByte stream)
         ]
@@ -21929,19 +21822,19 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"ClassfileConstantPool" ClassfileConstantPool'new-2 [#_"DataInputStream" stream, #_"BytecodeProvider" context]
+    (defn #_"ConstantPool" ConstantPool'new-2 [#_"DataInputStream" stream, #_"BytecodeProvider" context]
         (let [
             #_"int" n (#_"DataInputStream" .readUnsignedShort stream)
             #_"[ClassfileConstant]" entries
                 (loop-when [entries (vec (repeat n nil)) #_"int" i 1] (< i n) => entries
                     (let [
-                        entries (assoc' entries i (ClassfileConstantPool'readConstant-1 stream))
+                        entries (assoc' entries i (ConstantPool'readConstant-1 stream))
                     ]
                         (recur entries (+ i (if (any = (:tag (nth entries i)) ClassfileConstant'CONSTANT_Double ClassfileConstant'CONSTANT_Long) 2 1)))
                     )
                 )
         ]
-            (merge (ClassfileConstantPool'class.)
+            (merge (ConstantPool'class.)
                 (hash-map
                     #_"[ClassfileConstant]" :entries entries
                     #_"BytecodeProvider" :context context
@@ -21950,15 +21843,25 @@ ZeroExtendNode'new-4
         )
     )
 
-    (§ override! #_"int" #_"ConstantPool." length [#_"ClassfileConstantPool" this]
+    ;;;
+     ; Returns the number of entries the constant pool.
+     ;;
+    (defn #_"int" ConstantPool''length-1 [#_"ConstantPool" this]
         (count (:entries this))
     )
 
-    (defn #_"<T implements ClassfileConstant> T" ClassfileConstantPool''get-3 [#_"ClassfileConstantPool" this, #_"Class<T>" c, #_"int" index]
+    (defn #_"<T implements ClassfileConstant> T" ConstantPool''get-3 [#_"ConstantPool" this, #_"Class<T>" c, #_"int" index]
         (#_"Class" .cast c, (nth (:entries this) index))
     )
 
-    (§ override! #_"void" #_"ConstantPool." loadReferencedType [#_"ClassfileConstantPool" this, #_"int" index, #_"int" opcode]
+    ;;;
+     ; Ensures that the type referenced by the specified constant pool entry is loaded and initialized.
+     ; This can be used to compile time resolve a type. It works for field, method, or type constant pool entries.
+     ;
+     ; @param index the index of the constant pool entry that references the type
+     ; @param opcode the opcode of the instruction that references the type
+     ;;
+    (defn #_"void" ConstantPool''loadReferencedType-3 [#_"ConstantPool" this, #_"int" index, #_"int" opcode]
         (when (= opcode Bytecodes'INVOKEDYNAMIC)
             (throw! (str "INVOKEDYNAMIC not supported by " (#_"Class" .getSimpleName BytecodeProvider'iface)))
         )
@@ -21966,33 +21869,76 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (§ override! #_"JavaField" #_"ConstantPool." lookupField [#_"ClassfileConstantPool" this, #_"int" index, #_"ResolvedJavaMethod" method, #_"int" opcode]
-        (FieldRef''resolve-3 (ClassfileConstantPool''get-3 this, FieldRef'iface, index), this, opcode)
+    ;;;
+     ; Looks up a reference to a field. If {@code opcode} is non-negative, then resolution checks
+     ; specific to the bytecode it denotes are performed if the field is already resolved. Checks
+     ; for some bytecodes require the method that contains the bytecode to be specified. Should
+     ; any of these checks fail, an unresolved field reference is returned.
+     ;
+     ; @param index the constant pool index
+     ; @param opcode the opcode of the instruction for which the lookup is being performed or {@code -1}
+     ; @param method the method for which the lookup is being performed
+     ; @return a reference to the field at {@code index} in this pool
+     ; @throws ClassFormatError if the entry at {@code index} is not a field
+     ;;
+    (defn #_"JavaField" ConstantPool''lookupField-4 [#_"ConstantPool" this, #_"int" index, #_"ResolvedJavaMethod" method, #_"int" opcode]
+        (FieldRef''resolve-3 (ConstantPool''get-3 this, FieldRef'iface, index), this, opcode)
     )
 
-    (§ override! #_"JavaMethod" #_"ConstantPool." lookupMethod [#_"ClassfileConstantPool" this, #_"int" index, #_"int" opcode]
+    ;;;
+     ; Looks up a reference to a method. If {@code opcode} is non-negative, then resolution checks
+     ; specific to the bytecode it denotes are performed if the method is already resolved. Should
+     ; any of these checks fail, an unresolved method reference is returned.
+     ;
+     ; @param index the constant pool index
+     ; @param opcode the opcode of the instruction for which the lookup is being performed or {@code -1}
+     ; @return a reference to the method at {@code index} in this pool
+     ; @throws ClassFormatError if the entry at {@code index} is not a method
+     ;;
+    (defn #_"JavaMethod" ConstantPool''lookupMethod-3 [#_"ConstantPool" this, #_"int" index, #_"int" opcode]
         (when (= opcode Bytecodes'INVOKEDYNAMIC)
             (throw! (str "INVOKEDYNAMIC not supported by" (#_"Class" .getSimpleName BytecodeProvider'iface)))
         )
-        (ExecutableRef''resolve-3 (ClassfileConstantPool''get-3 this, ExecutableRef'iface, index), this, opcode)
+        (ExecutableRef''resolve-3 (ConstantPool''get-3 this, ExecutableRef'iface, index), this, opcode)
     )
 
-    (§ override! #_"JavaType" #_"ConstantPool." lookupType [#_"ClassfileConstantPool" this, #_"int" index, #_"int" opcode]
-        (ClassRef''resolve-2 (ClassfileConstantPool''get-3 this, ClassRef'iface, index), this)
+    ;;;
+     ; Looks up a reference to a type. If {@code opcode} is non-negative, then resolution checks
+     ; specific to the bytecode it denotes are performed if the type is already resolved. Should any
+     ; of these checks fail, an unresolved type reference is returned.
+     ;
+     ; @param index the constant pool index
+     ; @param opcode the opcode of the instruction for which the lookup is being performed or {@code -1}
+     ; @return a reference to the compiler interface type
+     ;;
+    (defn #_"JavaType" ConstantPool''lookupType-3 [#_"ConstantPool" this, #_"int" index, #_"int" opcode]
+        (ClassRef''resolve-2 (ConstantPool''get-3 this, ClassRef'iface, index), this)
     )
 
-    (§ override! #_"String" #_"ConstantPool." lookupUtf8 [#_"ClassfileConstantPool" this, #_"int" index]
+    ;;;
+     ; Looks up an Utf8 string.
+     ;
+     ; @param index the constant pool index
+     ; @return the Utf8 string at index {@code index} in this constant pool
+     ;;
+    (defn #_"String" ConstantPool''lookupUtf8-2 [#_"ConstantPool" this, #_"int" index]
         (:value (§ cast #_"Utf8" (nth (:entries this) index)))
     )
 
-    (§ override! #_"Object" #_"ConstantPool." lookupConstant [#_"ClassfileConstantPool" this, #_"int" index]
+    ;;;
+     ; Looks up a constant at the specified index.
+     ;
+     ; @param index the constant pool index
+     ; @return the {@code Constant} or {@code JavaType} instance representing the constant pool entry
+     ;;
+    (defn #_"Object" ConstantPool''lookupConstant-2 [#_"ConstantPool" this, #_"int" index]
         (let [
             #_"ClassfileConstant" c (nth (:entries this) index)
         ]
             (if (satisfies? Primitive c)
                 (:value c)
                 (condp = (:tag c)
-                    ClassfileConstant'CONSTANT_Class  (#_"ConstantPool" .lookupType this, index, -1)
+                    ClassfileConstant'CONSTANT_Class  (ConstantPool''lookupType-3 this, index, -1)
                     ClassfileConstant'CONSTANT_String (StringRef''getValue-2 this, c)
                     (throw! (str "unexpected constant pool tag " (:tag c)))
                 )
@@ -22000,7 +21946,14 @@ ZeroExtendNode'new-4
         )
     )
 
-    (§ override! #_"JavaConstant" #_"ConstantPool." lookupAppendix [#_"ClassfileConstantPool" this, #_"int" index, #_"int" opcode]
+    ;;;
+     ; Looks up the appendix at the specified index.
+     ;
+     ; @param index the constant pool index
+     ; @param opcode the opcode of the instruction for which the lookup is being performed or {@code -1}
+     ; @return the appendix if it exists and is resolved or {@code nil}
+     ;;
+    (defn #_"JavaConstant" ConstantPool''lookupAppendix-3 [#_"ConstantPool" this, #_"int" index, #_"int" opcode]
         (when-not (= opcode Bytecodes'INVOKEVIRTUAL)
             (throw! "should not reach here")
         )
@@ -22977,19 +22930,6 @@ ZeroExtendNode'new-4
     #_unused
     (defn #_"boolean" CompressEncoding''hasShift-1 [#_"CompressEncoding" this]
         (not (zero? (:shift this)))
-    )
-)
-
-(class-ns ComputeLoopFrequencyPhase [Phase]
-    (defn #_"ComputeLoopFrequencyPhase" ComputeLoopFrequencyPhase'new-0 []
-        (ComputeLoopFrequencyPhase'class.)
-    )
-
-    (defm ComputeLoopFrequencyPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"ComputeLoopFrequencyPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (ComputeLoopFrequenciesClosure'compute-1 graph)
-            graph
-        )
     )
 )
 
@@ -24268,7 +24208,7 @@ ZeroExtendNode'new-4
     )
 
     (defm ConditionalEliminationPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"ConditionalEliminationPhase" this, #_"Graph" graph, #_"PhaseContext" context]
+        (#_"Graph" Phase'''run-2 [#_"ConditionalEliminationPhase" this, #_"Graph" graph]
             (let [
                 #_"ControlFlowGraph" cfg (ControlFlowGraph'compute-3 graph, true, true)
                 [cfg #_"{Block Node*}" block->nodes #_"{Node Block}" node->block]
@@ -26459,7 +26399,7 @@ ZeroExtendNode'new-4
                     (if (:unscheduled this)
                         [nil (ControlFlowGraph'compute-3 graph, false, false)]
                         (let [
-                            _ (§ ass! graph (Phase'''run-3 (SchedulePhase'new-1 :SchedulingStrategy'EARLIEST), graph, nil))
+                            _ (§ ass! graph (Phase'''run-2 (SchedulePhase'new-1 :SchedulingStrategy'EARLIEST), graph))
                             schedule (:lastSchedule graph)
                         ]
                             [schedule (:cfg schedule)]
@@ -26496,7 +26436,7 @@ ZeroExtendNode'new-4
     )
 
     (defm EffectsPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"EffectsPhase" this, #_"Graph" graph, #_"PhaseContext" context]
+        (#_"Graph" Phase'''run-2 [#_"EffectsPhase" this, #_"Graph" graph]
             (EffectsPhase''runAnalysis-2 this, graph)
             graph
         )
@@ -26504,7 +26444,7 @@ ZeroExtendNode'new-4
 
     (defn #_"void" EffectsPhase''postIteration-3 [#_"EffectsPhase" this, #_"Graph" graph, #_"{Node}" changedNodes]
         (when (some? (:canonicalizer this))
-            (CanonicalizerPhase''applyIncremental-3i (:canonicalizer this), graph, changedNodes)
+            (CanonicalizerPhase''applyIncremental-3 (:canonicalizer this), graph, changedNodes)
         )
         nil
     )
@@ -26522,7 +26462,7 @@ ZeroExtendNode'new-4
     )
 
     (defm EarlyReadEliminationPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"EarlyReadEliminationPhase" this, #_"Graph" graph, #_"PhaseContext" context]
+        (#_"Graph" Phase'''run-2 [#_"EarlyReadEliminationPhase" this, #_"Graph" graph]
             (EffectsPhase''runAnalysis-2 this, graph)
             graph
         )
@@ -26543,7 +26483,7 @@ ZeroExtendNode'new-4
     )
 
     (defm PartialEscapePhase Phase
-        (#_"Graph" Phase'''run-3 [#_"PartialEscapePhase" this, #_"Graph" graph, #_"PhaseContext" context]
+        (#_"Graph" Phase'''run-2 [#_"PartialEscapePhase" this, #_"Graph" graph]
             (when (or (:readElimination this) (Graph''hasVirtualizableAllocation-1 graph))
                 (EffectsPhase''runAnalysis-2 this, graph)
             )
@@ -26744,7 +26684,7 @@ ZeroExtendNode'new-4
     )
 
     (defm ExpandLogicPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"ExpandLogicPhase" this, #_"Graph" graph, #_"PhaseContext" context]
+        (#_"Graph" Phase'''run-2 [#_"ExpandLogicPhase" this, #_"Graph" graph]
             (doseq [#_"ShortCircuitOrNode" logic (Graph''getNodes-2 graph, ShortCircuitOrNode)]
                 (ExpandLogicPhase'processBinary-1 logic)
             )
@@ -28166,9 +28106,9 @@ ZeroExtendNode'new-4
     )
 
     (defm FixReadsPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"FixReadsPhase" this, #_"Graph" graph, #_"PhaseContext" context]
+        (#_"Graph" Phase'''run-2 [#_"FixReadsPhase" this, #_"Graph" graph]
             (let [
-                _ (§ ass! graph (Phase'''run-3 (:schedulePhase this), graph, nil))
+                _ (§ ass! graph (Phase'''run-2 (:schedulePhase this), graph))
                 #_"Schedule" schedule (:lastSchedule graph)
                 #_"FixReadsClosure" closure (FixReadsClosure'new-0)
                 _ (§ ass! closure (reduce #(ScheduledNodeIterator''processNodes-3 %1, %2, schedule) closure (:reversePostOrder (:cfg schedule))))
@@ -28274,7 +28214,7 @@ ZeroExtendNode'new-4
 
     ; @SuppressWarnings("try")
     (defm FloatingReadPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"FloatingReadPhase" this, #_"Graph" graph, #_"PhaseContext" context]
+        (#_"Graph" Phase'''run-2 [#_"FloatingReadPhase" this, #_"Graph" graph]
             (let [
                 #_"{LoopBeginNode {LocationIdentity}}" modifiedInLoops
                     (when (Graph''hasLoops-1 graph)
@@ -28968,7 +28908,7 @@ ZeroExtendNode'new-4
     )
 
     (defm FrameStateAssignmentPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"FrameStateAssignmentPhase" this, #_"Graph" graph, #_"PhaseContext" context]
+        (#_"Graph" Phase'''run-2 [#_"FrameStateAssignmentPhase" this, #_"Graph" graph]
             (when (GuardsStage'areFrameStatesAtSideEffects-1 (:guardsStage graph)) => graph
                 (ReentrantNodeIterator'apply-3 (FrameStateAssignmentClosure'new-0), (:start graph), nil)
                 (let [
@@ -29466,17 +29406,10 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Returns a sequence of all nodes added since the last {@link Graph#getMark() mark}.
-     ;;
-    (defn #_"Node*" Graph''getNodesSince-2 [#_"Graph" this, #_"int" mark]
-        (remove nil? (subvec (:gNodes this) mark))
-    )
-
-    ;;;
      ; Returns a sequence of all the live nodes.
      ;;
     (defn #_"Node*" Graph''getNodes-1 [#_"Graph" this]
-        (Graph''getNodesSince-2 this, 0)
+        (remove nil? (:gNodes this))
     )
 
     ;;;
@@ -29797,22 +29730,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns GraphBuilderInstance [Phase]
-    (defn #_"GraphBuilderInstance" GraphBuilderInstance'new-1 [#_"OptimisticOptimizations" optimisticOpts]
-        (merge (GraphBuilderInstance'class.)
-            (hash-map
-                #_"OptimisticOptimizations" :optimisticOpts optimisticOpts
-            )
-        )
-    )
-
-    (defm GraphBuilderInstance Phase
-        (#_"Graph" Phase'''run-3 [#_"GraphBuilderInstance" this, #_"Graph" graph, #_"PhaseContext" context]
-            (-> this (BytecodeParser'new-2 graph) (BytecodeParser''buildRootMethod-1) :graph)
-        )
-    )
-)
-
 ;;;
  ; Parses the bytecodes of a method and builds the IR graph.
  ;;
@@ -29822,8 +29739,8 @@ ZeroExtendNode'new-4
     )
 
     (defm GraphBuilderPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"GraphBuilderPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (Phase'''run-3 (GraphBuilderInstance'new-1 (:optimisticOpts context)), graph, nil)
+        (#_"Graph" Phase'''run-2 [#_"GraphBuilderPhase" this, #_"Graph" graph]
+            (-> graph (BytecodeParser'new-1) (BytecodeParser''buildRootMethod-1) :graph)
         )
     )
 )
@@ -29845,10 +29762,10 @@ ZeroExtendNode'new-4
     )
 
     (defm GuardLoweringPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"GuardLoweringPhase" this, #_"Graph" graph, #_"PhaseContext" context]
+        (#_"Graph" Phase'''run-2 [#_"GuardLoweringPhase" this, #_"Graph" graph]
             (when (GuardsStage'allowsFloatingGuards-1 (:guardsStage graph)) => graph
                 (let [
-                    graph (Phase'''run-3 (SchedulePhase'new-1 :SchedulingStrategy'EARLIEST), graph, nil)
+                    graph (Phase'''run-2 (SchedulePhase'new-1 :SchedulingStrategy'EARLIEST), graph)
                 ]
                     (doseq [#_"Block" block (:reversePostOrder (:cfg (:lastSchedule graph)))]
                         (let [
@@ -31826,7 +31743,7 @@ ZeroExtendNode'new-4
     )
 
     (defm IterativeConditionalEliminationPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"IterativeConditionalEliminationPhase" this, #_"Graph" graph, #_"PhaseContext" context]
+        (#_"Graph" Phase'''run-2 [#_"IterativeConditionalEliminationPhase" this, #_"Graph" graph]
             (let [
                 #_"HashSetNodeEventListener" listener (HashSetNodeEventListener''exclude-2 (HashSetNodeEventListener'new-0), :NodeEvent'NODE_ADDED)
             ]
@@ -31834,7 +31751,7 @@ ZeroExtendNode'new-4
                     (let [
                         graph
                             (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 graph, listener)])
-                                (Phase'''run-3 (ConditionalEliminationPhase'new-1 (:fullSchedule this)), graph, context)
+                                (Phase'''run-2 (ConditionalEliminationPhase'new-1 (:fullSchedule this)), graph)
                             )
                     ]
                         (when (seq (:changedNodes listener)) => graph
@@ -31843,7 +31760,7 @@ ZeroExtendNode'new-4
                                     (§ ass! listener (update listener :changedNodes conj node))
                                 )
                             )
-                            (CanonicalizerPhase''applyIncremental-3i (:canonicalizer this), graph, (:changedNodes listener))
+                            (CanonicalizerPhase''applyIncremental-3 (:canonicalizer this), graph, (:changedNodes listener))
                             (let [
                                 _ (§ ass! listener (assoc listener :changedNodes #{}))
                                 iteration (inc iteration)
@@ -38501,7 +38418,7 @@ ZeroExtendNode'new-4
     )
 
     (defm LockEliminationPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"LockEliminationPhase" this, #_"Graph" graph, #_"PhaseContext" context]
+        (#_"Graph" Phase'''run-2 [#_"LockEliminationPhase" this, #_"Graph" graph]
             (doseq [#_"MonitorExitNode" monitorExitNode (Graph''getNodes-2 graph, MonitorExitNode)]
                 (let [
                     #_"FixedNode" _next (:next monitorExitNode)
@@ -38697,12 +38614,8 @@ ZeroExtendNode'new-4
     )
 
     (defm LoweringPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"LoweringPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (let [
-                #_"IncrementalCanonicalizerPhase" suite (IncrementalCanonicalizerPhase'new-2 (:canonicalizer this), (LoweringRound'new-1 this))
-            ]
-                (Phase'''run-3 suite, graph, context)
-            )
+        (#_"Graph" Phase'''run-2 [#_"LoweringPhase" this, #_"Graph" graph]
+            (Phase'''run-2 (IncrementalCanonicalizerPhase'new-2 (:canonicalizer this), (LoweringRound'new-1 this)), graph)
         )
     )
 
@@ -38872,9 +38785,9 @@ ZeroExtendNode'new-4
     )
 
     (defm LoweringRound Phase
-        (#_"Graph" Phase'''run-3 [#_"LoweringRound" this, #_"Graph" graph, #_"PhaseContext" context]
+        (#_"Graph" Phase'''run-2 [#_"LoweringRound" this, #_"Graph" graph]
             (let [
-                graph (Phase'''run-3 (:schedulePhase this), graph, nil)
+                graph (Phase'''run-2 (:schedulePhase this), graph)
                 _ (§ ass! this (assoc this :schedule (:lastSchedule graph)))
                 _ (§ ass! (:cfg (:schedule this)) (ControlFlowGraph''computePostdominators-1 (:cfg (:schedule this))))
                 #_"Block" startBlock (ControlFlowGraph''getStartBlock-1 (:cfg (:schedule this)))
@@ -48062,7 +47975,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Represents an address of the form [base + index*scale + displacement]. Both base and index are optional.
  ;;
-(class-ns AMD64AddressNode [AddressNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, Simplifiable, LIRLowerable]
+(class-ns AMD64AddressNode [AddressNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable]
     (defn #_"AMD64AddressNode" AMD64AddressNode'new-2 [#_"ValueNode" base, #_"ValueNode" index]
         (merge (AMD64AddressNode'class.) (AddressNode'new-0)
             (hash-map
@@ -48072,31 +47985,6 @@ ZeroExtendNode'new-4
                 #_"ValueNode" :index index
                 #_"Scale" :scale Scale'Times1
                 #_"int" :displacement 0
-            )
-        )
-    )
-
-    (defn #_"this" AMD64AddressNode''canonicalizeIndex-2 [#_"AMD64AddressNode" this, #_"SimplifierTool" tool]
-        (when (and (satisfies? AddNode (:index this)) (= (:bits (:stamp (:index this))) 64)) => this
-            (let [
-                #_"AddNode" add (:index this)
-            ]
-                (when (and (satisfies? PhiNode (:x add)) (satisfies? LoopBeginNode (:merge (:x add)))) => this
-                    (let [
-                        #_"LoopBeginNode" loopNode (:merge (:x add))
-                    ]
-                        (when (and false (satisfies? ConstantNode (:y add))) => this
-                            (let [
-                                #_"int" addBy (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 (:y add)))
-                                this (assoc this :displacement (+ (:displacement this) (* (:value (:scale this)) addBy)))
-                                _ (Node''replaceFirstInput-3 this, (:index this), (:x add))
-                                _ (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (:index this)))
-                            ]
-                                this
-                            )
-                        )
-                    )
-                )
             )
         )
     )
@@ -48160,12 +48048,6 @@ ZeroExtendNode'new-4
     (defm AMD64AddressNode AddressNode
         (#_"long" AddressNode'''getMaxConstantDisplacement-1 [#_"AMD64AddressNode" this]
             (:displacement this)
-        )
-    )
-
-    (defm AMD64AddressNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"AMD64AddressNode" this, #_"SimplifierTool" tool]
-            (AMD64AddressNode''canonicalizeIndex-2 this, tool)
         )
     )
 )
@@ -54072,58 +53954,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ComputeLoopFrequenciesClosure [NodeIteratorClosure #_"<Double>"]
-    (defn- #_"ComputeLoopFrequenciesClosure" ComputeLoopFrequenciesClosure'new-0 []
-        (ComputeLoopFrequenciesClosure'class.)
-    )
-
-    (def- #_"ComputeLoopFrequenciesClosure" ComputeLoopFrequenciesClosure'INSTANCE (§ soon ComputeLoopFrequenciesClosure'new-0))
-
-    (defm ComputeLoopFrequenciesClosure NodeIteratorClosure
-        (#_"Double" NodeIteratorClosure'''processNode-3 [#_"ComputeLoopFrequenciesClosure" this, #_"FixedNode" node, #_"Double" currentState]
-            ;; normal nodes never change the probability of a path
-            currentState
-        )
-
-        (#_"Double" NodeIteratorClosure'''merge-3 [#_"ComputeLoopFrequenciesClosure" this, #_"AbstractMergeNode" merge, #_"Double*" states]
-            ;; a merge has the sum of all predecessor probabilities
-            (reduce + 0.0 states)
-        )
-
-        (#_"Double" NodeIteratorClosure'''afterSplit-3 [#_"ComputeLoopFrequenciesClosure" this, #_"AbstractBeginNode" node, #_"Double" oldState]
-            ;; a control split splits up the probability
-            (* oldState (ControlSplitNode'''probability-2 (:predecessor node), node))
-        )
-
-        (#_"{LoopExitNode Double}" NodeIteratorClosure'''processLoop-3 [#_"ComputeLoopFrequenciesClosure" this, #_"LoopBeginNode" _loop, #_"Double" initialState]
-            (let [
-                #_"{LoopExitNode Double}" exitStates (:exitStates (ReentrantNodeIterator'processLoop-3 this, _loop, 1.0))
-                #_"double" exitProbability (reduce + 0.0 (vals exitStates))
-                exitProbability (max ControlFlowGraph'MIN_PROBABILITY (min exitProbability 1.0))
-                #_"double" loopFrequency (/ 1.0 exitProbability)
-                _ (§ ass! _loop (assoc _loop :loopFrequency loopFrequency))
-                #_"double" adjustmentFactor (* initialState loopFrequency)
-            ]
-                (into exitStates (map #(vector (key %) (ControlFlowGraph'multiplyProbabilities-2 (val %), adjustmentFactor)) exitStates))
-            )
-        )
-    )
-
-    ;;;
-     ; Computes the frequencies of all loops in the given graph. This is done by performing a
-     ; reverse postorder iteration and computing the probability of all fixed nodes. The combined
-     ; probability of all exits of a loop can be used to compute the loop's expected frequency.
-     ;;
-    (defn #_"void" ComputeLoopFrequenciesClosure'compute-1 [#_"Graph" graph]
-        (when (Graph''hasLoops-1 graph)
-            (ReentrantNodeIterator'apply-3 ComputeLoopFrequenciesClosure'INSTANCE, (:start graph), 1.0)
-        )
-        nil
-    )
-
-    (§ def #_"ComputeLoopFrequencyPhase" ComputeLoopFrequenciesClosure'PHASE_INSTANCE (ComputeLoopFrequencyPhase'new-0))
-)
-
 (class-ns FloatingReadClosure [NodeIteratorClosure #_"<MemoryMap0>"]
     (defn #_"FloatingReadClosure" FloatingReadClosure'new-3 [#_"{LoopBeginNode {LocationIdentity}}" modifiedInLoops, #_"boolean" createFloatingReads, #_"boolean" createMemoryMapNodes]
         (merge (FloatingReadClosure'class.)
@@ -54553,33 +54383,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns OptimisticOptimizations []
-    (defn- #_"OptimisticOptimizations" OptimisticOptimizations'new-1 [#_"{Optimization}" enabledOpts]
-        (merge (OptimisticOptimizations'class.)
-            (hash-map
-                #_"{Optimization}" :enabledOpts enabledOpts
-            )
-        )
-    )
-
-    (def #_"OptimisticOptimizations" OptimisticOptimizations'ALL (OptimisticOptimizations'new-1 Optimization'SET))
-    (def #_"OptimisticOptimizations" OptimisticOptimizations'NONE (OptimisticOptimizations'new-1 nil))
-
-    (defn #_"boolean" OptimisticOptimizations''removeNeverExecutedCode-1 [#_"OptimisticOptimizations" this]
-        (and GraalOptions'removeNeverExecutedCode (contains? (:enabledOpts this) :Optimization'RemoveNeverExecutedCode))
-    )
-)
-
-(class-ns PhaseContext []
-    (defn #_"PhaseContext" PhaseContext'new-1 [#_"OptimisticOptimizations" optimisticOpts]
-        (merge (PhaseContext'class.)
-            (hash-map
-                #_"OptimisticOptimizations" :optimisticOpts optimisticOpts
-            )
-        )
-    )
-)
-
 ;;;
  ; A compiler phase that can apply an ordered collection of phases to a graph.
  ;;
@@ -54597,8 +54400,8 @@ ZeroExtendNode'new-4
     )
 
     (defm PhaseSuite Phase
-        (#_"Graph" Phase'''run-3 [#_"PhaseSuite" this, #_"Graph" graph, #_"PhaseContext" context]
-            (reduce #(Phase'''run-3 %2, %1, context) graph (:phases this))
+        (#_"Graph" Phase'''run-2 [#_"PhaseSuite" this, #_"Graph" graph]
+            (reduce #(Phase'''run-2 %2, %1) graph (:phases this))
         )
     )
 )
@@ -54650,16 +54453,16 @@ ZeroExtendNode'new-4
 
     ; @SuppressWarnings("try")
     (defm IncrementalCanonicalizerPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"IncrementalCanonicalizerPhase" this, #_"Graph" graph, #_"PhaseContext" context]
+        (#_"Graph" Phase'''run-2 [#_"IncrementalCanonicalizerPhase" this, #_"Graph" graph]
             (let [
                 #_"HashSetNodeEventListener" listener (HashSetNodeEventListener'new-0)
                 graph
                     (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 graph, listener)])
-                        (Phase'''run-3 (§ super #_"PhaseSuite"), graph, context)
+                        (Phase'''run-2 (§ super #_"PhaseSuite"), graph)
                     )
             ]
                 (when (seq (:changedNodes listener))
-                    (CanonicalizerPhase''applyIncremental-3i (:canonicalizer this), graph, (:changedNodes listener))
+                    (CanonicalizerPhase''applyIncremental-3 (:canonicalizer this), graph, (:changedNodes listener))
                 )
                 graph
             )
@@ -54885,7 +54688,7 @@ ZeroExtendNode'new-4
     )
 
     (defm PropagateDeoptimizeProbabilityPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"PropagateDeoptimizeProbabilityPhase" this, #_"Graph" graph, #_"PhaseContext" context]
+        (#_"Graph" Phase'''run-2 [#_"PropagateDeoptimizeProbabilityPhase" this, #_"Graph" graph]
             (let [
                 ;; Mark all control flow nodes that are post-dominated by a deoptimization.
                 #_"{ControlSplitNode {AbstractBeginNode}}" splits
@@ -56022,7 +55825,7 @@ ZeroExtendNode'new-4
     )
 
     (defm RemoveValueProxyPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"RemoveValueProxyPhase" this, #_"Graph" graph, #_"PhaseContext" context]
+        (#_"Graph" Phase'''run-2 [#_"RemoveValueProxyPhase" this, #_"Graph" graph]
             (let [
                 _
                     (doseq [#_"LoopExitNode" exit (Graph''getNodes-2 graph, LoopExitNode)]
@@ -56803,7 +56606,7 @@ ZeroExtendNode'new-4
     )
 
     (defm SchedulePhase Phase
-        (#_"Graph" Phase'''run-3 [#_"SchedulePhase" this, #_"Graph" graph, #_"PhaseContext" context]
+        (#_"Graph" Phase'''run-2 [#_"SchedulePhase" this, #_"Graph" graph]
             (Schedule''run-1 (Schedule'new-3 nil, graph, (:selectedStrategy this)))
         )
     )
@@ -57024,8 +56827,8 @@ ZeroExtendNode'new-4
                 )
             #_"ResolvedJavaMethod" method (:method (:info args))
             #_"Graph" graph (Graph'new-1 method)
-            graph (Phase'''run-3 (GraphBuilderInstance'new-1 OptimisticOptimizations'NONE), graph, nil)
-            graph (Phase'''run-3 (CanonicalizerPhase'new-0), graph, nil)
+            graph (Phase'''run-2 (GraphBuilderPhase'new-0), graph)
+            graph (Phase'''run-2 (CanonicalizerPhase'new-0), graph)
             ;; copy snippet graph replacing constant parameters with given arguments
             #_"Graph" snippet (Graph'new-1 method)
             _ (Graph''addDuplicates-4m snippet, (Graph''getNodes-1 graph), graph, { (:start graph) (:start snippet) })
@@ -57042,10 +56845,10 @@ ZeroExtendNode'new-4
             ;; perform lowering on the snippet
             snippet
                 (when-not (GuardsStage'allowsFloatingGuards-1 (:guardsStage args)) => snippet
-                    (Phase'''run-3 (GuardLoweringPhase'new-0), snippet, nil)
+                    (Phase'''run-2 (GuardLoweringPhase'new-0), snippet)
                 )
             snippet (Graph''setGuardsStage-2 snippet, (:guardsStage args))
-            snippet (Phase'''run-3 (LoweringPhase'new-2 (CanonicalizerPhase'new-0), (:loweringStage args)), snippet, nil)
+            snippet (Phase'''run-2 (LoweringPhase'new-2 (CanonicalizerPhase'new-0), (:loweringStage args)), snippet)
             #_"ValueNode*" placeholderStampedNodes
                 (for [#_"Node" node (Graph''getNodes-1 snippet) :when (and (satisfies? ValueNode node) (= (:stamp node) PlaceholderStamp'SINGLETON))]
                     node
@@ -57071,8 +56874,8 @@ ZeroExtendNode'new-4
                 (for [#_"Node" node (Graph''getNodes-1 snippet) :when (and (satisfies? DeoptimizingNode node) (DeoptimizingNode'''canDeoptimize-1 node))]
                     node
                 )
-            snippet (Phase'''run-3 (FloatingReadPhase'new-2 true, true), snippet, nil)
-            snippet (Phase'''run-3 (RemoveValueProxyPhase'new-0), snippet, nil)
+            snippet (Phase'''run-2 (FloatingReadPhase'new-2 true, true), snippet)
+            snippet (Phase'''run-2 (RemoveValueProxyPhase'new-0), snippet)
             #_"MemoryAnchorNode" anchor (Graph''add-2 snippet, (MemoryAnchorNode'new-0))
             _ (Node''replaceAtUsages-3 (:start snippet), :InputType'Memory, anchor)
             this (assoc this :snippet snippet)
@@ -59776,26 +59579,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns Suites []
-    (defn #_"PhaseSuite" Suites'createGraphBuilderSuite-0 []
-        (PhaseSuite''appendPhase-2 (PhaseSuite'new-0), (GraphBuilderPhase'new-0))
-    )
-
-    (defn- #_"Suites" Suites'new-3 [#_"PhaseSuite" highTier, #_"PhaseSuite" midTier, #_"PhaseSuite" lowTier]
-        (merge (Suites'class.)
-            (hash-map
-                #_"PhaseSuite" :highTier highTier
-                #_"PhaseSuite" :midTier midTier
-                #_"PhaseSuite" :lowTier lowTier
-            )
-        )
-    )
-
-    (defn #_"Suites" Suites'createSuites-0 []
-        (Suites'new-3 (HighTier'new-0), (MidTier'new-0), (LowTier'new-0))
-    )
-)
-
 (class-ns SwitchStrategy []
     (defn #_"SwitchStrategy" SwitchStrategy'new-1 [#_"[double]" probabilities]
         (merge (SwitchStrategy'class.)
@@ -60535,7 +60318,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"void" UseTrappingNullChecksPhase'tryUseTrappingNullCheck-4 [#_"DeoptimizeNode" deopt, #_"Node" predecessor, #_"DeoptimizationReason" deoptimizationReason, #_"long" implicitNullCheckLimit]
-        (when (any = deoptimizationReason :DeoptimizationReason'NullCheckException :DeoptimizationReason'UnreachedCode)
+        (when (= deoptimizationReason :DeoptimizationReason'NullCheckException)
             (condp satisfies? predecessor
                 AbstractMergeNode
                     (when (empty? (AbstractMergeNode''phis-1 predecessor))
@@ -60552,7 +60335,7 @@ ZeroExtendNode'new-4
     )
 
     (defm UseTrappingNullChecksPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"UseTrappingNullChecksPhase" this, #_"Graph" graph, #_"PhaseContext" context]
+        (#_"Graph" Phase'''run-2 [#_"UseTrappingNullChecksPhase" this, #_"Graph" graph]
             (when (and GraalOptions'useTrappingNullChecks (pos? AMD64'implicitNullCheckLimit))
                 (doseq [#_"DeoptimizeNode" deopt (Graph''getNodes-2 graph, DeoptimizeNode)]
                     (UseTrappingNullChecksPhase'tryUseTrappingNullCheck-4 deopt, (:predecessor deopt), (:reason deopt), AMD64'implicitNullCheckLimit)
@@ -62466,7 +62249,7 @@ ZeroExtendNode'new-4
     )
 
     (defm WriteBarrierAdditionPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"WriteBarrierAdditionPhase" this, #_"Graph" graph, #_"PhaseContext" context]
+        (#_"Graph" Phase'''run-2 [#_"WriteBarrierAdditionPhase" this, #_"Graph" graph]
             (doseq [#_"Node" node (Graph''getNodes-1 graph)]
                 (condp satisfies? node
                     ReadNode                      (WriteBarrierAdditionPhase'addReadNodeBarriers-2 node, graph)
@@ -62659,22 +62442,21 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"Graph" Compiler'emitFrontEnd-3 [#_"Graph" graph, #_"OptimisticOptimizations" optimisticOpts, #_"Suites" suites]
+    (defn- #_"Graph" Compiler'emitFrontEnd-1 [#_"Graph" graph]
         (let [
-            #_"PhaseContext" context (PhaseContext'new-1 optimisticOpts)
             graph
                 (when (nil? (:next (:start graph))) => graph
-                    (Phase'''run-3 HotSpot'graphBuilderSuite, graph, context)
+                    (Phase'''run-2 (GraphBuilderPhase'new-0), graph)
                 )
-            graph (Phase'''run-3 (:highTier suites), graph, context)
-            graph (Phase'''run-3 (:midTier suites), graph, context)
-            graph (Phase'''run-3 (:lowTier suites), graph, nil)
+            graph (Phase'''run-2 (HighTier'new-0), graph)
+            graph (Phase'''run-2 (MidTier'new-0), graph)
+            graph (Phase'''run-2 (LowTier'new-0), graph)
         ]
             graph
         )
     )
 
-    (defn #_"LIRGenerationResult" Compiler'emitLowLevel-3 [#_"LIRGenerationResult" res, #_"LIRGenerator" gen, #_"LIRSuites" suites]
+    (defn- #_"LIRGenerationResult" Compiler'emitLowLevel-3 [#_"LIRGenerationResult" res, #_"LIRGenerator" gen, #_"LIRSuites" suites]
         (let [
             #_"LIRPhaseContext" context (LIRPhaseContext'new-1 gen)
         ]
@@ -62702,7 +62484,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"LIRGenerationResult" Compiler'emitLIR-2 [#_"Graph" graph, #_"LIRSuites" suites]
+    (defn- #_"LIRGenerationResult" Compiler'emitLIR-2 [#_"Graph" graph, #_"LIRSuites" suites]
         (let [
             #_"Schedule" schedule (:lastSchedule graph)
             #_"Block" start (ControlFlowGraph''getStartBlock-1 (:cfg schedule))
@@ -62717,13 +62499,13 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"CompilationResult" Compiler'emitBackEnd-2 [#_"Graph" graph, #_"LIRSuites" suites]
+    (defn- #_"CompilationResult" Compiler'emitBackEnd-2 [#_"Graph" graph, #_"LIRSuites" suites]
         (-> (Compiler'emitLIR-2 graph, suites) (Assembler'new-1) (Assembler''assemble-1) (Assembler''finish-1))
     )
 
     (defn #_"CompilationResult" Compiler'compileGraph-1 [#_"Graph" graph]
         (let [
-            _ (§ ass! graph (Compiler'emitFrontEnd-3 graph, OptimisticOptimizations'ALL, (Suites'createSuites-0)))
+            graph (Compiler'emitFrontEnd-1 graph)
         ]
             (Compiler'emitBackEnd-2 graph, (LIRSuites'new-0))
         )
@@ -62796,20 +62578,24 @@ ZeroExtendNode'new-4
     ;;;
      ; Installs code based on a given compilation result.
      ;
-     ; @param method the method compiled to produce {@code compiledCode} or nil if the input to {@code result} was not a ResolvedJavaMethod
-     ; @param result the code to be installed
      ; @return a reference to the compiled and ready-to-run installed code
      ;;
     #_unused
-    (defn #_"InstalledCode" Compiler'createInstalledCode-3 [#_"ResolvedJavaMethod" method, #_"CompilationResult" result, #_"boolean" default?]
+    (defn #_"InstalledCode" Compiler'createInstalledCode-1 [#_"CompilationResult" result]
         (let [
             #_"TargetDescription" target (#_"JVMCIBackend" .getTarget (#_"JVMCIRuntime" .getJVMCIBackend JVMCI'runtime, jdk.vm.ci.amd64.AMD64))
             #_"HotSpotCompiledCode" compiledCode (Compiler'createCompiledCode-1 result)
             #_"String" name (#_"HotSpotCompiledCode" .getName compiledCode)
-            #_"InstalledCode" installedCode
-                (if (some? method)
-                    (HotSpotNmethod. (§ cast #_"HotSpotResolvedJavaMethod" method), name, default?)
-                    (HotSpotRuntimeStub. name)
+            #_"HotSpotInstalledCode" installedCode
+                (§ proxy #_"HotSpotInstalledCode" (HotSpotInstalledCode'new-1 name)
+                    (#_"void" InstalledCode'''invalidate-1 [#_"InstalledCode" this]
+                        (#_"CompilerToVM" .invalidateInstalledCode HotSpot'native, this)
+                        nil
+                    )
+
+                    (#_"Object" InstalledCode'''executeVarargs-2* [#_"InstalledCode" this & #_"Object..." args] (§ throws #_"InvalidInstalledCodeException")
+                        (#_"CompilerToVM" .executeInstalledCode HotSpot'native, (ß object-array args), this)
+                    )
                 )
             #_"int" result' (#_"CompilerToVM" .installCode HotSpot'native, target, compiledCode, installedCode, nil)
         ]
@@ -62945,95 +62731,5 @@ public abstract class Site
     (§
         this.pcOffset = pos
     )
-)
-)
-
-(§ package jdk.vm.ci.meta
-
-;;;
- ; Represents the runtime representation of the constant pool that is used by the compiler when
- ; parsing bytecode. Provides methods to look up a constant pool entry without performing
- ; resolution. They are used during compilation.
- ;;
-public interface ConstantPool
-(§
-    ;;;
-     ; Returns the number of entries the constant pool.
-     ;
-     ; @return number of entries in the constant pool
-     ;;
-    #_"int" length()
-
-    ;;;
-     ; Ensures that the type referenced by the specified constant pool entry is loaded and
-     ; initialized. This can be used to compile time resolve a type. It works for field, method, or
-     ; type constant pool entries.
-     ;
-     ; @param cpi the index of the constant pool entry that references the type
-     ; @param opcode the opcode of the instruction that references the type
-     ;;
-    #_"void" loadReferencedType(#_"int" cpi, #_"int" opcode)
-
-    ;;;
-     ; Looks up a reference to a field. If {@code opcode} is non-negative, then resolution checks
-     ; specific to the bytecode it denotes are performed if the field is already resolved. Checks
-     ; for some bytecodes require the method that contains the bytecode to be specified. Should
-     ; any of these checks fail, an unresolved field reference is returned.
-     ;
-     ; @param cpi the constant pool index
-     ; @param opcode the opcode of the instruction for which the lookup is being performed or {@code -1}
-     ; @param method the method for which the lookup is being performed
-     ; @return a reference to the field at {@code cpi} in this pool
-     ; @throws ClassFormatError if the entry at {@code cpi} is not a field
-     ;;
-    #_"JavaField" lookupField(#_"int" cpi, #_"ResolvedJavaMethod" method, #_"int" opcode)
-
-    ;;;
-     ; Looks up a reference to a method. If {@code opcode} is non-negative, then resolution checks
-     ; specific to the bytecode it denotes are performed if the method is already resolved. Should
-     ; any of these checks fail, an unresolved method reference is returned.
-     ;
-     ; @param cpi the constant pool index
-     ; @param opcode the opcode of the instruction for which the lookup is being performed or {@code -1}
-     ; @return a reference to the method at {@code cpi} in this pool
-     ; @throws ClassFormatError if the entry at {@code cpi} is not a method
-     ;;
-    #_"JavaMethod" lookupMethod(#_"int" cpi, #_"int" opcode)
-
-    ;;;
-     ; Looks up a reference to a type. If {@code opcode} is non-negative, then resolution checks
-     ; specific to the bytecode it denotes are performed if the type is already resolved. Should any
-     ; of these checks fail, an unresolved type reference is returned.
-     ;
-     ; @param cpi the constant pool index
-     ; @param opcode the opcode of the instruction for which the lookup is being performed or {@code -1}
-     ; @return a reference to the compiler interface type
-     ;;
-    #_"JavaType" lookupType(#_"int" cpi, #_"int" opcode)
-
-    ;;;
-     ; Looks up an Utf8 string.
-     ;
-     ; @param cpi the constant pool index
-     ; @return the Utf8 string at index {@code cpi} in this constant pool
-     ;;
-    #_"String" lookupUtf8(#_"int" cpi)
-
-    ;;;
-     ; Looks up a constant at the specified index.
-     ;
-     ; @param cpi the constant pool index
-     ; @return the {@code Constant} or {@code JavaType} instance representing the constant pool entry
-     ;;
-    #_"Object" lookupConstant(#_"int" cpi)
-
-    ;;;
-     ; Looks up the appendix at the specified index.
-     ;
-     ; @param cpi the constant pool index
-     ; @param opcode the opcode of the instruction for which the lookup is being performed or {@code -1}
-     ; @return the appendix if it exists and is resolved or {@code null}
-     ;;
-    #_"JavaConstant" lookupAppendix(#_"int" cpi, #_"int" opcode)
 )
 )
