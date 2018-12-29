@@ -177,7 +177,6 @@ CurrentLockNode'currentLock-1
 DeoptimizeCallerNode'deopt-2
 DeoptimizeNode'deopt-2
 EndLockScopeNode'endLockScope-0
-ExplodeLoopNode'explodeLoop-0
 FastAcquireBiasedLockNode'mark-1
 FixedValueAnchorNode'getObject-1
 LoadHubNode'loadHubIntrinsic-1
@@ -616,7 +615,6 @@ AtomicReadAndWriteNode'new-5
 AtomicReadAndWriteOp'new-4
 BarrierType'SET
 BaseSwitchClosure'new-3
-BasicInductionVariable'new-5
 BciBlock''addSuccessor-2
 BciBlock''clearSucccessors-1
 BciBlock''endsWithRet-1
@@ -684,7 +682,6 @@ Block''getFirstSuccessor-1
 Block''getKillLocations-1
 Block''getKillLocationsBetweenThisAndDominator-1
 Block''getLoopDepth-1
-Block''getLoopExit-1
 Block''getNodes-1
 Block''isLoopEnd-1
 Block''isLoopHeader-1
@@ -1139,19 +1136,6 @@ CountLeadingZerosNode'tryFold-1
 CountTrailingZerosNode'computeStamp-2
 CountTrailingZerosNode'new-1
 CountTrailingZerosNode'tryFold-1
-CountedLoopInfo''constantExactTripCount-1
-CountedLoopInfo''constantMaxTripCount-1
-CountedLoopInfo''createOverFlowGuard-1
-CountedLoopInfo''exactTripCountNode-1
-CountedLoopInfo''getOverFlowGuard-1
-CountedLoopInfo''getStamp-1
-CountedLoopInfo''getStart-1
-CountedLoopInfo''isConstantExactTripCount-1
-CountedLoopInfo''isConstantMaxTripCount-1
-CountedLoopInfo''isExactTripCount-1
-CountedLoopInfo''maxTripCountNode-1
-CountedLoopInfo''maxTripCountNode-2
-CountedLoopInfo'new-6
 CurrentLockNode'new-1
 Data''updateAlignment-2
 Data'new-2
@@ -1171,7 +1155,6 @@ DefUseTree''getConstant-1
 DefUseTree''getVariable-1
 DefUseTree''usageCount-1
 DefUseTree'new-2
-DefaultLoopPolicies'new-0
 DeferredExit'new-2
 DeoptimizationAction'SET
 DeoptimizationReason'SET
@@ -1179,12 +1162,6 @@ DeoptimizeCallerNode'new-2
 DeoptimizeCallerOp'new-0
 DeoptimizeNode'new-2
 DeoptimizingFixedWithNextNode'new-1
-DerivedConvertedInductionVariable'new-4
-DerivedInductionVariable''getBase-1
-DerivedInductionVariable'new-2
-DerivedOffsetInductionVariable'new-4
-DerivedScaledInductionVariable'new-3
-DerivedScaledInductionVariable'new-4
 DirectCallOp''emitCall-2
 DirectCallOp'new-4
 DirectCallTargetNode'new-6
@@ -1192,7 +1169,6 @@ DirectFarForeignCallOp'new-4
 DirectNearForeignCallOp'new-4
 DirectStaticCallOp'new-5
 DirectVirtualCallOp'new-5
-Direction''opposite-1
 Div'new-2
 DivRemOp'SET
 DummyGuardHandle'new-1
@@ -1237,8 +1213,6 @@ EscapeObjectState'new-1
 ExecutableRef''resolve-3
 ExecutableRef'new-2
 ExpandLogicPhase'new-0
-ExplodeLoopNode''findLoopBegin-1
-ExplodeLoopNode'new-0
 FastAcquireBiasedLockNode'new-1
 FieldInfo'new-4
 FieldKey'new-2
@@ -1377,46 +1351,27 @@ GraalOptions'canOmitFrame
 GraalOptions'conditionalElimination
 GraalOptions'escapeAnalysisIterations
 GraalOptions'escapeAnalysisLoopCutoff
-GraalOptions'exactFullUnrollMaxNodes
-GraalOptions'exactPartialUnrollMaxNodes
-GraalOptions'fullUnroll
-GraalOptions'fullUnrollMaxIterations
-GraalOptions'fullUnrollMaxNodes
-GraalOptions'genLoopSafepoints
 GraalOptions'lirOptLSRAEliminateSpillMoves
 GraalOptions'lirOptLSRAOptimizeSpillPosition
 GraalOptions'lirOptimization
-GraalOptions'loopMaxUnswitch
-GraalOptions'loopPeeling
-GraalOptions'loopUnswitch
-GraalOptions'loopUnswitchFrequencyBoost
-GraalOptions'loopUnswitchMaxIncrease
-GraalOptions'loopUnswitchTrivial
 GraalOptions'lsraOptSplitOnly
 GraalOptions'lsraOptimization
-GraalOptions'maximumDesiredSize
 GraalOptions'maximumEscapeAnalysisArrayLength
-GraalOptions'minimumPeelProbability
 GraalOptions'mitigateSpeculativeExecutionAttacks
 GraalOptions'optClearNonLiveLocals
 GraalOptions'optEarlyReadElimination
 GraalOptions'optEliminateGuards
 GraalOptions'optFloatingReads
 GraalOptions'optImplicitNullChecks
-GraalOptions'optLoopTransform
 GraalOptions'optReadElimination
 GraalOptions'optScheduleOutOfLoops
 GraalOptions'partialEscapeAnalysis
-GraalOptions'partialUnroll
 GraalOptions'rawConditionalElimination
 GraalOptions'readEliminationMaxLoopVisits
-GraalOptions'reassociateInvariants
 GraalOptions'removeNeverExecutedCode
 GraalOptions'replaceInputsWithConstantsBasedOnStamps
 GraalOptions'simpleFastInflatedLocking
 GraalOptions'trustFinalDefaultFields
-GraalOptions'unrollMaxIterations
-GraalOptions'useLoopLimitChecks
 GraalOptions'useTrappingNullChecks
 GraalOptions'zapStackOnMethodEntry
 Graph''add-2
@@ -1428,7 +1383,6 @@ Graph''addInputs-2
 Graph''addOrUniqueWithInputs-2
 Graph''freeze-1
 Graph''getInvokes-1
-Graph''getMark-1
 Graph''getNodeCount-1
 Graph''getNodes-1
 Graph''getNodes-2
@@ -1543,7 +1497,6 @@ HotSpot'deoptReasonClassCheck
 HotSpot'deoptReasonConstraint
 HotSpot'deoptReasonDiv0Check
 HotSpot'deoptReasonJsrMismatch
-HotSpot'deoptReasonLoopLimitCheck
 HotSpot'deoptReasonNone
 HotSpot'deoptReasonNullCheck
 HotSpot'deoptReasonRangeCheck
@@ -1654,7 +1607,6 @@ IfNode'new-4b
 IfNode'new-4f
 IllegalStamp'instance
 IncrementalCanonicalizerPhase'new-2
-InductionVariable'new-1
 InfoElement'new-4
 InputEdges'new-2
 InputEdges'translateInto-2
@@ -2178,97 +2130,25 @@ Loop''getKillLocations-1
 Loop''numBackedges-1
 Loop'new-3
 LoopBeginNode''canonicalizePhis-2
-LoopBeginNode''disableSafepoint-1
 LoopBeginNode''forwardEnd-1
-LoopBeginNode''getSingleLoopEnd-1
-LoopBeginNode''getSingleLoopExit-1
-LoopBeginNode''incrementSplits-1
-LoopBeginNode''incrementUnswitches-1
-LoopBeginNode''isLoopExit-2
-LoopBeginNode''isMainLoop-1
-LoopBeginNode''isPostLoop-1
-LoopBeginNode''isPreLoop-1
-LoopBeginNode''isSimpleLoop-1
 LoopBeginNode''loopEnds-1
 LoopBeginNode''loopExits-1
 LoopBeginNode''nextEndIndex-1
 LoopBeginNode''orderedLoopEnds-1
 LoopBeginNode''removeExits-1
-LoopBeginNode''setMainLoop-1
-LoopBeginNode''setOverflowGuard-2
-LoopBeginNode''setPostLoop-1
-LoopBeginNode''setPreLoop-1
 LoopBeginNode'new-0
-LoopEndNode''disableSafepoint-1
 LoopEndNode''setEndIndex-2
 LoopEndNode''setLoopBegin-2
 LoopEndNode'new-1
-LoopEx''canDuplicateLoop-1
-LoopEx''deleteUnusedNodes-1
-LoopEx''detectCounted-1
-LoopEx''entryPoint-1
-LoopEx''getInductionVariables-1
-LoopEx''inside-1
-LoopEx''invalidateFragments-1
-LoopEx''isCounted-1
-LoopEx''isOutsideLoop-2
-LoopEx''loopBegin-1
-LoopEx''nodesInLoopBranch-3
-LoopEx''reassociateInvariants-1
-LoopEx''size-1
-LoopEx''whole-1
-LoopEx'new-2
 LoopExitNode''proxies-1
 LoopExitNode''removeProxies-1
 LoopExitNode'new-1
-LoopFragment''contains-2
-LoopFragment''getDuplicatedNode-2
-LoopFragment''graph-1
-LoopFragment''isDuplicate-1
-LoopFragment''mergeEarlyExits-1
-LoopFragment''patchNodes-2
-LoopFragment''putDuplicatedNode-3
-LoopFragment'computeNodes-3
-LoopFragment'new-1
-LoopFragment'new-2
-LoopFragment'toHirBlocks-1
-LoopFragment'toHirExits-1
-LoopFragmentInside''exits-1
-LoopFragmentInside''insertWithinAfter-2
-LoopFragmentInside''insertWithinAfter-3
-LoopFragmentInside''primAfter-2
-LoopFragmentInside'new-1e
-LoopFragmentInside'new-1f
-LoopFragmentWhole''cleanupLoopExits-1
-LoopFragmentWhole''entryPoint-1
-LoopFragmentWhole'new-1e
-LoopFragmentWhole'new-1f
-LoopFullUnrollPhase'new-2
 LoopKillCache''containsLocation-2
 LoopKillCache''loopKillsLocations-1
 LoopKillCache''rememberLoopKilledLocation-2
 LoopKillCache''setKillsAll-1
 LoopKillCache''visited-1
 LoopKillCache'new-1
-LoopPartialUnrollPhase'new-2
-LoopPeelingPhase'new-1
-LoopPhase'new-1
-LoopSafepointEliminationPhase'new-0
-LoopSafepointInsertionPhase'new-0
-LoopTransformations'findUnswitchable-1
-LoopTransformations'fullUnroll-2
-LoopTransformations'insertPrePostLoops-1
-LoopTransformations'isUnrollableLoop-1
-LoopTransformations'partialUnroll-1
-LoopTransformations'peel-1
-LoopTransformations'unswitch-2
-LoopType'SET
-LoopUnswitchingPhase'new-1
-LoopsData''countedLoops-1
-LoopsData''deleteUnusedNodes-1
-LoopsData''detectedCountedLoops-1
-LoopsData''loop-2
-LoopsData'new-1
 LowTier'new-0
 LowerGuards'new-1
 LowerOp''getSucceedingStampForX-5
@@ -2321,10 +2201,8 @@ MapReplacement'new-1
 MaterializationUsageReplacer'new-5
 MaterializedObjectState'new-2
 MathUtil'add-3
-MathUtil'divBefore-4
 MathUtil'mul-3
 MathUtil'sub-3
-MathUtil'unsignedDivBefore-4
 MembarNode'new-1
 MembarNode'new-2
 MembarOp'new-1
@@ -2487,7 +2365,6 @@ Node''clearInputs-1
 Node''clearSuccessors-1
 Node''clone-3
 Node''copyWithInputs-1
-Node''dataFlowEquals-2
 Node''hasExactlyOneUsage-1
 Node''hasMoreThanOneUsage-1
 Node''hasNoUsages-1
@@ -2501,7 +2378,6 @@ Node''maybeNotifyZeroUsages-2
 Node''removeUsage-2
 Node''replaceAndDelete-2
 Node''replaceAtAllUsages-3
-Node''replaceAtMatchingUsages-3
 Node''replaceAtPredecessor-2
 Node''replaceAtUsages-2
 Node''replaceAtUsages-3
@@ -2509,7 +2385,6 @@ Node''replaceAtUsagesAndDelete-2
 Node''replaceFirstInput-3
 Node''replaceFirstSuccessor-3
 Node''safeDelete-1
-Node''successorPositions-1
 Node''successors-1
 Node''updatePredecessor-3
 Node''updateUsages-3
@@ -2605,7 +2480,6 @@ OperandFlag'SET
 OperandMode'SET
 OperandModeAnnotation'new-0
 OptimisticOptimizations''removeNeverExecutedCode-1
-OptimisticOptimizations''useLoopLimitChecks-1
 OptimisticOptimizations'ALL
 OptimisticOptimizations'NONE
 Optimization'SET
@@ -2656,7 +2530,6 @@ PhiNode''isLoopPhi-1
 PhiNode''removeInput-2
 PhiNode''setValueAt-3i
 PhiNode''setValueAt-3n
-PhiNode''singleBackValueOrThis-1
 PhiNode''singleValueOrThis-1
 PhiNode''valueAt-2n
 PhiNode'new-2
@@ -2749,7 +2622,6 @@ ReadNode'new-4
 ReadRegisterNode'new-4i
 ReadRegisterNode'new-4r
 ReadTimestampCounter'new-0
-ReassociateInvariantPhase'new-0
 ReassociateMatch''getOtherValue-2
 ReassociateMatch''getValue-2
 RedundantMoveElimination'new-0
@@ -2954,7 +2826,6 @@ SwitchNode''keySuccessor-2
 SwitchNode''keySuccessorIndex-2
 SwitchNode''killOtherSuccessors-3
 SwitchNode''setBlockSuccessor-3
-SwitchNode''structureEquals-2
 SwitchNode'new-4
 SwitchStrategy''registerDefaultEffort-2
 SwitchStrategy''registerEffort-4
@@ -3276,7 +3147,6 @@ WordTypes'isWord-1v
 WordTypes'isWordOperation-1
 WordTypes'klassPointer
 WordTypes'word
-WorkListEntry'new-2
 WriteBarrier'new-0
 WriteBarrierAdditionPhase'new-0
 WriteBarrierTemplates'new-1
@@ -3535,7 +3405,6 @@ ZeroExtendNode'new-4
     (#_"this" BaseSwitchClosure'''conditionalJump-4 [#_"BaseSwitchClosure" this, #_"int" index, #_"Condition" condition, #_"Label" target])
 )
 
-(defp BasicInductionVariable)
 (defp BciBlock)
 (defp BciBlockMapping)
 (defp BeginLockScopeNode)
@@ -3926,7 +3795,6 @@ ZeroExtendNode'new-4
 
 (defp CountLeadingZerosNode)
 (defp CountTrailingZerosNode)
-(defp CountedLoopInfo)
 (defp CurrentLockNode)
 
 (defp Data
@@ -3943,7 +3811,6 @@ ZeroExtendNode'new-4
 (defp DataSection)
 (defp DataTwoOp)
 (defp DefUseTree)
-(defp DefaultLoopPolicies)
 (defp DeferredExit)
 
 ;;;
@@ -3995,10 +3862,6 @@ ZeroExtendNode'new-4
     (#_"boolean" DeoptimizingNode'''canDeoptimize-1 [#_"DeoptimizingNode" this])
 )
 
-(defp DerivedConvertedInductionVariable)
-(defp DerivedInductionVariable)
-(defp DerivedOffsetInductionVariable)
-(defp DerivedScaledInductionVariable)
 (defp DirectCallOp)
 (defp DirectCallTargetNode)
 (defp DirectFarForeignCallOp)
@@ -4064,7 +3927,6 @@ ZeroExtendNode'new-4
 (defp EscapeObjectState)
 (defp ExecutableRef)
 (defp ExpandLogicPhase)
-(defp ExplodeLoopNode)
 (defp FastAcquireBiasedLockNode)
 (defp FieldInfo)
 (defp FieldKey)
@@ -4208,42 +4070,6 @@ ZeroExtendNode'new-4
  ; users of this node should also be placed on the work list for canonicalization.
  ;;
 (defp IndirectCanonicalization)
-
-;;;
- ; This class describes a value node that is an induction variable in a counted loop.
- ;;
-(defp InductionVariable
-    (#_"Graph" InductionVariable'''graph-1 [#_"InductionVariable" this])
-    (#_"Direction" InductionVariable'''direction-1 [#_"InductionVariable" this])
-    ;;;
-     ; Returns the value node that is described by this induction variable.
-     ;;
-    (#_"ValueNode" InductionVariable'''valueNode-1 [#_"InductionVariable" this])
-    ;;;
-     ; Returns the node that gives the initial value of this induction variable.
-     ;;
-    (#_"ValueNode" InductionVariable'''initNode-1 [#_"InductionVariable" this])
-    ;;;
-     ; Returns the stride of the induction variable. The stride is the value that is added to
-     ; the induction variable at each iteration.
-     ;;
-    (#_"ValueNode" InductionVariable'''strideNode-1 [#_"InductionVariable" this])
-    (#_"boolean" InductionVariable'''isConstantInit-1 [#_"InductionVariable" this])
-    (#_"boolean" InductionVariable'''isConstantStride-1 [#_"InductionVariable" this])
-    (#_"long" InductionVariable'''constantInit-1 [#_"InductionVariable" this])
-    (#_"long" InductionVariable'''constantStride-1 [#_"InductionVariable" this])
-    (#_"boolean" InductionVariable'''isConstantExtremum-1 [#_"InductionVariable" this])
-    (#_"long" InductionVariable'''constantExtremum-1 [#_"InductionVariable" this])
-    ;;;
-     ; Returns the exit value of the induction variable. The exit value is the value of the
-     ; induction variable at the loop exit.
-     ;;
-    (#_"ValueNode" InductionVariable'''exitValueNode-1 [#_"InductionVariable" this])
-    ;;;
-     ; Deletes any nodes created within the scope of this object that have no usages.
-     ;;
-    (#_"void" InductionVariable'''deleteUnusedNodes-1 [#_"InductionVariable" this])
-)
 
 (defp InfoElement)
 
@@ -4764,46 +4590,8 @@ ZeroExtendNode'new-4
 (defp Loop)
 (defp LoopBeginNode)
 (defp LoopEndNode)
-(defp LoopEx)
 (defp LoopExitNode)
-
-(defp LoopFragment
-    (#_"LoopFragment" LoopFragment'''duplicate-1 [#_"LoopFragment" this])
-    (#_"this" LoopFragment'''insertBefore-2 [#_"LoopFragment" this, #_"LoopEx" l])
-    ;;;
-     ; Gets the corresponding value in this fragment. Should be called on duplicate fragments
-     ; with a node from the original fragment as argument.
-     ;
-     ; @param b original value
-     ; @return corresponding value in the peel
-     ;;
-    (#_"ValueNode" LoopFragment'''prim-2 [#_"LoopFragment" this, #_"ValueNode" b])
-    (#_"sorted {Node}" LoopFragment'''nodes-1 [#_"LoopFragment" this])
-    (#_"DuplicationReplacement" LoopFragment'''getDuplicationReplacement-1 [#_"LoopFragment" this])
-    (#_"void" LoopFragment'''beforeDuplication-1 [#_"LoopFragment" this])
-    (#_"void" LoopFragment'''finishDuplication-1 [#_"LoopFragment" this])
-)
-
-(defp LoopFragmentInside)
-(defp LoopFragmentWhole)
-(defp LoopFullUnrollPhase)
 (defp LoopKillCache)
-(defp LoopPartialUnrollPhase)
-(defp LoopPeelingPhase)
-(defp LoopPhase)
-
-(defp LoopPolicies
-    (#_"boolean" LoopPolicies'''shouldPeel-3 [#_"LoopPolicies" this, #_"LoopEx" _loop, #_"ControlFlowGraph" cfg])
-    (#_"boolean" LoopPolicies'''shouldFullUnroll-2 [#_"LoopPolicies" this, #_"LoopEx" _loop])
-    (#_"boolean" LoopPolicies'''shouldPartiallyUnroll-2 [#_"LoopPolicies" this, #_"LoopEx" _loop])
-    (#_"boolean" LoopPolicies'''shouldTryUnswitch-2 [#_"LoopPolicies" this, #_"LoopEx" _loop])
-    (#_"boolean" LoopPolicies'''shouldUnswitch-3 [#_"LoopPolicies" this, #_"LoopEx" _loop, #_"ControlSplitNode*" controlSplits])
-)
-
-(defp LoopSafepointEliminationPhase)
-(defp LoopSafepointInsertionPhase)
-(defp LoopUnswitchingPhase)
-(defp LoopsData)
 (defp LowTier)
 (defp LowerGuards)
 
@@ -5273,7 +5061,6 @@ ZeroExtendNode'new-4
 (defp ReadNode)
 (defp ReadRegisterNode)
 (defp ReadTimestampCounter)
-(defp ReassociateInvariantPhase)
 
 (defp RecursiveVisitor #_"<V>"
     (#_"V" RecursiveVisitor'''enter-2 [#_"RecursiveVisitor<V>" this, #_"Block" block])
@@ -5881,10 +5668,6 @@ ZeroExtendNode'new-4
      ; The key at the specified position, encoded in a Constant.
      ;;
     (#_"Constant" SwitchNode'''keyAt-2 [#_"SwitchNode" this, #_"int" i])
-    ;;;
-     ; Returns true if the switch has the same keys in the same order as this switch.
-     ;;
-    (#_"boolean" SwitchNode'''equalKeys-2 [#_"SwitchNode" this, #_"SwitchNode" switchNode])
     (#_"Stamp" SwitchNode'''getValueStampForSuccessor-2 [#_"SwitchNode" this, #_"AbstractBeginNode" beginNode])
 )
 
@@ -6088,11 +5871,6 @@ ZeroExtendNode'new-4
 (defp Variable)
 (defp VariableMap)
 (defp VirtualArrayNode)
-
-(defp VirtualClosure
-    (#_"void" VirtualClosure'''apply-2 [#_"VirtualClosure" this, #_"VirtualState" vs])
-)
-
 (defp VirtualInstanceNode)
 
 (defp VirtualObjectNode
@@ -6139,14 +5917,7 @@ ZeroExtendNode'new-4
  ; Subclasses of this class will be treated in a special way by the scheduler.
  ;;
 (defp VirtualState
-    (#_"VirtualState" VirtualState'''duplicateWithVirtualState-1 [#_"VirtualState" this])
     (#_"void" VirtualState'''applyToNonVirtual-2 [#_"VirtualState" this, #_"NodeClosure" closure])
-    ;;;
-     ; Performs a <b>pre-order</b> iteration over all elements reachable from this state that
-     ; are a subclass of VirtualState.
-     ;;
-    (#_"void" VirtualState'''applyToVirtual-2 [#_"VirtualState" this, #_"VirtualClosure" closure])
-    (#_"boolean" VirtualState'''isPartOfThisState-2 [#_"VirtualState" this, #_"VirtualState" state])
 )
 
 ;;;
@@ -6271,7 +6042,6 @@ ZeroExtendNode'new-4
 (defp Word)
 (defp WordCastNode)
 (defp WordOperationPlugin)
-(defp WorkListEntry)
 (defp WriteBarrier)
 (defp WriteBarrierAdditionPhase)
 (defp WriteBarrierTemplates)
@@ -6325,7 +6095,6 @@ ZeroExtendNode'new-4
             :DeoptimizationReason'JavaSubroutineMismatch
             :DeoptimizationReason'ArithmeticException
             :DeoptimizationReason'RuntimeConstraint
-            :DeoptimizationReason'LoopLimitCheck
         )
     )
 )
@@ -6800,7 +6569,6 @@ ZeroExtendNode'new-4
             :DeoptimizationReason'JavaSubroutineMismatch HotSpot'deoptReasonJsrMismatch
             :DeoptimizationReason'ArithmeticException    HotSpot'deoptReasonDiv0Check
             :DeoptimizationReason'RuntimeConstraint      HotSpot'deoptReasonConstraint
-            :DeoptimizationReason'LoopLimitCheck         HotSpot'deoptReasonLoopLimitCheck
         )
     )
 
@@ -7841,17 +7609,16 @@ ZeroExtendNode'new-4
     (def #_"int" HotSpot'codeInstallResultCacheFull           (.getConstant HotSpot'config, "JVMCIEnv::cache_full",           Integer))
     (def #_"int" HotSpot'codeInstallResultCodeTooLarge        (.getConstant HotSpot'config, "JVMCIEnv::code_too_large",       Integer))
 
-    (def #_"int" HotSpot'deoptReasonNone           (.getConstant HotSpot'config, "Deoptimization::Reason_none",             Integer))
-    (def #_"int" HotSpot'deoptReasonNullCheck      (.getConstant HotSpot'config, "Deoptimization::Reason_null_check",       Integer))
-    (def #_"int" HotSpot'deoptReasonRangeCheck     (.getConstant HotSpot'config, "Deoptimization::Reason_range_check",      Integer))
-    (def #_"int" HotSpot'deoptReasonClassCheck     (.getConstant HotSpot'config, "Deoptimization::Reason_class_check",      Integer))
-    (def #_"int" HotSpot'deoptReasonArrayCheck     (.getConstant HotSpot'config, "Deoptimization::Reason_array_check",      Integer))
-    (def #_"int" HotSpot'deoptReasonUnreached0     (.getConstant HotSpot'config, "Deoptimization::Reason_unreached0",       Integer))
-    (def #_"int" HotSpot'deoptReasonUnresolved     (.getConstant HotSpot'config, "Deoptimization::Reason_unresolved",       Integer))
-    (def #_"int" HotSpot'deoptReasonJsrMismatch    (.getConstant HotSpot'config, "Deoptimization::Reason_jsr_mismatch",     Integer))
-    (def #_"int" HotSpot'deoptReasonDiv0Check      (.getConstant HotSpot'config, "Deoptimization::Reason_div0_check",       Integer))
-    (def #_"int" HotSpot'deoptReasonConstraint     (.getConstant HotSpot'config, "Deoptimization::Reason_constraint",       Integer))
-    (def #_"int" HotSpot'deoptReasonLoopLimitCheck (.getConstant HotSpot'config, "Deoptimization::Reason_loop_limit_check", Integer))
+    (def #_"int" HotSpot'deoptReasonNone        (.getConstant HotSpot'config, "Deoptimization::Reason_none",         Integer))
+    (def #_"int" HotSpot'deoptReasonNullCheck   (.getConstant HotSpot'config, "Deoptimization::Reason_null_check",   Integer))
+    (def #_"int" HotSpot'deoptReasonRangeCheck  (.getConstant HotSpot'config, "Deoptimization::Reason_range_check",  Integer))
+    (def #_"int" HotSpot'deoptReasonClassCheck  (.getConstant HotSpot'config, "Deoptimization::Reason_class_check",  Integer))
+    (def #_"int" HotSpot'deoptReasonArrayCheck  (.getConstant HotSpot'config, "Deoptimization::Reason_array_check",  Integer))
+    (def #_"int" HotSpot'deoptReasonUnreached0  (.getConstant HotSpot'config, "Deoptimization::Reason_unreached0",   Integer))
+    (def #_"int" HotSpot'deoptReasonUnresolved  (.getConstant HotSpot'config, "Deoptimization::Reason_unresolved",   Integer))
+    (def #_"int" HotSpot'deoptReasonJsrMismatch (.getConstant HotSpot'config, "Deoptimization::Reason_jsr_mismatch", Integer))
+    (def #_"int" HotSpot'deoptReasonDiv0Check   (.getConstant HotSpot'config, "Deoptimization::Reason_div0_check",   Integer))
+    (def #_"int" HotSpot'deoptReasonConstraint  (.getConstant HotSpot'config, "Deoptimization::Reason_constraint",   Integer))
 
     (def #_"int" HotSpot'deoptActionNone           (.getConstant HotSpot'config, "Deoptimization::Action_none",             Integer))
     (def #_"int" HotSpot'deoptActionReinterpret    (.getConstant HotSpot'config, "Deoptimization::Action_reinterpret",      Integer))
@@ -8647,22 +8414,11 @@ ZeroExtendNode'new-4
  ; This class encapsulates options that control the behavior of the Graal compiler.
  ;;
 (value-ns GraalOptions
-    ;; @Option "Maximum desired size of the compiler graph in nodes."
-    (def #_"int" GraalOptions'maximumDesiredSize 20000)
-
     ;; escape analysis settings
     (def #_"boolean" GraalOptions'partialEscapeAnalysis true)
     (def #_"int" GraalOptions'escapeAnalysisIterations 2)
     (def #_"int" GraalOptions'escapeAnalysisLoopCutoff 20)
     (def #_"int" GraalOptions'maximumEscapeAnalysisArrayLength 32)
-    (def #_"boolean" GraalOptions'loopPeeling true)
-    (def #_"boolean" GraalOptions'reassociateInvariants true)
-    (def #_"boolean" GraalOptions'fullUnroll true)
-    (def #_"boolean" GraalOptions'loopUnswitch true)
-    (def #_"boolean" GraalOptions'partialUnroll true)
-    (def #_"float" GraalOptions'minimumPeelProbability 0.35 #_"f")
-    (def #_"int" GraalOptions'loopMaxUnswitch 3)
-    (def #_"boolean" GraalOptions'useLoopLimitChecks true)
 
     ;; debugging settings
     (def #_"boolean" GraalOptions'zapStackOnMethodEntry false)
@@ -8672,7 +8428,6 @@ ZeroExtendNode'new-4
     (def #_"boolean" GraalOptions'rawConditionalElimination true)
     (def #_"boolean" GraalOptions'replaceInputsWithConstantsBasedOnStamps true)
     (def #_"boolean" GraalOptions'removeNeverExecutedCode true)
-    (def #_"boolean" GraalOptions'genLoopSafepoints true)
     (def #_"boolean" GraalOptions'canOmitFrame true)
 
     ;; runtime settings
@@ -8682,7 +8437,6 @@ ZeroExtendNode'new-4
     (def #_"boolean" GraalOptions'optEliminateGuards true)
     (def #_"boolean" GraalOptions'optImplicitNullChecks true)
     (def #_"boolean" GraalOptions'optClearNonLiveLocals true)
-    (def #_"boolean" GraalOptions'optLoopTransform true)
     (def #_"boolean" GraalOptions'optFloatingReads true)
 
     ;; @Option "AMD64: Emit lfence instructions at the beginning of basic blocks."
@@ -8710,17 +8464,6 @@ ZeroExtendNode'new-4
     (def #_"boolean" GraalOptions'lsraOptimization false)
     ;; @Option "LSRA optimization: Only split but do not reassign."
     (def #_"boolean" GraalOptions'lsraOptSplitOnly false)
-
-    (def #_"int" GraalOptions'loopUnswitchMaxIncrease 500)
-    (def #_"int" GraalOptions'loopUnswitchTrivial 10)
-    (def #_"double" GraalOptions'loopUnswitchFrequencyBoost 10.0)
-
-    (def #_"int" GraalOptions'fullUnrollMaxNodes 300)
-    (def #_"int" GraalOptions'fullUnrollMaxIterations 600)
-    (def #_"int" GraalOptions'exactFullUnrollMaxNodes 1200)
-    (def #_"int" GraalOptions'exactPartialUnrollMaxNodes 200)
-
-    (def #_"int" GraalOptions'unrollMaxIterations 16)
 
     ;; @Option "Use traps for nil-checks instead of explicit nil-checks."
     (def #_"boolean" GraalOptions'useTrappingNullChecks true)
@@ -9591,7 +9334,7 @@ ZeroExtendNode'new-4
                 #_"int" stepSize HotSpot'allocatePrefetchStepSize
                 #_"int" distance HotSpot'allocatePrefetchDistance
             ]
-                (ExplodeLoopNode'explodeLoop-0)
+                #_explode_loop
                 (loop-when-recur [distance distance #_"int" i 0] (< i lines) [(+ distance stepSize) (inc i)]
                     (PrefetchAllocateNode'prefetch-1 (OffsetAddressNode'address-2 address, distance))
                 )
@@ -9629,7 +9372,7 @@ ZeroExtendNode'new-4
                     ;; This case handles arrays of constant length. Instead of having a snippet variant
                     ;; for each length, generate a chain of stores of maximum length. Once it's inlined
                     ;; the break statement will trim excess stores.
-                    (ExplodeLoopNode'explodeLoop-0)
+                    #_explode_loop
                     (loop-when-recur [#_"int" i offset #_"int" n 0] (and (< i size) (< n NewObjectSnippets'MAX_UNROLLED_OBJECT_ZEROING_STORES)) [(+ i 8) (inc n)]
                         (Word''initializeLong-4i memory, i, value, LocationIdentity'INIT)
                     )
@@ -9637,7 +9380,7 @@ ZeroExtendNode'new-4
                 ;; Use Word instead of int to avoid extension to long in generated code.
                 (do
                     (when (and constantSize (<= (quot (- size offset) 8) NewObjectSnippets'MAX_UNROLLED_OBJECT_ZEROING_STORES))
-                        (ExplodeLoopNode'explodeLoop-0)
+                        #_explode_loop
                     )
                     (loop-when-recur [#_"Word" w (WordFactory'signed-1i offset)] (< (Word''rawValue-1 w) size) [(Word''add-2i w, 8)]
                         (Word''initializeLong-4w memory, w, value, LocationIdentity'INIT)
@@ -10641,25 +10384,6 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; A collection of machine-independent LIR operations, as well as interfaces to be implemented
- ; for specific kinds or LIR operations.
- ;;
-(value-ns StandardOp
-)
-
-(value-ns Direction
-    :Direction'Up
-    :Direction'Down
-
-    (defn #_"Direction" Direction''opposite-1 [#_"Direction" this]
-        (case this
-            :Direction'Up :Direction'Down
-            :Direction'Down :Direction'Up
-        )
-    )
-)
-
-;;;
  ; Utility methods to perform integer math with some obvious constant folding first.
  ;;
 (value-ns MathUtil
@@ -10671,6 +10395,7 @@ ZeroExtendNode'new-4
         (and (satisfies? ConstantNode v1) (satisfies? IntegerStamp (:stamp v1)) (zero? (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 v1))))
     )
 
+    #_unused
     (defn #_"ValueNode" MathUtil'add-3 [#_"Graph" graph, #_"ValueNode" v1, #_"ValueNode" v2]
         (cond
             (MathUtil'isConstantZero-1 v1) v2
@@ -10679,6 +10404,7 @@ ZeroExtendNode'new-4
         )
     )
 
+    #_unused
     (defn #_"ValueNode" MathUtil'mul-3 [#_"Graph" graph, #_"ValueNode" v1, #_"ValueNode" v2]
         (cond
             (MathUtil'isConstantOne-1 v1) v2
@@ -10687,442 +10413,11 @@ ZeroExtendNode'new-4
         )
     )
 
+    #_unused
     (defn #_"ValueNode" MathUtil'sub-3 [#_"Graph" graph, #_"ValueNode" v1, #_"ValueNode" v2]
         (cond
             (MathUtil'isConstantZero-1 v2) v1
             :else                          (BinaryArithmeticNode'sub-3 graph, v1, v2)
-        )
-    )
-
-    (defn- #_"ValueNode" MathUtil'fixedDivBefore-5 [#_"Graph" graph, #_"FixedNode" before, #_"ValueNode" dividend, #_"ValueNode" divisor, #_"fn ValueNode [ValueNode ValueNode]" f'createDiv-2]
-        (when-not (MathUtil'isConstantOne-1 divisor) => dividend
-            (let [
-                #_"ValueNode" div (Graph''addOrUniqueWithInputs-2 graph, (f'createDiv-2 dividend, divisor))
-            ]
-                (when (satisfies? FixedBinaryNode div) => div
-                    (if (and (satisfies? FixedBinaryNode (:predecessor before)) (Node''dataFlowEquals-2 div, (:predecessor before)))
-                        (let [
-                            _ (§ ass! div (Node''safeDelete-1 div))
-                        ]
-                            (:predecessor before)
-                        )
-                        (let [
-                            _ (Graph''addBeforeFixed-3 graph, before, div)
-                        ]
-                            div
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    #_unused
-    (defn #_"ValueNode" MathUtil'divBefore-4 [#_"Graph" graph, #_"FixedNode" before, #_"ValueNode" dividend, #_"ValueNode" divisor]
-        (MathUtil'fixedDivBefore-5 graph, before, dividend, divisor, SignedDivNode'create-2)
-    )
-
-    (defn #_"ValueNode" MathUtil'unsignedDivBefore-4 [#_"Graph" graph, #_"FixedNode" before, #_"ValueNode" dividend, #_"ValueNode" divisor]
-        (MathUtil'fixedDivBefore-5 graph, before, dividend, divisor, UnsignedDivNode'create-2)
-    )
-)
-
-(value-ns LoopTransformations
-    (defn #_"void" LoopTransformations'peel-1 [#_"LoopEx" _loop]
-        (let [
-            #_"LoopFragment" inside (LoopFragment'''duplicate-1 (LoopEx''inside-1 _loop))
-            _ (§ ass! inside (LoopFragment'''insertBefore-2 inside, _loop))
-            _ (§ ass! (LoopEx''loopBegin-1 _loop) (update (LoopEx''loopBegin-1 _loop) :loopFrequency #(max 0.0 (dec %))))
-        ]
-        )
-        nil
-    )
-
-    (defn #_"void" LoopTransformations'fullUnroll-2 [#_"LoopEx" _loop, #_"CanonicalizerPhase" canonicalizer]
-        (let [
-            #_"LoopBeginNode" loopBegin (LoopEx''loopBegin-1 _loop)
-            #_"Graph" graph (:graph loopBegin)
-            #_"int" o'count (Graph''getNodeCount-1 graph)
-        ]
-            (while (not (Node''isDeleted-1 loopBegin))
-                (let [
-                    #_"int" mark (Graph''getMark-1 graph)
-                ]
-                    (LoopTransformations'peel-1 _loop)
-                    (CanonicalizerPhase''applyIncremental-3m canonicalizer, graph, mark)
-                    (§ ass! _loop (LoopEx''invalidateFragments-1 _loop))
-                    (when (< (+ o'count (* GraalOptions'maximumDesiredSize 2)) (Graph''getNodeCount-1 graph))
-                        (throw! "full unroll: graph seems to grow out of proportion")
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (defn #_"void" LoopTransformations'unswitch-2 [#_"LoopEx" _loop, #_"ControlSplitNode*" controlSplits]
-        (let [
-            #_"LoopFragmentWhole" o'loop (LoopEx''whole-1 _loop)
-            #_"ControlSplitNode" firstNode (nth controlSplits 0)
-            #_"Graph" graph (:graph firstNode)
-            _ (§ ass! (LoopEx''loopBegin-1 _loop) (LoopBeginNode''incrementUnswitches-1 (LoopEx''loopBegin-1 _loop)))
-            ;; create new control split out of loop
-            #_"ControlSplitNode" newControlSplit (Node''copyWithInputs-1 firstNode)
-            _ (Node''replaceAtPredecessor-2 (LoopFragmentWhole''entryPoint-1 o'loop), newControlSplit)
-            ;; The code below assumes that all of the control split nodes have the same successor structure,
-            ;; which should have been enforced by findUnswitchable.
-            ;;
-            ;; original loop is used as first successor
-            [#_"Position" firstPosition & #_"Position*" successors] (Node''successorPositions-1 firstNode)
-            #_"AbstractBeginNode" originalLoopBegin (BeginNode'begin-1 (LoopFragmentWhole''entryPoint-1 o'loop))
-            _ (Position''set-3 firstPosition, newControlSplit, originalLoopBegin)
-        ]
-            (doseq [#_"Position" position successors]
-                (let [
-                    ;; create a new loop duplicate and connect it
-                    #_"LoopFragmentWhole" duplicateLoop (LoopFragment'''duplicate-1 o'loop)
-                    #_"AbstractBeginNode" newBegin (BeginNode'begin-1 (LoopFragmentWhole''entryPoint-1 duplicateLoop))
-                    _ (Position''set-3 position, newControlSplit, newBegin)
-                ]
-                    ;; for each cloned ControlSplitNode, simplify the proper path
-                    (doseq [#_"ControlSplitNode" controlSplit controlSplits]
-                        (let [
-                            #_"ControlSplitNode" duplicatedControlSplit (LoopFragment''getDuplicatedNode-2 duplicateLoop, controlSplit)
-                        ]
-                            (when (Node''isAlive-1 duplicatedControlSplit)
-                                (let [
-                                    #_"AbstractBeginNode" survivingSuccessor (Position''get-2 position, duplicatedControlSplit)
-                                ]
-                                    (Node''replaceAtUsages-3 survivingSuccessor, :InputType'Guard, newBegin)
-                                    (Graph''removeSplitPropagate-3 graph, duplicatedControlSplit, survivingSuccessor)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-            ;; original loop is simplified last to avoid deleting controlSplit too early
-            (doseq [#_"ControlSplitNode" controlSplit controlSplits]
-                (when (Node''isAlive-1 controlSplit)
-                    (let [
-                        #_"AbstractBeginNode" survivingSuccessor (Position''get-2 firstPosition, controlSplit)
-                    ]
-                        (Node''replaceAtUsages-3 survivingSuccessor, :InputType'Guard, originalLoopBegin)
-                        (Graph''removeSplitPropagate-3 graph, controlSplit, survivingSuccessor)
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (defn #_"void" LoopTransformations'partialUnroll-1 [#_"LoopEx" _loop]
-        (let [
-            #_"LoopFragment" inside (LoopFragment'''duplicate-1 (LoopEx''inside-1 _loop))
-            _ (§ ass! inside (LoopFragmentInside''insertWithinAfter-2 inside, _loop))
-        ]
-        )
-        nil
-    )
-
-    (defn- #_"EndNode" LoopTransformations'getBlockEnd-1 [#_"FixedNode" node]
-        (loop-when-recur node (satisfies? FixedWithNextNode node) (:next node) => node)
-    )
-
-    ;;;
-     ; Find the end of the block following the LoopExit.
-     ;;
-    (defn- #_"EndNode" LoopTransformations'getBlockEndAfterLoopExit-1 [#_"LoopBeginNode" curLoopBegin]
-        ;; find the last node after the exit blocks starts
-        (LoopTransformations'getBlockEnd-1 (:next (LoopBeginNode''getSingleLoopExit-1 curLoopBegin)))
-    )
-
-    (defn- #_"void" LoopTransformations'processPreLoopPhis-3 [#_"LoopEx" preLoop, #_"LoopFragmentWhole" mainLoop, #_"LoopFragmentWhole" postLoop]
-        ;; process phis for the post loop
-        (doseq [#_"PhiNode" prePhiNode (AbstractMergeNode''phis-1 (LoopEx''loopBegin-1 preLoop))]
-            (let [
-                #_"PhiNode" postPhiNode (LoopFragment''getDuplicatedNode-2 postLoop, prePhiNode)
-                #_"PhiNode" mainPhiNode (LoopFragment''getDuplicatedNode-2 mainLoop, prePhiNode)
-                _ (§ ass! postPhiNode (PhiNode''setValueAt-3i postPhiNode, 0, mainPhiNode))
-            ]
-                ;; build a work list to update the pre loop phis to the post loops phis
-                (doseq [#_"Node" usage (:nodeUsages prePhiNode)]
-                    (when (and (not= usage mainPhiNode) (LoopEx''isOutsideLoop-2 preLoop, usage))
-                        (Node''replaceFirstInput-3 usage, prePhiNode, postPhiNode)
-                    )
-                )
-            )
-        )
-        (doseq [#_"Node" node (LoopFragment'''nodes-1 (LoopEx''inside-1 preLoop)) #_"Node" externalUsage (:nodeUsages node)]
-            (when (LoopEx''isOutsideLoop-2 preLoop, externalUsage)
-                (let [
-                    #_"Node" postUsage (LoopFragment''getDuplicatedNode-2 postLoop, node)
-                ]
-                    (Node''replaceFirstInput-3 externalUsage, node, postUsage)
-                )
-            )
-        )
-        nil
-    )
-
-    ;;;
-     ; Cleanup the merge and remove the predecessors too.
-     ;;
-    (defn- #_"void" LoopTransformations'cleanupMerge-2 [#_"AbstractMergeNode" merge, #_"AbstractBeginNode" landing]
-        (let [
-            _
-                (doseq [#_"EndNode" end (§ snap (Node'''cfgPredecessors-1 merge))]
-                    (§ ass! merge (AbstractMergeNode''removeEnd-2 merge, end))
-                    (§ ass! end (Node''safeDelete-1 end))
-                )
-        ]
-            (AbstractBeginNode'''prepareDelete-2 merge, landing)
-            (§ ass! merge (Node''safeDelete-1 merge))
-        )
-        nil
-    )
-
-    (defn- #_"void" LoopTransformations'updateMainLoopLimit-3 [#_"IfNode" preLimit, #_"InductionVariable" preIv, #_"LoopFragmentWhole" mainLoop]
-        ;; update the main loops limit test to be different than the post loop
-        (let [
-            #_"IfNode" mainLimit (LoopFragment''getDuplicatedNode-2 mainLoop, preLimit)
-            #_"LogicNode" logic (:logic mainLimit)
-            #_"ValueNode" prePhi (InductionVariable'''valueNode-1 preIv)
-            #_"ValueNode" mainPhi (LoopFragment''getDuplicatedNode-2 mainLoop, prePhi)
-            #_"ValueNode" preStride (InductionVariable'''strideNode-1 preIv)
-            #_"ValueNode" mainStride (if (satisfies? ConstantNode preStride) preStride (LoopFragment''getDuplicatedNode-2 mainLoop, preStride))
-            ;; fetch the bounds to pose lowering the range by one
-            #_"ValueNode" ub
-                (condp = mainPhi
-                    (:x logic) (:y logic)
-                    (:y logic) (:x logic)
-                )
-            ;; preloop always performs at least one iteration, so remove that from the main loop
-            #_"ValueNode" newLimit (MathUtil'sub-3 (:graph preLimit), ub, mainStride)
-        ]
-            ;; re-wire the condition with the new limit
-            (Node''replaceFirstInput-3 logic, ub, newLimit)
-        )
-        nil
-    )
-
-    (defn- #_"void" LoopTransformations'updatePreLoopLimit-3 [#_"IfNode" preLimit, #_"InductionVariable" preIv, #_"CountedLoopInfo" preCounted]
-        ;; update the pre loops limit test
-        (let [
-            #_"Graph" graph (:graph preLimit)
-            #_"LogicNode" logic (:logic preLimit)
-            #_"ValueNode" prePhi (InductionVariable'''valueNode-1 preIv)
-            ;; make new limit one iteration
-            #_"ValueNode" initIv (CountedLoopInfo''getStart-1 preCounted)
-            #_"ValueNode" newLimit (MathUtil'add-3 graph, initIv, (InductionVariable'''strideNode-1 preIv))
-            ;; fetch the variable we are not replacing and configure the one we are
-            #_"ValueNode" ub
-                (condp = prePhi
-                    (:x logic) (:y logic)
-                    (:y logic) (:x logic)
-                )
-        ]
-            ;; re-wire the condition with the new limit
-            (Node''replaceFirstInput-3 logic, ub, (Graph''add-2 graph, (ConditionalNode'new-3 (Graph''add-2 graph, (if (= (InductionVariable'''direction-1 preIv) :Direction'Up) (IntegerLessThanNode'new-2 newLimit, ub) (IntegerLessThanNode'new-2 ub, newLimit))), newLimit, ub)))
-        )
-        nil
-    )
-
-    ;; This function splits candidate loops into pre, main and post loops,
-    ;; dividing the iteration space to facilitate the majority of iterations
-    ;; being executed in a main loop, which will have RCE implemented upon it.
-    ;; The initial loop form is constrained to single entry/exit, but can have
-    ;; flow. The translation looks like:
-    ;;
-    ;;       (Simple Loop entry)                   (Pre Loop Entry)
-    ;;                |                                  |
-    ;;         (LoopBeginNode)                    (LoopBeginNode)
-    ;;                |                                  |
-    ;;       (Loop Control Test)<------   ==>  (Loop control Test)<------
-    ;;         /               \       \         /               \       \
-    ;;    (Loop Exit)      (Loop Body) |    (Loop Exit)      (Loop Body) |
-    ;;        |                |       |        |                |       |
-    ;; (continue code)     (Loop End)  |  if (M < length)*   (Loop End)  |
-    ;;                         \       /       /      \           \      /
-    ;;                          ----->        /       |            ----->
-    ;;                                       /  if ( ... )*
-    ;;                                      /     /       \
-    ;;                                     /     /         \
-    ;;                                    /     /           \
-    ;;                                   |     /     (Main Loop Entry)
-    ;;                                   |    |             |
-    ;;                                   |    |      (LoopBeginNode)
-    ;;                                   |    |             |
-    ;;                                   |    |     (Loop Control Test)<------
-    ;;                                   |    |      /               \        \
-    ;;                                   |    |  (Loop Exit)      (Loop Body) |
-    ;;                                    \   \      |                |       |
-    ;;                                     \   \     |            (Loop End)  |
-    ;;                                      \   \    |                \       /
-    ;;                                       \   \   |                 ------>
-    ;;                                        \   \  |
-    ;;                                      (Main Loop Merge)*
-    ;;                                               |
-    ;;                                      (Post Loop Entry)
-    ;;                                               |
-    ;;                                        (LoopBeginNode)
-    ;;                                               |
-    ;;                                       (Loop Control Test)<-----
-    ;;                                        /               \       \
-    ;;                                    (Loop Exit)     (Loop Body) |
-    ;;                                        |               |       |
-    ;;                                 (continue code)    (Loop End)  |
-    ;;                                                         \      /
-    ;;                                                          ----->
-    ;;
-    ;; Key: "*" = optional.
-    ;;
-    ;; The value "M" is the maximal value of the loop trip for the original
-    ;; loop. The value of "length" is applicable to the number of arrays found
-    ;; in the loop but is reduced if some or all of the arrays are known to be
-    ;; the same length as "M". The maximum number of tests can be equal to the
-    ;; number of arrays in the loop, where multiple instances of an array are
-    ;; subsumed into a single test for that arrays length.
-    ;;
-    ;; If the optional main loop entry tests are absent, the Pre Loop exit
-    ;; connects to the Main loops entry and there is no merge hanging off the
-    ;; main loops exit to converge flow from said tests. All split use data
-    ;; flow is mitigated through phi(s) in the main merge if present and
-    ;; passed through the main and post loop phi(s) from the originating pre
-    ;; loop with final phi(s) and data flow patched to the "continue code".
-    ;; The pre loop is constrained to one iteration for now and will likely
-    ;; be updated to produce vector alignment if applicable.
-
-    (defn #_"LoopBeginNode" LoopTransformations'insertPrePostLoops-1 [#_"LoopEx" _loop]
-        (let [
-            #_"Graph" graph (:graph (LoopEx''loopBegin-1 _loop))
-            #_"LoopFragmentWhole" preLoop (LoopEx''whole-1 _loop)
-            #_"CountedLoopInfo" preCounted (:counted _loop)
-            #_"IfNode" preLimit (:ifNode preCounted)
-            #_"LoopBeginNode" preLoopBegin (LoopEx''loopBegin-1 _loop)
-            #_"InductionVariable" preIv (:iv preCounted)
-            #_"LoopExitNode" preLoopExitNode (LoopBeginNode''getSingleLoopExit-1 preLoopBegin)
-            #_"FixedNode" continuationNode (:next preLoopExitNode)
-            ;; each duplication is inserted after the original, ergo create the post loop first
-            #_"LoopFragmentWhole" mainLoop (LoopFragment'''duplicate-1 preLoop)
-            #_"LoopFragmentWhole" postLoop (LoopFragment'''duplicate-1 preLoop)
-            _ (§ ass! preLoopBegin (LoopBeginNode''incrementSplits-1 preLoopBegin))
-            _ (§ ass! preLoopBegin (LoopBeginNode''incrementSplits-1 preLoopBegin))
-            _ (§ ass! preLoopBegin (LoopBeginNode''setPreLoop-1 preLoopBegin))
-            #_"LoopBeginNode" mainLoopBegin (LoopFragment''getDuplicatedNode-2 mainLoop, preLoopBegin)
-            _ (§ ass! mainLoopBegin (LoopBeginNode''setMainLoop-1 mainLoopBegin))
-            #_"LoopBeginNode" postLoopBegin (LoopFragment''getDuplicatedNode-2 postLoop, preLoopBegin)
-            _ (§ ass! postLoopBegin (LoopBeginNode''setPostLoop-1 postLoopBegin))
-            #_"EndNode" postEndNode (LoopTransformations'getBlockEndAfterLoopExit-1 postLoopBegin)
-            #_"AbstractMergeNode" postMergeNode (AbstractEndNode'''merge-1 postEndNode)
-            #_"LoopExitNode" postLoopExitNode (LoopBeginNode''getSingleLoopExit-1 postLoopBegin)
-            ;; update the main loop phi initialization to carry from the pre loop
-            _
-                (doseq [#_"PhiNode" prePhiNode (AbstractMergeNode''phis-1 preLoopBegin)]
-                    (let [
-                        #_"Node" dup (LoopFragment''getDuplicatedNode-2 mainLoop, prePhiNode)
-                    ]
-                        (§ ass! dup (PhiNode''setValueAt-3i dup, 0, prePhiNode))
-                    )
-                )
-            #_"EndNode" mainEndNode (LoopTransformations'getBlockEndAfterLoopExit-1 mainLoopBegin)
-            #_"AbstractMergeNode" mainMergeNode (AbstractEndNode'''merge-1 mainEndNode)
-            #_"AbstractEndNode" postEntryNode (LoopBeginNode''forwardEnd-1 postLoopBegin)
-            ;; in the case of no Bounds tests, we just flow right into the main loop
-            #_"AbstractBeginNode" mainLandingNode (BeginNode'begin-1 postEntryNode)
-            #_"LoopExitNode" mainLoopExitNode (LoopBeginNode''getSingleLoopExit-1 mainLoopBegin)
-            _ (§ ass! mainLoopExitNode (FixedWithNextNode''setNext-2 mainLoopExitNode, mainLandingNode))
-            _ (§ ass! preLoopExitNode (FixedWithNextNode''setNext-2 preLoopExitNode, (LoopBeginNode''forwardEnd-1 mainLoopBegin)))
-            ;; add and update any phi edges as per merge usage as needed and update usages
-            _ (LoopTransformations'processPreLoopPhis-3 _loop, mainLoop, postLoop)
-            _ (Node''clearSuccessors-1 (:predecessor continuationNode))
-            _ (§ ass! postLoopExitNode (FixedWithNextNode''setNext-2 postLoopExitNode, continuationNode))
-            _ (LoopTransformations'cleanupMerge-2 postMergeNode, postLoopExitNode)
-            _ (LoopTransformations'cleanupMerge-2 mainMergeNode, mainLandingNode)
-            ;; change the preLoop to execute one iteration for now
-            _ (LoopTransformations'updateMainLoopLimit-3 preLimit, preIv, mainLoop)
-            _ (LoopTransformations'updatePreLoopLimit-3 preLimit, preIv, preCounted)
-            _ (§ ass! preLoopBegin (assoc preLoopBegin :loopFrequency 1.0))
-            _ (§ ass! mainLoopBegin (update mainLoopBegin :loopFrequency #(max 0.0 (- % 2.0))))
-            _ (§ ass! postLoopBegin (update postLoopBegin :loopFrequency #(max 0.0 (- % 1.0))))
-        ]
-            ;; the pre and post loops don't require safepoints at all
-            (doseq [#_"SafepointNode" safepoint (filter #(satisfies? SafepointNode %) (LoopFragment'''nodes-1 preLoop))]
-                (Graph''removeFixed-2 graph, safepoint)
-            )
-            (doseq [#_"SafepointNode" safepoint (filter #(satisfies? SafepointNode %) (LoopFragment'''nodes-1 postLoop))]
-                (Graph''removeFixed-2 graph, safepoint)
-            )
-            mainLoopBegin
-        )
-    )
-
-    (defn #_"[ControlSplitNode]" LoopTransformations'findUnswitchable-1 [#_"LoopEx" _loop]
-        (let [
-            [#_"ValueNode" invariant #_"[ControlSplitNode]" controls]
-                (loop-when [invariant nil controls nil #_"seq" s (seq (filter #(satisfies? IfNode %) (LoopFragment'''nodes-1 (LoopEx''whole-1 _loop))))] (some? s) => [invariant controls]
-                    (let [
-                        #_"IfNode" ifNode (first s)
-                        [invariant controls]
-                            (when (LoopEx''isOutsideLoop-2 _loop, (:logic ifNode)) => [invariant controls]
-                                (when (some? controls) => [(:logic ifNode) [ ifNode ]]
-                                    (let [
-                                        controls
-                                            (when (= (:logic ifNode) invariant) => controls
-                                                (conj' controls ifNode)
-                                            )
-                                    ]
-                                        [invariant controls]
-                                    )
-                                )
-                            )
-                    ]
-                        (recur invariant controls (next s))
-                    )
-                )
-        ]
-            (or controls
-                (loop-when [#_"SwitchNode" firstSwitch nil invariant invariant controls controls #_"seq" s (seq (filter #(satisfies? SwitchNode %) (LoopFragment'''nodes-1 (LoopEx''whole-1 _loop))))] (some? s) => controls
-                    (let [
-                        #_"SwitchNode" switchNode (first s)
-                        [firstSwitch invariant controls]
-                            (when (and (< 1 (count (Node''successors-1 switchNode))) (LoopEx''isOutsideLoop-2 _loop, (:value switchNode))) => [firstSwitch invariant controls]
-                                (when (some? controls) => [switchNode (:value switchNode) [ switchNode ]]
-                                    (let [
-                                        controls
-                                            (when (and (= (:value switchNode) invariant) (SwitchNode''structureEquals-2 firstSwitch, switchNode)) => controls
-                                                ;; only collect switches which test the same values in the same order
-                                                (conj' controls switchNode)
-                                            )
-                                    ]
-                                        [firstSwitch invariant controls]
-                                    )
-                                )
-                            )
-                    ]
-                        (recur firstSwitch invariant controls (next s))
-                    )
-                )
-            )
-        )
-    )
-
-    (defn #_"boolean" LoopTransformations'isUnrollableLoop-1 [#_"LoopEx" _loop]
-        (and (LoopEx''isCounted-1 _loop)
-            (InductionVariable'''isConstantStride-1 (:iv (:counted _loop)))
-            (empty? (:children (:loop _loop)))
-            (let [
-                #_"LoopBeginNode" loopBegin (LoopEx''loopBegin-1 _loop)
-                #_"LogicNode" logic (:logic (:ifNode (:counted _loop)))
-            ]
-                (and (satisfies? CompareNode logic)
-                    (not (= (:condition logic) CanonicalCondition'EQ))
-                    (or (LoopBeginNode''isMainLoop-1 loopBegin) (LoopBeginNode''isSimpleLoop-1 loopBegin))
-                    ;; Flow-less loops to partial unroll for now. 3 blocks corresponds to an if that either exits
-                    ;; or continues the loop. There might be fixed and floating work within the loop as well.
-                    (< (count (:loopBlocks (:loop _loop))) 3)
-                )
-            )
         )
     )
 )
@@ -11196,18 +10491,6 @@ ZeroExtendNode'new-4
         (ordered-set
             :CompressionOp'Compress
             :CompressionOp'Uncompress
-        )
-    )
-)
-
-(value-ns LoopType
-    #_unused
-    (def #_"ordered {LoopType}" LoopType'SET
-        (ordered-set
-            :LoopType'SIMPLE_LOOP
-            :LoopType'PRE_LOOP
-            :LoopType'MAIN_LOOP
-            :LoopType'POST_LOOP
         )
     )
 )
@@ -12253,8 +11536,7 @@ ZeroExtendNode'new-4
 (value-ns Optimization
     (def #_"ordered {Optimization}" Optimization'SET
         (ordered-set
-            :Optimization'RemoveNeverExecutedCode
-            :Optimization'UseLoopLimitChecks
+            :Optimization'RemoveNeverExecutedCode
         )
     )
 )
@@ -13689,96 +12971,11 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; Create a sign extend for {@code input}, or zero extend if {@code input} can be proven positive.
-     ;;
-    (defn- #_"ValueNode" AddressLowering'signExtend-2 [#_"ValueNode" input, #_"LoopEx" _loop]
-        (or
-            (when (satisfies? PhiNode input)
-                (let [
-                    #_"InductionVariable" iv (get (LoopEx''getInductionVariables-1 _loop) input)
-                ]
-                    (when (and (some? iv) (satisfies? BasicInductionVariable iv))
-                        (let [
-                            #_"CountedLoopInfo" cli (:counted _loop)
-                        ]
-                            (when (IntegerStamp''isPositive-1 (:stamp (InductionVariable'''initNode-1 iv)))
-                                (or
-                                    (when (InductionVariable'''isConstantExtremum-1 iv)
-                                        (let [
-                                            #_"long" init (InductionVariable'''constantInit-1 iv)
-                                            #_"long" stride (InductionVariable'''constantStride-1 iv)
-                                            #_"long" extremum (InductionVariable'''constantExtremum-1 iv)
-                                        ]
-                                            (when (and (<= 0 init) (<= 0 extremum) (= (CountedLoopInfo''constantMaxTripCount-1 cli) (inc (quot (- extremum init) stride))))
-                                                (Graph''add-2 (:graph input), (ZeroExtendNode'new-4 input, AddressLowering'INT_BITS, AddressLowering'ADDRESS_BITS, true))
-                                            )
-                                        )
-                                    )
-                                    (when (and (= (:iv cli) iv) (= (InductionVariable'''direction-1 iv) :Direction'Up) (some? (CountedLoopInfo''getOverFlowGuard-1 cli)))
-                                        (Graph''add-2 (:graph input), (ZeroExtendNode'new-4 input, AddressLowering'INT_BITS, AddressLowering'ADDRESS_BITS, true))
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-            (Graph''maybeAddOrUnique-2 (:graph input), (SignExtendNode'create-2 input, AddressLowering'ADDRESS_BITS))
-        )
-    )
-
-    ;;;
-     ; Given that Add(a, cst) is always positive, performs the following: ZeroExtend(Add(a, cst)) -> Add(SignExtend(a), SignExtend(cst)).
-     ;;
-    (defn- #_"ZeroExtendNode" AddressLowering'optimizeAdd-4 [#_"ZeroExtendNode" node, #_"ConstantNode" constant, #_"ValueNode" other, #_"LoopEx" _loop]
-        (Node''replaceAtUsages-2 node, (Graph''add-2 (:graph node), (AddNode'new-2 (AddressLowering'signExtend-2 other, _loop), (ConstantNode'forLong-2 (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 constant)), (:graph node)))))
-    )
-
     (defn- #_"boolean" AddressLowering'applicableToImplicitZeroExtend-1 [#_"ZeroExtendNode" node]
         (and (:inputAlwaysPositive node) (= (IntegerConvertNode''getInputBits-1 node) AddressLowering'INT_BITS) (= (IntegerConvertNode''getResultBits-1 node) AddressLowering'ADDRESS_BITS))
     )
 
-    (defn- #_"void" AddressLowering'tryOptimize-2 [#_"OffsetAddressNode" offsetAddress, #_"LoopEx" _loop]
-        (loop-when [#_"InductionVariable" iv (get (LoopEx''getInductionVariables-1 _loop) (:offset offsetAddress))] (some? iv)
-            (when (satisfies? DerivedInductionVariable iv)
-                (let [
-                    #_"ValueNode" value (InductionVariable'''valueNode-1 iv)
-                ]
-                    (when-not (Node''isDeleted-1 value)
-                        (when (and (satisfies? ZeroExtendNode value) (AddressLowering'applicableToImplicitZeroExtend-1 value))
-                            (let [
-                                #_"ValueNode" input (Unary'''getValue-1 value)
-                            ]
-                                (when (satisfies? AddNode input)
-                                    (cond
-                                        (satisfies? ConstantNode (:x input)) (§ ass! value (AddressLowering'optimizeAdd-4 value, (:x input), (:y input), _loop))
-                                        (satisfies? ConstantNode (:y input)) (§ ass! value (AddressLowering'optimizeAdd-4 value, (:y input), (:x input), _loop))
-                                    )
-                                )
-                            )
-                        )
-                        (recur (DerivedInductionVariable''getBase-1 iv))
-                    )
-                )
-            )
-        )
-        nil
-    )
-
     (defn #_"void" AddressLowering'preProcess-1 [#_"Graph" graph]
-        (when (Graph''hasLoops-1 graph)
-            (let [
-                #_"LoopsData" loopsData (LoopsData'new-1 graph)
-            ]
-                (LoopsData''detectedCountedLoops-1 loopsData)
-                (doseq [#_"LoopEx" _loop (LoopsData''countedLoops-1 loopsData)]
-                    (doseq [#_"OffsetAddressNode" offsetAdressNode (filter #(satisfies? OffsetAddressNode %) (LoopFragment'''nodes-1 (LoopEx''whole-1 _loop)))]
-                        (AddressLowering'tryOptimize-2 offsetAdressNode, _loop)
-                    )
-                )
-            )
-        )
         nil
     )
 
@@ -17139,21 +16336,6 @@ ZeroExtendNode'new-4
 
     (defn #_"this" Block''setDominator-2 [#_"Block" this, #_"Block" dominator]
         (assoc this :dominator dominator, :domDepth (inc (:domDepth dominator)))
-    )
-
-    ;;;
-     ; Return the LoopExitNode for this block if it exists.
-     ;;
-    (defn #_"LoopExitNode" Block''getLoopExit-1 [#_"Block" this]
-        (condp satisfies? (:beginNode this)
-            BeginNode
-                (when (satisfies? LoopExitNode (:next (:beginNode this)))
-                    (:next (:beginNode this))
-                )
-            LoopExitNode
-                (:beginNode this)
-            nil
-        )
     )
 
     (defn #_"int" Block''getLoopDepth-1 [#_"Block" this]
@@ -22082,7 +21264,7 @@ ZeroExtendNode'new-4
     ;;;
      ; @param newNodesMark only the {@linkplain Graph#getNodesSince(int) new nodes} specified by this mark are processed
      ;;
-    (defn #_"void" CanonicalizerPhase''applyIncremental-3m [#_"CanonicalizerPhase" this, #_"Graph" graph, #_"int" newNodesMark]
+    (defn #_"void" CanonicalizerPhase''applyIncremental-3m [#_"CanonicalizerPhase" this, #_"Graph" graph, #_"int" newNodesMark]
         (§ ass! graph (Phase'''run-3 (CanonicalizerInstance'new-3 this, nil, newNodesMark), graph, nil))
         nil
     )
@@ -26003,169 +25185,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CountedLoopInfo []
-    (defn #_"CountedLoopInfo" CountedLoopInfo'new-6 [#_"LoopEx" _loop, #_"InductionVariable" iv, #_"IfNode" ifNode, #_"ValueNode" end, #_"boolean" oneOff, #_"AbstractBeginNode" body]
-        (merge (CountedLoopInfo'class.)
-            (hash-map
-                #_"LoopEx" :loop _loop
-                #_"InductionVariable" :iv iv
-                #_"ValueNode" :end end
-                #_"boolean" :oneOff oneOff
-                #_"AbstractBeginNode" :body body
-                #_"IfNode" :ifNode ifNode
-            )
-        )
-    )
-
-    ;;;
-     ; Returns a node that computes the maximum trip count of this loop. That is the trip count of
-     ; this loop assuming it is not exited by an other exit than the {@linkplain #getLimitTest()
-     ; count check}.
-     ;
-     ; This count is exact if #isExactTripCount() returns true.
-     ;
-     ; THIS VALUE SHOULD BE TREATED AS UNSIGNED.
-     ;;
-    (defn #_"ValueNode" CountedLoopInfo''maxTripCountNode-1 [#_"CountedLoopInfo" this]
-        (CountedLoopInfo''maxTripCountNode-2 this, false)
-    )
-
-    ;;;
-     ; Returns a node that computes the maximum trip count of this loop. That is the trip count of
-     ; this loop assuming it is not exited by an other exit than the {@linkplain #getLimitTest()
-     ; count check}.
-     ;
-     ; This count is exact if #isExactTripCount() returns true.
-     ;
-     ; THIS VALUE SHOULD BE TREATED AS UNSIGNED.
-     ;
-     ; @param assumePositive if true the check that the loop is entered at all will be omitted.
-     ;;
-    (defn #_"ValueNode" CountedLoopInfo''maxTripCountNode-2 [#_"CountedLoopInfo" this, #_"boolean" assumePositive]
-        (let [
-            #_"Graph" graph (:graph (InductionVariable'''valueNode-1 (:iv this)))
-            #_"Stamp" stamp (:stamp (InductionVariable'''valueNode-1 (:iv this)))
-            [#_"ValueNode" absStride #_"ValueNode" range #_"ValueNode" max #_"ValueNode" min]
-                (if (= (InductionVariable'''direction-1 (:iv this)) :Direction'Up)
-                    [
-                        (InductionVariable'''strideNode-1 (:iv this))
-                        (MathUtil'sub-3 graph, (:end this), (InductionVariable'''initNode-1 (:iv this)))
-                        (:end this)
-                        (InductionVariable'''initNode-1 (:iv this))
-                    ]
-                    [
-                        (Graph''maybeAddOrUnique-2 graph, (NegateNode'create-1 (InductionVariable'''strideNode-1 (:iv this))))
-                        (MathUtil'sub-3 graph, (InductionVariable'''initNode-1 (:iv this)), (:end this))
-                        (InductionVariable'''initNode-1 (:iv this))
-                        (:end this)
-                    ]
-                )
-            #_"ConstantNode" one (ConstantNode'forIntegerStamp-3 stamp, 1, graph)
-            range (if (:oneOff this) (MathUtil'add-3 graph, range, one) range)
-            ;; round-away-from-zero divison: (range + stride -/+ 1) / stride
-            #_"ValueNode" denominator (MathUtil'add-3 graph, range, (MathUtil'sub-3 graph, absStride, one))
-            #_"ValueNode" div (MathUtil'unsignedDivBefore-4 graph, (LoopEx''entryPoint-1 (:loop this)), denominator, absStride)
-        ]
-            (if assumePositive
-                div
-                (Graph''add-2 graph, (ConditionalNode'new-3 (Graph''add-2 graph, (IntegerLessThanNode'new-2 max, min)), (ConstantNode'forIntegerStamp-3 stamp, 0, graph), div))
-            )
-        )
-    )
-
-    ;;;
-     ; @return true if the loop has constant bounds
-     ;;
-    (defn #_"boolean" CountedLoopInfo''isConstantMaxTripCount-1 [#_"CountedLoopInfo" this]
-        (and (satisfies? ConstantNode (:end this)) (InductionVariable'''isConstantInit-1 (:iv this)) (InductionVariable'''isConstantStride-1 (:iv this)))
-    )
-
-    ;;;
-     ; Compute the raw value of the trip count for this loop. THIS IS AN UNSIGNED VALUE!
-     ;;
-    (defn- #_"long" CountedLoopInfo''rawConstantMaxTripCount-1 [#_"CountedLoopInfo" this]
-        (let [
-            #_"long" endValue (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:end this)))
-            #_"long" initValue (InductionVariable'''constantInit-1 (:iv this))
-            [#_"long" range #_"long" absStride]
-                (if (= (InductionVariable'''direction-1 (:iv this)) :Direction'Up)
-                    (if (< endValue initValue)
-                        (§ return 0)
-                        [(- endValue (InductionVariable'''constantInit-1 (:iv this))) (InductionVariable'''constantStride-1 (:iv this))]
-                    )
-                    (if (< initValue endValue)
-                        (§ return 0)
-                        [(- (InductionVariable'''constantInit-1 (:iv this)) endValue) (- (InductionVariable'''constantStride-1 (:iv this)))]
-                    )
-                )
-            range (if (:oneOff this) (inc range) range)
-        ]
-            (Long/divideUnsigned (dec (+ range absStride)), absStride)
-        )
-    )
-
-    (defn #_"UnsignedLong" CountedLoopInfo''constantMaxTripCount-1 [#_"CountedLoopInfo" this]
-        (UnsignedLong'new-1 (CountedLoopInfo''rawConstantMaxTripCount-1 this))
-    )
-
-    (defn #_"boolean" CountedLoopInfo''isExactTripCount-1 [#_"CountedLoopInfo" this]
-        (= (count (LoopBeginNode''loopExits-1 (LoopEx''loopBegin-1 (:loop this)))) 1)
-    )
-
-    #_unused
-    (defn #_"ValueNode" CountedLoopInfo''exactTripCountNode-1 [#_"CountedLoopInfo" this]
-        (CountedLoopInfo''maxTripCountNode-1 this)
-    )
-
-    (defn #_"boolean" CountedLoopInfo''isConstantExactTripCount-1 [#_"CountedLoopInfo" this]
-        (CountedLoopInfo''isConstantMaxTripCount-1 this)
-    )
-
-    #_unused
-    (defn #_"UnsignedLong" CountedLoopInfo''constantExactTripCount-1 [#_"CountedLoopInfo" this]
-        (CountedLoopInfo''constantMaxTripCount-1 this)
-    )
-
-    (defn #_"ValueNode" CountedLoopInfo''getStart-1 [#_"CountedLoopInfo" this]
-        (InductionVariable'''initNode-1 (:iv this))
-    )
-
-    (defn #_"GuardingNode" CountedLoopInfo''getOverFlowGuard-1 [#_"CountedLoopInfo" this]
-        (:overflowGuard (LoopEx''loopBegin-1 (:loop this)))
-    )
-
-    (defn #_"GuardingNode" CountedLoopInfo''createOverFlowGuard-1 [#_"CountedLoopInfo" this]
-        (or (CountedLoopInfo''getOverFlowGuard-1 this)
-            (let [
-                #_"IntegerStamp" stamp (:stamp (InductionVariable'''valueNode-1 (:iv this)))
-                #_"Graph" graph (:graph (InductionVariable'''valueNode-1 (:iv this)))
-                #_"ConstantNode" one (ConstantNode'forIntegerStamp-3 stamp, 1, graph)
-                #_"CompareNode" cond ;; we use a negated guard with a < condition to achieve a >=
-                    (if (= (InductionVariable'''direction-1 (:iv this)) :Direction'Up)
-                        (let [
-                            #_"ValueNode" v1 (MathUtil'sub-3 graph, (ConstantNode'forIntegerStamp-3 stamp, (NumUtil'maxValue-1 (:bits stamp)), graph), (MathUtil'sub-3 graph, (InductionVariable'''strideNode-1 (:iv this)), one))
-                        ]
-                            (Graph''add-2 graph, (IntegerLessThanNode'new-2 (if (:oneOff this) (MathUtil'sub-3 graph, v1, one) v1), (:end this)))
-                        )
-                        (let [
-                            #_"ValueNode" v1 (MathUtil'add-3 graph, (ConstantNode'forIntegerStamp-3 stamp, (NumUtil'minValue-1 (:bits stamp)), graph), (MathUtil'sub-3 graph, one, (InductionVariable'''strideNode-1 (:iv this))))
-                        ]
-                            (Graph''add-2 graph, (IntegerLessThanNode'new-2 (:end this), (if (:oneOff this) (MathUtil'add-3 graph, v1, one) v1)))
-                        )
-                    )
-                #_"GuardingNode" overflowGuard (Graph''add-2 graph, (GuardNode'new-5 cond, (AbstractBeginNode'prevBegin-1 (LoopEx''entryPoint-1 (:loop this))), :DeoptimizationReason'LoopLimitCheck, :DeoptimizationAction'InvalidateRecompile, true))
-                _ (§ ass! (LoopEx''loopBegin-1 (:loop this)) (LoopBeginNode''setOverflowGuard-2 (LoopEx''loopBegin-1 (:loop this)), overflowGuard))
-            ]
-                overflowGuard
-            )
-        )
-    )
-
-    (defn #_"IntegerStamp" CountedLoopInfo''getStamp-1 [#_"CountedLoopInfo" this]
-        (:stamp (InductionVariable'''valueNode-1 (:iv this)))
-    )
-)
-
 (class-ns Data []
     (defn #_"Data" Data'new-2 [#_"int" alignment, #_"int" size]
         (merge (Data'class.)
@@ -26346,155 +25365,6 @@ ZeroExtendNode'new-4
 
     (defn #_"int" DefUseTree''usageCount-1 [#_"DefUseTree" this]
         (count (:uses this))
-    )
-)
-
-(class-ns DefaultLoopPolicies [LoopPolicies]
-    (defn #_"DefaultLoopPolicies" DefaultLoopPolicies'new-0 []
-        (DefaultLoopPolicies'class.)
-    )
-
-    (defm DefaultLoopPolicies LoopPolicies
-        (#_"boolean" LoopPolicies'''shouldPeel-3 [#_"DefaultLoopPolicies" this, #_"LoopEx" _loop, #_"ControlFlowGraph" cfg]
-            (let [
-                #_"LoopBeginNode" loopBegin (LoopEx''loopBegin-1 _loop)
-            ]
-                (and (< GraalOptions'minimumPeelProbability (:probability (ControlFlowGraph''blockFor-2 cfg, (LoopBeginNode''forwardEnd-1 loopBegin))))
-                    (< (+ (LoopEx''size-1 _loop) (Graph''getNodeCount-1 (:graph loopBegin))) GraalOptions'maximumDesiredSize)
-                    ;; check whether we're allowed to peel this loop
-                    (LoopEx''canDuplicateLoop-1 _loop)
-                )
-            )
-        )
-
-        (#_"boolean" LoopPolicies'''shouldFullUnroll-2 [#_"DefaultLoopPolicies" this, #_"LoopEx" _loop]
-            (and (LoopEx''isCounted-1 _loop) (CountedLoopInfo''isConstantMaxTripCount-1 (:counted _loop))
-                (let [
-                    #_"CountedLoopInfo" counted (:counted _loop)
-                    #_"UnsignedLong" maxTrips (CountedLoopInfo''constantMaxTripCount-1 counted)
-                ]
-                    (if (zero? maxTrips)
-                        (LoopEx''canDuplicateLoop-1 _loop)
-                        (let [
-                            #_"int" maxNodes (if (and (CountedLoopInfo''isExactTripCount-1 counted) (CountedLoopInfo''isConstantExactTripCount-1 counted)) GraalOptions'exactFullUnrollMaxNodes GraalOptions'fullUnrollMaxNodes)
-                            maxNodes (min maxNodes (max 0 (- GraalOptions'maximumDesiredSize (Graph''getNodeCount-1 (:graph (LoopEx''loopBegin-1 _loop))))))
-                            #_"int" size (max 1 (- (LoopEx''size-1 _loop) 1 (count (AbstractMergeNode''phis-1 (LoopEx''loopBegin-1 _loop)))))
-                        ]
-                            ;; The check below should not throw ArithmeticException because:
-                            ;; maxTrips is guaranteed to be >= 1 by the check above
-                            ;; - maxTrips * size can not overfow because:
-                            ;;   - maxTrips <= FullUnrollMaxIterations <= Integer.MAX_VALUE
-                            ;;   - 1 <= size <= Integer.MAX_VALUE
-                            (and (UnsignedLong''isLessOrEqualTo-2 maxTrips, GraalOptions'fullUnrollMaxIterations)
-                                (UnsignedLong''isLessOrEqualTo-2 (UnsignedLong''times-2 (UnsignedLong''minus-2 maxTrips, 1), size), maxNodes)
-                                ;; check whether we're allowed to unroll this loop
-                                (LoopEx''canDuplicateLoop-1 _loop)
-                            )
-                        )
-                    )
-                )
-            )
-        )
-
-        (#_"boolean" LoopPolicies'''shouldPartiallyUnroll-2 [#_"DefaultLoopPolicies" this, #_"LoopEx" _loop]
-            (let [
-                #_"LoopBeginNode" loopBegin (LoopEx''loopBegin-1 _loop)
-            ]
-                (and (LoopEx''isCounted-1 _loop)
-                    (let [
-                        #_"int" maxNodes GraalOptions'exactPartialUnrollMaxNodes
-                        maxNodes (min maxNodes (max 0 (- GraalOptions'maximumDesiredSize (Graph''getNodeCount-1 (:graph (LoopEx''loopBegin-1 _loop))))))
-                        #_"int" size (max 1 (- (LoopEx''size-1 _loop) 1 (count (AbstractMergeNode''phis-1 (LoopEx''loopBegin-1 _loop)))))
-                        #_"int" unrollFactor (:unrollFactor loopBegin)
-                    ]
-                        (when (= unrollFactor 1)
-                            (let [
-                                #_"double" loopFrequency (:loopFrequency loopBegin)
-                            ]
-                                (when (and (LoopBeginNode''isSimpleLoop-1 loopBegin) (< loopFrequency 5.0))
-                                    (§ return false)
-                                )
-                                (§ ass! loopBegin (assoc loopBegin :loopOrigFrequency loopFrequency))
-                            )
-                        )
-                        (let [
-                            #_"int" maxUnroll GraalOptions'unrollMaxIterations
-                            ;; Now correct size for the next unroll. UnrollMaxIterations == 1 means perform
-                            ;; the pre/main/post transformation but don't actually unroll the main loop.
-                            size (+ size size)
-                        ]
-                            (and (or (and (= maxUnroll 1) (LoopBeginNode''isSimpleLoop-1 loopBegin)) (and (<= size maxNodes) (< unrollFactor maxUnroll)))
-                                ;; Will the next unroll fit?
-                                (<= (* unrollFactor 2) (int (:loopOrigFrequency loopBegin)))
-                                ;; check whether we're allowed to unroll this loop
-                                (loop-when [#_"seq" s (seq (LoopFragment'''nodes-1 (LoopEx''inside-1 _loop)))] (some? s) => true
-                                    (let [
-                                        #_"Node" node (first s)
-                                    ]
-                                        (when-not (or (satisfies? ControlFlowAnchorNode node) (satisfies? InvokeNode node)) => false
-                                            (recur (next s))
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-
-        (#_"boolean" LoopPolicies'''shouldTryUnswitch-2 [#_"DefaultLoopPolicies" this, #_"LoopEx" _loop]
-            (let [
-                #_"LoopBeginNode" loopBegin (LoopEx''loopBegin-1 _loop)
-            ]
-                (and (< 1.0 (:loopFrequency loopBegin)) (<= (:unswitches loopBegin) GraalOptions'loopMaxUnswitch))
-            )
-        )
-
-        (#_"boolean" LoopPolicies'''shouldUnswitch-3 [#_"DefaultLoopPolicies" this, #_"LoopEx" _loop, #_"ControlSplitNode*" controlSplits]
-            (let [
-                #_"Graph" graph (:graph (LoopEx''loopBegin-1 _loop))
-                #_"sorted {Node}" branchNodes (sorted-set)
-                #_"int" phis
-                    (loop-when [phis 0 #_"seq" s (seq controlSplits)] (some? s) => phis
-                        (let [
-                            #_"ControlSplitNode" controlSplit (first s)
-                            _
-                                (doseq [#_"Node" successor (Node''successors-1 controlSplit)]
-                                    ;; this may count twice because of fall-through in switches
-                                    (§ ass! branchNodes (LoopEx''nodesInLoopBranch-3 _loop, branchNodes, successor))
-                                )
-                            #_"Block" postDomBlock (:postdominator (ControlFlowGraph''blockFor-2 (:cfg (:lexData _loop)), controlSplit))
-                            phis
-                                (when (some? postDomBlock) => phis
-                                    (+ phis (count (AbstractMergeNode''phis-1 (:beginNode postDomBlock))))
-                                )
-                        ]
-                            (recur phis (next s))
-                        )
-                    )
-                #_"int" maxDiff
-                    (min (+ GraalOptions'loopUnswitchTrivial (int (* GraalOptions'loopUnswitchFrequencyBoost (+ (:loopFrequency (LoopEx''loopBegin-1 _loop)) -1.0 phis))))
-                        GraalOptions'loopUnswitchMaxIncrease
-                        (- GraalOptions'maximumDesiredSize (Graph''getNodeCount-1 graph))
-                    )
-                #_"int" inBranchTotal (count branchNodes)
-                #_"int'" v'stateNodesCount (volatile! 0)
-            ]
-                (VirtualState'''applyToVirtual-2 (:stateAfter (LoopEx''loopBegin-1 _loop)),
-                    (reify VirtualClosure
-                        (#_"void" VirtualClosure'''apply-2 [#_"VirtualClosure" _, #_"VirtualState" vs]
-                            (vswap! v'stateNodesCount inc)
-                            nil
-                        )
-                    )
-                )
-                (and (<= (- (LoopEx''size-1 _loop) (count (AbstractMergeNode''phis-1 (LoopEx''loopBegin-1 _loop))) @v'stateNodesCount 1 inBranchTotal) maxDiff)
-                    ;; check whether we're allowed to unswitch this loop
-                    (LoopEx''canDuplicateLoop-1 _loop)
-                )
-            )
-        )
     )
 )
 
@@ -30544,10 +29414,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"int" Graph''getMark-1 [#_"Graph" this]
-        (count (:gNodes this))
-    )
-
     ;;;
      ; Gets the number of live nodes in this graph. That is the number of nodes which have been
      ; added to the graph minus the number of deleted nodes.
@@ -31075,371 +29941,6 @@ ZeroExtendNode'new-4
 
         (#_"boolean" NodePlugin'''handleInstanceOf-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
             false
-        )
-    )
-)
-
-(class-ns InductionVariable []
-    (defn #_"InductionVariable" InductionVariable'new-1 [#_"LoopEx" _loop]
-        (merge (InductionVariable'class.)
-            (hash-map
-                #_"LoopEx" :loop _loop
-            )
-        )
-    )
-)
-
-(class-ns BasicInductionVariable [InductionVariable]
-    (defn #_"BasicInductionVariable" BasicInductionVariable'new-5 [#_"LoopEx" _loop, #_"ValuePhiNode" phi, #_"ValueNode" init, #_"ValueNode" rawStride, #_"BinaryArithmeticNode" op]
-        (merge (BasicInductionVariable'class.) (InductionVariable'new-1 _loop)
-            (hash-map
-                #_"ValuePhiNode" :phi phi
-                #_"ValueNode" :init init
-                #_"ValueNode" :rawStride rawStride
-                #_"BinaryArithmeticNode" :op op
-            )
-        )
-    )
-
-    (defm BasicInductionVariable InductionVariable
-        (#_"Graph" InductionVariable'''graph-1 [#_"BasicInductionVariable" this]
-            (:graph (:phi this))
-        )
-
-        (#_"Direction" InductionVariable'''direction-1 [#_"BasicInductionVariable" this]
-            (let [
-                #_"Stamp" stamp (:stamp (:rawStride this))
-            ]
-                (when (satisfies? IntegerStamp stamp)
-                    (let [
-                        #_"Direction" dir
-                            (cond
-                                (IntegerStamp''isStrictlyPositive-1 stamp) :Direction'Up
-                                (IntegerStamp''isStrictlyNegative-1 stamp) :Direction'Down
-                            )
-                    ]
-                        (when (some? dir)
-                            (if (satisfies? AddNode (:op this)) dir (Direction''opposite-1 dir))
-                        )
-                    )
-                )
-            )
-        )
-
-        (#_"ValuePhiNode" InductionVariable'''valueNode-1 [#_"BasicInductionVariable" this]
-            (:phi this)
-        )
-
-        (#_"ValueNode" InductionVariable'''initNode-1 [#_"BasicInductionVariable" this]
-            (:init this)
-        )
-
-        (#_"ValueNode" InductionVariable'''strideNode-1 [#_"BasicInductionVariable" this]
-            (condp satisfies? (:op this)
-                AddNode (:rawStride this)
-                SubNode (Graph''add-2 (InductionVariable'''graph-1 this), (NegateNode'new-1 (:rawStride this)))
-            )
-        )
-
-        (#_"boolean" InductionVariable'''isConstantInit-1 [#_"BasicInductionVariable" this]
-            (satisfies? ConstantNode (:init this))
-        )
-
-        (#_"boolean" InductionVariable'''isConstantStride-1 [#_"BasicInductionVariable" this]
-            (satisfies? ConstantNode (:rawStride this))
-        )
-
-        (#_"long" InductionVariable'''constantInit-1 [#_"BasicInductionVariable" this]
-            (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:init this)))
-        )
-
-        (#_"long" InductionVariable'''constantStride-1 [#_"BasicInductionVariable" this]
-            (condp satisfies? (:op this)
-                AddNode    (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:rawStride this)))
-                SubNode (- (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:rawStride this))))
-            )
-        )
-
-        (#_"ValueNode" InductionVariable'''exitValueNode-1 [#_"BasicInductionVariable" this]
-            (let [
-                #_"Stamp" stamp (:stamp (:phi this))
-                #_"ValueNode" maxTripCount (CountedLoopInfo''maxTripCountNode-1 (:counted (:loop this)))
-                _
-                    (when-not (Stamp'''isCompatible-2s (:stamp maxTripCount), stamp)
-                        (§ ass maxTripCount (IntegerConvertNode'convert-3g maxTripCount, stamp, (InductionVariable'''graph-1 this)))
-                    )
-            ]
-                (MathUtil'add-3 (InductionVariable'''graph-1 this), (MathUtil'mul-3 (InductionVariable'''graph-1 this), (InductionVariable'''strideNode-1 this), maxTripCount), (InductionVariable'''initNode-1 this))
-            )
-        )
-
-        (#_"boolean" InductionVariable'''isConstantExtremum-1 [#_"BasicInductionVariable" this]
-            (and (InductionVariable'''isConstantInit-1 this) (InductionVariable'''isConstantStride-1 this) (CountedLoopInfo''isConstantMaxTripCount-1 (:counted (:loop this))))
-        )
-
-        (#_"long" InductionVariable'''constantExtremum-1 [#_"BasicInductionVariable" this]
-            (let [
-                #_"UnsignedLong" tripCount (CountedLoopInfo''constantMaxTripCount-1 (:counted (:loop this)))
-            ]
-                (if (UnsignedLong''isLessThan-2 tripCount, 1)
-                    (InductionVariable'''constantInit-1 this)
-                    (UnsignedLong''asLong-1 (UnsignedLong''wrappingPlus-2 (UnsignedLong''wrappingTimes-2 (UnsignedLong''minus-2 tripCount, 1), (InductionVariable'''constantStride-1 this)), (InductionVariable'''constantInit-1 this)))
-                )
-            )
-        )
-
-        (#_"void" InductionVariable'''deleteUnusedNodes-1 [#_"BasicInductionVariable" this]
-            nil
-        )
-    )
-)
-
-;;;
- ; Base class of the derived induction variables.
- ;;
-(class-ns DerivedInductionVariable [InductionVariable]
-    (defn #_"DerivedInductionVariable" DerivedInductionVariable'new-2 [#_"LoopEx" _loop, #_"InductionVariable" base]
-        (merge (DerivedInductionVariable'class.) (InductionVariable'new-1 _loop)
-            (hash-map
-                #_"InductionVariable" :base base
-            )
-        )
-    )
-
-    (defm DerivedInductionVariable InductionVariable
-        (#_"Graph" InductionVariable'''graph-1 [#_"DerivedInductionVariable" this]
-            (InductionVariable'''graph-1 (:base this))
-        )
-    )
-
-    (defn #_"InductionVariable" DerivedInductionVariable''getBase-1 [#_"DerivedInductionVariable" this]
-        (:base this)
-    )
-)
-
-(class-ns DerivedConvertedInductionVariable [DerivedInductionVariable, InductionVariable]
-    (defn #_"DerivedConvertedInductionVariable" DerivedConvertedInductionVariable'new-4 [#_"LoopEx" _loop, #_"InductionVariable" base, #_"Stamp" stamp, #_"ValueNode" value]
-        (merge (DerivedConvertedInductionVariable'class.) (DerivedInductionVariable'new-2 _loop, base)
-            (hash-map
-                #_"Stamp" :stamp stamp
-                #_"ValueNode" :value value
-            )
-        )
-    )
-
-    (defm DerivedConvertedInductionVariable InductionVariable
-        (#_"ValueNode" InductionVariable'''valueNode-1 [#_"DerivedConvertedInductionVariable" this]
-            (:value this)
-        )
-
-        (#_"Direction" InductionVariable'''direction-1 [#_"DerivedConvertedInductionVariable" this]
-            (InductionVariable'''direction-1 (:base this))
-        )
-
-        (#_"ValueNode" InductionVariable'''initNode-1 [#_"DerivedConvertedInductionVariable" this]
-            (IntegerConvertNode'convert-3g (InductionVariable'''initNode-1 (:base this)), (:stamp this), (InductionVariable'''graph-1 this))
-        )
-
-        (#_"ValueNode" InductionVariable'''strideNode-1 [#_"DerivedConvertedInductionVariable" this]
-            (IntegerConvertNode'convert-3g (InductionVariable'''strideNode-1 (:base this)), (:stamp this), (InductionVariable'''graph-1 this))
-        )
-
-        (#_"boolean" InductionVariable'''isConstantInit-1 [#_"DerivedConvertedInductionVariable" this]
-            (InductionVariable'''isConstantInit-1 (:base this))
-        )
-
-        (#_"boolean" InductionVariable'''isConstantStride-1 [#_"DerivedConvertedInductionVariable" this]
-            (InductionVariable'''isConstantStride-1 (:base this))
-        )
-
-        (#_"long" InductionVariable'''constantInit-1 [#_"DerivedConvertedInductionVariable" this]
-            (InductionVariable'''constantInit-1 (:base this))
-        )
-
-        (#_"long" InductionVariable'''constantStride-1 [#_"DerivedConvertedInductionVariable" this]
-            (InductionVariable'''constantStride-1 (:base this))
-        )
-
-        (#_"ValueNode" InductionVariable'''exitValueNode-1 [#_"DerivedConvertedInductionVariable" this]
-            (IntegerConvertNode'convert-3g (InductionVariable'''exitValueNode-1 (:base this)), (:stamp this), (InductionVariable'''graph-1 this))
-        )
-
-        (#_"boolean" InductionVariable'''isConstantExtremum-1 [#_"DerivedConvertedInductionVariable" this]
-            (InductionVariable'''isConstantExtremum-1 (:base this))
-        )
-
-        (#_"long" InductionVariable'''constantExtremum-1 [#_"DerivedConvertedInductionVariable" this]
-            (InductionVariable'''constantExtremum-1 (:base this))
-        )
-
-        (#_"void" InductionVariable'''deleteUnusedNodes-1 [#_"DerivedConvertedInductionVariable" this]
-            nil
-        )
-    )
-)
-
-(class-ns DerivedOffsetInductionVariable [DerivedInductionVariable, InductionVariable]
-    (defn #_"DerivedOffsetInductionVariable" DerivedOffsetInductionVariable'new-4 [#_"LoopEx" _loop, #_"InductionVariable" base, #_"ValueNode" offset, #_"BinaryArithmeticNode" value]
-        (merge (DerivedOffsetInductionVariable'class.) (DerivedInductionVariable'new-2 _loop, base)
-            (hash-map
-                #_"ValueNode" :offset offset
-                #_"BinaryArithmeticNode" :value value
-            )
-        )
-    )
-
-    (defn- #_"long" DerivedOffsetInductionVariable''op-3l [#_"DerivedOffsetInductionVariable" this, #_"long" b, #_"long" o]
-        (condp satisfies? (:value this)
-            AddNode
-                (+ b o)
-            SubNode
-                (if (= (InductionVariable'''valueNode-1 (:base this)) (:x (:value this)))
-                    (- b o)
-                    (- o b)
-                )
-        )
-    )
-
-    (defn- #_"ValueNode" DerivedOffsetInductionVariable''op-3v [#_"DerivedOffsetInductionVariable" this, #_"ValueNode" b, #_"ValueNode" o]
-        (condp satisfies? (:value this)
-            AddNode
-                (MathUtil'add-3 (InductionVariable'''graph-1 this), b, o)
-            SubNode
-                (if (= (InductionVariable'''valueNode-1 (:base this)) (:x (:value this)))
-                    (MathUtil'sub-3 (InductionVariable'''graph-1 this), b, o)
-                    (MathUtil'sub-3 (InductionVariable'''graph-1 this), o, b)
-                )
-        )
-    )
-
-    (defm DerivedOffsetInductionVariable InductionVariable
-        (#_"Direction" InductionVariable'''direction-1 [#_"DerivedOffsetInductionVariable" this]
-            (InductionVariable'''direction-1 (:base this))
-        )
-
-        (#_"ValueNode" InductionVariable'''valueNode-1 [#_"DerivedOffsetInductionVariable" this]
-            (:value this)
-        )
-
-        (#_"boolean" InductionVariable'''isConstantInit-1 [#_"DerivedOffsetInductionVariable" this]
-            (and (satisfies? ConstantNode (:offset this)) (InductionVariable'''isConstantInit-1 (:base this)))
-        )
-
-        (#_"boolean" InductionVariable'''isConstantStride-1 [#_"DerivedOffsetInductionVariable" this]
-            (InductionVariable'''isConstantStride-1 (:base this))
-        )
-
-        (#_"long" InductionVariable'''constantInit-1 [#_"DerivedOffsetInductionVariable" this]
-            (DerivedOffsetInductionVariable''op-3l this, (InductionVariable'''constantInit-1 (:base this)), (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:offset this))))
-        )
-
-        (#_"long" InductionVariable'''constantStride-1 [#_"DerivedOffsetInductionVariable" this]
-            (if (and (satisfies? SubNode (:value this)) (= (InductionVariable'''valueNode-1 (:base this)) (:y (:value this))))
-                (- (InductionVariable'''constantStride-1 (:base this)))
-                (InductionVariable'''constantStride-1 (:base this))
-            )
-        )
-
-        (#_"ValueNode" InductionVariable'''initNode-1 [#_"DerivedOffsetInductionVariable" this]
-            (DerivedOffsetInductionVariable''op-3v this, (InductionVariable'''initNode-1 (:base this)), (:offset this))
-        )
-
-        (#_"ValueNode" InductionVariable'''strideNode-1 [#_"DerivedOffsetInductionVariable" this]
-            (if (and (satisfies? SubNode (:value this)) (= (InductionVariable'''valueNode-1 (:base this)) (:y (:value this))))
-                (Graph''addOrUniqueWithInputs-2 (InductionVariable'''graph-1 this), (NegateNode'create-1 (InductionVariable'''strideNode-1 (:base this))))
-                (InductionVariable'''strideNode-1 (:base this))
-            )
-        )
-
-        (#_"ValueNode" InductionVariable'''exitValueNode-1 [#_"DerivedOffsetInductionVariable" this]
-            (DerivedOffsetInductionVariable''op-3v this, (InductionVariable'''exitValueNode-1 (:base this)), (:offset this))
-        )
-
-        (#_"boolean" InductionVariable'''isConstantExtremum-1 [#_"DerivedOffsetInductionVariable" this]
-            (and (satisfies? ConstantNode (:offset this)) (InductionVariable'''isConstantExtremum-1 (:base this)))
-        )
-
-        (#_"long" InductionVariable'''constantExtremum-1 [#_"DerivedOffsetInductionVariable" this]
-            (DerivedOffsetInductionVariable''op-3l this, (InductionVariable'''constantExtremum-1 (:base this)), (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:offset this))))
-        )
-
-        (#_"void" InductionVariable'''deleteUnusedNodes-1 [#_"DerivedOffsetInductionVariable" this]
-            nil
-        )
-    )
-)
-
-(class-ns DerivedScaledInductionVariable [DerivedInductionVariable, InductionVariable]
-    (defn #_"DerivedScaledInductionVariable" DerivedScaledInductionVariable'new-4 [#_"LoopEx" _loop, #_"InductionVariable" base, #_"ValueNode" scale, #_"ValueNode" value]
-        (merge (DerivedScaledInductionVariable'class.) (DerivedInductionVariable'new-2 _loop, base)
-            (hash-map
-                #_"ValueNode" :scale scale
-                #_"ValueNode" :value value
-            )
-        )
-    )
-
-    (defn #_"DerivedScaledInductionVariable" DerivedScaledInductionVariable'new-3 [#_"LoopEx" _loop, #_"InductionVariable" base, #_"NegateNode" value]
-        (DerivedScaledInductionVariable'new-4 _loop, base, (ConstantNode'forIntegerStamp-3 (:stamp value), -1, (:graph value)), value)
-    )
-
-    (defm DerivedScaledInductionVariable InductionVariable
-        (#_"ValueNode" InductionVariable'''valueNode-1 [#_"DerivedScaledInductionVariable" this]
-            (:value this)
-        )
-
-        (#_"Direction" InductionVariable'''direction-1 [#_"DerivedScaledInductionVariable" this]
-            (let [
-                #_"Stamp" stamp (:stamp (:scale this))
-            ]
-                (when (satisfies? IntegerStamp stamp)
-                    (cond
-                        (IntegerStamp''isStrictlyPositive-1 stamp)                        (InductionVariable'''direction-1 (:base this))
-                        (IntegerStamp''isStrictlyNegative-1 stamp) (Direction''opposite-1 (InductionVariable'''direction-1 (:base this)))
-                    )
-                )
-            )
-        )
-
-        (#_"ValueNode" InductionVariable'''initNode-1 [#_"DerivedScaledInductionVariable" this]
-            (MathUtil'mul-3 (InductionVariable'''graph-1 this), (InductionVariable'''initNode-1 (:base this)), (:scale this))
-        )
-
-        (#_"ValueNode" InductionVariable'''strideNode-1 [#_"DerivedScaledInductionVariable" this]
-            (MathUtil'mul-3 (InductionVariable'''graph-1 this), (InductionVariable'''strideNode-1 (:base this)), (:scale this))
-        )
-
-        (#_"boolean" InductionVariable'''isConstantInit-1 [#_"DerivedScaledInductionVariable" this]
-            (and (satisfies? ConstantNode (:scale this)) (InductionVariable'''isConstantInit-1 (:base this)))
-        )
-
-        (#_"boolean" InductionVariable'''isConstantStride-1 [#_"DerivedScaledInductionVariable" this]
-            (and (satisfies? ConstantNode (:scale this)) (InductionVariable'''isConstantStride-1 (:base this)))
-        )
-
-        (#_"long" InductionVariable'''constantInit-1 [#_"DerivedScaledInductionVariable" this]
-            (* (InductionVariable'''constantInit-1 (:base this)) (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:scale this))))
-        )
-
-        (#_"long" InductionVariable'''constantStride-1 [#_"DerivedScaledInductionVariable" this]
-            (* (InductionVariable'''constantStride-1 (:base this)) (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:scale this))))
-        )
-
-        (#_"ValueNode" InductionVariable'''exitValueNode-1 [#_"DerivedScaledInductionVariable" this]
-            (MathUtil'mul-3 (InductionVariable'''graph-1 this), (InductionVariable'''exitValueNode-1 (:base this)), (:scale this))
-        )
-
-        (#_"boolean" InductionVariable'''isConstantExtremum-1 [#_"DerivedScaledInductionVariable" this]
-            (and (satisfies? ConstantNode (:scale this)) (InductionVariable'''isConstantExtremum-1 (:base this)))
-        )
-
-        (#_"long" InductionVariable'''constantExtremum-1 [#_"DerivedScaledInductionVariable" this]
-            (* (InductionVariable'''constantExtremum-1 (:base this)) (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:scale this))))
-        )
-
-        (#_"void" InductionVariable'''deleteUnusedNodes-1 [#_"DerivedScaledInductionVariable" this]
-            (GraphUtil'tryKillUnused-1 (:scale this))
-            nil
         )
     )
 )
@@ -40132,1446 +38633,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoopEx []
-    (defn #_"LoopEx" LoopEx'new-2 [#_"Loop" _loop, #_"LoopsData" data]
-        (merge (LoopEx'class.)
-            (hash-map
-                #_"Loop" :loop _loop
-                #_"LoopFragmentInside" :inside nil
-                #_"LoopFragmentWhole" :whole nil
-                #_"CountedLoopInfo" :counted nil
-                #_"LoopsData" :lexData data
-                #_"{Node InductionVariable}" :ivs nil
-            )
-        )
-    )
-
-    (defn #_"LoopFragmentInside" LoopEx''inside-1 [#_"LoopEx" this]
-        (when (nil? (:inside this))
-            (§ ass! this (assoc this :inside (LoopFragmentInside'new-1e this)))
-        )
-        (:inside this)
-    )
-
-    (defn #_"LoopFragmentWhole" LoopEx''whole-1 [#_"LoopEx" this]
-        (when (nil? (:whole this))
-            (§ ass! this (assoc this :whole (LoopFragmentWhole'new-1e this)))
-        )
-        (:whole this)
-    )
-
-    (defn #_"this" LoopEx''invalidateFragments-1 [#_"LoopEx" this]
-        (let [
-            this (assoc this :inside nil)
-            this (assoc this :whole nil)
-        ]
-            this
-        )
-    )
-
-    (defn #_"boolean" LoopEx''isOutsideLoop-2 [#_"LoopEx" this, #_"Node" node]
-        (not (LoopFragment''contains-2 (LoopEx''whole-1 this), node))
-    )
-
-    (defn #_"LoopBeginNode" LoopEx''loopBegin-1 [#_"LoopEx" this]
-        (:beginNode (:header (:loop this)))
-    )
-
-    (defn #_"FixedNode" LoopEx''entryPoint-1 [#_"LoopEx" this]
-        (LoopBeginNode''forwardEnd-1 (LoopEx''loopBegin-1 this))
-    )
-
-    (defn #_"boolean" LoopEx''isCounted-1 [#_"LoopEx" this]
-        (some? (:counted this))
-    )
-
-    (defn #_"int" LoopEx''size-1 [#_"LoopEx" this]
-        (count (LoopFragment'''nodes-1 (LoopEx''whole-1 this)))
-    )
-
-    (defn #_"boolean" LoopEx''reassociateInvariants-1 [#_"LoopEx" this]
-        (let [
-            #_"Graph" graph (:graph (LoopEx''loopBegin-1 this))
-            #_"int" mark (Graph''getMark-1 graph)
-            #_"fn boolean [ValueNode]" f'invariant-1 #(and (< (:nid %) mark) (LoopEx''isOutsideLoop-2 this, %)) ;; newly created nodes are unknown
-        ]
-            (loop-when [#_"int" n 0 #_"seq" s (seq (filter #(satisfies? BinaryArithmeticNode %) (LoopFragment'''nodes-1 (LoopEx''whole-1 this))))] (some? s) => (pos? n)
-                (let [
-                    #_"BinaryArithmeticNode" binary (first s)
-                    n
-                        (when (BinaryArithmeticNode'''isAssociative-1 binary) => n
-                            (let [
-                                #_"ValueNode" result (BinaryArithmeticNode'reassociate-4 binary, f'invariant-1, (:x binary), (:y binary))
-                            ]
-                                (when-not (= result binary) => n
-                                    (let [
-                                        result
-                                            (when-not (Node''isAlive-1 result) => result
-                                                (Graph''addOrUniqueWithInputs-2 graph, result)
-                                            )
-                                        _ (§ ass! binary (Node''replaceAtUsages-2 binary, result))
-                                    ]
-                                        (GraphUtil'killWithUnusedFloatingInputs-1 binary)
-                                        (inc n)
-                                    )
-                                )
-                            )
-                        )
-                ]
-                    (recur n (next s))
-                )
-            )
-        )
-    )
-
-    (defn #_"boolean" LoopEx''detectCounted-1 [#_"LoopEx" this]
-        (let [
-            #_"LoopBeginNode" loopBegin (LoopEx''loopBegin-1 this)
-            #_"FixedNode" _next
-                (loop-when-recur [_next (:next loopBegin)]
-                                 (or (satisfies? FixedGuardNode _next) (satisfies? ValueAnchorNode _next))
-                                 [(:next _next)]
-                              => _next
-                )
-        ]
-            (and (satisfies? IfNode _next)
-                (let [
-                    #_"IfNode" ifNode _next
-                    #_"boolean" negated? false
-                ]
-                    (when-not (LoopBeginNode''isLoopExit-2 loopBegin, (:falseSuccessor ifNode))
-                        (when-not (LoopBeginNode''isLoopExit-2 loopBegin, (:trueSuccessor ifNode))
-                            (§ return false)
-                        )
-                        (§ ass negated? true)
-                    )
-                    (let [
-                        #_"LogicNode" logic (:logic ifNode)
-                    ]
-                        (and (or (satisfies? IntegerLessThanNode logic) (satisfies? IntegerEqualsNode logic))
-                            (let [
-                                [#_"InductionVariable" iv #_"Condition" condition #_"ValueNode" limit]
-                                    (cond
-                                        (LoopEx''isOutsideLoop-2 this, (:x logic))
-                                            (let [
-                                                iv (get (LoopEx''getInductionVariables-1 this) (:y logic))
-                                            ]
-                                                (when (some? iv)
-                                                    [iv (Condition''mirror-1 (:canonical (:condition logic))) (:x logic)]
-                                                )
-                                            )
-                                        (LoopEx''isOutsideLoop-2 this, (:y logic))
-                                            (let [
-                                                iv (get (LoopEx''getInductionVariables-1 this) (:x logic))
-                                            ]
-                                                (when (some? iv)
-                                                    [iv (:canonical (:condition logic)) (:y logic)]
-                                                )
-                                            )
-                                    )
-                            ]
-                                (and (some? condition)
-                                    (let [
-                                        condition (if negated? (Condition''negate-1 condition) condition)
-                                        #_"boolean" oneOff (§ tbd )
-                                    ]
-                                        (condp = condition
-                                            Condition'EQ
-                                                (§ return false)
-                                            Condition'NE
-                                            (do
-                                                (when-not (and (InductionVariable'''isConstantStride-1 iv) (= (abs (InductionVariable'''constantStride-1 iv)) 1))
-                                                    (§ return false)
-                                                )
-                                                (let [
-                                                    #_"IntegerStamp" initStamp (:stamp (InductionVariable'''initNode-1 iv))
-                                                    #_"IntegerStamp" limitStamp (:stamp limit)
-                                                ]
-                                                    (case (InductionVariable'''direction-1 iv)
-                                                        :Direction'Up
-                                                        (do
-                                                            (when (< (:lowerBound limitStamp) (:upperBound initStamp))
-                                                                (§ return false)
-                                                            )
-                                                            (§ ass oneOff false)
-                                                        )
-                                                        :Direction'Down
-                                                        (do
-                                                            (when (< (:lowerBound initStamp) (:upperBound limitStamp))
-                                                                (§ return false)
-                                                            )
-                                                            (§ ass oneOff false)
-                                                        )
-                                                        (§ return false)
-                                                    )
-                                                )
-                                            )
-                                            Condition'LE
-                                            (do
-                                                (when-not (= (InductionVariable'''direction-1 iv) :Direction'Up)
-                                                    (§ return false)
-                                                )
-                                                (§ ass oneOff true)
-                                            )
-                                            Condition'LT
-                                            (do
-                                                (when-not (= (InductionVariable'''direction-1 iv) :Direction'Up)
-                                                    (§ return false)
-                                                )
-                                                (§ ass oneOff false)
-                                            )
-                                            Condition'GE
-                                            (do
-                                                (when-not (= (InductionVariable'''direction-1 iv) :Direction'Down)
-                                                    (§ return false)
-                                                )
-                                                (§ ass oneOff true)
-                                            )
-                                            Condition'GT
-                                            (do
-                                                (when-not (= (InductionVariable'''direction-1 iv) :Direction'Down)
-                                                    (§ return false)
-                                                )
-                                                (§ ass oneOff false)
-                                            )
-                                        )
-                                        (§ ass! this (assoc this :counted (CountedLoopInfo'new-6 this, iv, ifNode, limit, oneOff, (if negated? (:falseSuccessor ifNode) (:trueSuccessor ifNode)))))
-                                        true
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defn #_"sorted {Node}" LoopEx''nodesInLoopBranch-3 [#_"LoopEx" this, #_"sorted {Node}" branchNodes, #_"AbstractBeginNode" branch]
-        (let [
-            [#_"{AbstractBeginNode}" blocks #_"AbstractBeginNode*" exits]
-                (loop-when [blocks #{} exits nil #_"queue [Block]" q [ (ControlFlowGraph''blockFor-2 (:cfg (:lexData this)), branch) ]] (seq q) => [blocks exits]
-                    (let [
-                        [#_"Block" b & q] q
-                    ]
-                        (cond
-                            (some #(= % b) (:loopExits (:loop this))) (recur blocks (conj' exits (:beginNode b)) q)
-                            (contains? blocks (:beginNode b))         (recur blocks        exits                 q)
-                            :else
-                                (recur
-                                    (conj blocks (:beginNode b))
-                                    exits
-                                    (loop-when-recur [q q #_"Block" d (:dominatedSibling b)]
-                                                     (some? d)
-                                                     [(if (some #(= % d) (:loopBlocks (:loop this))) (conj' q d) q) (:dominatedSibling d)]
-                                                  => q
-                                    )
-                                )
-                        )
-                    )
-                )
-        ]
-            (LoopFragment'computeNodes-3 branchNodes, blocks, exits)
-        )
-    )
-
-    (defn- #_"ValueNode" LoopEx'addSub-3 [#_"LoopEx" _loop, #_"ValueNode" op, #_"ValueNode" base]
-        (when (and (satisfies? IntegerStamp (:stamp op)) (or (satisfies? AddNode op) (satisfies? SubNode op)))
-            (cond
-                (and (= (:x op) base) (LoopEx''isOutsideLoop-2 _loop, (:y op))) (:y op)
-                (and (= (:y op) base) (LoopEx''isOutsideLoop-2 _loop, (:x op))) (:x op)
-            )
-        )
-    )
-
-    (defn- #_"ValueNode" LoopEx'mul-3 [#_"LoopEx" _loop, #_"ValueNode" op, #_"ValueNode" base]
-        (condp satisfies? op
-            MulNode
-                (cond
-                    (and (= (:x op) base) (LoopEx''isOutsideLoop-2 _loop, (:y op))) (:y op)
-                    (and (= (:y op) base) (LoopEx''isOutsideLoop-2 _loop, (:x op))) (:x op)
-                )
-            LeftShiftNode
-                (when (and (= (:x op) base) (satisfies? ConstantNode (:y op)))
-                    (ConstantNode'forIntegerStamp-3 (:stamp base), (<< 1 (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 (:y op)))), (:graph base))
-                )
-            nil
-        )
-    )
-
-    ;;;
-     ; Collect all the basic induction variables for the loop and the find any induction variables
-     ; which are derived from the basic ones.
-     ;
-     ; @return a map from node to induction variable
-     ;;
-    (defn- #_"{Node InductionVariable}" LoopEx'findInductionVariables-1 [#_"LoopEx" _loop]
-        (let [
-            #_"LoopBeginNode" loopBegin (LoopEx''loopBegin-1 _loop)
-            #_"AbstractEndNode" forwardEnd (LoopBeginNode''forwardEnd-1 loopBegin)
-            [#_"{Node InductionVariable}" ivs #_"queue [InductionVariable]" queue]
-                (loop-when [ivs {} queue nil #_"seq" s (seq (AbstractMergeNode''valuePhis-1 loopBegin))] (some? s) => [ivs queue]
-                    (let [
-                        #_"PhiNode" phi (first s)
-                        #_"ValueNode" backValue (PhiNode''singleBackValueOrThis-1 phi)
-                        [ivs queue]
-                            (when-not (= backValue phi) => [ivs queue]
-                                (let [
-                                    #_"ValueNode" stride (LoopEx'addSub-3 _loop, backValue, phi)
-                                ]
-                                    (when (some? stride) => [ivs queue]
-                                        (let [
-                                            #_"BasicInductionVariable" biv (BasicInductionVariable'new-5 _loop, phi, (PhiNode''valueAt-2n phi, forwardEnd), stride, backValue)
-                                        ]
-                                            [(assoc ivs phi biv) (conj' queue biv)]
-                                        )
-                                    )
-                                )
-                            )
-                    ]
-                        (recur ivs queue (next s))
-                    )
-                )
-        ]
-            (loop-when [ivs ivs queue queue] (seq queue) => ivs
-                (let [
-                    [#_"InductionVariable" baseIv & queue] queue
-                    #_"ValueNode" baseIvNode (InductionVariable'''valueNode-1 baseIv)
-                    [ivs queue]
-                        (loop-when [ivs ivs queue queue #_"seq" s (seq (filter #(satisfies? ValueNode %) (:nodeUsages baseIvNode)))] (some? s) => [ivs queue]
-                            (let [
-                                #_"ValueNode" op (first s)
-                                [ivs queue]
-                                    (cond
-                                        (LoopEx''isOutsideLoop-2 _loop, op)
-                                            [ivs queue]
-                                        (and (Node''hasExactlyOneUsage-1 op) (= (first (:nodeUsages op)) baseIvNode))
-                                            [ivs queue] ;; This is just the base induction variable increment with no other uses, so don't bother reporting it.
-                                        :else
-                                            (let [
-                                                #_"ValueNode" offset (LoopEx'addSub-3 _loop, op, baseIvNode)
-                                                #_"InductionVariable" iv
-                                                    (cond
-                                                        (some? offset)             (DerivedOffsetInductionVariable'new-4 _loop, baseIv, offset, op)
-                                                        (satisfies? NegateNode op) (DerivedScaledInductionVariable'new-3 _loop, baseIv,         op)
-                                                        :else
-                                                            (let [
-                                                                #_"ValueNode" scale (LoopEx'mul-3 _loop, op, baseIvNode)
-                                                            ]
-                                                                (cond
-                                                                    (some? scale) (DerivedScaledInductionVariable'new-4 _loop, baseIv, scale, op)
-                                                                    :else
-                                                                        (let [
-                                                                            #_"boolean" valid? (or (satisfies? PiNode op) (satisfies? SignExtendNode op))
-                                                                            valid?
-                                                                                (when (and (not valid?) (satisfies? ZeroExtendNode op)) => valid?
-                                                                                    (or (:inputAlwaysPositive op) (IntegerStamp''isPositive-1 (:stamp op)))
-                                                                                )
-                                                                        ]
-                                                                            (when valid?
-                                                                                (DerivedConvertedInductionVariable'new-4 _loop, baseIv, (:stamp op), op)
-                                                                            )
-                                                                        )
-                                                                )
-                                                            )
-                                                    )
-                                            ]
-                                                (when (some? iv) => [ivs queue]
-                                                    [(assoc ivs op iv) (conj' queue iv)]
-                                                )
-                                            )
-                                    )
-                            ]
-                                (recur ivs queue (next s))
-                            )
-                        )
-                ]
-                    (recur ivs queue)
-                )
-            )
-        )
-    )
-
-    (defn #_"{Node InductionVariable}" LoopEx''getInductionVariables-1 [#_"LoopEx" this]
-        (when (nil? (:ivs this))
-            (§ ass! this (assoc this :ivs (LoopEx'findInductionVariables-1 this)))
-        )
-        (:ivs this)
-    )
-
-    ;;;
-     ; Deletes any nodes created within the scope of this object that have no usages.
-     ;;
-    (defn #_"void" LoopEx''deleteUnusedNodes-1 [#_"LoopEx" this]
-        (doseq [#_"InductionVariable" iv (vals (:ivs this))]
-            (InductionVariable'''deleteUnusedNodes-1 iv)
-        )
-        nil
-    )
-
-    ;;;
-     ; Returns true if all nodes in the loop can be duplicated.
-     ;;
-    (defn #_"boolean" LoopEx''canDuplicateLoop-1 [#_"LoopEx" this]
-        (loop-when [#_"seq" s (seq (LoopFragment'''nodes-1 (LoopEx''inside-1 this)))] (some? s) => true
-            (and (not (satisfies? ControlFlowAnchored (first s)))
-                (recur (next s))
-            )
-        )
-    )
-)
-
-(class-ns LoopFragment []
-    (defn #_"LoopFragment" LoopFragment'new-2 [#_"LoopEx" _loop, #_"LoopFragment" original]
-        (merge (LoopFragment'class.)
-            (hash-map
-                ;;;
-                 ; The original LoopEx for this fragment. For duplicated fragments this is nil.
-                 ;;
-                #_"LoopEx" :loop _loop
-                #_"LoopFragment" :original original
-                #_"sorted {Node}" :fragmentNodes nil
-                #_"boolean" :nodesReady false
-                #_"{Node Node}" :duplicationMap nil
-            )
-        )
-    )
-
-    (defn #_"LoopFragment" LoopFragment'new-1 [#_"LoopEx" _loop]
-        (let [
-            #_"LoopFragment" this (merge (LoopFragment'class.) (LoopFragment'new-2 _loop, nil))
-            this (assoc this :nodesReady true)
-        ]
-            this
-        )
-    )
-
-    (defn #_"boolean" LoopFragment''contains-2 [#_"LoopFragment" this, #_"Node" node]
-        (contains? (LoopFragment'''nodes-1 this) node)
-    )
-
-    (defn #_"Node" LoopFragment''getDuplicatedNode-2 [#_"LoopFragment" this, #_"Node" node]
-        (get (:duplicationMap this) node)
-    )
-
-    (defn #_"this" LoopFragment''putDuplicatedNode-3 [#_"LoopFragment" this, #_"Node" oldNode, #_"Node" newNode]
-        (assoc-in this [:duplicationMap oldNode] newNode)
-    )
-
-    (defn #_"boolean" LoopFragment''isDuplicate-1 [#_"LoopFragment" this]
-        (some? (:original this))
-    )
-
-    (defn #_"Graph" LoopFragment''graph-1 [#_"LoopFragment" this]
-        (:graph (LoopEx''loopBegin-1 (:loop (if (LoopFragment''isDuplicate-1 this) (:original this) this))))
-    )
-
-    (defn #_"this" LoopFragment''patchNodes-2 [#_"LoopFragment" this, #_"DuplicationReplacement" dataFix]
-        (when (and (LoopFragment''isDuplicate-1 this) (not (:nodesReady this))) => this
-            (let [
-                #_"DuplicationReplacement" cfgFix (LoopFragment'''getDuplicationReplacement-1 (:original this))
-                #_"DuplicationReplacement" dr
-                    (cond
-                        (and (nil? cfgFix) (some? dataFix)) dataFix
-                        (and (some? cfgFix) (nil? dataFix)) cfgFix
-                        (and (some? cfgFix) (some? dataFix))
-                            (reify DuplicationReplacement
-                                (#_"Node" DuplicationReplacement'''replacement-2 [#_"DuplicationReplacement" _, #_"Node" o]
-                                    (let [
-                                        #_"Node" r1 (DuplicationReplacement'''replacement-2 dataFix, o)
-                                    ]
-                                        (if-not (= r1 o)
-                                            r1
-                                            (let [
-                                                #_"Node" r2 (DuplicationReplacement'''replacement-2 cfgFix, o)
-                                            ]
-                                                (if-not (= r2 o)
-                                                    r2
-                                                    o
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                    )
-                _ (LoopFragment'''beforeDuplication-1 this)
-                this (assoc this :duplicationMap (Graph''addDuplicates-4r (LoopFragment''graph-1 this), (LoopFragment'''nodes-1 (:original this)), (LoopFragment''graph-1 this), dr))
-                _ (LoopFragment'''finishDuplication-1 this)
-            ]
-                (assoc this :fragmentNodes (into (sorted-set) (vals (:duplicationMap this))), :nodesReady true)
-            )
-        )
-    )
-
-    (defn- #_"Boolean" LoopFragment'isLoopNode-3 [#_"Node" node, #_"{Node}" loopNodes, #_"{Node}" nonLoopNodes]
-        (cond
-            (contains? loopNodes node)                                 true
-            (contains? nonLoopNodes node)                              false
-            ;; phi nodes are treated the same as fixed nodes in this algorithm to break cycles
-            (or (satisfies? FixedNode node) (satisfies? PhiNode node)) false
-        )
-    )
-
-    (defn- #_"[(WorkListEntry) {Node} {Node}]" LoopFragment'markFloating-4 [#_"Node" start, #_"(WorkListEntry)" stack, #_"{Node}" loopNodes, #_"{Node}" nonLoopNodes]
-        (when-not (some? (LoopFragment'isLoopNode-3 start, loopNodes, nonLoopNodes)) => [stack loopNodes nonLoopNodes]
-            (loop-when [stack (cons (WorkListEntry'new-2 start, loopNodes) stack) loopNodes loopNodes nonLoopNodes nonLoopNodes] (seq stack) => [stack loopNodes nonLoopNodes]
-                (let [
-                    #_"WorkListEntry" e (first stack)
-                ]
-                    (if (seq (:usages e))
-                        (let [
-                            #_"Node" node (first (:usages e))
-                            _ (§ ass! e (update e :usages next))
-                            #_"Boolean" loop? (LoopFragment'isLoopNode-3 node, loopNodes, nonLoopNodes)
-                            stack
-                                (when (some? loop?) => (cons (WorkListEntry'new-2 node, loopNodes) stack)
-                                    (let [
-                                        _
-                                            (when (true? loop?)
-                                                (§ ass! e (assoc e :isLoopNode true))
-                                            )
-                                    ]
-                                        stack
-                                    )
-                                )
-                        ]
-                            (recur stack loopNodes nonLoopNodes)
-                        )
-                        (let [
-                            stack (next stack)
-                            #_"Node" node (:n e)
-                            #_"boolean" loop? (:isLoopNode e)
-                            loop?
-                                (when (and (not loop?) (satisfies? GuardNode node)) => loop?
-                                    true ;; this is only OK if we are not going to make loop transforms based on this
-                                )
-                            [loopNodes nonLoopNodes]
-                                (when loop? => [loopNodes (conj nonLoopNodes node)]
-                                    (let [
-                                        _
-                                            (loop-when-recur [#_"seq" s (seq stack)] (some? s) [(next s)]
-                                                (let [
-                                                    #_"WorkListEntry" e (first s)
-                                                ]
-                                                    (§ ass! e (assoc e :isLoopNode true))
-                                                )
-                                            )
-                                    ]
-                                        [(conj loopNodes node) nonLoopNodes]
-                                    )
-                                )
-                        ]
-                            (recur stack loopNodes nonLoopNodes)
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defn #_"sorted {Node}" LoopFragment'computeNodes-3 [#_"sorted {Node}" nodes, #_"AbstractBeginNode*" blocks, #_"AbstractBeginNode*" earlyExits]
-        (doseq [#_"AbstractBeginNode" block blocks]
-            (when-not (Node''isDeleted-1 block)
-                (doseq [#_"Node" node (AbstractBeginNode''getBlockNodes-1 block)]
-                    (let [
-                        _
-                            (when (satisfies? InvokeNode node)
-                                (§ ass! nodes (conj nodes (:callTarget node)))
-                            )
-                        _
-                            (when (satisfies? NodeWithState node)
-                                (doseq [#_"FrameState" state (NodeWithState''states-1 node)]
-                                    (VirtualState'''applyToVirtual-2 state,
-                                        (reify VirtualClosure
-                                            (#_"void" VirtualClosure'''apply-2 [#_"VirtualClosure" _, #_"VirtualState" vs]
-                                                (§ ass! nodes (conj nodes vs))
-                                                nil
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        _
-                            (when (satisfies? AbstractMergeNode node)
-                                ;; if a merge is in the loop, all of its phis are also in the loop
-                                (doseq [#_"PhiNode" phi (AbstractMergeNode''phis-1 node)]
-                                    (§ ass! nodes (conj nodes phi))
-                                )
-                            )
-                        _ (§ ass! nodes (conj nodes node))
-                    ]
-                    )
-                )
-            )
-        )
-        (doseq [#_"AbstractBeginNode" earlyExit earlyExits]
-            (when-not (Node''isDeleted-1 earlyExit)
-                (let [
-                    _ (§ ass! nodes (conj nodes earlyExit))
-                ]
-                    (when (satisfies? LoopExitNode earlyExit)
-                        (let [
-                            #_"FrameState" state (:stateAfter earlyExit)
-                        ]
-                            (when (some? state)
-                                (VirtualState'''applyToVirtual-2 state,
-                                    (reify VirtualClosure
-                                        (#_"void" VirtualClosure'''apply-2 [#_"VirtualClosure" _, #_"VirtualState" vs]
-                                            (§ ass! nodes (conj nodes vs))
-                                            nil
-                                        )
-                                    )
-                                )
-                            )
-                            (doseq [#_"ValueProxyNode" proxy (LoopExitNode''proxies-1 earlyExit)]
-                                (§ ass! nodes (conj nodes proxy))
-                            )
-                        )
-                    )
-                )
-            )
-        )
-
-        (let [
-            #_"(WorkListEntry)" stack nil
-            #_"{Node}" nonLoopNodes #{}
-        ]
-            (doseq [#_"AbstractBeginNode" block (remove Node''isDeleted-1 blocks) #_"Node" node (AbstractBeginNode''getBlockNodes-1 block)]
-                (let [
-                    _
-                        (when (satisfies? CommitAllocationNode node)
-                            (doseq [#_"VirtualObjectNode" obj (:virtualObjects node)]
-                                (§ ass! [stack nodes nonLoopNodes] (LoopFragment'markFloating-4 obj, stack, nodes, nonLoopNodes))
-                            )
-                        )
-                    _
-                        (when (satisfies? MonitorEnterNode node)
-                            (§ ass! [stack nodes nonLoopNodes] (LoopFragment'markFloating-4 (:monitorId node), stack, nodes, nonLoopNodes))
-                        )
-                    _
-                        (when (satisfies? AbstractMergeNode node)
-                            ;; Since we already marked all phi nodes as being in the loop to break cycles,
-                            ;; we also have to iterate over their usages here.
-                            (doseq [#_"PhiNode" phi (AbstractMergeNode''phis-1 node) #_"Node" usage (:nodeUsages phi)]
-                                (§ ass! [stack nodes nonLoopNodes] (LoopFragment'markFloating-4 usage, stack, nodes, nonLoopNodes))
-                            )
-                        )
-                    _
-                        (doseq [#_"Node" usage (:nodeUsages node)]
-                            (§ ass! [stack nodes nonLoopNodes] (LoopFragment'markFloating-4 usage, stack, nodes, nonLoopNodes))
-                        )
-                ]
-                )
-            )
-            nodes
-        )
-    )
-
-    (defn #_"AbstractBeginNode*" LoopFragment'toHirBlocks-1 [#_"Block*" blocks]
-        (map :beginNode blocks)
-    )
-
-    ;;;
-     ; Return the true LoopExitNode for this loop or the BeginNode for the block.
-     ;;
-    (defn #_"AbstractBeginNode*" LoopFragment'toHirExits-1 [#_"Block*" blocks]
-        (map #(or (Block''getLoopExit-1 %) (:beginNode %)) blocks)
-    )
-
-    ;;;
-     ; Merges the early exits (i.e. loop exits) that were duplicated as part of this fragment
-     ; with the original fragment's exits.
-     ;;
-    (defn #_"void" LoopFragment''mergeEarlyExits-1 [#_"LoopFragment" this]
-        (let [
-            #_"Graph" graph (LoopFragment''graph-1 this)
-        ]
-            (doseq [#_"AbstractBeginNode" earlyExit (LoopFragment'toHirBlocks-1 (:loopExits (:loop (:loop (:original this)))))]
-                (let [
-                    #_"FixedNode" _next (:next earlyExit)
-                ]
-                    (when (and (not (Node''isDeleted-1 earlyExit)) (LoopFragment''contains-2 (:original this), earlyExit))
-                        (let [
-                            #_"AbstractBeginNode" newEarlyExit (LoopFragment''getDuplicatedNode-2 this, earlyExit)
-                        ]
-                            (when (some? newEarlyExit)
-                                (let [
-                                    #_"MergeNode" merge (Graph''add-2 graph, (MergeNode'new-0))
-                                    #_"EndNode" originalEnd (Graph''add-2 graph, (EndNode'new-0))
-                                    #_"EndNode" newEnd (Graph''add-2 graph, (EndNode'new-0))
-                                    merge (AbstractMergeNode''addForwardEnd-2 merge, originalEnd)
-                                    merge (AbstractMergeNode''addForwardEnd-2 merge, newEnd)
-                                    _ (§ ass! earlyExit (FixedWithNextNode''setNext-2 earlyExit, originalEnd))
-                                    _ (§ ass! newEarlyExit (FixedWithNextNode''setNext-2 newEarlyExit, newEnd))
-                                    merge (FixedWithNextNode''setNext-2 merge, _next)
-                                    #_"FrameState" finalExitState
-                                        (when-some [#_"FrameState" exitState (:stateAfter earlyExit)]
-                                            (let [
-                                                #_"FrameState" o'exitState exitState
-                                                exitState (VirtualState'''duplicateWithVirtualState-1 exitState)
-                                                _ (§ ass! earlyExit (StateSplit'''setStateAfter-2 earlyExit, exitState))
-                                                _ (§ ass! merge (StateSplit'''setStateAfter-2 merge, o'exitState))
-                                            ]
-                                                ;; Using the old exit's state as the merge's state is necessary because some of the VirtualState
-                                                ;; nodes contained in the old exit's state may be shared by other dominated VirtualStates.
-                                                ;; Those dominated virtual states need to see the proxy->phi update that are applied below.
-                                                ;;
-                                                ;; We now update the original fragment's nodes accordingly:
-                                                (VirtualState'''applyToVirtual-2 o'exitState,
-                                                    (reify VirtualClosure
-                                                        (#_"void" VirtualClosure'''apply-2 [#_"VirtualClosure" _, #_"VirtualState" vs]
-                                                            (§ ass! (:fragmentNodes (:original this)) (disj (:fragmentNodes (:original this)) vs))
-                                                            nil
-                                                        )
-                                                    )
-                                                )
-                                                (VirtualState'''applyToVirtual-2 exitState,
-                                                    (reify VirtualClosure
-                                                        (#_"void" VirtualClosure'''apply-2 [#_"VirtualClosure" _, #_"VirtualState" vs]
-                                                            (§ ass! (:fragmentNodes (:original this)) (conj (:fragmentNodes (:original this)) vs))
-                                                            nil
-                                                        )
-                                                    )
-                                                )
-                                                exitState
-                                            )
-                                        )
-                                ]
-                                    (doseq [#_"Node" anchored (§ snap (AbstractBeginNode'''anchored-1 earlyExit))]
-                                        (Node''replaceFirstInput-3 anchored, earlyExit, merge)
-                                    )
-
-                                    (let [
-                                        #_"boolean" newEarlyExitIsLoopExit (satisfies? LoopExitNode newEarlyExit)
-                                    ]
-                                        (doseq [#_"ValueProxyNode" vpn (§ snap (LoopExitNode''proxies-1 earlyExit))]
-                                            (cond
-                                                (Node''hasNoUsages-1 vpn)  nil
-                                                (nil? (:value vpn)) (§ ass! vpn (Node''replaceAtUsages-2 vpn, nil))
-                                                :else
-                                                    (let [
-                                                        #_"ValueNode" newVpn (LoopFragment'''prim-2 this, (if newEarlyExitIsLoopExit vpn (:value vpn)))
-                                                        #_"ValueNode" replaceWith
-                                                            (when (some? newVpn) => (:value vpn)
-                                                                (let [
-                                                                    #_"PhiNode" phi
-                                                                        (condp satisfies? vpn
-                                                                            ValueProxyNode (ValuePhiNode'new-2 (:stamp vpn), merge)
-                                                                        )
-                                                                    _ (Graph''add-2 graph, phi)
-                                                                    phi (PhiNode''addInput-2 phi, vpn)
-                                                                    phi (PhiNode''addInput-2 phi, newVpn)
-                                                                ]
-                                                                    phi
-                                                                )
-                                                            )
-                                                    ]
-                                                        (§ ass! vpn (Node''replaceAtMatchingUsages-3 vpn, replaceWith, #(not (or (AbstractMergeNode''isPhiAtMerge-2 merge, %) (and (satisfies? VirtualState %) (some? finalExitState) (VirtualState'''isPartOfThisState-2 finalExitState, %))))))
-                                                    )
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-        nil
-    )
-)
-
-(class-ns LoopFragmentInside [LoopFragment]
-    (defn- #_"LoopFragmentInside" LoopFragmentInside'init-0 []
-        (hash-map
-            ;;;
-             ; When an inside fragment's (loop)ends are merged to create a unique exit point, some phis
-             ; must be created: they phis together all the back-values of the loop-phis. These can then
-             ; be used to update the loop-phis' forward edge value ('initializer') in the peeling case.
-             ; In the unrolling case they will be used as the value that replace the loop-phis of the
-             ; duplicated inside fragment.
-             ;;
-            #_"{PhiNode ValueNode}" :mergedInitializers nil
-        )
-    )
-
-    (defn #_"LoopFragmentInside" LoopFragmentInside'new-1e [#_"LoopEx" _loop]
-        (merge (LoopFragmentInside'class.) (LoopFragment'new-1 _loop)
-            (LoopFragmentInside'init-0)
-        )
-    )
-
-    (defn #_"LoopFragmentInside" LoopFragmentInside'new-1f [#_"LoopFragmentInside" original]
-        (merge (LoopFragmentInside'class.) (LoopFragment'new-2 nil, original)
-            (LoopFragmentInside'init-0)
-        )
-    )
-
-    (defm LoopFragmentInside LoopFragment
-        (#_"LoopFragmentInside" LoopFragment'''duplicate-1 [#_"LoopFragmentInside" this]
-            (LoopFragmentInside'new-1f this)
-        )
-    )
-
-    (defn- #_"PhiNode" LoopFragmentInside'patchPhi-3 [#_"Graph" graph, #_"PhiNode" phi, #_"AbstractMergeNode" merge]
-        (let [
-            #_"PhiNode" ret
-                (condp satisfies? phi
-                    ValuePhiNode  (ValuePhiNode'new-2 (:stamp phi), merge)
-                    MemoryPhiNode (MemoryPhiNode'new-2 merge, (:locationIdentity phi))
-                )
-        ]
-            (Graph''add-2 graph, ret)
-        )
-    )
-
-    (defn- #_"AbstractBeginNode" LoopFragmentInside''mergeEnds-1 [#_"LoopFragmentInside" this]
-        (let [
-            #_"[EndNode]" endsToMerge []
-            ;; map peel exits to the corresponding loop exits
-            #_"{AbstractEndNode LoopEndNode}" reverseEnds {}
-            #_"LoopBeginNode" loopBegin (LoopEx''loopBegin-1 (:loop (:original this)))
-            _
-                (doseq [#_"LoopEndNode" le (LoopBeginNode''loopEnds-1 loopBegin)]
-                    (let [
-                        #_"AbstractEndNode" duplicate (LoopFragment''getDuplicatedNode-2 this, le)
-                    ]
-                        (when (some? duplicate)
-                            (§ ass! endsToMerge (conj' endsToMerge (§ cast #_"EndNode" duplicate)))
-                            (§ ass! reverseEnds (assoc reverseEnds duplicate le))
-                        )
-                    )
-                )
-            _ (§ ass! this (assoc this :mergedInitializers {}))
-            #_"Graph" graph (LoopFragment''graph-1 this)
-        ]
-            (if (= (count endsToMerge) 1)
-                (let [
-                    #_"AbstractEndNode" end (nth endsToMerge 0)
-                    #_"AbstractBeginNode" newExit (Graph''add-2 graph, (BeginNode'new-0))
-                    _ (Node''replaceAtPredecessor-2 end, newExit)
-                    _ (§ ass! end (Node''safeDelete-1 end))
-                ]
-                    newExit
-                )
-                (let [
-                    #_"AbstractMergeNode" newExitMerge (Graph''add-2 graph, (MergeNode'new-0))
-                    #_"AbstractBeginNode" newExit newExitMerge
-                    #_"FrameState" state (:stateAfter loopBegin)
-                    #_"FrameState" duplicateState
-                        (when (some? state)
-                            (let [
-                                duplicateState (VirtualState'''duplicateWithVirtualState-1 state)
-                                _ (§ ass! newExitMerge (StateSplit'''setStateAfter-2 newExitMerge, duplicateState))
-                            ]
-                                duplicateState
-                            )
-                        )
-                    _
-                        (doseq [#_"EndNode" end endsToMerge]
-                            (§ ass! newExitMerge (AbstractMergeNode''addForwardEnd-2 newExitMerge, end))
-                        )
-                    _
-                        (doseq [#_"PhiNode" phi (§ snap (AbstractMergeNode''phis-1 loopBegin))]
-                            (when-not (Node''hasNoUsages-1 phi)
-                                (let [
-                                    #_"PhiNode" firstPhi (LoopFragmentInside'patchPhi-3 graph, phi, newExitMerge)
-                                    _
-                                        (doseq [#_"AbstractEndNode" end (:ends newExitMerge)]
-                                            (let [
-                                                #_"LoopEndNode" loopEnd (get reverseEnds end)
-                                                #_"ValueNode" prim (LoopFragment'''prim-2 this, (PhiNode''valueAt-2n phi, loopEnd))
-                                            ]
-                                                (§ ass! firstPhi (PhiNode''addInput-2 firstPhi, prim))
-                                            )
-                                        )
-                                    #_"ValueNode" initializer firstPhi
-                                ]
-                                    (when (some? duplicateState)
-                                        ;; fix the merge's state after
-                                        (VirtualState'''applyToNonVirtual-2 duplicateState,
-                                            (reify NodeClosure #_"<ValueNode>"
-                                                (#_"void" NodeClosure'''apply-3 [#_"NodeClosure" _, #_"Node" from, #_"ValueNode" node]
-                                                    (when (= node phi)
-                                                        (Node''replaceFirstInput-3 from, phi, firstPhi)
-                                                    )
-                                                    nil
-                                                )
-                                            )
-                                        )
-                                    )
-                                    (§ ass! this (update this :mergedInitializers assoc phi initializer))
-                                )
-                            )
-                        )
-                ]
-                    newExit
-                )
-            )
-        )
-    )
-
-    (defn- #_"void" LoopFragmentInside'markStateNodes-2 [#_"StateSplit" stateSplit, #_"{Node}" marks]
-        (let [
-            #_"FrameState" exitState (:stateAfter stateSplit)
-        ]
-            (when (some? exitState)
-                (VirtualState'''applyToVirtual-2 exitState,
-                    (reify VirtualClosure
-                        (#_"void" VirtualClosure'''apply-2 [#_"VirtualClosure" _, #_"VirtualState" vs]
-                            (§ ass! marks (conj marks vs))
-                            nil
-                        )
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (defn- #_"void" LoopFragmentInside''patchPeeling-2 [#_"LoopFragmentInside" this, #_"LoopFragmentInside" peel]
-        (let [
-            #_"LoopBeginNode" loopBegin (LoopEx''loopBegin-1 (:loop this))
-            #_"Graph" graph (:graph loopBegin)
-            #_"{Node}" usagesToPatch (§ snap (:fragmentNodes this))
-            _
-                (doseq [#_"LoopExitNode" exit (LoopFragmentInside''exits-1 this)]
-                    (LoopFragmentInside'markStateNodes-2 exit, usagesToPatch)
-                    (§ ass! usagesToPatch (into usagesToPatch (LoopExitNode''proxies-1 exit)))
-                )
-            _ (LoopFragmentInside'markStateNodes-2 loopBegin, usagesToPatch)
-            #_"[PhiNode]" oldPhis (§ snap (AbstractMergeNode''phis-1 loopBegin))
-            #_"[PhiNode]" newPhis
-                (loop-when [newPhis nil #_"seq" s (seq (remove Node''hasNoUsages-1 oldPhis))] (some? s) => newPhis
-                    (let [
-                        #_"PhiNode" phi (first s)
-                        #_"ValueNode" _first
-                            (if (= (count (LoopBeginNode''loopEnds-1 loopBegin)) 1)
-                                (let [
-                                    ;; back edge value
-                                    #_"ValueNode" b (PhiNode''valueAt-2n phi, (first (LoopBeginNode''loopEnds-1 loopBegin)))
-                                ]
-                                    (LoopFragment'''prim-2 peel, b) ;; corresponding value in the peel
-                                )
-                                (get (:mergedInitializers peel) phi)
-                            )
-                        ;; create a new phi (we don't patch the old one since some usages of the old one may still be valid)
-                        #_"PhiNode" newPhi (LoopFragmentInside'patchPhi-3 graph, phi, loopBegin)
-                        _ (§ ass! newPhi (PhiNode''addInput-2 newPhi, _first))
-                        _
-                            (doseq [#_"LoopEndNode" end (LoopBeginNode''orderedLoopEnds-1 loopBegin)]
-                                (§ ass! newPhi (PhiNode''addInput-2 newPhi, (PhiNode''valueAt-2n phi, end)))
-                            )
-                        _ (§ ass! peel (LoopFragment''putDuplicatedNode-3 peel, phi, newPhi))
-                        newPhis (conj' newPhis newPhi)
-                    ]
-                        (doseq [#_"Node" usage (:nodeUsages phi)]
-                            ;; patch only usages that should use the new phi, i.e. usages that were peeled
-                            (when (contains? usagesToPatch usage)
-                                (Node''replaceFirstInput-3 usage, phi, newPhi)
-                            )
-                        )
-                        (recur newPhis (next s))
-                    )
-                )
-            ;; check new phis to see if they have as input some old phis, replace those inputs with the new corresponding phis
-            _
-                (doseq [#_"PhiNode" phi newPhis]
-                    (dotimes [#_"int" i (count (:phiValues phi))]
-                        (let-when [#_"ValueNode" v (nth (:phiValues phi) i)] (AbstractMergeNode''isPhiAtMerge-2 loopBegin, v)
-                            (when-some [#_"PhiNode" newV (LoopFragment''getDuplicatedNode-2 peel, v)]
-                                (§ ass! phi (PhiNode''setValueAt-3i phi, i, newV))
-                            )
-                        )
-                    )
-                )
-            oldPhis
-                (loop [oldPhis oldPhis]
-                    (let [
-                        [#_"boolean" progress? oldPhis]
-                            (loop-when [progress? false oldPhis oldPhis #_"int" i 0] (< i (count oldPhis)) => [progress? oldPhis]
-                                (let [
-                                    [progress? oldPhis i]
-                                        (loop-when [oldPhis oldPhis #_"seq" s (seq (:nodeUsages (nth oldPhis i)))] (some? s) => [progress? oldPhis i]
-                                            (let [
-                                                #_"Node" usage (first s)
-                                            ]
-                                                (when (and (satisfies? PhiNode usage) (some #(= % usage) oldPhis)) => [true (dissoc' oldPhis i) (dec i)]
-                                                    (recur oldPhis (next s))
-                                                )
-                                            )
-                                        )
-                                ]
-                                    (recur progress? oldPhis (inc i))
-                                )
-                            )
-                    ]
-                        (recur-if progress? [oldPhis] => oldPhis)
-                    )
-                )
-        ]
-            (run! Node''clearInputs-1 oldPhis)
-            (run! GraphUtil'killWithUnusedFloatingInputs-1 (filter Node''isAlive-1 oldPhis))
-        )
-        nil
-    )
-
-    (defm LoopFragmentInside LoopFragment
-        (#_"this" LoopFragment'''insertBefore-2 [#_"LoopFragmentInside" this, #_"LoopEx" _loop]
-            (let [
-                #_"DuplicationReplacement" f'dataFixBefore
-                    (reify DuplicationReplacement
-                        (#_"Node" DuplicationReplacement'''replacement-2 [#_"DuplicationReplacement" _, #_"Node" original]
-                            (if (satisfies? ValueNode original) (LoopFragment'''prim-2 this, original) original)
-                        )
-                    )
-                this (LoopFragment''patchNodes-2 this, f'dataFixBefore)
-                #_"AbstractBeginNode" end (LoopFragmentInside''mergeEnds-1 this)
-                _ (LoopFragment''mergeEarlyExits-1 this)
-                _ (LoopFragmentInside''patchPeeling-2 (:original this), this)
-                #_"AbstractBeginNode" entry (LoopFragment''getDuplicatedNode-2 this, (LoopEx''loopBegin-1 _loop))
-                _ (Node''replaceAtPredecessor-2 (LoopEx''entryPoint-1 _loop), entry)
-                _ (§ ass! end (FixedWithNextNode''setNext-2 end, (LoopEx''entryPoint-1 _loop)))
-            ]
-                this
-            )
-        )
-    )
-
-    (defn- #_"EndNode" LoopFragmentInside'getBlockEnd-1 [#_"FixedNode" node]
-        (loop-when-recur node (satisfies? FixedWithNextNode node) (:next node) => node)
-    )
-
-    (defn- #_"void" LoopFragmentInside''placeNewSegmentAndCleanup-2 [#_"LoopFragmentInside" this, #_"LoopEx" _loop]
-        (let [
-            #_"CountedLoopInfo" mainCounted (:counted _loop)
-            #_"LoopBeginNode" mainLoopBegin (LoopEx''loopBegin-1 _loop)
-            ;; discard the segment entry and its flow after if merging it into the loop
-            #_"Graph" graph (:graph mainLoopBegin)
-            #_"IfNode" loopTest (:ifNode mainCounted)
-            #_"IfNode" newSegmentTest (LoopFragment''getDuplicatedNode-2 this, loopTest)
-            #_"AbstractBeginNode" trueSuccessor (:trueSuccessor loopTest)
-            #_"AbstractBeginNode" falseSuccessor (:falseSuccessor loopTest)
-            #_"boolean" codeInTrueSide (= trueSuccessor (:body mainCounted))
-            #_"FixedNode" firstNode (:next (if codeInTrueSide trueSuccessor falseSuccessor))
-            trueSuccessor (:trueSuccessor newSegmentTest)
-            falseSuccessor (:falseSuccessor newSegmentTest)
-            _
-                (doseq [#_"Node" usage (§ snap (AbstractBeginNode'''anchored-1 falseSuccessor))]
-                    (Node''replaceFirstInput-3 usage, falseSuccessor, (:falseSuccessor loopTest))
-                )
-            _
-                (doseq [#_"Node" usage (§ snap (AbstractBeginNode'''anchored-1 trueSuccessor))]
-                    (Node''replaceFirstInput-3 usage, trueSuccessor, (:trueSuccessor loopTest))
-                )
-            #_"AbstractBeginNode" startBlockNode (if codeInTrueSide trueSuccessor falseSuccessor)
-            #_"FixedNode" lastNode (LoopFragmentInside'getBlockEnd-1 startBlockNode)
-            #_"LoopEndNode" loopEndNode (LoopBeginNode''getSingleLoopEnd-1 mainLoopBegin)
-            #_"FixedWithNextNode" lastCodeNode (:predecessor loopEndNode)
-            #_"FixedNode" newSegmentFirstNode (LoopFragment''getDuplicatedNode-2 this, firstNode)
-            #_"FixedWithNextNode" newSegmentLastNode (LoopFragment''getDuplicatedNode-2 this, lastCodeNode)
-        ]
-            (if (satisfies? LoopEndNode firstNode)
-                (GraphUtil'killCFG-1 (LoopFragment''getDuplicatedNode-2 this, mainLoopBegin))
-                (let [
-                    _ (Node''clearSuccessors-1 newSegmentLastNode)
-                    _ (§ ass! startBlockNode (FixedWithNextNode''setNext-2 startBlockNode, lastNode))
-                    _ (Node''replaceFirstSuccessor-3 lastCodeNode, loopEndNode, newSegmentFirstNode)
-                    _ (Node''replaceFirstSuccessor-3 newSegmentLastNode, lastNode, loopEndNode)
-                    _ (§ ass! lastCodeNode (FixedWithNextNode''setNext-2 lastCodeNode, newSegmentFirstNode))
-                    _ (§ ass! newSegmentLastNode (FixedWithNextNode''setNext-2 newSegmentLastNode, loopEndNode))
-                    _ (Node''clearSuccessors-1 startBlockNode)
-                    _ (§ ass! lastNode (Node''safeDelete-1 lastNode))
-                    #_"Node" newSegmentTestStart (:predecessor newSegmentTest)
-                    #_"LogicNode" newSegmentIfTest (:logic newSegmentTest)
-                    _ (Node''clearSuccessors-1 newSegmentTestStart)
-                    _ (§ ass! newSegmentTest (Node''safeDelete-1 newSegmentTest))
-                    _ (§ ass! newSegmentIfTest (Node''safeDelete-1 newSegmentIfTest))
-                    _ (§ ass! trueSuccessor (Node''safeDelete-1 trueSuccessor))
-                    _ (§ ass! falseSuccessor (Node''safeDelete-1 falseSuccessor))
-                    _ (§ ass! newSegmentTestStart (Node''safeDelete-1 newSegmentTestStart))
-                ]
-                )
-            )
-        )
-        nil
-    )
-
-    ;;;
-     ; Duplicate the body within the loop after the current copy copy of the body.
-     ;;
-    (defn #_"this" LoopFragmentInside''insertWithinAfter-3 [#_"LoopFragmentInside" this, #_"LoopEx" _loop, #_"boolean" update-limit?]
-        (let [
-            #_"DuplicationReplacement" f'dataFixWithinAfter
-                (reify DuplicationReplacement
-                    (#_"Node" DuplicationReplacement'''replacement-2 [#_"DuplicationReplacement" _, #_"Node" original]
-                        (if (satisfies? ValueNode original) (LoopFragmentInside''primAfter-2 this, original) original)
-                    )
-                )
-            this (LoopFragment''patchNodes-2 this, f'dataFixWithinAfter)
-            ;; collect any new back edges values before updating them since they might reference each other
-            #_"LoopBeginNode" mainLoopBegin (LoopEx''loopBegin-1 _loop)
-            #_"ValueNode*" backedgeValues
-                (loop-when [backedgeValues nil #_"seq" s (seq (AbstractMergeNode''phis-1 mainLoopBegin))] (some? s) => backedgeValues
-                    (let [
-                        #_"PhiNode" phi (first s)
-                        #_"ValueNode" dupe (LoopFragment''getDuplicatedNode-2 this, (nth (:phiValues phi) 1))
-                        dupe
-                            (when (and (nil? dupe) (AbstractMergeNode''isPhiAtMerge-2 mainLoopBegin, (nth (:phiValues phi) 1))) => dupe
-                                (nth (:phiValues (nth (:phiValues phi) 1)) 1)
-                            )
-                    ]
-                        (recur (conj' backedgeValues dupe) (next s))
-                    )
-                )
-            #_"int" index
-                (loop-when [index 0 #_"seq" s (seq (AbstractMergeNode''phis-1 mainLoopBegin))] (some? s) => index
-                    (let [
-                        #_"ValueNode" dupe (nth backedgeValues index)
-                        _
-                            (when (some? dupe)
-                                (§ ass! (first s) (PhiNode''setValueAt-3i (first s), 1, dupe))
-                            )
-                    ]
-                        (recur (inc index) (next s))
-                    )
-                )
-            _ (LoopFragmentInside''placeNewSegmentAndCleanup-2 this, _loop)
-            ;; remove any safepoints from the original copy leaving only the duplicated one
-            _
-                (doseq [#_"SafepointNode" safepoint (filter #(satisfies? SafepointNode %) (LoopFragment'''nodes-1 (LoopEx''whole-1 _loop)))]
-                    (Graph''removeFixed-2 (LoopFragment''graph-1 this), safepoint)
-                )
-            #_"int" unrollFactor (:unrollFactor mainLoopBegin)
-            #_"Graph" graph (:graph mainLoopBegin)
-            _
-                (when update-limit?
-                    ;; use the previous unrollFactor to update the exit condition to power of two
-                    (let [
-                        #_"InductionVariable" iv (:iv (:counted _loop))
-                        #_"CompareNode" compareNode (:logic (:ifNode (:counted _loop)))
-                        #_"ValueNode" compareBound
-                            (condp = (InductionVariable'''valueNode-1 iv)
-                                (:x compareNode) (:y compareNode)
-                                (:y compareNode) (:x compareNode)
-                            )
-                        #_"long" originalStride (if (= unrollFactor 1) (InductionVariable'''constantStride-1 iv) (quot (InductionVariable'''constantStride-1 iv) unrollFactor))
-                    ]
-                        (case (InductionVariable'''direction-1 iv)
-                            :Direction'Up
-                            (let [
-                                #_"ConstantNode" above (Graph''add-2 graph, (ConstantNode'forIntegerStamp-2 (:stamp (InductionVariable'''initNode-1 iv)), (* unrollFactor originalStride)))
-                                #_"ValueNode" limit (Graph''add-2 graph, (SubNode'new-2 compareBound, above))
-                            ]
-                                (Node''replaceFirstInput-3 compareNode, compareBound, limit)
-                            )
-                            :Direction'Down
-                            (let [
-                                #_"ConstantNode" above (Graph''add-2 graph, (ConstantNode'forIntegerStamp-2 (:stamp (InductionVariable'''initNode-1 iv)), (* unrollFactor (- originalStride))))
-                                #_"ValueNode" limit (Graph''add-2 graph, (AddNode'new-2 compareBound, above))
-                            ]
-                                (Node''replaceFirstInput-3 compareNode, compareBound, limit)
-                            )
-                            nil
-                        )
-                    )
-                )
-            _ (§ ass! mainLoopBegin (assoc mainLoopBegin :unrollFactor (* unrollFactor 2)))
-            _ (§ ass! mainLoopBegin (update mainLoopBegin :loopFrequency #(/ % 2.0)))
-        ]
-            this
-        )
-    )
-
-    ;;;
-     ; Duplicate the body within the loop after the current copy copy of the body, updating the
-     ; iteration limit to account for the duplication.
-     ;;
-    (defn #_"this" LoopFragmentInside''insertWithinAfter-2 [#_"LoopFragmentInside" this, #_"LoopEx" _loop]
-        (LoopFragmentInside''insertWithinAfter-3 this, _loop, true)
-    )
-
-    (defn- #_"this" LoopFragmentInside''clearStateNodes-2 [#_"LoopFragmentInside" this, #_"StateSplit" stateSplit]
-        (let [
-            #_"FrameState" loopState (:stateAfter stateSplit)
-        ]
-            (when (some? loopState) => this
-                (VirtualState'''applyToVirtual-2 loopState,
-                    (reify VirtualClosure
-                        (#_"void" VirtualClosure'''apply-2 [#_"VirtualClosure" _, #_"VirtualState" vs]
-                            (when (empty? (filter #(and (contains? (:fragmentNodes this) %) (not= % stateSplit)) (:nodeUsages vs)))
-                                (§ ass! this (update this :fragmentNodes disj vs))
-                            )
-                            nil
-                        )
-                    )
-                )
-                this
-            )
-        )
-    )
-
-    (defm LoopFragmentInside LoopFragment
-        (#_"sorted {Node}" LoopFragment'''nodes-1 [#_"LoopFragmentInside" this]
-            (when (nil? (:fragmentNodes this))
-                (let [
-                    #_"LoopFragmentWhole" whole (LoopEx''whole-1 (:loop this))
-                    _ (LoopFragment'''nodes-1 whole) ;; init nodes bitmap in whole
-                    _ (§ ass! this (assoc this :fragmentNodes (§ snap (:fragmentNodes whole))))
-                    #_"LoopBeginNode" loopBegin (LoopEx''loopBegin-1 (:loop this))
-                    _ ;; remove the phis
-                        (doseq [#_"PhiNode" phi (AbstractMergeNode''phis-1 loopBegin)]
-                            (§ ass! this (update this :fragmentNodes disj phi))
-                        )
-                    _ (§ ass! this (LoopFragmentInside''clearStateNodes-2 this, loopBegin))
-                ]
-                    (doseq [#_"LoopExitNode" exit (LoopFragmentInside''exits-1 this)]
-                        (let [
-                            _ (§ ass! this (LoopFragmentInside''clearStateNodes-2 this, exit))
-                        ]
-                            (doseq [#_"ValueProxyNode" proxy (LoopExitNode''proxies-1 exit)]
-                                (§ ass! this (update this :fragmentNodes disj proxy))
-                            )
-                        )
-                    )
-                )
-            )
-            (:fragmentNodes this)
-        )
-    )
-
-    (defn #_"LoopExitNode*" LoopFragmentInside''exits-1 [#_"LoopFragmentInside" this]
-        (LoopBeginNode''loopExits-1 (LoopEx''loopBegin-1 (:loop this)))
-    )
-
-    (defm LoopFragmentInside LoopFragment
-        (#_"DuplicationReplacement" LoopFragment'''getDuplicationReplacement-1 [#_"LoopFragmentInside" this]
-            (let [
-                #_"LoopBeginNode" loopBegin (LoopEx''loopBegin-1 (:loop this))
-                #_"Graph" graph (LoopFragment''graph-1 this)
-                #_"{Node Node}" seenNode {}
-            ]
-                (reify DuplicationReplacement
-                    (#_"Node" DuplicationReplacement'''replacement-2 [#_"DuplicationReplacement" _, #_"Node" original]
-                        (when (= original loopBegin)
-                            (let [
-                                #_"Node" value (get seenNode original)
-                            ]
-                                (when (some? value)
-                                    (§ return value)
-                                )
-                                (let [
-                                    #_"AbstractBeginNode" newValue (Graph''add-2 graph, (BeginNode'new-0))
-                                    _ (§ ass! seenNode (assoc seenNode original newValue))
-                                ]
-                                    (§ return newValue)
-                                )
-                            )
-                        )
-                        (when (and (satisfies? LoopExitNode original) (= (LoopEx''loopBegin-1 original) loopBegin))
-                            (let [
-                                #_"Node" value (get seenNode original)
-                            ]
-                                (when (some? value)
-                                    (§ return value)
-                                )
-                                (let [
-                                    #_"AbstractBeginNode" newValue (Graph''add-2 graph, (BeginNode'new-0))
-                                    _ (§ ass! seenNode (assoc seenNode original newValue))
-                                ]
-                                    (§ return newValue)
-                                )
-                            )
-                        )
-                        (when (and (satisfies? LoopEndNode original) (= (LoopEx''loopBegin-1 original) loopBegin))
-                            (let [
-                                #_"Node" value (get seenNode original)
-                            ]
-                                (when (some? value)
-                                    (§ return value)
-                                )
-                                (let [
-                                    #_"EndNode" newValue (Graph''add-2 graph, (EndNode'new-0))
-                                    _ (§ ass! seenNode (assoc seenNode original newValue))
-                                ]
-                                    (§ return newValue)
-                                )
-                            )
-                        )
-                        original
-                    )
-                )
-            )
-        )
-
-        (#_"void" LoopFragment'''finishDuplication-1 [#_"LoopFragmentInside" this]
-            ;; TODO
-            nil
-        )
-
-        (#_"void" LoopFragment'''beforeDuplication-1 [#_"LoopFragmentInside" this]
-            ;; Nothing to do
-            nil
-        )
-    )
-
-    ;;;
-     ; Gets the corresponding value in this fragment.
-     ;
-     ; @param b original value
-     ; @return corresponding value in the peel
-     ;;
-    (defm LoopFragmentInside LoopFragment
-        (#_"ValueNode" LoopFragment'''prim-2 [#_"LoopFragmentInside" this, #_"ValueNode" b]
-            (let [
-                #_"LoopBeginNode" loopBegin (LoopEx''loopBegin-1 (:loop (:original this)))
-            ]
-                (cond
-                    (AbstractMergeNode''isPhiAtMerge-2 loopBegin, b) (PhiNode''valueAt-2n b, (LoopBeginNode''forwardEnd-1 loopBegin))
-                    (:nodesReady this)                               (or (LoopFragment''getDuplicatedNode-2 this, b) b)
-                    :else                                            b
-                )
-            )
-        )
-    )
-
-    (defn #_"ValueNode" LoopFragmentInside''primAfter-2 [#_"LoopFragmentInside" this, #_"ValueNode" b]
-        (let [
-            #_"LoopBeginNode" loopBegin (LoopEx''loopBegin-1 (:loop (:original this)))
-        ]
-            (cond
-                (AbstractMergeNode''isPhiAtMerge-2 loopBegin, b) (nth (:phiValues b) 1)
-                (:nodesReady this)                               (or (LoopFragment''getDuplicatedNode-2 this, b) b)
-                :else                                            b
-            )
-        )
-    )
-)
-
-(class-ns LoopFragmentWhole [LoopFragment]
-    (defn #_"LoopFragmentWhole" LoopFragmentWhole'new-1e [#_"LoopEx" _loop]
-        (merge (LoopFragmentWhole'class.) (LoopFragment'new-1 _loop))
-    )
-
-    (defn #_"LoopFragmentWhole" LoopFragmentWhole'new-1f [#_"LoopFragmentWhole" original]
-        (merge (LoopFragmentWhole'class.) (LoopFragment'new-2 nil, original))
-    )
-
-    (defm LoopFragmentWhole LoopFragment
-        (#_"LoopFragmentWhole" LoopFragment'''duplicate-1 [#_"LoopFragmentWhole" this]
-            (let [
-                #_"LoopFragmentWhole" copy (LoopFragmentWhole'new-1f this)
-                copy (LoopFragment''patchNodes-2 copy, nil)
-            ]
-                (LoopFragment''mergeEarlyExits-1 copy)
-                copy
-            )
-        )
-
-        (#_"sorted {Node}" LoopFragment'''nodes-1 [#_"LoopFragmentWhole" this]
-            (when (nil? (:fragmentNodes this))
-                (let [
-                    #_"Loop" _loop (:loop (:loop this))
-                ]
-                    (§ ass! this (assoc this :fragmentNodes (LoopFragment'computeNodes-3 (sorted-set), (LoopFragment'toHirBlocks-1 (:loopBlocks _loop)), (LoopFragment'toHirExits-1 (:loopExits _loop)))))
-                )
-            )
-            (:fragmentNodes this)
-        )
-
-        (#_"ValueNode" LoopFragment'''prim-2 [#_"LoopFragmentWhole" this, #_"ValueNode" b]
-            (LoopFragment''getDuplicatedNode-2 this, b)
-        )
-
-        (#_"DuplicationReplacement" LoopFragment'''getDuplicationReplacement-1 [#_"LoopFragmentWhole" this]
-            (let [
-                #_"FixedNode" entry (LoopEx''entryPoint-1 (:loop this))
-                #_"Graph" graph (LoopFragment''graph-1 this)
-                #_"EndNode'" d'endNode (delay (Graph''add-2 graph, (EndNode'new-0)))
-            ]
-                (reify DuplicationReplacement
-                    (#_"Node" DuplicationReplacement'''replacement-2 [#_"DuplicationReplacement" _, #_"Node" original]
-                        (when (= original entry) => original
-                            @d'endNode
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defn #_"FixedNode" LoopFragmentWhole''entryPoint-1 [#_"LoopFragmentWhole" this]
-        (when (LoopFragment''isDuplicate-1 this) => (LoopEx''entryPoint-1 (:loop this))
-            (LoopBeginNode''forwardEnd-1 (LoopFragment''getDuplicatedNode-2 this, (LoopEx''loopBegin-1 (:loop (:original this)))))
-        )
-    )
-
-    (defm LoopFragmentWhole LoopFragment
-        (#_"void" LoopFragment'''finishDuplication-1 [#_"LoopFragmentWhole" this]
-            ;; TODO
-            nil
-        )
-    )
-
-    (defn #_"void" LoopFragmentWhole''cleanupLoopExits-1 [#_"LoopFragmentWhole" this]
-        (let [
-            #_"LoopBeginNode" loopBegin (LoopEx''loopBegin-1 (:loop (:original this)))
-            #_"Graph" graph (:graph loopBegin)
-        ]
-            (when (= (:guardsStage graph) :GuardsStage'AFTER_FSA)
-                ;; After FrameStateAssignment ControlFlowGraph treats loop exits differently which means
-                ;; that the LoopExitNodes can be in a block which post dominates the true loop exit. For
-                ;; cloning to work right they must agree.
-                (let [
-                    #_"{LoopExitNode}" exits #{}
-                    _
-                        (doseq [#_"Block" exitBlock (:loopExits (:loop (:loop (:original this))))]
-                            (let [
-                                #_"LoopExitNode" exitNode (Block''getLoopExit-1 exitBlock)
-                            ]
-                                (when (nil? exitNode)
-                                    (let [
-                                        _ (§ ass exitNode (Graph''add-2 graph, (LoopExitNode'new-1 loopBegin)))
-                                    ]
-                                        (Graph''addAfterFixed-3 graph, (:beginNode exitBlock), exitNode)
-                                        (when (some? (:fragmentNodes this))
-                                            (§ ass! this (update this :fragmentNodes conj exitNode))
-                                        )
-                                    )
-                                )
-                                (§ ass! exits (conj exits exitNode))
-                            )
-                        )
-                ]
-                    (doseq [#_"LoopExitNode" exitNode (LoopBeginNode''loopExits-1 loopBegin)]
-                        (when-not (contains? exits exitNode)
-                            (when (some? (:fragmentNodes this))
-                                (§ ass! this (update this :fragmentNodes disj exitNode))
-                            )
-                            (Graph''removeFixed-2 graph, exitNode)
-                        )
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (defm LoopFragmentWhole LoopFragment
-        (#_"void" LoopFragment'''beforeDuplication-1 [#_"LoopFragmentWhole" this]
-            (LoopFragmentWhole''cleanupLoopExits-1 this)
-            nil
-        )
-
-        (#_"this" LoopFragment'''insertBefore-2 [#_"LoopFragmentWhole" this, #_"LoopEx" _loop]
-            ;; TODO auto-generated method stub
-            this
-        )
-    )
-)
-
 (class-ns LoopKillCache []
     (defn #_"LoopKillCache" LoopKillCache'new-1 [#_"int" visits]
         (merge (LoopKillCache'class.)
@@ -41619,304 +38680,6 @@ ZeroExtendNode'new-4
 
     (defn #_"boolean" LoopKillCache''loopKillsLocations-1 [#_"LoopKillCache" this]
         (or (:killsAll this) (some? (:firstLocation this)))
-    )
-)
-
-(class-ns LoopPhase [Phase]
-    (defn #_"LoopPhase" LoopPhase'new-1 [#_"LoopPolicies" policies]
-        (merge (LoopPhase'class.)
-            (hash-map
-                #_"LoopPolicies" :policies policies
-            )
-        )
-    )
-)
-
-(class-ns LoopFullUnrollPhase [LoopPhase, Phase]
-    (defn #_"LoopFullUnrollPhase" LoopFullUnrollPhase'new-2 [#_"CanonicalizerPhase" canonicalizer, #_"LoopPolicies" policies]
-        (merge (LoopFullUnrollPhase'class.) (LoopPhase'new-1 policies)
-            (hash-map
-                #_"CanonicalizerPhase" :canonicalizer canonicalizer
-            )
-        )
-    )
-
-    (defm LoopFullUnrollPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"LoopFullUnrollPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (when (Graph''hasLoops-1 graph)
-                (loop []
-                    (let [
-                        #_"LoopsData" dataCounted (LoopsData'new-1 graph)
-                    ]
-                        (LoopsData''detectedCountedLoops-1 dataCounted)
-                        (let [
-                            #_"boolean" peeled?
-                                (loop-when [#_"seq" s (seq (LoopsData''countedLoops-1 dataCounted))] (some? s) => false
-                                    (let [
-                                        #_"LoopEx" _loop (first s)
-                                    ]
-                                        (when (LoopPolicies'''shouldFullUnroll-2 (:policies this), _loop) => (recur (next s))
-                                            (LoopTransformations'fullUnroll-2 _loop, (:canonicalizer this))
-                                            true
-                                        )
-                                    )
-                                )
-                        ]
-                            (LoopsData''deleteUnusedNodes-1 dataCounted)
-                            (recur-if peeled? [])
-                        )
-                    )
-                )
-            )
-            graph
-        )
-    )
-)
-
-(class-ns LoopPartialUnrollPhase [LoopPhase, Phase]
-    (defn #_"LoopPartialUnrollPhase" LoopPartialUnrollPhase'new-2 [#_"LoopPolicies" policies, #_"CanonicalizerPhase" canonicalizer]
-        (merge (LoopPartialUnrollPhase'class.) (LoopPhase'new-1 policies)
-            (hash-map
-                #_"CanonicalizerPhase" :canonicalizer canonicalizer
-            )
-        )
-    )
-
-    ; @SuppressWarnings("try")
-    (defm LoopPartialUnrollPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"LoopPartialUnrollPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (when (Graph''hasLoops-1 graph)
-                (let [
-                    #_"HashSetNodeEventListener" listener (HashSetNodeEventListener'new-0)
-                ]
-                    (loop []
-                        (let [
-                            #_"boolean" changed?
-                                (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 graph, listener)])
-                                    (let [
-                                        #_"LoopsData" dataCounted (LoopsData'new-1 graph)
-                                    ]
-                                        (LoopsData''detectedCountedLoops-1 dataCounted)
-                                        (let [
-                                            changed?
-                                                (loop-when [changed? false #_"seq" s (seq (LoopsData''countedLoops-1 dataCounted))] (some? s) => changed?
-                                                    (let [
-                                                        #_"LoopEx" _loop (first s)
-                                                        changed?
-                                                            (when (and (LoopTransformations'isUnrollableLoop-1 _loop) (LoopPolicies'''shouldPartiallyUnroll-2 (:policies this), _loop)) => changed?
-                                                                (if (LoopBeginNode''isSimpleLoop-1 (LoopEx''loopBegin-1 _loop))
-                                                                    ;; First perform the pre/post transformation and do the partial unroll when we come around again.
-                                                                    (LoopTransformations'insertPrePostLoops-1 _loop)
-                                                                    (LoopTransformations'partialUnroll-1 _loop)
-                                                                )
-                                                                true
-                                                            )
-                                                    ]
-                                                        (recur changed? (next s))
-                                                    )
-                                                )
-                                        ]
-                                            (LoopsData''deleteUnusedNodes-1 dataCounted)
-
-                                            (when (seq (:changedNodes listener))
-                                                (CanonicalizerPhase''applyIncremental-3i (:canonicalizer this), graph, (:changedNodes listener))
-                                                (§ ass! listener (assoc listener :changedNodes #{}))
-                                            )
-                                            changed?
-                                        )
-                                    )
-                                )
-                        ]
-                            (recur-if changed? [])
-                        )
-                    )
-                )
-            )
-            graph
-        )
-    )
-)
-
-(class-ns LoopPeelingPhase [LoopPhase, Phase]
-    (defn #_"LoopPeelingPhase" LoopPeelingPhase'new-1 [#_"LoopPolicies" policies]
-        (merge (LoopPeelingPhase'class.) (LoopPhase'new-1 policies))
-    )
-
-    (defm LoopPeelingPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"LoopPeelingPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (when (Graph''hasLoops-1 graph)
-                (let [
-                    #_"LoopsData" data (LoopsData'new-1 graph)
-                ]
-                    (doseq [#_"LoopEx" _loop (:loopExs data)]
-                        (when (LoopPolicies'''shouldPeel-3 (:policies this), _loop, (:cfg data))
-                            (LoopTransformations'peel-1 _loop)
-                        )
-                    )
-                    (LoopsData''deleteUnusedNodes-1 data)
-                )
-            )
-            graph
-        )
-    )
-)
-
-(class-ns LoopUnswitchingPhase [LoopPhase, Phase]
-    (defn #_"LoopUnswitchingPhase" LoopUnswitchingPhase'new-1 [#_"LoopPolicies" policies]
-        (merge (LoopUnswitchingPhase'class.) (LoopPhase'new-1 policies))
-    )
-
-    (defm LoopUnswitchingPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"LoopUnswitchingPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (when (Graph''hasLoops-1 graph)
-                (loop []
-                    (let [
-                        #_"LoopsData" dataUnswitch (LoopsData'new-1 graph)
-                        #_"boolean" unswitched?
-                            (loop-when [#_"seq" s (seq (:loopExs dataUnswitch))] (some? s) => false
-                                (let [
-                                    #_"LoopEx" _loop (first s)
-                                ]
-                                    (when (LoopPolicies'''shouldTryUnswitch-2 (:policies this), _loop) => (recur (next s))
-                                        (let [
-                                            #_"[ControlSplitNode]" controlSplits (LoopTransformations'findUnswitchable-1 _loop)
-                                        ]
-                                            (when (and (some? controlSplits) (LoopPolicies'''shouldUnswitch-3 (:policies this), _loop, controlSplits)) => (recur (next s))
-                                                (LoopTransformations'unswitch-2 _loop, controlSplits)
-                                                true
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                    ]
-                        (recur-if unswitched? [])
-                    )
-                )
-            )
-            graph
-        )
-    )
-)
-
-(class-ns LoopSafepointEliminationPhase [Phase]
-    (defn #_"LoopSafepointEliminationPhase" LoopSafepointEliminationPhase'new-0 []
-        (LoopSafepointEliminationPhase'class.)
-    )
-
-    (defm LoopSafepointEliminationPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"LoopSafepointEliminationPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (let [
-                #_"LoopsData" loops (LoopsData'new-1 graph)
-            ]
-                (when (and (OptimisticOptimizations''useLoopLimitChecks-1 (:optimisticOpts context)) (GuardsStage'allowsFloatingGuards-1 (:guardsStage graph)))
-                    (LoopsData''detectedCountedLoops-1 loops)
-                    (doseq [#_"LoopEx" _loop (LoopsData''countedLoops-1 loops)]
-                        (when (and (empty? (:children (:loop _loop))) (<= (:bits (CountedLoopInfo''getStamp-1 (:counted _loop))) 32))
-                            (let [
-                                #_"boolean" hasSafepoint
-                                    (loop-when-recur [hasSafepoint false #_"seq" s (seq (LoopBeginNode''loopEnds-1 (LoopEx''loopBegin-1 _loop)))]
-                                                    (some? s)
-                                                    [(or hasSafepoint (:canSafepoint (first s))) (next s)]
-                                                => hasSafepoint
-                                    )
-                            ]
-                                (when hasSafepoint
-                                    (CountedLoopInfo''createOverFlowGuard-1 (:counted _loop))
-                                    (§ ass! (LoopEx''loopBegin-1 _loop) (LoopBeginNode''disableSafepoint-1 (LoopEx''loopBegin-1 _loop)))
-                                )
-                            )
-                        )
-                    )
-                )
-                (doseq [#_"LoopEx" _loop (:loopExs loops) #_"LoopEndNode" loopEnd (LoopBeginNode''loopEnds-1 (LoopEx''loopBegin-1 _loop))]
-                    (loop-when [#_"Block" b (ControlFlowGraph''blockFor-2 (:cfg loops), loopEnd)] (not= b (:header (:loop _loop)))
-                        (or
-                            (loop-when [#_"seq" s (seq (Block''getNodes-1 b))] (some? s)
-                                (let [
-                                    #_"FixedNode" node (first s)
-                                ]
-                                    (when (satisfies? InvokeNode node) => (recur (next s))
-                                        (§ ass! loopEnd (LoopEndNode''disableSafepoint-1 loopEnd))
-                                        :done
-                                    )
-                                )
-                            )
-                            (recur (:dominator b))
-                        )
-                    )
-                )
-                (LoopsData''deleteUnusedNodes-1 loops)
-                graph
-            )
-        )
-    )
-)
-
-;;;
- ; Adds safepoints to loops.
- ;;
-(class-ns LoopSafepointInsertionPhase [Phase]
-    (defn #_"LoopSafepointInsertionPhase" LoopSafepointInsertionPhase'new-0 []
-        (LoopSafepointInsertionPhase'class.)
-    )
-
-    (defm LoopSafepointInsertionPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"LoopSafepointInsertionPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (when GraalOptions'genLoopSafepoints
-                (doseq [#_"LoopBeginNode" loopBeginNode (Graph''getNodes-2 graph, LoopBeginNode) #_"LoopEndNode" loopEndNode (LoopBeginNode''loopEnds-1 loopBeginNode)]
-                    (when (:canSafepoint loopEndNode)
-                        (Graph''addBeforeFixed-3 graph, loopEndNode, (Graph''add-2 graph, (SafepointNode'new-0)))
-                    )
-                )
-            )
-            graph
-        )
-    )
-)
-
-(class-ns LoopsData []
-    (defn #_"LoopsData" LoopsData'new-1 [#_"Graph" graph]
-        (let [
-            #_"ControlFlowGraph" cfg (ControlFlowGraph'compute-3 graph, true, true)
-            #_"LoopsData" this
-                (merge (LoopsData'class.)
-                    (hash-map
-                        #_"ControlFlowGraph" :cfg cfg
-                        #_"LoopEx*" :loopExs nil
-                        #_"{LoopBeginNode LoopEx}" :loopBeginToEx nil
-                    )
-                )
-            this (assoc this :loopExs (mapv #(LoopEx'new-2 %, this) (:loops cfg)))
-            this (assoc this :loopBeginToEx (into {} (map #(vector (LoopEx''loopBegin-1 %) %) (:loopExs this))))
-        ]
-            this
-        )
-    )
-
-    (defn #_"LoopEx" LoopsData''loop-2 [#_"LoopsData" this, #_"LoopBeginNode" loopBegin]
-        (get (:loopBeginToEx this) loopBegin)
-    )
-
-    (defn #_"LoopEx*" LoopsData''countedLoops-1 [#_"LoopsData" this]
-        (filter LoopEx''isCounted-1 (:loopExs this))
-    )
-
-    (defn #_"void" LoopsData''detectedCountedLoops-1 [#_"LoopsData" this]
-        (doseq [#_"LoopEx" _loop (:loopExs this)]
-            (LoopEx''detectCounted-1 _loop)
-        )
-        nil
-    )
-
-    ;;;
-     ; Deletes any nodes created within the scope of this object that have no usages.
-     ;;
-    (defn #_"void" LoopsData''deleteUnusedNodes-1 [#_"LoopsData" this]
-        (doseq [#_"LoopEx" _loop (:loopExs this)]
-            (LoopEx''deleteUnusedNodes-1 _loop)
-        )
-        nil
     )
 )
 
@@ -44093,13 +40856,6 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Returns an iterable which can be used to traverse all successor edge positions of this node.
-     ;;
-    (defn #_"Position*" Node''successorPositions-1 [#_"Node" this]
-        (Edges''getPositions-2 (:successorEdges (:nodeClass this)), this)
-    )
-
-    ;;;
      ; Checks whether this node has no usages.
      ;;
     (defn #_"boolean" Node''hasNoUsages-1 [#_"Node" this]
@@ -44248,23 +41004,6 @@ ZeroExtendNode'new-4
                 (Node''replaceAtUsage-4 this, other, toBeDeleted, node)
             )
             (assoc this :nodeUsages [])
-        )
-    )
-
-    (defn #_"this" Node''replaceAtMatchingUsages-3 [#_"Node" this, #_"Node" other, #_"fn boolean [Node]" f'filter-1]
-        (Node''checkReplaceWith-2 this, other)
-        (when (some? f'filter-1) => (throw! "filter cannot be nil")
-            (Node''checkReplaceWith-2 this, other)
-            (loop-when [this this #_"int" i 0] (< i (count (:nodeUsages this))) => this
-                (let [
-                    #_"Node" usage (nth (:nodeUsages this) i)
-                ]
-                    (when (f'filter-1 usage) => (recur this (inc i))
-                        (Node''replaceAtUsage-4 this, other, nil, usage)
-                        (recur (update this :nodeUsages #(pop' (assoc' % i (peek' %)))) i)
-                    )
-                )
-            )
         )
     )
 
@@ -44449,19 +41188,6 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"boolean" Node''valueEquals-2 [#_"Node" this, #_"Node" other]
         (ß NodeClass''dataEquals-3 (:nodeClass this), this, other)
-    )
-
-    ;;;
-     ; Determines if this node is equal to the other node while ignoring differences in
-     ; {@linkplain Successor control-flow} edges.
-     ;;
-    (defn #_"boolean" Node''dataFlowEquals-2 [#_"Node" this, #_"Node" other]
-        (or (= this other)
-            (and (= (:nodeClass this) (:nodeClass other))
-                 (Node''valueEquals-2 this, other)
-                 (NodeClass''equalInputs-3 (:nodeClass this), this, other)
-            )
-        )
     )
 )
 
@@ -44789,20 +41515,6 @@ ZeroExtendNode'new-4
                  ; Use LoopBeginNode#phiPredecessorIndex(AbstractEndNode) for this purpose.
                  ;;
                 #_"int" :endIndex (LoopBeginNode''nextEndIndex-1 begin)
-                ;;;
-                 ; Most loop ends need a safepoint (flag set to true) so that garbage collection can interrupt
-                 ; a long-running (possibly endless) loop. Safepoints may be disabled for two reasons: (1) Some
-                 ; code must be safepoint free, i.e. uninterruptible by garbage collection. (2) An optimization
-                 ; phase determined that the loop already has another safepoint or cannot be endless, so there
-                 ; is no need for a loop-end safepoint.
-                 ;
-                 ; Note that (1) is a hard correctness issue: emitting a safepoint in uninterruptible code is a bug,
-                 ; i.e. it is not allowed to set the flag back to true once it is false. To ensure that loop ends
-                 ; that are created late, e.g. during control flow simplifications, have no safepoints in such cases,
-                 ; the safepoints are actually disabled for the {@link LoopBeginNode#canEndsSafepoint loop begin}.
-                 ; New loop ends inherit the flag value from the loop begin.
-                 ;;
-                #_"boolean" :canSafepoint (:canEndsSafepoint begin)
             )
         )
     )
@@ -44816,14 +41528,6 @@ ZeroExtendNode'new-4
     (defn #_"this" LoopEndNode''setLoopBegin-2 [#_"LoopEndNode" this, #_"LoopBeginNode" loopBegin]
         (Node''updateUsages-3 this, (:loopBegin this), loopBegin)
         (assoc this :loopBegin loopBegin)
-    )
-
-    ;;;
-     ; Disables safepoints for only this loop end (in contrast to disabling it for
-     ; {@link LoopBeginNode#disableSafepoint() the whole loop}).
-     ;;
-    (defn #_"this" LoopEndNode''disableSafepoint-1 [#_"LoopEndNode" this]
-        (assoc this :canSafepoint false)
     )
 
     (defm LoopEndNode LIRLowerable
@@ -46310,10 +43014,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"boolean" SwitchNode''structureEquals-2 [#_"SwitchNode" this, #_"SwitchNode" switchNode]
-        (and (= (:keySuccessors this) (:keySuccessors switchNode)) (SwitchNode'''equalKeys-2 this, switchNode))
-    )
-
     ;;;
      ; Returns the index of the successor belonging to the key at the specified index.
      ;;
@@ -46412,10 +43112,6 @@ ZeroExtendNode'new-4
     (defm IntegerSwitchNode SwitchNode
         (#_"JavaConstant" SwitchNode'''keyAt-2 [#_"IntegerSwitchNode" this, #_"int" i]
             (JavaConstant'forInt-1 (nth (:keys this) i))
-        )
-
-        (#_"boolean" SwitchNode'''equalKeys-2 [#_"IntegerSwitchNode" this, #_"SwitchNode" switchNode]
-            (and (satisfies? IntegerSwitchNode switchNode) (= (:keys this) (:keys switchNode)))
         )
     )
 
@@ -47117,66 +43813,8 @@ ZeroExtendNode'new-4
         (merge (LoopBeginNode'class.) (AbstractMergeNode'new-0)
             (hash-map
                 #_"double" :loopFrequency 1.0
-                #_"double" :loopOrigFrequency 1.0
                 #_"int" :nextEndIndex 0
-                #_"int" :unswitches 0
-                #_"int" :splits 0
-                #_"LoopType" :loopType :LoopType'SIMPLE_LOOP
-                #_"int" :unrollFactor 1
-                ;;;
-                 ; See LoopEndNode#canSafepoint for more information.
-                 ;;
-                #_"boolean" :canEndsSafepoint true
-                ; @OptionalInput(InputType'Guard)
-                #_"GuardingNode" :overflowGuard nil
             )
-        )
-    )
-
-    (defn #_"boolean" LoopBeginNode''isSimpleLoop-1 [#_"LoopBeginNode" this]
-        (= (:loopType this) :LoopType'SIMPLE_LOOP)
-    )
-
-    (defn #_"this" LoopBeginNode''setPreLoop-1 [#_"LoopBeginNode" this]
-        (assoc this :loopType :LoopType'PRE_LOOP)
-    )
-
-    #_unused
-    (defn #_"boolean" LoopBeginNode''isPreLoop-1 [#_"LoopBeginNode" this]
-        (= (:loopType this) :LoopType'PRE_LOOP)
-    )
-
-    (defn #_"this" LoopBeginNode''setMainLoop-1 [#_"LoopBeginNode" this]
-        (assoc this :loopType :LoopType'MAIN_LOOP)
-    )
-
-    (defn #_"boolean" LoopBeginNode''isMainLoop-1 [#_"LoopBeginNode" this]
-        (= (:loopType this) :LoopType'MAIN_LOOP)
-    )
-
-    (defn #_"this" LoopBeginNode''setPostLoop-1 [#_"LoopBeginNode" this]
-        (assoc this :loopType :LoopType'POST_LOOP)
-    )
-
-    #_unused
-    (defn #_"boolean" LoopBeginNode''isPostLoop-1 [#_"LoopBeginNode" this]
-        (= (:loopType this) :LoopType'POST_LOOP)
-    )
-
-    ;;;
-     ; Disables safepoint for the whole loop, i.e. for all {@link LoopEndNode loop ends}.
-     ;;
-    (defn #_"this" LoopBeginNode''disableSafepoint-1 [#_"LoopBeginNode" this]
-        ;; Store flag locally in case new loop ends are created later on.
-        (let [
-            this (assoc this :canEndsSafepoint false)
-            ;; Propagate flag to all existing loop ends.
-            _
-                (doseq [#_"LoopEndNode" loopEnd (LoopBeginNode''loopEnds-1 this)]
-                    (§ ass! loopEnd (LoopEndNode''disableSafepoint-1 loopEnd))
-                )
-        ]
-            this
         )
     )
 
@@ -47221,10 +43859,6 @@ ZeroExtendNode'new-4
 
     (defn #_"AbstractEndNode" LoopBeginNode''forwardEnd-1 [#_"LoopBeginNode" this]
         (nth (:ends this) 0)
-    )
-
-    (defn #_"this" LoopBeginNode''incrementSplits-1 [#_"LoopBeginNode" this]
-        (update this :splits inc)
     )
 
     (defm LoopBeginNode LIRLowerable
@@ -47278,27 +43912,11 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"this" LoopBeginNode''incrementUnswitches-1 [#_"LoopBeginNode" this]
-        (update this :unswitches inc)
-    )
-
     (defm LoopBeginNode Simplifiable
         (#_"this" Simplifiable'''simplify-2 [#_"LoopBeginNode" this, #_"SimplifierTool" tool]
             (LoopBeginNode''canonicalizePhis-2 this, tool)
             this
         )
-    )
-
-    (defn #_"boolean" LoopBeginNode''isLoopExit-2 [#_"LoopBeginNode" this, #_"AbstractBeginNode" begin]
-        (and (satisfies? LoopExitNode begin) (= (:loopBegin begin) this))
-    )
-
-    (defn #_"LoopExitNode" LoopBeginNode''getSingleLoopExit-1 [#_"LoopBeginNode" this]
-        (first (LoopBeginNode''loopExits-1 this))
-    )
-
-    (defn #_"LoopEndNode" LoopBeginNode''getSingleLoopEnd-1 [#_"LoopBeginNode" this]
-        (first (LoopBeginNode''loopEnds-1 this))
     )
 
     (defn #_"this" LoopBeginNode''removeExits-1 [#_"LoopBeginNode" this]
@@ -47315,11 +43933,6 @@ ZeroExtendNode'new-4
                 (recur this (next s))
             )
         )
-    )
-
-    (defn #_"this" LoopBeginNode''setOverflowGuard-2 [#_"LoopBeginNode" this, #_"GuardingNode" overflowGuard]
-        (Node''updateUsages-3 this, (:overflowGuard this), overflowGuard)
-        (assoc this :overflowGuard overflowGuard)
     )
 
     (def- #_"int" LoopBeginNode'NO_INCREMENT Integer/MIN_VALUE)
@@ -50399,6 +47012,7 @@ ZeroExtendNode'new-4
  ; Marks a position in the graph where a safepoint should be emitted.
  ;;
 (class-ns SafepointNode [DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, LIRLowerable]
+    #_unused
     (defn #_"SafepointNode" SafepointNode'new-0 []
         (merge (SafepointNode'class.) (DeoptimizingFixedWithNextNode'new-1 VoidStamp'instance))
     )
@@ -50418,33 +47032,6 @@ ZeroExtendNode'new-4
     (defm SafepointNode DeoptimizingNode
         (#_"boolean" DeoptimizingNode'''canDeoptimize-1 [#_"SafepointNode" this]
             true
-        )
-    )
-)
-
-;;;
- ; Placeholder node to denote to snippet preparation that the following loop must be completely unrolled.
- ;;
-(class-ns ExplodeLoopNode [FixedWithNextNode, FixedNode, ValueNode, Node]
-    ;;;
-     ; A call to this method must be placed immediately prior to the loop that is to be exploded.
-     ;;
-    (§ intrinsic! #_"void" ExplodeLoopNode'explodeLoop-0 [])
-
-    #_intrinsifier
-    (defn #_"ExplodeLoopNode" ExplodeLoopNode'new-0 []
-        (merge (ExplodeLoopNode'class.) (FixedWithNextNode'new-1 VoidStamp'instance))
-    )
-
-    (defn #_"LoopBeginNode" ExplodeLoopNode''findLoopBegin-1 [#_"ExplodeLoopNode" this]
-        (loop-when [#_"Node*" s nil #_"Node" n (:next this)] (not (satisfies? LoopBeginNode n)) => n
-            (let [
-                s (into' s (Node'''cfgSuccessors-1 n))
-            ]
-                (when (and (= (count s) 1) (not= (nth s 0) n))
-                    (recur s (nth s 0))
-                )
-            )
         )
     )
 )
@@ -51498,7 +48085,7 @@ ZeroExtendNode'new-4
                     (let [
                         #_"LoopBeginNode" loopNode (:merge (:x add))
                     ]
-                        (when (and (not (LoopBeginNode''isSimpleLoop-1 loopNode)) (satisfies? ConstantNode (:y add))) => this
+                        (when (and false (satisfies? ConstantNode (:y add))) => this
                             (let [
                                 #_"int" addBy (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 (:y add)))
                                 this (assoc this :displacement (+ (:displacement this) (* (:value (:scale this)) addBy)))
@@ -55847,21 +52434,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; If all inputs (but the first one) are the same value, the value is returned, otherwise {@code this}.
-     ; Note that nil is a valid return value, since GuardPhiNodes can have nil inputs.
-     ;;
-    (defn #_"ValueNode" PhiNode''singleBackValueOrThis-1 [#_"PhiNode" this]
-        (let [
-            ;; Skip first value, assume second value as single value.
-            #_"ValueNode" singleValue (nth (:phiValues this) 1)
-        ]
-            (loop-when [#_"int" i 2] (< i (count (:phiValues this))) => singleValue
-                (recur-if (= (nth (:phiValues this) i) singleValue) [(inc i)] => this)
-            )
-        )
-    )
-
     (defm PhiNode Canonicalizable
         (#_"ValueNode" Canonicalizable'''canonical-2 [#_"PhiNode" this, #_"CanonicalizerTool" tool]
             (when (PhiNode''isLoopPhi-1 this) => (PhiNode''singleValueOrThis-1 this)
@@ -57202,17 +53774,6 @@ ZeroExtendNode'new-4
             )
         )
     )
-
-    (defm EscapeObjectState VirtualState
-        (#_"boolean" VirtualState'''isPartOfThisState-2 [#_"EscapeObjectState" this, #_"VirtualState" state]
-            (= this state)
-        )
-
-        (#_"void" VirtualState'''applyToVirtual-2 [#_"EscapeObjectState" this, #_"VirtualClosure" closure]
-            (VirtualClosure'''apply-2 closure, this)
-            nil
-        )
-    )
 )
 
 ;;;
@@ -57229,10 +53790,6 @@ ZeroExtendNode'new-4
     )
 
     (defm MaterializedObjectState VirtualState
-        (#_"MaterializedObjectState" VirtualState'''duplicateWithVirtualState-1 [#_"MaterializedObjectState" this]
-            (Graph''add-2 (:graph this), (MaterializedObjectState'new-2 (:object this), (:materializedValue this)))
-        )
-
         (#_"void" VirtualState'''applyToNonVirtual-2 [#_"MaterializedObjectState" this, #_"NodeClosure" closure]
             (NodeClosure'''apply-3 closure, this, (:materializedValue this))
             nil
@@ -57254,10 +53811,6 @@ ZeroExtendNode'new-4
     )
 
     (defm VirtualObjectState VirtualState
-        (#_"VirtualObjectState" VirtualState'''duplicateWithVirtualState-1 [#_"VirtualObjectState" this]
-            (Graph''add-2 (:graph this), (VirtualObjectState'new-2 (:object this), (:vosValues this)))
-        )
-
         (#_"void" VirtualState'''applyToNonVirtual-2 [#_"VirtualObjectState" this, #_"NodeClosure" closure]
             (doseq [#_"ValueNode" value (:vosValues this)]
                 (when (some? value)
@@ -57377,24 +53930,6 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"FrameState" FrameState''duplicate-1 [#_"FrameState" this]
         (Graph''add-2 (:graph this), (FrameState'new-8 (:outerFrameState this), (:bytecode this), (:bci this), (:fsValues this), (:localsSize this), (:stackSize this), (:monitorNodes this), (:virtualMappings this)))
-    )
-
-    ;;;
-     ; Duplicates a FrameState, along with a deep copy of all connected VirtualStates.
-     ;;
-    (defm FrameState VirtualState
-        (#_"FrameState" VirtualState'''duplicateWithVirtualState-1 [#_"FrameState" this]
-            (let [
-                #_"FrameState" outerFrameState (:outerFrameState this)
-                outerFrameState (when (some? outerFrameState) (VirtualState'''duplicateWithVirtualState-1 outerFrameState))
-                #_"EscapeObjectState*" virtualMappings
-                    (when (some? (:virtualMappings this))
-                        (map VirtualState'''duplicateWithVirtualState-1 (:virtualMappings this))
-                    )
-            ]
-                (Graph''add-2 (:graph this), (FrameState'new-8 outerFrameState, (:bytecode this), (:bci this), (:fsValues this), (:localsSize this), (:stackSize this), (:monitorNodes this), virtualMappings))
-            )
-        )
     )
 
     ;;;
@@ -57533,32 +54068,6 @@ ZeroExtendNode'new-4
                 (VirtualState'''applyToNonVirtual-2 (:outerFrameState this), closure)
             )
             nil
-        )
-
-        (#_"void" VirtualState'''applyToVirtual-2 [#_"FrameState" this, #_"VirtualClosure" closure]
-            (VirtualClosure'''apply-2 closure, this)
-            (when (some? (:virtualMappings this))
-                (doseq [#_"EscapeObjectState" state (:virtualMappings this)]
-                    (VirtualState'''applyToVirtual-2 state, closure)
-                )
-            )
-            (when (some? (:outerFrameState this))
-                (VirtualState'''applyToVirtual-2 (:outerFrameState this), closure)
-            )
-            nil
-        )
-
-        (#_"boolean" VirtualState'''isPartOfThisState-2 [#_"FrameState" this, #_"VirtualState" state]
-            (or (= state this)
-                (and (some? (:outerFrameState this)) (VirtualState'''isPartOfThisState-2 (:outerFrameState this), state))
-                (loop [#_"seq" s (seq (:virtualMappings this))]
-                    (and (some? s)
-                        (or (VirtualState'''isPartOfThisState-2 (first s), state)
-                            (recur (next s))
-                        )
-                    )
-                )
-            )
         )
     )
 )
@@ -58059,10 +54568,6 @@ ZeroExtendNode'new-4
     (defn #_"boolean" OptimisticOptimizations''removeNeverExecutedCode-1 [#_"OptimisticOptimizations" this]
         (and GraalOptions'removeNeverExecutedCode (contains? (:enabledOpts this) :Optimization'RemoveNeverExecutedCode))
     )
-
-    (defn #_"boolean" OptimisticOptimizations''useLoopLimitChecks-1 [#_"OptimisticOptimizations" this]
-        (and GraalOptions'useLoopLimitChecks (contains? (:enabledOpts this) :Optimization'UseLoopLimitChecks))
-    )
 )
 
 (class-ns PhaseContext []
@@ -58103,30 +54608,10 @@ ZeroExtendNode'new-4
         (let [
             #_"HighTier" this (merge (HighTier'class.) (PhaseSuite'new-0))
             #_"CanonicalizerPhase" canonicalizer (CanonicalizerPhase'new-0)
-            #_"LoopPolicies" loopPolicies (DefaultLoopPolicies'new-0)
             this (PhaseSuite''appendPhase-2 this, canonicalizer)
             this
                 (when GraalOptions'conditionalElimination => this
                     (PhaseSuite''appendPhase-2 this, (IterativeConditionalEliminationPhase'new-2 canonicalizer, false))
-                )
-            this
-                (when GraalOptions'fullUnroll => this
-                    (PhaseSuite''appendPhase-2 this, (LoopFullUnrollPhase'new-2 canonicalizer, loopPolicies))
-                )
-            this
-                (when GraalOptions'optLoopTransform => this
-                    (let [
-                        this
-                            (when GraalOptions'loopPeeling => this
-                                (PhaseSuite''appendPhase-2 this, (LoopPeelingPhase'new-1 loopPolicies))
-                            )
-                        this
-                            (when GraalOptions'loopUnswitch => this
-                                (PhaseSuite''appendPhase-2 this, (LoopUnswitchingPhase'new-1 loopPolicies))
-                            )
-                    ]
-                        this
-                    )
                 )
             this (PhaseSuite''appendPhase-2 this, canonicalizer)
             this
@@ -58205,7 +54690,6 @@ ZeroExtendNode'new-4
         (let [
             #_"MidTier" this (merge (MidTier'class.) (PhaseSuite'new-0))
             #_"CanonicalizerPhase" canonicalizer (CanonicalizerPhase'new-0)
-            #_"LoopPolicies" loopPolicies (DefaultLoopPolicies'new-0)
             this (PhaseSuite''appendPhase-2 this, (LockEliminationPhase'new-0))
             this
                 (when GraalOptions'optFloatingReads => this
@@ -58215,19 +54699,9 @@ ZeroExtendNode'new-4
                 (when GraalOptions'conditionalElimination => this
                     (PhaseSuite''appendPhase-2 this, (IterativeConditionalEliminationPhase'new-2 canonicalizer, true))
                 )
-            this (PhaseSuite''appendPhase-2 this, (LoopSafepointEliminationPhase'new-0))
-            this (PhaseSuite''appendPhase-2 this, (LoopSafepointInsertionPhase'new-0))
             this (PhaseSuite''appendPhase-2 this, (GuardLoweringPhase'new-0))
             this (PhaseSuite''appendPhase-2 this, (LoweringPhase'new-2 canonicalizer, :LoweringStage'MID_TIER))
             this (PhaseSuite''appendPhase-2 this, (FrameStateAssignmentPhase'new-0))
-            this
-                (when (and GraalOptions'optLoopTransform GraalOptions'partialUnroll) => this
-                    (PhaseSuite''appendPhase-2 this, (LoopPartialUnrollPhase'new-2 loopPolicies, canonicalizer))
-                )
-            this
-                (when GraalOptions'reassociateInvariants => this
-                    (PhaseSuite''appendPhase-2 this, (ReassociateInvariantPhase'new-0))
-                )
             this (PhaseSuite''appendPhase-2 this, canonicalizer)
             this (PhaseSuite''appendPhase-2 this, (WriteBarrierAdditionPhase'new-0))
         ]
@@ -59394,36 +55868,6 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Rearrange {@link BinaryArithmeticNode#isAssociative() associative binary operations} so that
- ; invariant parts of the expression can be moved outside of the loop.
- ;;
-(class-ns ReassociateInvariantPhase [Phase]
-    (defn #_"ReassociateInvariantPhase" ReassociateInvariantPhase'new-0 []
-        (ReassociateInvariantPhase'class.)
-    )
-
-    (defm ReassociateInvariantPhase Phase
-        (#_"Graph" Phase'''run-3 [#_"ReassociateInvariantPhase" this, #_"Graph" graph, #_"PhaseContext" context]
-            (loop [#_"int" iterations 0]
-                (let [
-                    #_"LoopsData" dataReassociate (LoopsData'new-1 graph)
-                    #_"boolean" changed?
-                        (loop-when-recur [changed? false #_"seq" s (seq (:loopExs dataReassociate))]
-                                        (some? s)
-                                        [(or changed? (LoopEx''reassociateInvariants-1 (first s))) (next s)]
-                                    => changed?
-                        )
-                ]
-                    (LoopsData''deleteUnusedNodes-1 dataReassociate)
-                    (recur-if changed? [(inc iterations)])
-                )
-            )
-            graph
-        )
-    )
-)
-
-;;;
  ; Removes move instructions, where the destination value is already in place.
  ;;
 (class-ns RedundantMoveElimination [LIRPhase #_"<LIRPhaseContext>"] ;; PostAllocationPhase
@@ -60535,37 +56979,6 @@ ZeroExtendNode'new-4
  ; constants to the snippet's ConstantParameter parameters.
  ;;
 (class-ns SnippetTemplate []
-    (defn- #_"void" SnippetTemplate'explodeLoops-1 [#_"Graph" snippet]
-        ;; do any required loop explosion
-        (loop []
-            (let [
-                #_"boolean" exploded? false
-                #_"ExplodeLoopNode" explodeLoop (first (Graph''getNodes-2 snippet, ExplodeLoopNode))
-            ]
-                (when (some? explodeLoop) ;; earlier canonicalization may have removed the loop altogether
-                    (let [
-                        #_"LoopBeginNode" loopBegin (ExplodeLoopNode''findLoopBegin-1 explodeLoop)
-                    ]
-                        (when (some? loopBegin)
-                            (let [
-                                #_"LoopEx" _loop (LoopsData''loop-2 (LoopsData'new-1 snippet), loopBegin)
-                                #_"int" mark (Graph''getMark-1 snippet)
-                            ]
-                                (LoopTransformations'fullUnroll-2 _loop, (CanonicalizerPhase'new-0))
-                                (CanonicalizerPhase''applyIncremental-3m (CanonicalizerPhase'new-0), snippet, mark)
-                                (LoopEx''deleteUnusedNodes-1 _loop)
-                            )
-                        )
-                        (GraphUtil'removeFixedWithUnusedInputs-1 explodeLoop)
-                        (§ ass exploded? true)
-                    )
-                )
-                (recur-if exploded? [])
-            )
-        )
-        nil
-    )
-
     (defn #_"SnippetTemplate" SnippetTemplate'new-2 [#_"Arguments" args, #_"Node" replacee]
         (let [
             #_"SnippetTemplate" this
@@ -60625,7 +57038,7 @@ ZeroExtendNode'new-4
                         )
                     )
                 )
-            _ (SnippetTemplate'explodeLoops-1 snippet)
+            #_do_explode_loops
             ;; perform lowering on the snippet
             snippet
                 (when-not (GuardsStage'allowsFloatingGuards-1 (:guardsStage args)) => snippet
@@ -65954,22 +62367,6 @@ ZeroExtendNode'new-4
                     false
             )
         )
-    )
-)
-
-(class-ns WorkListEntry []
-    (defn #_"WorkListEntry" WorkListEntry'new-2 [#_"Node" n, #_"{Node}" loopNodes]
-        (merge (WorkListEntry'class.)
-            (hash-map
-                #_"Node*" :usages (:nodeUsages n)
-                #_"Node" :n n
-                #_"boolean" :isLoopNode (contains? loopNodes n)
-            )
-        )
-    )
-
-    (§ override! #_"boolean" #_"Object." equals [#_"WorkListEntry" this, #_"Object" obj]
-        (and (satisfies? WorkListEntry obj) (= (:n this) (:n obj)))
     )
 )
 
