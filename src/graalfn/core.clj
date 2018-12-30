@@ -400,7 +400,7 @@ AddressLowering'new-1
 AddressLowering'postProcess-1
 AddressLowering'preProcess-1
 AddressLowering'updateDisplacement-3
-AddressLoweringPhase'new-1
+AddressLoweringPhase'run-2
 AddressNode'new-0
 AllocatableRegisters'new-3
 AllocatableValue'new-1
@@ -899,9 +899,6 @@ CanonicalCondition'EQ
 CanonicalCondition'LT
 CanonicalizableLocation'foldIndirection-3
 CanonicalizableLocation'new-1
-CanonicalizerInstance'new-2
-CanonicalizerPhase''applyIncremental-3
-CanonicalizerPhase'new-0
 ChainedNodeEventListener'new-2
 ClassGetHubNode'canonical-4
 ClassGetHubNode'create-2
@@ -1029,7 +1026,7 @@ ConditionFlag'Parity
 ConditionFlag'Positive
 ConditionFlag'Zero
 ConditionalEliminationInstance'new-3
-ConditionalEliminationPhase'new-1
+ConditionalEliminationPhase'run-2
 ConditionalNode'canonicalizeConditional-4
 ConditionalNode'create-1
 ConditionalNode'create-3
@@ -1173,7 +1170,7 @@ DummyGuardHandle'new-1
 EMOptimizer''optimizeMovesAtBlockBegin-2
 EMOptimizer''optimizeMovesAtBlockEnd-2
 EMOptimizer'new-1
-EarlyReadEliminationPhase'new-1
+EarlyReadEliminationPhase'run-1
 EdgeInfo'new-4
 EdgeMoveOptimizer'new-0
 Edges''copy-3
@@ -1197,10 +1194,9 @@ EffectsClosure''addScalarAlias-3
 EffectsClosure''getScalarAlias-2
 EffectsClosure''hasScalarReplacedInputs-2
 EffectsClosure'new-2
-EffectsPhase''postIteration-3
 EffectsPhase''runAnalysis-2
+EffectsPhase'new-1
 EffectsPhase'new-2
-EffectsPhase'new-3
 EffortClosure''getAverageEffort-1
 EffortClosure'new-2
 EndLockScopeNode'new-0
@@ -1210,7 +1206,7 @@ EpilogueBlockEndOp'new-0
 EscapeObjectState'new-1
 ExecutableRef''resolve-3
 ExecutableRef'new-2
-ExpandLogicPhase'new-0
+ExpandLogicPhase'run-1
 FastAcquireBiasedLockNode'new-1
 FieldInfo'new-4
 FieldLocationIdentity'new-1
@@ -1224,7 +1220,7 @@ FinalFieldBarrierNode'new-1
 FixPointIntervalBuilder''getOrCreateInterval-2
 FixPointIntervalBuilder'build-1
 FixReadsClosure'new-0
-FixReadsPhase'new-1
+FixReadsPhase''run-1
 FixedAccessNode''setNullCheck-2
 FixedAccessNode'new-4
 FixedBinaryNode'new-3
@@ -1248,9 +1244,8 @@ FloatingReadClosure'new-3
 FloatingReadNode'new-4
 FloatingReadNode'new-5
 FloatingReadNode'new-6
+FloatingReadPhase'run-3
 FloatingReadPhase'mergeMemoryMaps-2
-FloatingReadPhase'new-0
-FloatingReadPhase'new-2
 ForeignCallDescriptor'DEOPTIMIZATION_HANDLER
 ForeignCallDescriptor'G1WBPOSTCALL
 ForeignCallDescriptor'G1WBPRECALL
@@ -1314,7 +1309,7 @@ FrameState'new-1
 FrameState'new-2
 FrameState'new-7a
 FrameStateAssignmentClosure'new-0
-FrameStateAssignmentPhase'new-0
+FrameStateAssignmentPhase'run-1
 FrameStateBuilder''clearNonLiveLocals-4
 FrameStateBuilder''clearStack-1
 FrameStateBuilder''create-2
@@ -1374,7 +1369,6 @@ Graph''addDuplicates-4m
 Graph''addDuplicates-4r
 Graph''addInputs-2
 Graph''addOrUniqueWithInputs-2
-Graph''freeze-1
 Graph''getInvokes-1
 Graph''getNodeCount-1
 Graph''getNodes-1
@@ -1383,7 +1377,6 @@ Graph''getParameter-2
 Graph''getReturnStamp-1
 Graph''hasLoops-1
 Graph''hasVirtualizableAllocation-1
-Graph''isFrozen-1
 Graph''maybeAddOrUnique-2
 Graph''reduceDegenerateLoopBegin-2
 Graph''reduceTrivialMerge-2
@@ -1402,10 +1395,9 @@ Graph''setAfterFixReadPhase-2
 Graph''setAfterFloatingReadPhase-2
 Graph''setGuardsStage-2
 Graph''setHasValueProxies-2
-Graph''setStart-2
 Graph''unregister-2
 Graph'new-1
-GraphBuilderPhase'new-0
+GraphBuilderPhase'run-1
 GraphEffects''add-2
 GraphEffects''addAll-2
 GraphEffects''addFixedNodeBefore-3
@@ -1439,7 +1431,7 @@ GraphUtil'tryKillUnused-1
 GraphUtil'unlinkFixedNode-1
 GraphUtil'unproxify-1n
 GraphUtil'unproxify-1p
-GuardLoweringPhase'new-0
+GuardLoweringPhase'run-1
 GuardNode'new-5
 GuardsStage'SET
 GuardsStage'allowsFloatingGuards-1
@@ -1450,7 +1442,6 @@ HashSetNodeEventListener''exclude-2
 HashSetNodeEventListener'new-0
 HashSetNodeEventListener'new-1
 HeapBaseNode'new-1
-HighTier'new-0
 HotSpot'ageMaskInPlace
 HotSpot'allocateInstancePrefetchLines
 HotSpot'allocatePrefetchDistance
@@ -1543,7 +1534,7 @@ HotSpot'objectResultOffset
 HotSpot'oopEncoding
 HotSpot'pendingDeoptimizationOffset
 HotSpot'pendingExceptionOffset
-HotSpot'plugins
+HotSpot'plugin
 HotSpot'pollFarMark
 HotSpot'pollNearMark
 HotSpot'pollReturnFarMark
@@ -1582,7 +1573,7 @@ HotSpot'vmPageSize
 HotSpot'writeBarrierPostAddress
 HotSpot'writeBarrierPreAddress
 HotSpotDirectCallTargetNode'new-6
-HotSpotNodePlugin'new-0
+HotSpotPlugin'new-0
 HotSpotSwitchClosure'new-3
 HubGetClassNode'new-1
 IfNode''eliminateNegation-1
@@ -1594,7 +1585,6 @@ IfNode''setTrueSuccessorProbability-2
 IfNode'new-4b
 IfNode'new-4f
 IllegalStamp'instance
-IncrementalCanonicalizerPhase'new-2
 InfoElement'new-4
 InputEdges'new-2
 InputEdges'translateInto-2
@@ -1751,7 +1741,7 @@ InvokeNode'new-3
 IsNullNode'create-1
 IsNullNode'new-1
 IsNullNode'tryCanonicalize-1
-IterativeConditionalEliminationPhase'new-2
+IterativeConditionalEliminationPhase'run-2
 JSRData'new-0
 JVMCI'runtime
 JavaConstant''isNonNull-1
@@ -2088,7 +2078,7 @@ LocationSet''addAll-2
 LocationSet''contains-2
 LocationSet''isAny-1
 LocationSet'new-0
-LockEliminationPhase'new-0
+LockEliminationPhase'run-1
 LockStack''makeLockSlot-2
 LockStack'new-2
 LockStackHolder'new-1
@@ -2137,7 +2127,6 @@ LoopKillCache''rememberLoopKilledLocation-2
 LoopKillCache''setKillsAll-1
 LoopKillCache''visited-1
 LoopKillCache'new-1
-LowTier'new-0
 LowerGuards'new-1
 LowerOp''getSucceedingStampForX-5
 LowerOp''getSucceedingStampForXLowerXPlusA-4
@@ -2174,10 +2163,10 @@ Lowerer'smallestCompareWidth-0
 Lowerer'storeBarrierType-2
 Lowerer'unsafeLoadSnippets
 Lowerer'writeBarrierSnippets
-LoweringPhase'new-2
+LoweringPhase'run-2
 LoweringPhase'processBlock-1
 LoweringPhase'processBlockBounded-1
-LoweringRound'new-1
+LoweringRound'run-2
 LoweringStage'SET
 LoweringTool''createGuard-5
 LoweringTool''createGuard-6
@@ -2253,7 +2242,6 @@ MethodRef'new-1
 MicroBlock''add-2
 MicroBlock''prependChildrenTo-2
 MicroBlock'new-1
-MidTier'new-0
 MonitorEnterNode'new-2
 MonitorExitNode'new-2
 MonitorIdNode''setLockDepth-2
@@ -2357,7 +2345,7 @@ Node''hasUsages-1
 Node''inputPositions-1
 Node''inputs-1
 Node''isAlive-1
-Node''isDeleted-1
+Node''isDeleted-1
 Node''markDeleted-1
 Node''maybeNotifyZeroUsages-2
 Node''removeUsage-2
@@ -2496,10 +2484,7 @@ PartialEscapeClosure''getObjectState-3
 PartialEscapeClosure'new-1
 PartialEscapeClosure'updateStatesForMaterialized-3
 PartialEscapeMergeProcessor'new-2
-PartialEscapePhase'new-2
-PartialEscapePhase'new-3
-PhaseSuite''appendPhase-2
-PhaseSuite'new-0
+PartialEscapePhase'run-1
 PhiInfoElement''get-2
 PhiInfoElement''set-3
 PhiInfoElement'new-0
@@ -2521,9 +2506,6 @@ PiNode'new-2
 PiNode'new-3
 Placeholder'new-1
 PlaceholderStamp'SINGLETON
-Plugins''getOverridingStamp-4
-Plugins'create-0
-Plugins'new-0
 PointerCastNode'new-2
 PointerCompressionOp''getBaseRegister-1
 PointerCompressionOp''getShift-1
@@ -2568,7 +2550,7 @@ ProcessFrame''enterAlwaysReached-2
 ProcessFrame''postprocess-1
 ProcessFrame''preprocess-1
 ProcessFrame'new-5
-PropagateDeoptimizeProbabilityPhase'new-0
+PropagateDeoptimizeProbabilityPhase'run-1
 RMEOptimization''doOptimize-2
 RMEOptimization'new-1
 RMIOp'new-5
@@ -2638,7 +2620,7 @@ RegisterValue'new-2
 Rem'new-2
 RemNode'create-2
 RemNode'new-2
-RemoveValueProxyPhase'new-0
+RemoveValueProxyPhase'run-1
 ReplacementsUtil'REFERENT_OFFSET
 ReplacementsUtil'clearPendingException-1
 ReplacementsUtil'getAndClearObjectResult-1
@@ -2686,7 +2668,7 @@ Scale'fromInt-1
 Scale'fromShift-1
 Schedule''run-1
 Schedule'new-3
-SchedulePhase'new-1
+SchedulePhase'run-2
 ScheduledNodeIterator''insert-3
 ScheduledNodeIterator''processNodes-3
 ScheduledNodeIterator''replaceCurrent-2
@@ -2717,6 +2699,10 @@ SignedDivNode'new-2
 SignedRemNode'create-2
 SignedRemNode'new-2
 Signedness'SET
+Simplifier''add-2
+Simplifier''addAll-2
+Simplifier'run-1
+Simplifier'run-2
 SlotSize'SET
 SnippetAnchorNode'new-0
 SnippetInfo'new-2
@@ -2885,7 +2871,7 @@ UsePosList''size-1
 UsePosList''splitAt-2
 UsePosList''usePos-2
 UsePosList'new-0
-UseTrappingNullChecksPhase'new-0
+UseTrappingNullChecksPhase'run-1
 Utf8'new-1
 VMConfigNode'cardTableAddress-0
 VMConfigNode'isCardTableAddressConstant-0
@@ -2965,8 +2951,23 @@ VirtualObjectNode'new-2
 VirtualObjectState'new-2
 VirtualStackSlot'new-2
 VirtualState'new-0
-VirtualizerTool''reset-5
-VirtualizerTool'new-1
+Virtualizer''addLock-3
+Virtualizer''addNode-2
+Virtualizer''createVirtualObject-5
+Virtualizer''delete-1
+Virtualizer''ensureMaterialized-2
+Virtualizer''getAlias-2
+Virtualizer''getEntry-3
+Virtualizer''getMaximumEntryCount-1
+Virtualizer''removeLock-2
+Virtualizer''replaceFirstInput-3
+Virtualizer''replaceWith-2
+Virtualizer''replaceWithValue-2
+Virtualizer''replaceWithVirtual-2
+Virtualizer''reset-5
+Virtualizer''setVirtualEntry-4
+Virtualizer''setVirtualEntry-6
+Virtualizer'new-1
 VoidStamp'instance
 Word''aboveOrEqual-2i
 Word''aboveOrEqual-2w
@@ -3125,7 +3126,7 @@ WordTypes'isWordOperation-1
 WordTypes'klassPointer
 WordTypes'word
 WriteBarrier'new-0
-WriteBarrierAdditionPhase'new-0
+WriteBarrierAdditionPhase'run-1
 WriteBarrierTemplates'new-1
 WriteNode'new-4
 Xor'new-2
@@ -3318,7 +3319,6 @@ ZeroExtendNode'new-4
 (defp AddNode)
 (defp Address)
 (defp AddressLowering)
-(defp AddressLoweringPhase)
 
 ;;;
  ; Base class for nodes that deal with addressing calculation.
@@ -3391,16 +3391,16 @@ ZeroExtendNode'new-4
 
 ;;;
  ; This sub-interface of Canonicalizable is intended for nodes that have exactly two inputs.
- ; It has an additional #canonical(CanonicalizerTool, Node, Node) method that looks at the given
+ ; It has an additional #canonical(Canonicalizer, Node, Node) method that looks at the given
  ; inputs instead of the current inputs of the node - which can be used to ask "what if this
  ; input is changed to this node" - questions.
  ;;
 (defp Binary
     ;;;
-     ; Similar to Canonicalizable#canonical(CanonicalizerTool), except that implementations should act as if the
+     ; Similar to Canonicalizable#canonical(Canonicalizer), except that implementations should act as if the
      ; current input of the node was the given one, i.e. they should never look at the inputs via the this pointer.
      ;;
-    (#_"Node" Binary'''canonical-4 [#_"Binary" this, #_"CanonicalizerTool" tool, #_"Node" forX, #_"Node" forY])
+    (#_"Node" Binary'''canonical-4 [#_"Binary" this, #_"Canonicalizer" tool, #_"Node" forX, #_"Node" forY])
     ;;;
      ; Ensure a canonical ordering of inputs for commutative nodes to improve GVN results.
      ; Order the inputs by increasing Node#id and call Graph#findDuplicate(Node) on the node
@@ -3565,7 +3565,7 @@ ZeroExtendNode'new-4
  ; Implementations should return a replacement that is always semantically correct for
  ; the given inputs, or "this" if they do not see an opportunity for improvement.
  ;
- ; <b>Implementations of Canonicalizable#canonical(CanonicalizerTool) or the equivalent
+ ; <b>Implementations of Canonicalizable#canonical(Canonicalizer) or the equivalent
  ; methods of the two sub-interfaces must not have any side effects.</b>
  ; They are not allowed to change inputs, successors or properties of any node (including
  ; the current one) and they also cannot add new nodes to the graph.
@@ -3595,7 +3595,7 @@ ZeroExtendNode'new-4
      ;
      ; @param tool provides access to runtime interfaces like MetaAccessProvider
      ;;
-    (#_"Node" Canonicalizable'''canonical-2 [#_"Canonicalizable" this, #_"CanonicalizerTool" tool])
+    (#_"Node" Canonicalizable'''canonical-2 [#_"Canonicalizable" this, #_"Canonicalizer" tool])
 )
 
 (defp CanonicalizableLocation
@@ -3603,21 +3603,19 @@ ZeroExtendNode'new-4
 )
 
 (defp CanonicalizedCondition)
-(defp CanonicalizerInstance)
-(defp CanonicalizerPhase)
 
-(defp CanonicalizerTool
-    (#_"boolean" CanonicalizerTool'''canonicalizeReads-1 [#_"CanonicalizerTool" this])
+(defp Canonicalizer
+    (#_"boolean" Canonicalizer'''canonicalizeReads-1 [#_"Canonicalizer" this])
     ;;;
      ; If this method returns false, not all {@link Node#usages() usages of a node} are yet available.
      ; So a node must not be canonicalized base on, e.g. information returned from Node#hasNoUsages().
      ;;
-    (#_"boolean" CanonicalizerTool'''allUsagesAvailable-1 [#_"CanonicalizerTool" this])
+    (#_"boolean" Canonicalizer'''allUsagesAvailable-1 [#_"Canonicalizer" this])
     ;;;
      ; Indicates the smallest width for comparing an integer value on the target platform.
      ; If this method returns nil, then there is no known smallest compare width.
      ;;
-    (#_"Integer" CanonicalizerTool'''smallestCompareWidth-1 [#_"CanonicalizerTool" this])
+    (#_"Integer" Canonicalizer'''smallestCompareWidth-1 [#_"Canonicalizer" this])
 )
 
 (defp ChainedNodeEventListener)
@@ -3675,7 +3673,6 @@ ZeroExtendNode'new-4
 (defp ConditionAnchorNode)
 (defp ConditionFlag)
 (defp ConditionalEliminationInstance)
-(defp ConditionalEliminationPhase)
 (defp ConditionalNode)
 
 ;;;
@@ -3900,7 +3897,6 @@ ZeroExtendNode'new-4
 (defp EpilogueBlockEndOp)
 (defp EscapeObjectState)
 (defp ExecutableRef)
-(defp ExpandLogicPhase)
 (defp FastAcquireBiasedLockNode)
 (defp FieldInfo)
 (defp FieldLocationIdentity)
@@ -3909,7 +3905,6 @@ ZeroExtendNode'new-4
 (defp FinalFieldBarrierNode)
 (defp FixPointIntervalBuilder)
 (defp FixReadsClosure)
-(defp FixReadsPhase)
 (defp FixedAccessNode)
 (defp FixedBinaryNode)
 (defp FixedGuardNode)
@@ -3934,7 +3929,6 @@ ZeroExtendNode'new-4
 (defp FloatingNode)
 (defp FloatingReadClosure)
 (defp FloatingReadNode)
-(defp FloatingReadPhase)
 (defp ForeignCallDescriptor)
 (defp ForeignCallLinkage)
 (defp ForeignCallOp)
@@ -3944,7 +3938,6 @@ ZeroExtendNode'new-4
 (defp FrameMapBuilder)
 (defp FrameState)
 (defp FrameStateAssignmentClosure)
-(defp FrameStateAssignmentPhase)
 (defp FrameStateBuilder)
 (defp G1PostWriteBarrier)
 (defp G1PreWriteBarrier)
@@ -3952,9 +3945,7 @@ ZeroExtendNode'new-4
 (defp GetClassNode)
 (defp GetObjectAddressNode)
 (defp Graph)
-(defp GraphBuilderPhase)
 (defp GraphEffects)
-(defp GuardLoweringPhase)
 (defp GuardNode)
 
 (defp GuardRewirer
@@ -3986,7 +3977,6 @@ ZeroExtendNode'new-4
 (defp HeapAccess)
 
 (defp HeapBaseNode)
-(defp HighTier)
 
 ;;;
  ; Marker interface for HotSpot specific constants.
@@ -3998,7 +3988,7 @@ ZeroExtendNode'new-4
 )
 
 (defp HotSpotDirectCallTargetNode)
-(defp HotSpotNodePlugin)
+(defp HotSpotPlugin)
 
 ;;;
  ; Implementation of {@link JavaType} for resolved non-primitive HotSpot classes.
@@ -4033,8 +4023,6 @@ ZeroExtendNode'new-4
 (defp ImplicitNullCheck
     (#_"boolean" ImplicitNullCheck'''makeNullCheckFor-3 [#_"ImplicitNullCheck" this, #_"Value" value, #_"int" implicitNullCheckLimit])
 )
-
-(defp IncrementalCanonicalizerPhase)
 
 ;;;
  ; Marker interface for nodes that contains other nodes. When the inputs to this node changes,
@@ -4141,7 +4129,6 @@ ZeroExtendNode'new-4
 (defp InvokeTarget)
 
 (defp IsNullNode)
-(defp IterativeConditionalEliminationPhase)
 (defp JSRData)
 
 ;;;
@@ -4550,7 +4537,6 @@ ZeroExtendNode'new-4
 (defp LocationIdentity)
 
 (defp LocationSet)
-(defp LockEliminationPhase)
 (defp LockStack)
 (defp LockStackHolder)
 (defp LockState)
@@ -4563,7 +4549,6 @@ ZeroExtendNode'new-4
 (defp LoopEndNode)
 (defp LoopExitNode)
 (defp LoopKillCache)
-(defp LowTier)
 (defp LowerGuards)
 
 (defp LowerOp
@@ -4596,7 +4581,6 @@ ZeroExtendNode'new-4
 
 (defp LoweredAtomicReadAndWriteNode)
 (defp LoweredCallTargetNode)
-(defp LoweringPhase)
 (defp LoweringRound)
 (defp LoweringTool)
 (defp MOp)
@@ -4675,7 +4659,6 @@ ZeroExtendNode'new-4
 (defp MethodCallTargetNode)
 (defp MethodRef)
 (defp MicroBlock)
-(defp MidTier)
 
 ;;;
  ; Denotes monitor locking transition.
@@ -4940,16 +4923,6 @@ ZeroExtendNode'new-4
 (defp PartialEscapeClosure)
 (defp PartialEscapeMergeProcessor)
 (defp PartialEscapePhase)
-
-;;;
- ; Base for all compiler phases. Subclasses should be stateless. There will be one global instance
- ; for each phase that is shared for all compilations.
- ;;
-(defp Phase
-    (#_"Graph" Phase'''run-2 [#_"Phase" this, #_"Graph" graph])
-)
-
-(defp PhaseSuite)
 (defp PhiInfoElement)
 
 ;;;
@@ -4983,7 +4956,6 @@ ZeroExtendNode'new-4
 )
 
 (defp PlaceholderStamp)
-(defp Plugins)
 (defp PointerCastNode)
 (defp PointerCompressionOp)
 (defp PointerEqualsNode)
@@ -4995,7 +4967,6 @@ ZeroExtendNode'new-4
 (defp PrimitiveStamp)
 (defp PrimitiveStrategy)
 (defp ProcessFrame)
-(defp PropagateDeoptimizeProbabilityPhase)
 
 ;;;
  ; This interface marks nodes whose result is the same as one of their inputs. Such nodes are used
@@ -5040,7 +5011,6 @@ ZeroExtendNode'new-4
 (defp RegisterValue)
 (defp Rem)
 (defp RemNode)
-(defp RemoveValueProxyPhase)
 
 ;;;
  ; Represents a reference to a resolved Java field. Fields, like methods and types, are resolved
@@ -5053,10 +5023,6 @@ ZeroExtendNode'new-4
      ;;
     (#_"int" ResolvedJavaField'''getModifiers-1 [#_"ResolvedJavaField" this])
     (#_"int" ResolvedJavaField'''getOffset-1 [#_"ResolvedJavaField" this])
-    ;;;
-     ; Determines if this field is a synthetic field as defined by the Java Language Specification.
-     ;;
-    (#_"boolean" ResolvedJavaField'''isSynthetic-1 [#_"ResolvedJavaField" this])
     ;;;
      ; Determines if a given object contains this field.
      ;
@@ -5284,7 +5250,6 @@ ZeroExtendNode'new-4
 (defp SaveRbp)
 (defp Scale)
 (defp Schedule)
-(defp SchedulePhase)
 
 ;;;
  ; Iterates over a list of nodes, which usually comes from Schedule#getBlockToNodesMap().
@@ -5375,26 +5340,17 @@ ZeroExtendNode'new-4
 (defp SignedRemNode)
 
 ;;;
- ; This interface allows nodes to perform more complicated simplifications, in contrast to
- ; Canonicalizable, which supports only replacing the current node.
+ ; This interface allows nodes to perform more complicated simplifications,
+ ; in contrast to Canonicalizable, which supports only replacing the current node.
  ;
- ; Implementors of this interface need to be aware that they need to call
- ; SimplifierTool#addToWorkList(Node) for each node that might be influenced
- ; (in terms of simplification and canonicalization) by the actions performed in simplify.
+ ; Implementors of this interface need to call Simplifier#add(Node) for each node that might be
+ ; influenced (in terms of simplification and canonicalization) by the actions performed in simplify.
  ;;
 (defp Simplifiable
-    (#_"this" Simplifiable'''simplify-2 [#_"Simplifiable" this, #_"SimplifierTool" tool])
+    (#_"this" Simplifiable'''simplify-2 [#_"Simplifiable" this, #_"Simplifier" tool])
 )
 
-(defp SimplifierTool
-    (#_"void" SimplifierTool'''deleteBranch-2 [#_"SimplifierTool" this, #_"Node" branch])
-    ;;;
-     ; Adds a node to the worklist independent of whether it has already been on the worklist.
-     ;;
-    (#_"this" SimplifierTool'''addToWorkList-2n [#_"SimplifierTool" this, #_"Node" node])
-    (#_"this" SimplifierTool'''addToWorkList-2s [#_"SimplifierTool" this, #_"Node*" nodes])
-    (#_"void" SimplifierTool'''removeIfUnused-2 [#_"SimplifierTool" this, #_"Node" node])
-)
+(defp Simplifier)
 
 (defp Single
     ;;;
@@ -5409,9 +5365,8 @@ ZeroExtendNode'new-4
 (defp SnippetAnchorNode)
 
 ;;;
- ; Holds the ResolvedJavaMethod of the snippet, together with some information about the
- ; method that needs to be computed only once. The SnippetInfo should be created once per
- ; snippet and then cached.
+ ; Holds the ResolvedJavaMethod of the snippet, together with some information about the method that
+ ; needs to be computed only once. The SnippetInfo should be created once per snippet and then cached.
  ;;
 (defp SnippetInfo)
 
@@ -5648,18 +5603,18 @@ ZeroExtendNode'new-4
 
 ;;;
  ; This sub-interface of Canonicalizable is intended for nodes that have exactly one input. It has an
- ; additional #canonical(CanonicalizerTool, Node) method that looks at the given input instead of the current
+ ; additional #canonical(Canonicalizer, Node) method that looks at the given input instead of the current
  ; input of the node - which can be used to ask "what if this input is changed to this node" - questions.
  ;;
 (defp Unary
     ;;;
-     ; Similar to Canonicalizable#canonical(CanonicalizerTool), except that implementations should act as if the
+     ; Similar to Canonicalizable#canonical(Canonicalizer), except that implementations should act as if the
      ; current input of the node was the given one, i.e. they should never look at the inputs via the this pointer.
      ;;
-    (#_"Node" Unary'''canonical-3 [#_"Unary" this, #_"CanonicalizerTool" tool, #_"Node" forValue])
+    (#_"Node" Unary'''canonical-3 [#_"Unary" this, #_"Canonicalizer" tool, #_"Node" forValue])
     ;;;
-     ; Gets the current value of the input, so that calling #canonical(CanonicalizerTool, Node) with the value
-     ; returned from this method should behave exactly like Canonicalizable#canonical(CanonicalizerTool).
+     ; Gets the current value of the input, so that calling #canonical(Canonicalizer, Node) with the value
+     ; returned from this method should behave exactly like Canonicalizable#canonical(Canonicalizer).
      ;;
     (#_"Node" Unary'''getValue-1 [#_"Unary" this])
 )
@@ -5730,7 +5685,6 @@ ZeroExtendNode'new-4
 
 (defp UseEntry)
 (defp UsePosList)
-(defp UseTrappingNullChecksPhase)
 (defp Utf8)
 (defp VMConfigNode)
 
@@ -5866,7 +5820,7 @@ ZeroExtendNode'new-4
 
 ;;;
  ; This interface allows a node to convey information about what its effect would be if some of its
- ; inputs were virtualized. The #virtualize(VirtualizerTool) method will only be called for nodes
+ ; inputs were virtualized. The #virtualize(Virtualizer) method will only be called for nodes
  ; that have some interaction with virtualized nodes. However, the virtualized nodes might have
  ; been re-materialized in the meantime.
  ;;
@@ -5879,14 +5833,14 @@ ZeroExtendNode'new-4
      ;
      ; @param tool the tool used to describe the effects of this node
      ;;
-    (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"Virtualizable" this, #_"VirtualizerTool" tool])
+    (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"Virtualizable" this, #_"Virtualizer" tool])
 )
 
 ;;;
  ; This interface allows a node to convey information about what its effect would be if some of its
  ; inputs were virtualized.
  ;
- ; The difference to Virtualizable is that the #virtualize(VirtualizerTool) method will be called
+ ; The difference to Virtualizable is that the #virtualize(Virtualizer) method will be called
  ; regardless of whether this node had any interaction with virtualized nodes. This interface can
  ; therefore be used for object allocations, for which virtualization introduces new virtualized objects.
  ;;
@@ -5898,96 +5852,13 @@ ZeroExtendNode'new-4
  ;
  ; See also Virtualizable.
  ;;
-(defp VirtualizerTool
-    ;;;
-     ; This method should be used to query the maximum size of virtualized objects before attempting virtualization.
-     ;
-     ; @return the maximum number of entries for virtualized objects
-     ;;
-    (#_"int" VirtualizerTool'''getMaximumEntryCount-1 [#_"VirtualizerTool" this])
-    ;;;
-     ; Introduces a new virtual object to the current state.
-     ;
-     ; @param virtualObject the new virtual object.
-     ; @param entryState the initial state of the virtual object's fields.
-     ; @param locks the initial locking depths.
-     ; @param ensureVirtualized true if this object needs to stay virtual
-     ;;
-    (#_"this" VirtualizerTool'''createVirtualObject-5 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"[ValueNode]" entryState, #_"MonitorIdNode*" locks, #_"boolean" ensureVirtualized])
-    ;;;
-     ; Returns a VirtualObjectNode if the given value is aliased with a virtual object that is still
-     ; virtual, the materialized value of the given value is aliased with a virtual object that was
-     ; materialized, the replacement if the give value was replaced, otherwise the given value.
-     ;
-     ; Replacements via #replaceWithValue(ValueNode) are not immediately committed. This method can be
-     ; used to determine if a value was replaced by another one (e.g. a load field by the loaded value).
-     ;;
-    (#_"ValueNode" VirtualizerTool'''getAlias-2 [#_"VirtualizerTool" this, #_"ValueNode" value])
-    ;;;
-     ; Sets the entry (field or array element) with the given index in the virtualized object.
-     ;
-     ; @param index the index to be set.
-     ; @param value the new value for the given index.
-     ; @param accessKind the kind of the store which might be different than VirtualObjectNode#entryKind(int)
-     ; @return true if the operation was permitted
-     ;;
-    (#_"boolean" VirtualizerTool'''setVirtualEntry-6 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index, #_"ValueNode" value, #_"JavaKind" accessKind, #_"long" offset])
-    (#_"this" VirtualizerTool'''setVirtualEntry-4 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index, #_"ValueNode" value])
-    (#_"ValueNode" VirtualizerTool'''getEntry-3 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index])
-    (#_"this" VirtualizerTool'''addLock-3 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"MonitorIdNode" monitorId])
-    (#_"this" VirtualizerTool'''removeLock-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
-    ;;;
-     ; Deletes the current node and replaces it with the given virtualized object.
-     ;
-     ; @param virtualObject the virtualized object that should replace the current node.
-     ;;
-    (#_"this" VirtualizerTool'''replaceWithVirtual-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
-    ;;;
-     ; Deletes the current node and replaces it with the given value.
-     ;
-     ; @param replacement the value that should replace the current node.
-     ;;
-    (#_"this" VirtualizerTool'''replaceWithValue-2 [#_"VirtualizerTool" this, #_"ValueNode" replacement])
-    ;;;
-     ; Deletes the current node.
-     ;;
-    (#_"this" VirtualizerTool'''delete-1 [#_"VirtualizerTool" this])
-    ;;;
-     ; Replaces an input of the current node.
-     ;
-     ; @param oldInput the old input value.
-     ; @param replacement the new input value.
-     ;;
-    #_unused
-    (#_"this" VirtualizerTool'''replaceFirstInput-3 [#_"VirtualizerTool" this, #_"Node" oldInput, #_"Node" replacement])
-    ;;;
-     ; Adds the given node to the graph.This action will only be performed when, and if, the changes are committed.
-     ;
-     ; @param node the node to add.
-     ;;
-    (#_"this" VirtualizerTool'''addNode-2 [#_"VirtualizerTool" this, #_"ValueNode" node])
-    ;;;
-     ; This method performs either #replaceWithValue(ValueNode) or #replaceWithVirtual(VirtualObjectNode),
-     ; depending on the given value.
-     ;
-     ; @param value the replacement value
-     ;;
-    (#_"this" VirtualizerTool'''replaceWith-2 [#_"VirtualizerTool" this, #_"ValueNode" value])
-    ;;;
-     ; If state is virtual, materialization is performed for the given state.
-     ;
-     ; @return true if materialization happened, false if not
-     ;;
-    #_unused
-    (#_"boolean" VirtualizerTool'''ensureMaterialized-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject])
-)
+(defp Virtualizer)
 
 (defp VoidStamp)
 (defp Word)
 (defp WordCastNode)
 (defp WordOperationPlugin)
 (defp WriteBarrier)
-(defp WriteBarrierAdditionPhase)
 (defp WriteBarrierTemplates)
 (defp WriteNode)
 (defp Xor)
@@ -7620,7 +7491,8 @@ ZeroExtendNode'new-4
     (def #_"Register" HotSpot'stackPointerRegister AMD64'rsp)
 
     (§ def #_"ForeignCalls" HotSpot'foreignCalls (ForeignCalls'new-0))
-    (§ def #_"Plugins"      HotSpot'plugins      (Plugins'create-0))
+
+    (§ def #_"HotSpotPlugin" HotSpot'plugin (HotSpotPlugin'new-0))
 )
 
 ;;;
@@ -10895,7 +10767,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"void" GraphUtil'checkRedundantPhi-1 [#_"PhiNode" phiNode]
-        (when-not (or (Node''isDeleted-1 phiNode) (= (count (:phiValues phiNode)) 1))
+        (when-not (or (Node''isDeleted-1 phiNode) (= (count (:phiValues phiNode)) 1))
             (let [
                 #_"ValueNode" singleValue (PhiNode''singleValueOrThis-1 phiNode)
             ]
@@ -10917,7 +10789,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"void" GraphUtil'checkRedundantProxy-1 [#_"ValueProxyNode" vpn]
-        (when-not (Node''isDeleted-1 vpn)
+        (when-not (Node''isDeleted-1 vpn)
             (let [
                 #_"AbstractBeginNode" proxyPoint (:loopExit vpn)
             ]
@@ -11672,7 +11544,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"ValueNode" Lowerer'createReadHub-3 [#_"Graph" graph, #_"ValueNode" object, #_"LoweringTool" lowerer]
-        (if-not (= (:loweringStage (:phase lowerer)) :LoweringStage'LOW_TIER)
+        (if-not (= (:loweringStage lowerer) :LoweringStage'LOW_TIER)
             (Graph''add-2 graph, (LoadHubNode'new-1 object))
             (let [
                 #_"KlassPointerStamp" hubStamp KlassPointerStamp'KLASS_NON_NULL
@@ -12333,7 +12205,7 @@ ZeroExtendNode'new-4
                     )
                 )
             )
-            (when-not (Node''isDeleted-1 instanceOf)
+            (when-not (Node''isDeleted-1 instanceOf)
                 (GraphUtil'killWithUnusedFloatingInputs-1 instanceOf)
             )
         )
@@ -12372,14 +12244,14 @@ ZeroExtendNode'new-4
                 ]
                     (cond
                         (some? exact)
-                            (Arguments'new-4* (:instanceofExact this), (:guardsStage graph), (:loweringStage (:phase lowerer)),
+                            (Arguments'new-4* (:instanceofExact this), (:guardsStage graph), (:loweringStage lowerer),
                                 object,
                                 (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (HotSpotResolvedObjectType'''klass-1 exact), graph),
                                 (:trueValue replacer),
                                 (:falseValue replacer)
                             )
                         (HotSpotResolvedObjectType'''isPrimaryType-1 type)
-                            (Arguments'new-4* (:instanceofPrimary this), (:guardsStage graph), (:loweringStage (:phase lowerer)),
+                            (Arguments'new-4* (:instanceofPrimary this), (:guardsStage graph), (:loweringStage lowerer),
                                 hub,
                                 object,
                                 (HotSpotResolvedObjectType'''superCheckOffset-1 type),
@@ -12387,7 +12259,7 @@ ZeroExtendNode'new-4
                                 (:falseValue replacer)
                             )
                         :else
-                            (Arguments'new-4* (:instanceofSecondary this), (:guardsStage graph), (:loweringStage (:phase lowerer)),
+                            (Arguments'new-4* (:instanceofSecondary this), (:guardsStage graph), (:loweringStage lowerer),
                                 hub,
                                 object,
                                 (:trueValue replacer),
@@ -12400,7 +12272,7 @@ ZeroExtendNode'new-4
                     #_"InstanceOfDynamicNode" instanceOf (:instanceOf replacer)
                     #_"ValueNode" object (:y instanceOf)
                 ]
-                    (Arguments'new-4* (:instanceofDynamic this), (:guardsStage (:graph instanceOf)), (:loweringStage (:phase lowerer)),
+                    (Arguments'new-4* (:instanceofDynamic this), (:guardsStage (:graph instanceOf)), (:loweringStage lowerer),
                         (:x instanceOf),
                         object,
                         (:trueValue replacer),
@@ -12429,12 +12301,12 @@ ZeroExtendNode'new-4
         (let [
             #_"Arguments" args
                 (if (:useFastLocking this)
-                    (Arguments'new-4* (:monitorenter this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
+                    (Arguments'new-4* (:monitorenter this), (:guardsStage (:graph node)), (:loweringStage lowerer),
                         (:object node),
                         (:hub node),
                         (:lockDepth (:monitorId node))
                     )
-                    (Arguments'new-4* (:monitorenterStub this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
+                    (Arguments'new-4* (:monitorenterStub this), (:guardsStage (:graph node)), (:loweringStage lowerer),
                         (:object node),
                         (:lockDepth (:monitorId node))
                     )
@@ -12448,7 +12320,7 @@ ZeroExtendNode'new-4
     (defn #_"void" MonitorTemplates''lower-3o [#_"MonitorTemplates" this, #_"MonitorExitNode" node, #_"LoweringTool" lowerer]
         (let [
             #_"Arguments" args
-                (Arguments'new-4* (if (:useFastLocking this) (:monitorexit this) (:monitorexitStub this)), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
+                (Arguments'new-4* (if (:useFastLocking this) (:monitorexit this) (:monitorexitStub this)), (:guardsStage (:graph node)), (:loweringStage lowerer),
                     (:object node),
                     (:lockDepth (:monitorId node))
                 )
@@ -12473,7 +12345,7 @@ ZeroExtendNode'new-4
         (let [
             #_"HotSpotResolvedObjectType" type (:instanceClass node)
             #_"Arguments" args
-                (Arguments'new-4* (:allocateInstance this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
+                (Arguments'new-4* (:allocateInstance this), (:guardsStage (:graph node)), (:loweringStage lowerer),
                     (HotSpotResolvedObjectType'''instanceSize-1 type),
                     (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (HotSpotResolvedObjectType'''klass-1 type), (:graph node)),
                     (HotSpotResolvedObjectType'''prototypeMarkWord-1 type)
@@ -12490,7 +12362,7 @@ ZeroExtendNode'new-4
             #_"JavaKind" elementKind (JavaType'''getJavaKind-1 (:elementType node))
             #_"ValueNode" length (ArrayLengthProvider'''length-1 node)
             #_"Arguments" args
-                (Arguments'new-4* (:allocateArray this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
+                (Arguments'new-4* (:allocateArray this), (:guardsStage (:graph node)), (:loweringStage lowerer),
                     (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (HotSpotResolvedObjectType'''klass-1 arrayType), (:graph node)),
                     (if (Node''isAlive-1 length) length (Graph''addOrUniqueWithInputs-2 (:graph node), length)),
                     (HotSpotResolvedObjectType'''prototypeMarkWord-1 arrayType),
@@ -12517,7 +12389,7 @@ ZeroExtendNode'new-4
     (defn #_"void" UnsafeLoadTemplates''lower-3 [#_"UnsafeLoadTemplates" this, #_"RawLoadNode" node, #_"LoweringTool" lowerer]
         (let [
             #_"Arguments" args
-                (Arguments'new-4* (:lowerUnsafeLoad this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
+                (Arguments'new-4* (:lowerUnsafeLoad this), (:guardsStage (:graph node)), (:loweringStage lowerer),
                     (:object node),
                     (:offset node)
                 )
@@ -12546,10 +12418,10 @@ ZeroExtendNode'new-4
         (let [
             #_"Arguments" args
                 (if (:precise? node)
-                    (Arguments'new-4* (:serialPreciseWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
+                    (Arguments'new-4* (:serialPreciseWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage lowerer),
                         (:address node)
                     )
-                    (Arguments'new-4* (:serialImpreciseWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
+                    (Arguments'new-4* (:serialImpreciseWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage lowerer),
                         (AddressNode'''getBase-1 (:address node))
                     )
                 )
@@ -12567,7 +12439,7 @@ ZeroExtendNode'new-4
                     (CompressionNode'uncompress-2 expected, (:oopEncoding this))
                 )
             #_"Arguments" args
-                (Arguments'new-4* (:g1PreWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
+                (Arguments'new-4* (:g1PreWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage lowerer),
                     (:address node),
                     (when (satisfies? OffsetAddressNode (:address node)) (AddressNode'''getBase-1 (:address node))),
                     expected,
@@ -12588,7 +12460,7 @@ ZeroExtendNode'new-4
                     (CompressionNode'uncompress-2 expected, (:oopEncoding this))
                 )
             #_"Arguments" args
-                (Arguments'new-4* (:g1ReferentReadBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
+                (Arguments'new-4* (:g1ReferentReadBarrier this), (:guardsStage (:graph node)), (:loweringStage lowerer),
                     (:address node),
                     (when (satisfies? OffsetAddressNode (:address node)) (AddressNode'''getBase-1 (:address node))),
                     expected,
@@ -12609,7 +12481,7 @@ ZeroExtendNode'new-4
                         (CompressionNode'uncompress-2 (:value node), (:oopEncoding this))
                     )
                 #_"Arguments" args
-                    (Arguments'new-4* (:g1PostWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage (:phase lowerer)),
+                    (Arguments'new-4* (:g1PostWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage lowerer),
                         (:address node),
                         (when (satisfies? OffsetAddressNode (:address node)) (AddressNode'''getBase-1 (:address node))),
                         value,
@@ -12915,34 +12787,24 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AddressLoweringPhase [Phase]
-    (defn #_"AddressLoweringPhase" AddressLoweringPhase'new-1 [#_"AddressLowering" lowering]
-        (merge (AddressLoweringPhase'class.)
-            (hash-map
-                #_"AddressLowering" :lowering lowering
-            )
-        )
-    )
-
-    (defm AddressLoweringPhase Phase
-        (#_"Graph" Phase'''run-2 [#_"AddressLoweringPhase" this, #_"Graph" graph]
-            (AddressLowering'preProcess-1 graph)
-            (loop-when-recur [#_"seq" s (seq (Graph''getNodes-1 graph))] (some? s) [(next s)]
-                (let [
-                    #_"Node" node (first s)
-                ]
-                    (when (satisfies? OffsetAddressNode node)
-                        (let [
-                            #_"AddressNode" lowered (AddressLowering''lower-3 (:lowering this), (AddressNode'''getBase-1 node), (:offset node))
-                            _ (§ ass! node (Node''replaceAtUsages-2 node, (AddressLowering'postProcess-1 lowered)))
-                        ]
-                            (GraphUtil'killWithUnusedFloatingInputs-1 node)
-                        )
+(value-ns AddressLoweringPhase
+    (defn #_"Graph" AddressLoweringPhase'run-2 [#_"Graph" graph, #_"AddressLowering" lowering]
+        (AddressLowering'preProcess-1 graph)
+        (loop-when-recur [#_"seq" s (seq (Graph''getNodes-1 graph))] (some? s) [(next s)]
+            (let [
+                #_"Node" node (first s)
+            ]
+                (when (satisfies? OffsetAddressNode node)
+                    (let [
+                        #_"AddressNode" lowered (AddressLowering''lower-3 lowering, (AddressNode'''getBase-1 node), (:offset node))
+                        _ (§ ass! node (Node''replaceAtUsages-2 node, (AddressLowering'postProcess-1 lowered)))
+                    ]
+                        (GraphUtil'killWithUnusedFloatingInputs-1 node)
                     )
                 )
             )
-            graph
         )
+        graph
     )
 )
 
@@ -16867,14 +16729,14 @@ ZeroExtendNode'new-4
                         ;;;
                          ; This is handed out to implementers of Virtualizable.
                          ;;
-                        #_"VirtualizerTool" :tool nil
+                        #_"Virtualizer" :tool nil
                         ;;;
                          ; The indexes into this array correspond to VirtualObjectNode#getObjectId().
                          ;;
                         #_"VirtualObjectNode*" :peVirtualObjects nil
                     )
                 )
-            this (assoc this :tool (VirtualizerTool'new-1 this))
+            this (assoc this :tool (Virtualizer'new-1 this))
         ]
             this
         )
@@ -16918,7 +16780,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"boolean" PartialEscapeClosure''processVirtualizable-5 [#_"PartialEscapeClosure" this, #_"ValueNode" node, #_"FixedNode" insertBefore, #_"PartialEscapeBlockState" state, #_"GraphEffects" effects]
         (let [
-            _ (§ ass! this (update this :tool VirtualizerTool''reset-5 state, node, insertBefore, effects))
+            _ (§ ass! this (update this :tool Virtualizer''reset-5 state, node, insertBefore, effects))
             _ (§ ass! this (update this :tool #(Virtualizable'''virtualize-2 node, %)))
         ]
             true ;; request further processing
@@ -18682,16 +18544,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" BytecodeParser''tryNodePluginForInvocation-3 [#_"BytecodeParser" this, #_"[ValueNode]" args, #_"ResolvedJavaMethod" targetMethod]
-        (loop [#_"seq" s (seq (:nodePlugins HotSpot'plugins))]
-            (and (some? s)
-                (or (NodePlugin'''handleInvoke-4 (first s), this, targetMethod, args)
-                    (recur (next s))
-                )
-            )
-        )
-    )
-
     (defn- #_"InvokeNode" BytecodeParser''createInvoke-4 [#_"BytecodeParser" this, #_"int" invokeBci, #_"CallTargetNode" callTarget, #_"JavaKind" resultType]
         (let [
             #_"InvokeNode" invoke (BytecodeParser''append-2 this, (InvokeNode'new-2 callTarget, invokeBci))
@@ -18704,7 +18556,7 @@ ZeroExtendNode'new-4
     (defn- #_"InvokeNode" BytecodeParser''createNonInlinedInvoke-7 [#_"BytecodeParser" this, #_"int" invokeBci, #_"ValueNode*" invokeArgs, #_"ResolvedJavaMethod" targetMethod, #_"InvokeKind" invokeKind, #_"JavaKind" resultType, #_"JavaType" returnType]
         (let [
             #_"Stamp" returnStamp
-                (or (Plugins''getOverridingStamp-4 HotSpot'plugins, this, returnType, false)
+                (or (TypePlugin'''interceptType-4 HotSpot'plugin, this, returnType, false)
                     (StampFactory'forDeclaredType-2 returnType, false)
                 )
             #_"MethodCallTargetNode" callTarget (Graph''add-2 (:graph this), (MethodCallTargetNode'new-4 invokeKind, targetMethod, invokeArgs, returnStamp))
@@ -18735,7 +18587,7 @@ ZeroExtendNode'new-4
                 )
         ]
             (cond
-                (BytecodeParser''tryNodePluginForInvocation-3 this, args, targetMethod)
+                (NodePlugin'''handleInvoke-4 HotSpot'plugin, this, targetMethod, args)
                     nil
                 (and (not (= invokeKind :InvokeKind'Static)) (ValueNode''isNullConstant-1 (nth args 0)))
                 (do
@@ -18866,7 +18718,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"ValueNode" BytecodeParser''genLoadField-3 [#_"BytecodeParser" this, #_"ValueNode" receiver, #_"ResolvedJavaField" field]
         (let [
-            #_"Stamp" stamp (Plugins''getOverridingStamp-4 HotSpot'plugins, this, (JavaField'''getType-1 field), false)
+            #_"Stamp" stamp (TypePlugin'''interceptType-4 HotSpot'plugin, this, (JavaField'''getType-1 field), false)
         ]
             (if (some? stamp)
                 (LoadFieldNode'createOverrideStamp-5 stamp, receiver, field, false, false)
@@ -18876,12 +18728,7 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"this" BytecodeParser''genGetField-3r [#_"BytecodeParser" this, #_"ResolvedJavaField" resolvedField, #_"ValueNode" receiver]
-        (or
-            (loop-when [#_"seq" s (seq (:nodePlugins HotSpot'plugins))] (some? s)
-                (when (NodePlugin'''handleLoadField-4 (first s), this, receiver, resolvedField) => (recur (next s))
-                    this
-                )
-            )
+        (when-not (NodePlugin'''handleLoadField-4 HotSpot'plugin, this, receiver, resolvedField) => this
             (let [
                 #_"ValueNode" fieldRead (BytecodeParser''append-2 this, (BytecodeParser''genLoadField-3 this, receiver, resolvedField))
                 _
@@ -19301,13 +19148,8 @@ ZeroExtendNode'new-4
             #_"ValueNode" index (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Int)
             #_"ValueNode" array (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Object)
         ]
-            (loop [#_"seq" s (seq (:nodePlugins HotSpot'plugins))]
-                (if (some? s)
-                    (when (NodePlugin'''handleLoadIndexed-5 (first s), this, array, index, kind) => (recur (next s))
-                        this
-                    )
-                    (update this :frameState FrameStateBuilder''push-3 kind, (BytecodeParser''append-2 this, (LoadIndexedNode'create-3 array, index, kind)))
-                )
+            (when-not (NodePlugin'''handleLoadIndexed-5 HotSpot'plugin, this, array, index, kind) => this
+                (update this :frameState FrameStateBuilder''push-3 kind, (BytecodeParser''append-2 this, (LoadIndexedNode'create-3 array, index, kind)))
             )
         )
     )
@@ -19318,16 +19160,9 @@ ZeroExtendNode'new-4
             #_"ValueNode" index (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Int)
             #_"ValueNode" array (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Object)
         ]
-            (loop [#_"seq" s (seq (:nodePlugins HotSpot'plugins))]
-                (if (some? s)
-                    (when (NodePlugin'''handleStoreIndexed-6 (first s), this, array, index, kind, value) => (recur (next s))
-                        this
-                    )
-                    (do
-                        (BytecodeParser''add-2 this, (StoreIndexedNode'new-4 array, index, kind, value))
-                        this
-                    )
-                )
+            (when-not (NodePlugin'''handleStoreIndexed-6 HotSpot'plugin, this, array, index, kind, value) => this
+                (BytecodeParser''add-2 this, (StoreIndexedNode'new-4 array, index, kind, value))
+                this
             )
         )
     )
@@ -19488,24 +19323,19 @@ ZeroExtendNode'new-4
                 (let [
                     #_"TypeReference" checkedType (TypeReference'createTrusted-1 type)
                 ]
-                    (loop [#_"seq" s (seq (:nodePlugins HotSpot'plugins))]
-                        (if (some? s)
-                            (when (NodePlugin'''handleCheckCast-4 (first s), this, object, (:type checkedType)) => (recur (next s))
-                                this
-                            )
-                            (let [
-                                #_"ValueNode" castNode
-                                    (let [
-                                        #_"LogicNode" logic (BytecodeParser''genUnique-2 this, (InstanceOfNode'createAllowNull-2 checkedType, object))
-                                    ]
-                                        (if (LogicNode''isTautology-1 logic)
-                                            object
-                                            (BytecodeParser''append-2 this, (PiNode'create-3 object, (StampFactory'object-2 checkedType, (:never-nil? (:stamp object))), (BytecodeParser''append-2 this, (FixedGuardNode'new-3 logic, :DeoptimizationReason'ClassCastException, :DeoptimizationAction'InvalidateReprofile))))
-                                        )
+                    (when-not (NodePlugin'''handleCheckCast-4 HotSpot'plugin, this, object, (:type checkedType)) => this
+                        (let [
+                            #_"ValueNode" castNode
+                                (let [
+                                    #_"LogicNode" logic (BytecodeParser''genUnique-2 this, (InstanceOfNode'createAllowNull-2 checkedType, object))
+                                ]
+                                    (if (LogicNode''isTautology-1 logic)
+                                        object
+                                        (BytecodeParser''append-2 this, (PiNode'create-3 object, (StampFactory'object-2 checkedType, (:never-nil? (:stamp object))), (BytecodeParser''append-2 this, (FixedGuardNode'new-3 logic, :DeoptimizationReason'ClassCastException, :DeoptimizationAction'InvalidateReprofile))))
                                     )
-                            ]
-                                (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, castNode)
-                            )
+                                )
+                        ]
+                            (update this :frameState FrameStateBuilder''push-3 :JavaKind'Object, castNode)
                         )
                     )
                 )
@@ -19523,36 +19353,31 @@ ZeroExtendNode'new-4
                 (let [
                     #_"TypeReference" resolvedType (TypeReference'createTrusted-1 type)
                 ]
-                    (loop [this this #_"seq" s (seq (:nodePlugins HotSpot'plugins))]
-                        (if (some? s)
-                            (when-not (NodePlugin'''handleInstanceOf-4 (first s), this, object, (:type resolvedType)) => this
-                                (recur this (next s))
-                            )
-                            (let [
-                                #_"LogicNode" instanceOfNode (InstanceOfNode'create-2 resolvedType, object)
-                                #_"LogicNode" logic (BytecodeParser''genUnique-2 this, instanceOfNode)
-                                #_"int" _next (:nextBCI (:stream this))
-                                #_"int" value (BytecodeStream''readUByte-2 (:stream this), _next)
-                            ]
-                                (if (and (<= _next (:endBci (:currentBlock this))) (any = value Bytecodes'IFEQ Bytecodes'IFNE))
-                                    (let [
-                                        this (update this :stream BytecodeStream''next-1)
-                                        #_"BciBlock" succ1 (BciBlock''getSuccessor-2 (:currentBlock this), 0)
-                                        #_"BciBlock" succ2 (BciBlock''getSuccessor-2 (:currentBlock this), 1)
-                                    ]
-                                        (if (= succ1 succ2)
-                                            (BytecodeParser''appendGoto-2 this, succ1)
-                                            (let [
-                                                #_"boolean" negate? (not= value Bytecodes'IFNE)
-                                                [succ1 succ2] (if negate? [succ2 succ1] [succ1 succ2])
-                                            ]
-                                                (BytecodeParser''genIf-5 this, instanceOfNode, succ1, succ2, (BytecodeParser'getProfileProbability-1 negate?))
-                                            )
+                    (when-not (NodePlugin'''handleInstanceOf-4 HotSpot'plugin, this, object, (:type resolvedType)) => this
+                        (let [
+                            #_"LogicNode" instanceOfNode (InstanceOfNode'create-2 resolvedType, object)
+                            #_"LogicNode" logic (BytecodeParser''genUnique-2 this, instanceOfNode)
+                            #_"int" _next (:nextBCI (:stream this))
+                            #_"int" value (BytecodeStream''readUByte-2 (:stream this), _next)
+                        ]
+                            (if (and (<= _next (:endBci (:currentBlock this))) (any = value Bytecodes'IFEQ Bytecodes'IFNE))
+                                (let [
+                                    this (update this :stream BytecodeStream''next-1)
+                                    #_"BciBlock" succ1 (BciBlock''getSuccessor-2 (:currentBlock this), 0)
+                                    #_"BciBlock" succ2 (BciBlock''getSuccessor-2 (:currentBlock this), 1)
+                                ]
+                                    (if (= succ1 succ2)
+                                        (BytecodeParser''appendGoto-2 this, succ1)
+                                        (let [
+                                            #_"boolean" negate? (not= value Bytecodes'IFNE)
+                                            [succ1 succ2] (if negate? [succ2 succ1] [succ1 succ2])
+                                        ]
+                                            (BytecodeParser''genIf-5 this, instanceOfNode, succ1, succ2, (BytecodeParser'getProfileProbability-1 negate?))
                                         )
                                     )
-                                    ;; Most frequent for value is IRETURN, followed by ISTORE.
-                                    (update this :frameState FrameStateBuilder''push-3 :JavaKind'Int, (BytecodeParser''append-2 this, (ConditionalNode'create-1 (§ cast #_"LogicNode" logic))))
                                 )
+                                ;; Most frequent for value is IRETURN, followed by ISTORE.
+                                (update this :frameState FrameStateBuilder''push-3 :JavaKind'Int, (BytecodeParser''append-2 this, (ConditionalNode'create-1 (§ cast #_"LogicNode" logic))))
                             )
                         )
                     )
@@ -19625,12 +19450,7 @@ ZeroExtendNode'new-4
             #_"ValueNode" receiver (FrameStateBuilder''pop-2 (:frameState this), :JavaKind'Object)
         ]
             (when (satisfies? ResolvedJavaField field) => (BytecodeParser''handleUnresolvedStoreField-4 this, field, value, receiver)
-                (or
-                    (loop-when [#_"seq" s (seq (:nodePlugins HotSpot'plugins))] (some? s)
-                        (when (NodePlugin'''handleStoreField-5 (first s), this, receiver, field, value) => (recur (next s))
-                            this
-                        )
-                    )
+                (when-not (NodePlugin'''handleStoreField-5 HotSpot'plugin, this, receiver, field, value) => this
                     (let [
                         this
                             (when (and (ResolvedJavaField''isFinal-1 field) (ResolvedJavaMethod'''isConstructor-1 (:method this))) => this
@@ -19676,20 +19496,8 @@ ZeroExtendNode'new-4
         (let [
             #_"ResolvedJavaField" resolvedField (BytecodeParser''resolveStaticFieldAccess-3 this, field, nil)
         ]
-            (when (some? resolvedField) => this
-                (or
-                    ;; Javac does not allow the use of "$assertionsDisabled" for a field name as Eclipse does.
-                    ;; In this case a suffix is added to the generated field.
-                    (when (and (ResolvedJavaField'''isSynthetic-1 resolvedField) (#_"String" .startsWith (JavaField'''getName-1 resolvedField), "$assertionsDisabled"))
-                        (update this :frameState FrameStateBuilder''push-3 (JavaField''getJavaKind-1 field), (ConstantNode'forBoolean-2 true, (:graph this)))
-                    )
-                    (loop-when [#_"seq" s (seq (:nodePlugins HotSpot'plugins))] (some? s)
-                        (when (NodePlugin'''handleLoadStaticField-3 (first s), this, resolvedField) => (recur (next s))
-                            this
-                        )
-                    )
-                    (update this :frameState FrameStateBuilder''push-3 (JavaField''getJavaKind-1 field), (BytecodeParser''append-2 this, (BytecodeParser''genLoadField-3 this, nil, resolvedField)))
-                )
+            (when (and (some? resolvedField) (not (NodePlugin'''handleLoadStaticField-3 HotSpot'plugin, this, resolvedField))) => this
+                (update this :frameState FrameStateBuilder''push-3 (JavaField''getJavaKind-1 field), (BytecodeParser''append-2 this, (BytecodeParser''genLoadField-3 this, nil, resolvedField)))
             )
         )
     )
@@ -19703,15 +19511,8 @@ ZeroExtendNode'new-4
             #_"ValueNode" value (FrameStateBuilder''pop-2 (:frameState this), (JavaField''getJavaKind-1 field))
             #_"ResolvedJavaField" resolvedField (BytecodeParser''resolveStaticFieldAccess-3 this, field, value)
         ]
-            (when (some? resolvedField) => this
-                (or
-                    (loop-when [#_"seq" s (seq (:nodePlugins HotSpot'plugins))] (some? s)
-                        (when (NodePlugin'''handleStoreStaticField-4 (first s), this, resolvedField, value) => (recur (next s))
-                            this
-                        )
-                    )
-                    (BytecodeParser''genStoreField-4 this, nil, resolvedField, value)
-                )
+            (when (and (some? resolvedField) (not (NodePlugin'''handleStoreStaticField-4 HotSpot'plugin, this, resolvedField, value))) => this
+                (BytecodeParser''genStoreField-4 this, nil, resolvedField, value)
             )
         )
     )
@@ -20848,56 +20649,41 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CanonicalizerInstance [Phase, SimplifierTool, CanonicalizerTool]
-    (defn #_"CanonicalizerInstance" CanonicalizerInstance'new-2 [#_"CanonicalizerPhase" phase, #_"Node*" workingSet]
-        (merge (CanonicalizerInstance'class.)
+(class-ns Simplifier [Canonicalizer]
+    (defn- #_"Simplifier" Simplifier'new-0 []
+        (merge (Simplifier'class.)
             (hash-map
-                #_"CanonicalizerPhase" :phase phase
-                #_"Node*" :initWorkingSet workingSet
-                #_"ordered {Node}" :worklist nil
+                #_"ordered {Node}" :workset (ordered-set)
             )
         )
     )
 
-    (defn- #_"ordered {Node}" CanonicalizerInstance'add-2 [#_"ordered {Node}" worklist, #_"Node" node]
-        (if (some? node) (conj worklist node) worklist)
+    (defn- #_"ordered {Node}" Simplifier'add-2 [#_"ordered {Node}" workset, #_"Node" node]
+        (if (some? node) (conj workset node) workset)
     )
 
-    (defn- #_"ordered {Node}" CanonicalizerInstance'addAll-2 [#_"ordered {Node}" worklist, #_"Node*" nodes]
-        (reduce CanonicalizerInstance'add-2 worklist (filter Node''isAlive-1 nodes))
+    (defn- #_"ordered {Node}" Simplifier'addAll-2 [#_"ordered {Node}" workset, #_"Node*" nodes]
+        (reduce Simplifier'add-2 workset (filter Node''isAlive-1 nodes))
     )
 
-    (defm CanonicalizerInstance SimplifierTool
-        (#_"void" SimplifierTool'''deleteBranch-2 [#_"CanonicalizerInstance" this, #_"Node" branch]
-            (Node''replaceFirstSuccessor-3 (:predecessor branch), branch, nil)
-            (GraphUtil'killCFG-1 branch)
-            nil
-        )
-
-        (#_"this" SimplifierTool'''addToWorkList-2n [#_"CanonicalizerInstance" this, #_"Node" node]
-            (update this :worklist CanonicalizerInstance'add-2 node)
-        )
-
-        (#_"this" SimplifierTool'''addToWorkList-2s [#_"CanonicalizerInstance" this, #_"Node*" nodes]
-            (update this :worklist CanonicalizerInstance'addAll-2 nodes)
-        )
-
-        (#_"void" SimplifierTool'''removeIfUnused-2 [#_"CanonicalizerInstance" this, #_"Node" node]
-            (GraphUtil'tryKillUnused-1 node)
-            nil
-        )
+    (defn #_"this" Simplifier''add-2 [#_"Simplifier" this, #_"Node" node]
+        (update this :workset Simplifier'add-2 node)
     )
 
-    (defm CanonicalizerInstance CanonicalizerTool
-        (#_"boolean" CanonicalizerTool'''canonicalizeReads-1 [#_"CanonicalizerInstance" this]
+    (defn #_"this" Simplifier''addAll-2 [#_"Simplifier" this, #_"Node*" nodes]
+        (update this :workset Simplifier'addAll-2 nodes)
+    )
+
+    (defm Simplifier Canonicalizer
+        (#_"boolean" Canonicalizer'''canonicalizeReads-1 [#_"Simplifier" this]
             true
         )
 
-        (#_"boolean" CanonicalizerTool'''allUsagesAvailable-1 [#_"CanonicalizerInstance" this]
+        (#_"boolean" Canonicalizer'''allUsagesAvailable-1 [#_"Simplifier" this]
             true
         )
 
-        (#_"Integer" CanonicalizerTool'''smallestCompareWidth-1 [#_"CanonicalizerInstance" this]
+        (#_"Integer" Canonicalizer'''smallestCompareWidth-1 [#_"Simplifier" this]
             (Lowerer'smallestCompareWidth-0)
         )
     )
@@ -20917,7 +20703,7 @@ ZeroExtendNode'new-4
     ;;                                     --------------------------------------------
     ;;   X: must not happen
 
-    (defn- #_"boolean" CanonicalizerInstance''performReplacement-3 [#_"CanonicalizerInstance" this, #_"Node" node, #_"Node" newCanonical]
+    (defn- #_"boolean" Simplifier''performReplacement-3 [#_"Simplifier" this, #_"Node" node, #_"Node" newCanonical]
         (and (not= newCanonical node)
             (let [
                 #_"Graph" graph (:graph node)
@@ -20940,7 +20726,7 @@ ZeroExtendNode'new-4
                     :else
                     (let [
                         ;; when removing a fixed node, new canonicalization opportunities for its successor may arise
-                        _ (§ ass! this (SimplifierTool'''addToWorkList-2n this, (:next node)))
+                        _ (§ ass! this (Simplifier''add-2 this, (:next node)))
                     ]
                         (cond
                             (nil? canonical)
@@ -20969,7 +20755,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" CanonicalizerInstance''tryCanonicalize-3 [#_"CanonicalizerInstance" this, #_"Node" node, #_"NodeClass" nodeClass]
+    (defn- #_"boolean" Simplifier''tryCanonicalize-3 [#_"Simplifier" this, #_"Node" node, #_"NodeClass" nodeClass]
         (or
             (and (:canonicalizable? nodeClass)
                 (let [
@@ -20982,14 +20768,14 @@ ZeroExtendNode'new-4
                             )
                         )
                 ]
-                    (CanonicalizerInstance''performReplacement-3 this, node, canonical)
+                    (Simplifier''performReplacement-3 this, node, canonical)
                 )
             )
             (and (:simplifiable? nodeClass)
                 (let [
                     _ (§ ass! node (Simplifiable'''simplify-2 node, this))
                 ]
-                    (Node''isDeleted-1 node)
+                    (Node''isDeleted-1 node)
                 )
             )
         )
@@ -21000,12 +20786,12 @@ ZeroExtendNode'new-4
      ; re-queues the node's usages. If the stamp has changed, then this method also checks
      ; if the stamp now describes a constant integer value, in which case the node is replaced with a constant.
      ;;
-    (defn- #_"boolean" CanonicalizerInstance''tryInferStamp-2 [#_"CanonicalizerInstance" this, #_"ValueNode" node]
+    (defn- #_"boolean" Simplifier''tryInferStamp-2 [#_"Simplifier" this, #_"ValueNode" node]
         (and (Node''isAlive-1 node) (ValueNode'''inferStamp-1 node)
             (let [
                 _
                     (doseq [#_"Node" usage (:nodeUsages node)]
-                        (§ ass! this (update this :worklist CanonicalizerInstance'add-2 usage))
+                        (§ ass! this (update this :workset Simplifier'add-2 usage))
                     )
             ]
                 true
@@ -21013,34 +20799,24 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; @return true if the graph was changed
-     ;;
-    (defn- #_"boolean" CanonicalizerInstance''processNode-2 [#_"CanonicalizerInstance" this, #_"Node" node]
-        (and (Node''isAlive-1 node)
-            (or (GraphUtil'tryKillUnused-1 node)
-                (CanonicalizerInstance''tryCanonicalize-3 this, node, (:nodeClass node))
-                (and (satisfies? ValueNode node)
+    (defn- #_"void" Simplifier''processNode-2 [#_"Simplifier" this, #_"Node" node]
+        (when (Node''isAlive-1 node)
+            (when-not (or (GraphUtil'tryKillUnused-1 node) (Simplifier''tryCanonicalize-3 this, node, (:nodeClass node)))
+                (when (satisfies? ValueNode node)
                     (let [
-                        #_"boolean" improved? (CanonicalizerInstance''tryInferStamp-2 this, node)
+                        #_"boolean" improved? (Simplifier''tryInferStamp-2 this, node)
                         #_"Constant" constant (Stamp'''asConstant-1 (:stamp node))
                     ]
                         (if (and (some? constant) (not (satisfies? ConstantNode node)))
                             (do
                                 (Node''replaceAtUsages-3 node, :InputType'Value, (ConstantNode'forConstant-3s (:stamp node), constant, (:graph node)))
                                 (GraphUtil'tryKillUnused-1 node)
-                                true
                             )
-                            (and improved?
+                            (when improved?
                                 ;; the improved stamp may enable additional canonicalization
-                                (or (CanonicalizerInstance''tryCanonicalize-3 this, node, (:nodeClass node))
-                                    (let [
-                                        _
-                                            (doseq [#_"Node" usage (:nodeUsages node)]
-                                                (§ ass! this (update this :worklist CanonicalizerInstance'add-2 usage))
-                                            )
-                                    ]
-                                        false
+                                (when-not (Simplifier''tryCanonicalize-3 this, node, (:nodeClass node))
+                                    (doseq [#_"Node" usage (:nodeUsages node)]
+                                        (§ ass! this (update this :workset Simplifier'add-2 usage))
                                     )
                                 )
                             )
@@ -21049,72 +20825,47 @@ ZeroExtendNode'new-4
                 )
             )
         )
+        nil
+    )
+
+    (defn #_"Graph" Simplifier'run-1 [#_"Graph" graph]
+        (Simplifier'run-2 graph, nil)
     )
 
     ; @SuppressWarnings("try")
-    (defn- #_"this" CanonicalizerInstance''processWorkSet-2 [#_"CanonicalizerInstance" this, #_"Graph" graph]
+    (defn #_"Graph" Simplifier'run-2 [#_"Graph" graph, #_"Node*" workset]
         (let [
+            #_"Simplifier" this (Simplifier'new-0)
+            this (update this :workset Simplifier'addAll-2 (or workset (Graph''getNodes-1 graph)))
             #_"NodeEventListener" listener
                 (§ proxy #_"NodeEventListener" (NodeEventListener'new-0)
                     (#_"void" NodeEventListener'''nodeAdded-2 [#_"NodeEventListener" _, #_"Node" node]
-                        (§ ass! this (update this :worklist CanonicalizerInstance'add-2 node))
+                        (§ ass! this (update this :workset Simplifier'add-2 node))
                         nil
                     )
 
                     (#_"void" NodeEventListener'''inputChanged-2 [#_"NodeEventListener" _, #_"Node" node]
-                        (§ ass! this (update this :worklist CanonicalizerInstance'add-2 node))
+                        (§ ass! this (update this :workset Simplifier'add-2 node))
                         (when (satisfies? IndirectCanonicalization node)
                             (doseq [#_"Node" usage (:nodeUsages node)]
-                                (§ ass! this (update this :worklist CanonicalizerInstance'add-2 usage))
+                                (§ ass! this (update this :workset Simplifier'add-2 usage))
                             )
                         )
                         nil
                     )
 
                     (#_"void" NodeEventListener'''usagesDroppedToZero-2 [#_"NodeEventListener" _, #_"Node" node]
-                        (§ ass! this (update this :worklist CanonicalizerInstance'add-2 node))
+                        (§ ass! this (update this :workset Simplifier'add-2 node))
                         nil
                     )
                 )
         ]
             (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 graph, listener)])
-                (doseq [#_"Node" node (remove Node''isDeleted-1 (:worklist this))]
-                    (CanonicalizerInstance''processNode-2 this, node)
+                (doseq [#_"Node" node (remove Node''isDeleted-1 (:workset this))]
+                    (Simplifier''processNode-2 this, node)
                 )
             )
-            this
-        )
-    )
-
-    (defm CanonicalizerInstance Phase
-        (#_"Graph" Phase'''run-2 [#_"CanonicalizerInstance" this, #_"Graph" graph]
-            (let [
-                _ (§ ass! this (assoc this :worklist (ordered-set)))
-                _ (§ ass! this (update this :worklist CanonicalizerInstance'addAll-2 (or (:initWorkingSet this) (Graph''getNodes-1 graph))))
-                _ (§ ass! this (CanonicalizerInstance''processWorkSet-2 this, graph))
-            ]
-                graph
-            )
-        )
-    )
-)
-
-(class-ns CanonicalizerPhase [Phase]
-    (defn #_"CanonicalizerPhase" CanonicalizerPhase'new-0 []
-        (CanonicalizerPhase'class.)
-    )
-
-    ;;;
-     ; @param workingSet the initial working set of nodes on which the canonicalizer works, should be an auto-grow node bitmap
-     ;;
-    (defn #_"void" CanonicalizerPhase''applyIncremental-3 [#_"CanonicalizerPhase" this, #_"Graph" graph, #_"Node*" workingSet]
-        (§ ass! graph (Phase'''run-2 (CanonicalizerInstance'new-2 this, workingSet), graph))
-        nil
-    )
-
-    (defm CanonicalizerPhase Phase
-        (#_"Graph" Phase'''run-2 [#_"CanonicalizerPhase" this, #_"Graph" graph]
-            (Phase'''run-2 (CanonicalizerInstance'new-2 this, nil), graph)
+            graph
         )
     )
 )
@@ -23641,7 +23392,7 @@ ZeroExtendNode'new-4
     (defn- #_"void" ConditionalEliminationInstance''introducePisForPhis-2 [#_"ConditionalEliminationInstance" this, #_"MergeNode" merge]
         (doseq [[#_"ValuePhiNode" phi #_"PhiInfoElement" phiInfoElements] (get (:mergeMaps this) merge)]
             ;; Phi might have been killed already via a conditional elimination in another branch.
-            (when-not (Node''isDeleted-1 phi)
+            (when-not (Node''isDeleted-1 phi)
                 (let [
                     #_"Stamp" bestPossibleStamp
                         (loop-when [bestPossibleStamp nil #_"int" i 0] (< i (count (:phiValues phi))) => bestPossibleStamp
@@ -23981,7 +23732,7 @@ ZeroExtendNode'new-4
                     (when (Node''isAlive-1 end) => this
                         (ConditionalEliminationInstance''processNode-2 this, end)
                     )
-                    (when-not (or (Node''isDeleted-1 begin) (Node''isDeleted-1 end)) => this ;; branch was deleted
+                    (when-not (or (Node''isDeleted-1 begin) (Node''isDeleted-1 end)) => this ;; branch was deleted
                         (recur (ConditionalEliminationInstance''processNode-2 this, begin) (:next begin))
                     )
                 )
@@ -24028,29 +23779,19 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ConditionalEliminationPhase [Phase]
-    (defn #_"ConditionalEliminationPhase" ConditionalEliminationPhase'new-1 [#_"boolean" fullSchedule]
-        (merge (ConditionalEliminationPhase'class.)
-            (hash-map
-                #_"boolean" :fullSchedule fullSchedule
-            )
-        )
-    )
-
-    (defm ConditionalEliminationPhase Phase
-        (#_"Graph" Phase'''run-2 [#_"ConditionalEliminationPhase" this, #_"Graph" graph]
-            (let [
-                #_"ControlFlowGraph" cfg (ControlFlowGraph'compute-3 graph, true, true)
-                [cfg #_"{Block Node*}" block->nodes #_"{Node Block}" node->block]
-                    (when (:fullSchedule this) => [cfg nil (:node->block cfg)]
-                        (ControlFlowGraph''visitDominatorTree-3 cfg, (MoveGuardsUpwards'new-0), (:hasValueProxies graph))
-                        (§ ass! graph (Schedule''run-1 (Schedule'new-3 cfg, graph, :SchedulingStrategy'EARLIEST)))
-                        [(:cfg (:lastSchedule graph)) (:block->nodes (:lastSchedule graph)) (:node->block (:lastSchedule graph))]
-                    )
-            ]
-                (ControlFlowGraph''visitDominatorTree-3 cfg, (ConditionalEliminationInstance'new-3 graph, block->nodes, node->block), (:hasValueProxies graph))
-                graph
-            )
+(value-ns ConditionalEliminationPhase
+    (defn #_"Graph" ConditionalEliminationPhase'run-2 [#_"Graph" graph, #_"boolean" fullSchedule]
+        (let [
+            #_"ControlFlowGraph" cfg (ControlFlowGraph'compute-3 graph, true, true)
+            [cfg #_"{Block Node*}" block->nodes #_"{Node Block}" node->block]
+                (when fullSchedule => [cfg nil (:node->block cfg)]
+                    (ControlFlowGraph''visitDominatorTree-3 cfg, (MoveGuardsUpwards'new-0), (:hasValueProxies graph))
+                    (§ ass! graph (Schedule''run-1 (Schedule'new-3 cfg, graph, :SchedulingStrategy'EARLIEST)))
+                    [(:cfg (:lastSchedule graph)) (:block->nodes (:lastSchedule graph)) (:node->block (:lastSchedule graph))]
+                )
+        ]
+            (ControlFlowGraph''visitDominatorTree-3 cfg, (ConditionalEliminationInstance'new-3 graph, block->nodes, node->block), (:hasValueProxies graph))
+            graph
         )
     )
 )
@@ -26207,16 +25948,15 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns EffectsPhase [Phase]
-    (defn #_"EffectsPhase" EffectsPhase'new-2 [#_"int" maxIterations, #_"CanonicalizerPhase" canonicalizer]
-        (EffectsPhase'new-3 maxIterations, canonicalizer, false)
+(class-ns EffectsPhase []
+    (defn #_"EffectsPhase" EffectsPhase'new-1 [#_"int" maxIterations]
+        (EffectsPhase'new-2 maxIterations, false)
     )
 
-    (defn #_"EffectsPhase" EffectsPhase'new-3 [#_"int" maxIterations, #_"CanonicalizerPhase" canonicalizer, #_"boolean" unscheduled]
+    (defn #_"EffectsPhase" EffectsPhase'new-2 [#_"int" maxIterations, #_"boolean" unscheduled]
         (merge (EffectsPhase'class.)
             (hash-map
                 #_"int" :maxIterations maxIterations
-                #_"CanonicalizerPhase" :canonicalizer canonicalizer
                 #_"boolean" :unscheduled unscheduled
             )
         )
@@ -26229,7 +25969,7 @@ ZeroExtendNode'new-4
                     (if (:unscheduled this)
                         [nil (ControlFlowGraph'compute-3 graph, false, false)]
                         (let [
-                            _ (§ ass! graph (Phase'''run-2 (SchedulePhase'new-1 :SchedulingStrategy'EARLIEST), graph))
+                            _ (§ ass! graph (SchedulePhase'run-2 graph, :SchedulingStrategy'EARLIEST))
                             schedule (:lastSchedule graph)
                         ]
                             [schedule (:cfg schedule)]
@@ -26253,8 +25993,8 @@ ZeroExtendNode'new-4
                                         (§ ass! changedNodes (conj changedNodes node))
                                     )
                                 )
+                            _ (§ ass! graph (Simplifier'run-2 graph, changedNodes))
                         ]
-                            (EffectsPhase''postIteration-3 this, graph, changedNodes)
                         )
                     )
             ]
@@ -26264,25 +26004,11 @@ ZeroExtendNode'new-4
             )
         )
     )
-
-    (defm EffectsPhase Phase
-        (#_"Graph" Phase'''run-2 [#_"EffectsPhase" this, #_"Graph" graph]
-            (EffectsPhase''runAnalysis-2 this, graph)
-            graph
-        )
-    )
-
-    (defn #_"void" EffectsPhase''postIteration-3 [#_"EffectsPhase" this, #_"Graph" graph, #_"{Node}" changedNodes]
-        (when (some? (:canonicalizer this))
-            (CanonicalizerPhase''applyIncremental-3 (:canonicalizer this), graph, changedNodes)
-        )
-        nil
-    )
 )
 
-(class-ns EarlyReadEliminationPhase [EffectsPhase, Phase]
-    (defn #_"EarlyReadEliminationPhase" EarlyReadEliminationPhase'new-1 [#_"CanonicalizerPhase" canonicalizer]
-        (merge (EarlyReadEliminationPhase'class.) (EffectsPhase'new-3 1, canonicalizer, true))
+(class-ns EarlyReadEliminationPhase [EffectsPhase]
+    (defn- #_"EarlyReadEliminationPhase" EarlyReadEliminationPhase'new-0 []
+        (merge (EarlyReadEliminationPhase'class.) (EffectsPhase'new-2 1, true))
     )
 
     (defm EarlyReadEliminationPhase EffectsPhase
@@ -26291,29 +26017,29 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm EarlyReadEliminationPhase Phase
-        (#_"Graph" Phase'''run-2 [#_"EarlyReadEliminationPhase" this, #_"Graph" graph]
-            (EffectsPhase''runAnalysis-2 this, graph)
-            graph
-        )
+    (defn #_"Graph" EarlyReadEliminationPhase'run-1 [#_"Graph" graph]
+        (EffectsPhase''runAnalysis-2 (EarlyReadEliminationPhase'new-0), graph)
+        graph
     )
 )
 
-(class-ns PartialEscapePhase [EffectsPhase, Phase]
-    (defn #_"PartialEscapePhase" PartialEscapePhase'new-2 [#_"boolean" iterative, #_"CanonicalizerPhase" canonicalizer]
-        (PartialEscapePhase'new-3 iterative, GraalOptions'optEarlyReadElimination, canonicalizer)
-    )
-
-    (defn #_"PartialEscapePhase" PartialEscapePhase'new-3 [#_"boolean" iterative, #_"boolean" readElimination, #_"CanonicalizerPhase" canonicalizer]
-        (merge (PartialEscapePhase'class.) (EffectsPhase'new-2 (if iterative GraalOptions'escapeAnalysisIterations 1), canonicalizer)
+(class-ns PartialEscapePhase [EffectsPhase]
+    (defn- #_"PartialEscapePhase" PartialEscapePhase'new-2 [#_"boolean" iterative?, #_"boolean" readElimination]
+        (merge (PartialEscapePhase'class.) (EffectsPhase'new-1 (if iterative? GraalOptions'escapeAnalysisIterations 1))
             (hash-map
                 #_"boolean" :readElimination readElimination
             )
         )
     )
 
-    (defm PartialEscapePhase Phase
-        (#_"Graph" Phase'''run-2 [#_"PartialEscapePhase" this, #_"Graph" graph]
+    (defn- #_"PartialEscapePhase" PartialEscapePhase'new-1 [#_"boolean" iterative?]
+        (PartialEscapePhase'new-2 iterative?, GraalOptions'optEarlyReadElimination)
+    )
+
+    (defn #_"Graph" PartialEscapePhase'run-1 [#_"Graph" graph]
+        (let [
+            #_"PartialEscapePhase" this (PartialEscapePhase'new-1 true)
+        ]
             (when (or (:readElimination this) (Graph''hasVirtualizableAllocation-1 graph))
                 (EffectsPhase''runAnalysis-2 this, graph)
             )
@@ -26393,11 +26119,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ExpandLogicPhase [Phase]
-    (defn #_"ExpandLogicPhase" ExpandLogicPhase'new-0 []
-        (ExpandLogicPhase'class.)
-    )
-
+(value-ns ExpandLogicPhase
     (defn- #_"double" ExpandLogicPhase'sanitizeProbability-1 [#_"double" value]
         (let [
             #_"double" newValue (min 1.0 (max 0.0 value))
@@ -26513,16 +26235,14 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defm ExpandLogicPhase Phase
-        (#_"Graph" Phase'''run-2 [#_"ExpandLogicPhase" this, #_"Graph" graph]
-            (doseq [#_"ShortCircuitOrNode" logic (Graph''getNodes-2 graph, ShortCircuitOrNode)]
-                (ExpandLogicPhase'processBinary-1 logic)
-            )
-            (doseq [#_"NormalizeCompareNode" logic (Graph''getNodes-2 graph, NormalizeCompareNode)]
-                (ExpandLogicPhase'processNormalizeCompareNode-1 logic)
-            )
-            (Graph''setAfterExpandLogic-1 graph)
+    (defn #_"Graph" ExpandLogicPhase'run-1 [#_"Graph" graph]
+        (doseq [#_"ShortCircuitOrNode" logic (Graph''getNodes-2 graph, ShortCircuitOrNode)]
+            (ExpandLogicPhase'processBinary-1 logic)
         )
+        (doseq [#_"NormalizeCompareNode" logic (Graph''getNodes-2 graph, NormalizeCompareNode)]
+            (ExpandLogicPhase'processNormalizeCompareNode-1 logic)
+        )
+        (Graph''setAfterExpandLogic-1 graph)
     )
 )
 
@@ -27869,28 +27589,18 @@ ZeroExtendNode'new-4
 ;;;
  ; This phase lowers FloatingReadNodes into corresponding fixed reads.
  ;;
-(class-ns FixReadsPhase [Phase]
-    (defn #_"FixReadsPhase" FixReadsPhase'new-1 [#_"Phase" schedulePhase]
-        (merge (FixReadsPhase'class.)
-            (hash-map
-                #_"Phase" :schedulePhase schedulePhase
+(value-ns FixReadsPhase
+    (defn #_"Graph" FixReadsPhase''run-1 [#_"Graph" graph]
+        (let [
+            graph (SchedulePhase'run-2 graph, :SchedulingStrategy'LATEST_OUT_OF_LOOPS)
+            #_"Schedule" schedule (:lastSchedule graph)
+            #_"FixReadsClosure" closure (FixReadsClosure'new-0)
+            _ (§ ass! closure (reduce #(ScheduledNodeIterator''processNodes-3 %1, %2, schedule) closure (:reversePostOrder (:cfg schedule))))
+        ]
+            (when GraalOptions'rawConditionalElimination
+                (ControlFlowGraph''visitDominatorTree-3 (:cfg schedule), (RawConditionalEliminationVisitor'new-2 graph, schedule), false)
             )
-        )
-    )
-
-    (defm FixReadsPhase Phase
-        (#_"Graph" Phase'''run-2 [#_"FixReadsPhase" this, #_"Graph" graph]
-            (let [
-                _ (§ ass! graph (Phase'''run-2 (:schedulePhase this), graph))
-                #_"Schedule" schedule (:lastSchedule graph)
-                #_"FixReadsClosure" closure (FixReadsClosure'new-0)
-                _ (§ ass! closure (reduce #(ScheduledNodeIterator''processNodes-3 %1, %2, schedule) closure (:reversePostOrder (:cfg schedule))))
-            ]
-                (when GraalOptions'rawConditionalElimination
-                    (ControlFlowGraph''visitDominatorTree-3 (:cfg schedule), (RawConditionalEliminationVisitor'new-2 graph, schedule), false)
-                )
-                (Graph''setAfterFixReadPhase-2 graph, true)
-            )
+            (Graph''setAfterFixReadPhase-2 graph, true)
         )
     )
 )
@@ -27906,25 +27616,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FloatingReadPhase [Phase]
-    (defn #_"FloatingReadPhase" FloatingReadPhase'new-0 []
-        (FloatingReadPhase'new-2 true, false)
-    )
-
-    ;;;
-     ; @param createFloatingReads specifies whether FloatableAccessNodes like ReadNode
-     ;            should be converted into floating nodes (e.g. FloatingReadNodes) where possible
-     ; @param createMemoryMapNodes a MemoryMapNode will be created for each return if this is true
-     ;;
-    (defn #_"FloatingReadPhase" FloatingReadPhase'new-2 [#_"boolean" createFloatingReads, #_"boolean" createMemoryMapNodes]
-        (merge (FloatingReadPhase'class.)
-            (hash-map
-                #_"boolean" :createFloatingReads createFloatingReads
-                #_"boolean" :createMemoryMapNodes createMemoryMapNodes
-            )
-        )
-    )
-
+(value-ns FloatingReadPhase
     (defn- #_"{LocationIdentity}" FloatingReadPhase'processIdentity-2 [#_"{LocationIdentity}" state, #_"LocationIdentity" location]
         (when-not (:immutable location) => state
             (conj state location)
@@ -27985,30 +27677,33 @@ ZeroExtendNode'new-4
         )
     )
 
+    ;;;
+     ; @param createFloatingReads specifies whether FloatableAccessNodes like ReadNode
+     ;            should be converted into floating nodes (e.g. FloatingReadNodes) where possible
+     ; @param createMemoryMapNodes a MemoryMapNode will be created for each return if this is true
+     ;;
     ; @SuppressWarnings("try")
-    (defm FloatingReadPhase Phase
-        (#_"Graph" Phase'''run-2 [#_"FloatingReadPhase" this, #_"Graph" graph]
-            (let [
-                #_"{LoopBeginNode {LocationIdentity}}" modifiedInLoops
-                    (when (Graph''hasLoops-1 graph)
-                        (reduce FloatingReadPhase'processLoop-2 {} (:loops (ControlFlowGraph'compute-3 graph, false, false)))
-                    )
-                #_"HashSetNodeEventListener" listener (HashSetNodeEventListener'new-1 #{ :NodeEvent'NODE_ADDED, :NodeEvent'ZERO_USAGES })
-                _
-                    (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 graph, listener)])
-                        (ReentrantNodeIterator'apply-3 (FloatingReadClosure'new-3 modifiedInLoops, (:createFloatingReads this), (:createMemoryMapNodes this)), (:start graph), (MemoryMap0'new-1 (:start graph)))
-                    )
-                _
-                    (doseq [#_"Node" node (FloatingReadPhase'removeExternallyUsedNodes-1 (:changedNodes listener))]
-                        (when (and (Node''isAlive-1 node) (satisfies? FloatingNode node))
-                            (§ ass! node (Node''replaceAtUsages-2 node, nil))
-                            (GraphUtil'killWithUnusedFloatingInputs-1 node)
-                        )
-                    )
-            ]
-                (when (:createFloatingReads this) => graph
-                    (Graph''setAfterFloatingReadPhase-2 graph, true)
+    (defn #_"Graph" FloatingReadPhase'run-3 [#_"Graph" graph, #_"boolean" createFloatingReads, #_"boolean" createMemoryMapNodes]
+        (let [
+            #_"{LoopBeginNode {LocationIdentity}}" modifiedInLoops
+                (when (Graph''hasLoops-1 graph)
+                    (reduce FloatingReadPhase'processLoop-2 {} (:loops (ControlFlowGraph'compute-3 graph, false, false)))
                 )
+            #_"HashSetNodeEventListener" listener (HashSetNodeEventListener'new-1 #{ :NodeEvent'NODE_ADDED, :NodeEvent'ZERO_USAGES })
+            _
+                (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 graph, listener)])
+                    (ReentrantNodeIterator'apply-3 (FloatingReadClosure'new-3 modifiedInLoops, createFloatingReads, createMemoryMapNodes), (:start graph), (MemoryMap0'new-1 (:start graph)))
+                )
+            _
+                (doseq [#_"Node" node (FloatingReadPhase'removeExternallyUsedNodes-1 (:changedNodes listener))]
+                    (when (and (Node''isAlive-1 node) (satisfies? FloatingNode node))
+                        (§ ass! node (Node''replaceAtUsages-2 node, nil))
+                        (GraphUtil'killWithUnusedFloatingInputs-1 node)
+                    )
+                )
+        ]
+            (when createFloatingReads => graph
+                (Graph''setAfterFloatingReadPhase-2 graph, true)
             )
         )
     )
@@ -28675,23 +28370,17 @@ ZeroExtendNode'new-4
  ; This Phase processes the graph in post order, assigning the FrameState from the last
  ; StateSplit node to DeoptimizingNodes.
  ;;
-(class-ns FrameStateAssignmentPhase [Phase]
-    (defn #_"FrameStateAssignmentPhase" FrameStateAssignmentPhase'new-0 []
-        (FrameStateAssignmentPhase'class.)
-    )
-
-    (defm FrameStateAssignmentPhase Phase
-        (#_"Graph" Phase'''run-2 [#_"FrameStateAssignmentPhase" this, #_"Graph" graph]
-            (when (GuardsStage'areFrameStatesAtSideEffects-1 (:guardsStage graph)) => graph
-                (ReentrantNodeIterator'apply-3 (FrameStateAssignmentClosure'new-0), (:start graph), nil)
-                (let [
-                    graph (Graph''setGuardsStage-2 graph, :GuardsStage'AFTER_FSA)
-                ]
-                    (doseq [#_"Node" node (filter Node''hasNoUsages-1 (Graph''getNodes-2 graph, FrameState))]
-                        (ß GraphUtil'killWithUnusedFloatingInputs node)
-                    )
-                    graph
+(value-ns FrameStateAssignmentPhase
+    (defn #_"Graph" FrameStateAssignmentPhase'run-1 [#_"Graph" graph]
+        (when (GuardsStage'areFrameStatesAtSideEffects-1 (:guardsStage graph)) => graph
+            (ReentrantNodeIterator'apply-3 (FrameStateAssignmentClosure'new-0), (:start graph), nil)
+            (let [
+                graph (Graph''setGuardsStage-2 graph, :GuardsStage'AFTER_FSA)
+            ]
+                (doseq [#_"Node" node (filter Node''hasNoUsages-1 (Graph''getNodes-2 graph, FrameState))]
+                    (ß GraphUtil'killWithUnusedFloatingInputs node)
                 )
+                graph
             )
         )
     )
@@ -28706,7 +28395,7 @@ ZeroExtendNode'new-4
                 (when-not (ResolvedJavaMethod''isStatic-1 method) => [this 0 0]
                     (let [
                         #_"Stamp" receiverStamp
-                            (or (Plugins''getOverridingStamp-4 HotSpot'plugins, (:parser this), originalType, true)
+                            (or (TypePlugin'''interceptType-4 HotSpot'plugin, (:parser this), originalType, true)
                                 (StampFactory'forDeclaredType-2 originalType, true)
                             )
                         this (update this :locals assoc' 0 (Graph''addOrUniqueWithInputs-2 (:graph this), (ParameterNode'new-2 0, receiverStamp)))
@@ -28721,7 +28410,7 @@ ZeroExtendNode'new-4
                     #_"JavaType" type (JavaType'''resolve-2 (Signature'''getParameterType-2 sig, k), originalType)
                     #_"JavaKind" kind (JavaType'''getJavaKind-1 type)
                     #_"Stamp" stamp
-                        (or (Plugins''getOverridingStamp-4 HotSpot'plugins, (:parser this), type, false)
+                        (or (TypePlugin'''interceptType-4 HotSpot'plugin, (:parser this), type, false)
                             (StampFactory'forDeclaredType-2 type, false)
                         )
                     this (update this :locals assoc' j (Graph''addOrUniqueWithInputs-2 (:graph this), (ParameterNode'new-2 i, stamp)))
@@ -28775,7 +28464,7 @@ ZeroExtendNode'new-4
                         #_"ValueNode" x (nth (:stack this) i)
                         #_"ValueNode" y (nth (:stack other) i)
                     ]
-                        (if (and (not= x y) (or (= x :FrameState'TWO_SLOT_MARKER) (Node''isDeleted-1 x) (= y :FrameState'TWO_SLOT_MARKER) (Node''isDeleted-1 y) (not= (ValueNode''getStackKind-1 x) (ValueNode''getStackKind-1 y))))
+                        (if (and (not= x y) (or (= x :FrameState'TWO_SLOT_MARKER) (Node''isDeleted-1 x) (= y :FrameState'TWO_SLOT_MARKER) (Node''isDeleted-1 y) (not= (ValueNode''getStackKind-1 x) (ValueNode''getStackKind-1 y))))
                             false
                             (recur (inc i))
                         )
@@ -28802,10 +28491,10 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"ValueNode" FrameStateBuilder''merge-4 [#_"FrameStateBuilder" this, #_"ValueNode" value, #_"ValueNode" other, #_"AbstractMergeNode" block]
-        (when (and (some? value) (not (Node''isDeleted-1 value)))
+        (when (and (some? value) (not (Node''isDeleted-1 value)))
             (cond
                 (AbstractMergeNode''isPhiAtMerge-2 block, value)
-                    (if (and (some? other) (not= other :FrameState'TWO_SLOT_MARKER) (not (Node''isDeleted-1 other)) (= (ValueNode''getStackKind-1 value) (ValueNode''getStackKind-1 other)))
+                    (if (and (some? other) (not= other :FrameState'TWO_SLOT_MARKER) (not (Node''isDeleted-1 other)) (= (ValueNode''getStackKind-1 value) (ValueNode''getStackKind-1 other)))
                         (PhiNode''addInput-2 value, other)
                         ;; This phi must be dead anyway, add input of correct stack kind to keep the graph invariants.
                         (PhiNode''addInput-2 value, (ConstantNode'defaultForKind-2 (ValueNode''getStackKind-1 value), (:graph this)))
@@ -28814,7 +28503,7 @@ ZeroExtendNode'new-4
                     value
                 (or (= value :FrameState'TWO_SLOT_MARKER) (= other :FrameState'TWO_SLOT_MARKER))
                     nil
-                (and (some? other) (not (Node''isDeleted-1 other)) (= (ValueNode''getStackKind-1 value) (ValueNode''getStackKind-1 other)))
+                (and (some? other) (not (Node''isDeleted-1 other)) (= (ValueNode''getStackKind-1 value) (ValueNode''getStackKind-1 other)))
                     (FrameStateBuilder''createValuePhi-4 this, value, other, block)
             )
         )
@@ -29107,11 +28796,6 @@ ZeroExtendNode'new-4
                          ;;
                         #_"int" :nodesDeleted 0
                         #_"NodeEventListener" :nodeEventListener nil
-                        ;;;
-                         ; Indicates that the graph should no longer be modified. Frozen graphs can be used by multiple
-                         ; threads so it's only safe to read them.
-                         ;;
-                        #_"boolean" :frozen false
                         #_"StartNode" :start nil
                         ;;;
                          ; The root method from which this graph was built, or nil
@@ -29126,9 +28810,8 @@ ZeroExtendNode'new-4
                         #_"Schedule" :lastSchedule nil
                     )
                 )
-            this (Graph''setStart-2 this, (Graph''add-2 this, (StartNode'new-0)))
         ]
-            this
+            (assoc this :start (Graph''add-2 this, (StartNode'new-0)))
         )
     )
 
@@ -29241,14 +28924,6 @@ ZeroExtendNode'new-4
         (NodeClass'addGraphDuplicate-4 this, oldGraph, newNodes, replacements)
     )
 
-    (defn #_"boolean" Graph''isFrozen-1 [#_"Graph" this]
-        (:frozen this)
-    )
-
-    (defn #_"this" Graph''freeze-1 [#_"Graph" this]
-        (assoc this :frozen true)
-    )
-
     #_unused
     (defn #_"Stamp" Graph''getReturnStamp-1 [#_"Graph" this]
         (loop-when [#_"Stamp" stamp nil #_"seq" s (seq (Graph''getNodes-2 this, ReturnNode))] (some? s) => stamp
@@ -29264,10 +28939,6 @@ ZeroExtendNode'new-4
                 (recur stamp (next s))
             )
         )
-    )
-
-    (defn #_"this" Graph''setStart-2 [#_"Graph" this, #_"StartNode" start]
-        (assoc this :start start)
     )
 
     (defn #_"ParameterNode" Graph''getParameter-2 [#_"Graph" this, #_"int" index]
@@ -29318,7 +28989,7 @@ ZeroExtendNode'new-4
             _ (§ ass! node (Node''replaceAndDelete-2 node, replacement))
         ]
             (when (= node (:start this)) => this
-                (Graph''setStart-2 this, (§ cast #_"StartNode" replacement))
+                (assoc this :start (§ cast #_"StartNode" replacement))
             )
         )
     )
@@ -29511,15 +29182,9 @@ ZeroExtendNode'new-4
 ;;;
  ; Parses the bytecodes of a method and builds the IR graph.
  ;;
-(class-ns GraphBuilderPhase [Phase]
-    (defn #_"GraphBuilderPhase" GraphBuilderPhase'new-0 []
-        (GraphBuilderPhase'class.)
-    )
-
-    (defm GraphBuilderPhase Phase
-        (#_"Graph" Phase'''run-2 [#_"GraphBuilderPhase" this, #_"Graph" graph]
-            (-> graph (BytecodeParser'new-1) (BytecodeParser''parse-1) :graph)
-        )
+(value-ns GraphBuilderPhase
+    (defn #_"Graph" GraphBuilderPhase'run-1 [#_"Graph" graph]
+        (-> graph (BytecodeParser'new-1) (BytecodeParser''parse-1) :graph)
     )
 )
 
@@ -29534,26 +29199,20 @@ ZeroExtendNode'new-4
  ; implicit nil-checks performed by access to the objects that need to be nil-checked.
  ; The second phase does the actual control-flow expansion of the remaining GuardNodes.
  ;;
-(class-ns GuardLoweringPhase [Phase]
-    (defn #_"GuardLoweringPhase" GuardLoweringPhase'new-0 []
-        (GuardLoweringPhase'class.)
-    )
-
-    (defm GuardLoweringPhase Phase
-        (#_"Graph" Phase'''run-2 [#_"GuardLoweringPhase" this, #_"Graph" graph]
-            (when (GuardsStage'allowsFloatingGuards-1 (:guardsStage graph)) => graph
-                (let [
-                    graph (Phase'''run-2 (SchedulePhase'new-1 :SchedulingStrategy'EARLIEST), graph)
-                ]
-                    (doseq [#_"Block" block (:reversePostOrder (:cfg (:lastSchedule graph)))]
-                        (let [
-                            _ (LowerGuards'new-1 block)
-                        ]
-                            (§ ass! _ (ScheduledNodeIterator''processNodes-3 _, block, (:lastSchedule graph)))
-                        )
+(value-ns GuardLoweringPhase
+    (defn #_"Graph" GuardLoweringPhase'run-1 [#_"Graph" graph]
+        (when (GuardsStage'allowsFloatingGuards-1 (:guardsStage graph)) => graph
+            (let [
+                graph (SchedulePhase'run-2 graph, :SchedulingStrategy'EARLIEST)
+            ]
+                (doseq [#_"Block" block (:reversePostOrder (:cfg (:lastSchedule graph)))]
+                    (let [
+                        _ (LowerGuards'new-1 block)
+                    ]
+                        (§ ass! _ (ScheduledNodeIterator''processNodes-3 _, block, (:lastSchedule graph)))
                     )
-                    (Graph''setGuardsStage-2 graph, :GuardsStage'FIXED_DEOPTS)
                 )
+                (Graph''setGuardsStage-2 graph, :GuardsStage'FIXED_DEOPTS)
             )
         )
     )
@@ -29570,18 +29229,18 @@ ZeroExtendNode'new-4
  ;
  ; Constant folding of field loads.
  ;;
-(class-ns HotSpotNodePlugin [NodePlugin, TypePlugin]
-    (defn #_"HotSpotNodePlugin" HotSpotNodePlugin'new-0 []
-        (HotSpotNodePlugin'class.)
+(class-ns HotSpotPlugin [NodePlugin, TypePlugin]
+    (defn #_"HotSpotPlugin" HotSpotPlugin'new-0 []
+        (HotSpotPlugin'class.)
     )
 
-    (defm HotSpotNodePlugin TypePlugin
-        (#_"Stamp" TypePlugin'''interceptType-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"JavaType" declaredType, #_"boolean" never-nil?]
+    (defm HotSpotPlugin TypePlugin
+        (#_"Stamp" TypePlugin'''interceptType-4 [#_"HotSpotPlugin" this, #_"BytecodeParser" parser, #_"JavaType" declaredType, #_"boolean" never-nil?]
             nil
         )
     )
 
-    (defn- #_"boolean" HotSpotNodePlugin'tryReadField-3 [#_"BytecodeParser" parser, #_"ResolvedJavaField" field, #_"JavaConstant" object]
+    (defn- #_"boolean" HotSpotPlugin'tryReadField-3 [#_"BytecodeParser" parser, #_"ResolvedJavaField" field, #_"JavaConstant" object]
         (let [
             #_"ConstantNode" constant (ConstantFields'tryConstantFold-2 field, object)
         ]
@@ -29595,46 +29254,46 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm HotSpotNodePlugin NodePlugin
-        (#_"boolean" NodePlugin'''handleInvoke-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"[ValueNode]" args]
+    (defm HotSpotPlugin NodePlugin
+        (#_"boolean" NodePlugin'''handleInvoke-4 [#_"HotSpotPlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"[ValueNode]" args]
             false
         )
 
-        (#_"boolean" NodePlugin'''handleLoadField-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field]
+        (#_"boolean" NodePlugin'''handleLoadField-4 [#_"HotSpotPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field]
             (or (and (satisfies? ConstantNode object)
-                    (HotSpotNodePlugin'tryReadField-3 parser, field, (ValueNode''asJavaConstant-1 object))
+                    (HotSpotPlugin'tryReadField-3 parser, field, (ValueNode''asJavaConstant-1 object))
                 )
                 false
             )
         )
 
-        (#_"boolean" NodePlugin'''handleLoadStaticField-3 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field]
-            (or (HotSpotNodePlugin'tryReadField-3 parser, field, nil)
+        (#_"boolean" NodePlugin'''handleLoadStaticField-3 [#_"HotSpotPlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field]
+            (or (HotSpotPlugin'tryReadField-3 parser, field, nil)
                 false
             )
         )
 
-        (#_"boolean" NodePlugin'''handleStoreField-5 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field, #_"ValueNode" value]
+        (#_"boolean" NodePlugin'''handleStoreField-5 [#_"HotSpotPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field, #_"ValueNode" value]
             false
         )
 
-        (#_"boolean" NodePlugin'''handleStoreStaticField-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field, #_"ValueNode" value]
+        (#_"boolean" NodePlugin'''handleStoreStaticField-4 [#_"HotSpotPlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field, #_"ValueNode" value]
             false
         )
 
-        (#_"boolean" NodePlugin'''handleLoadIndexed-5 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind]
+        (#_"boolean" NodePlugin'''handleLoadIndexed-5 [#_"HotSpotPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind]
             false
         )
 
-        (#_"boolean" NodePlugin'''handleStoreIndexed-6 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind, #_"ValueNode" value]
+        (#_"boolean" NodePlugin'''handleStoreIndexed-6 [#_"HotSpotPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind, #_"ValueNode" value]
             false
         )
 
-        (#_"boolean" NodePlugin'''handleCheckCast-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
+        (#_"boolean" NodePlugin'''handleCheckCast-4 [#_"HotSpotPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
             false
         )
 
-        (#_"boolean" NodePlugin'''handleInstanceOf-4 [#_"HotSpotNodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
+        (#_"boolean" NodePlugin'''handleInstanceOf-4 [#_"HotSpotPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
             false
         )
     )
@@ -31508,46 +31167,36 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IterativeConditionalEliminationPhase [Phase]
+(value-ns IterativeConditionalEliminationPhase
     (def- #_"int" IterativeConditionalEliminationPhase'MAX_ITERATIONS 256)
 
-    (defn #_"IterativeConditionalEliminationPhase" IterativeConditionalEliminationPhase'new-2 [#_"CanonicalizerPhase" canonicalizer, #_"boolean" fullSchedule]
-        (merge (IterativeConditionalEliminationPhase'class.)
-            (hash-map
-                #_"CanonicalizerPhase" :canonicalizer canonicalizer
-                #_"boolean" :fullSchedule fullSchedule
-            )
-        )
-    )
-
-    (defm IterativeConditionalEliminationPhase Phase
-        (#_"Graph" Phase'''run-2 [#_"IterativeConditionalEliminationPhase" this, #_"Graph" graph]
-            (let [
-                #_"HashSetNodeEventListener" listener (HashSetNodeEventListener''exclude-2 (HashSetNodeEventListener'new-0), :NodeEvent'NODE_ADDED)
-            ]
-                (loop [graph graph #_"int" iteration 0]
-                    (let [
-                        graph
-                            (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 graph, listener)])
-                                (Phase'''run-2 (ConditionalEliminationPhase'new-1 (:fullSchedule this)), graph)
-                            )
-                    ]
-                        (when (seq (:changedNodes listener)) => graph
-                            (doseq [#_"Node" node (Graph''getNodes-1 graph)]
-                                (when (satisfies? Simplifiable node)
-                                    (§ ass! listener (update listener :changedNodes conj node))
+    (defn #_"Graph" IterativeConditionalEliminationPhase'run-2 [#_"Graph" graph, #_"boolean" fullSchedule]
+        (let [
+            #_"HashSetNodeEventListener" listener (HashSetNodeEventListener''exclude-2 (HashSetNodeEventListener'new-0), :NodeEvent'NODE_ADDED)
+        ]
+            (loop [graph graph #_"int" iteration 0]
+                (let [
+                    graph
+                        (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 graph, listener)])
+                            (ConditionalEliminationPhase'run-2 graph, fullSchedule)
+                        )
+                ]
+                    (when (seq (:changedNodes listener)) => graph
+                        (let [
+                            _
+                                (doseq [#_"Node" node (Graph''getNodes-1 graph)]
+                                    (when (satisfies? Simplifiable node)
+                                        (§ ass! listener (update listener :changedNodes conj node))
+                                    )
                                 )
+                            graph (Simplifier'run-2 graph, (:changedNodes listener))
+                            _ (§ ass! listener (assoc listener :changedNodes #{}))
+                            iteration (inc iteration)
+                        ]
+                            (when (< IterativeConditionalEliminationPhase'MAX_ITERATIONS iteration)
+                                (throw! (str "number of iterations in ConditionalEliminationPhase exceeds " IterativeConditionalEliminationPhase'MAX_ITERATIONS))
                             )
-                            (CanonicalizerPhase''applyIncremental-3 (:canonicalizer this), graph, (:changedNodes listener))
-                            (let [
-                                _ (§ ass! listener (assoc listener :changedNodes #{}))
-                                iteration (inc iteration)
-                            ]
-                                (when (< IterativeConditionalEliminationPhase'MAX_ITERATIONS iteration)
-                                    (throw! (str "number of iterations in ConditionalEliminationPhase exceeds " IterativeConditionalEliminationPhase'MAX_ITERATIONS))
-                                )
-                                (recur graph iteration)
-                            )
+                            (recur graph iteration)
                         )
                     )
                 )
@@ -36317,7 +35966,7 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Phase 7: Assign register numbers back to LIR.
+ ; Assign register numbers back to LIR.
  ;;
 (value-ns LSAssignLocationsPhase
     ;;;
@@ -37214,8 +36863,6 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Phase 6: resolve data flow
- ;
  ; Insert moves at edges between blocks if intervals have been split.
  ;;
 (value-ns LSResolveDataFlowPhase
@@ -37611,8 +37258,6 @@ ZeroExtendNode'new-4
     (defn #_"boolean" LinearScan''isProcessed-2 [#_"LinearScan" this, #_"Value" operand]
         (or (not (satisfies? RegisterValue operand)) (contains? RegisterConfig'allocatableRegisters (:reg operand)))
     )
-
-    ;; * Phase 5: actual register allocation
 
     (defn #_"Interval" LinearScan'addToList-3 [#_"Interval" _first, #_"Interval" prev, #_"Interval" interval]
         (when (some? prev) => interval
@@ -38190,43 +37835,37 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LockEliminationPhase [Phase]
-    (defn #_"LockEliminationPhase" LockEliminationPhase'new-0 []
-        (LockEliminationPhase'class.)
-    )
-
-    (defm LockEliminationPhase Phase
-        (#_"Graph" Phase'''run-2 [#_"LockEliminationPhase" this, #_"Graph" graph]
-            (doseq [#_"MonitorExitNode" monitorExitNode (Graph''getNodes-2 graph, MonitorExitNode)]
-                (let [
-                    #_"FixedNode" _next (:next monitorExitNode)
-                ]
-                    (when (or (satisfies? MonitorEnterNode _next) (satisfies? RawMonitorEnterNode _next))
-                        ;; should never happen, osr monitor enters are always direct successors of the graph start
-                        (let [
-                            #_"AccessMonitorNode" monitorEnterNode _next
-                        ]
-                            (when (= (GraphUtil'unproxify-1n (:object monitorEnterNode)) (GraphUtil'unproxify-1n (:object monitorExitNode)))
-                                ;; We've coarsened the lock so use the same monitor id for the whole region,
-                                ;; otherwise the monitor operations appear to be unrelated.
-                                (let [
-                                    #_"MonitorIdNode" enterId (:monitorId monitorEnterNode)
-                                    #_"MonitorIdNode" exitId (:monitorId monitorExitNode)
-                                    _
-                                        (when-not (= enterId exitId)
-                                            (§ ass! enterId (Node''replaceAndDelete-2 enterId, exitId))
-                                        )
-                                ]
-                                    (GraphUtil'removeFixedWithUnusedInputs-1 monitorEnterNode)
-                                    (GraphUtil'removeFixedWithUnusedInputs-1 monitorExitNode)
-                                )
+(value-ns LockEliminationPhase
+    (defn #_"Graph" LockEliminationPhase'run-1 [#_"Graph" graph]
+        (doseq [#_"MonitorExitNode" monitorExitNode (Graph''getNodes-2 graph, MonitorExitNode)]
+            (let [
+                #_"FixedNode" _next (:next monitorExitNode)
+            ]
+                (when (or (satisfies? MonitorEnterNode _next) (satisfies? RawMonitorEnterNode _next))
+                    ;; should never happen, osr monitor enters are always direct successors of the graph start
+                    (let [
+                        #_"AccessMonitorNode" monitorEnterNode _next
+                    ]
+                        (when (= (GraphUtil'unproxify-1n (:object monitorEnterNode)) (GraphUtil'unproxify-1n (:object monitorExitNode)))
+                            ;; We've coarsened the lock so use the same monitor id for the whole region,
+                            ;; otherwise the monitor operations appear to be unrelated.
+                            (let [
+                                #_"MonitorIdNode" enterId (:monitorId monitorEnterNode)
+                                #_"MonitorIdNode" exitId (:monitorId monitorExitNode)
+                                _
+                                    (when-not (= enterId exitId)
+                                        (§ ass! enterId (Node''replaceAndDelete-2 enterId, exitId))
+                                    )
+                            ]
+                                (GraphUtil'removeFixedWithUnusedInputs-1 monitorEnterNode)
+                                (GraphUtil'removeFixedWithUnusedInputs-1 monitorExitNode)
                             )
                         )
                     )
                 )
             )
-            graph
         )
+        graph
     )
 )
 
@@ -38381,19 +38020,19 @@ ZeroExtendNode'new-4
 ;;;
  ; Processes all Lowerable nodes to do their lowering.
  ;;
-(class-ns LoweringPhase [Phase]
-    (defn #_"LoweringPhase" LoweringPhase'new-2 [#_"CanonicalizerPhase" canonicalizer, #_"LoweringStage" loweringStage]
-        (merge (LoweringPhase'class.)
-            (hash-map
-                #_"CanonicalizerPhase" :canonicalizer canonicalizer
-                #_"LoweringStage" :loweringStage loweringStage
+(value-ns LoweringPhase
+    ; @SuppressWarnings("try")
+    (defn #_"Graph" LoweringPhase'run-2 [#_"Graph" graph, #_"LoweringStage" loweringStage]
+        (let [
+            #_"HashSetNodeEventListener" listener (HashSetNodeEventListener'new-0)
+            graph
+                (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 graph, listener)])
+                    (LoweringRound'run-2 graph, loweringStage)
+                )
+        ]
+            (when (seq (:changedNodes listener)) => graph
+                (Simplifier'run-2 graph, (:changedNodes listener))
             )
-        )
-    )
-
-    (defm LoweringPhase Phase
-        (#_"Graph" Phase'''run-2 [#_"LoweringPhase" this, #_"Graph" graph]
-            (Phase'''run-2 (IncrementalCanonicalizerPhase'new-2 (:canonicalizer this), (LoweringRound'new-1 this)), graph)
         )
     )
 
@@ -38551,28 +38190,26 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoweringRound [Phase]
-    (defn #_"LoweringRound" LoweringRound'new-1 [#_"LoweringPhase" phase]
+(class-ns LoweringRound []
+    (defn- #_"LoweringRound" LoweringRound'new-1 [#_"LoweringStage" loweringStage]
         (merge (LoweringRound'class.)
             (hash-map
-                #_"LoweringPhase" :phase phase
-                #_"SchedulePhase" :schedulePhase (SchedulePhase'new-1 (if GraalOptions'optScheduleOutOfLoops :SchedulingStrategy'LATEST_OUT_OF_LOOPS :SchedulingStrategy'LATEST))
+                #_"LoweringStage" :loweringStage loweringStage
                 #_"Schedule" :schedule nil
             )
         )
     )
 
-    (defm LoweringRound Phase
-        (#_"Graph" Phase'''run-2 [#_"LoweringRound" this, #_"Graph" graph]
-            (let [
-                graph (Phase'''run-2 (:schedulePhase this), graph)
-                _ (§ ass! this (assoc this :schedule (:lastSchedule graph)))
-                _ (§ ass! (:cfg (:schedule this)) (ControlFlowGraph''computePostdominators-1 (:cfg (:schedule this))))
-                #_"Block" startBlock (ControlFlowGraph''getStartBlock-1 (:cfg (:schedule this)))
-            ]
-                (LoweringPhase'processBlock-1 (ProcessFrame'new-5 nil, this, startBlock, #{}, (:beginNode startBlock)))
-                graph
-            )
+    (defn #_"Graph" LoweringRound'run-2 [#_"Graph" graph, #_"LoweringStage" loweringStage]
+        (let [
+            #_"LoweringRound" this (LoweringRound'new-1 loweringStage)
+            graph (SchedulePhase'run-2 graph, (if GraalOptions'optScheduleOutOfLoops :SchedulingStrategy'LATEST_OUT_OF_LOOPS :SchedulingStrategy'LATEST))
+            this (assoc this :schedule (:lastSchedule graph))
+            _ (§ ass! (:cfg (:schedule this)) (ControlFlowGraph''computePostdominators-1 (:cfg (:schedule this))))
+            #_"Block" startBlock (ControlFlowGraph''getStartBlock-1 (:cfg (:schedule this)))
+        ]
+            (LoweringPhase'processBlock-1 (ProcessFrame'new-5 nil, this, startBlock, #{}, (:beginNode startBlock)))
+            graph
         )
     )
 
@@ -38580,12 +38217,12 @@ ZeroExtendNode'new-4
         ;; Lower the instructions of this block.
         (let [
             #_"LoweringTool" lowerer
-                (loop-when [lowerer (LoweringTool'new-4 (:phase this), startAnchor, activeGuards, (:beginNode block)) #_"seq" s (seq (get (:block->nodes (:schedule this)) block))] (some? s) => lowerer
+                (loop-when [lowerer (LoweringTool'new-4 (:loweringStage this), startAnchor, activeGuards, (:beginNode block)) #_"seq" s (seq (get (:block->nodes (:schedule this)) block))] (some? s) => lowerer
                     (let [
                         #_"Node" node (first s)
                     ]
                         ;; => can happen when previous lowerings have deleted nodes
-                        (when-not (Node''isDeleted-1 node) => (recur lowerer (next s))
+                        (when-not (Node''isDeleted-1 node) => (recur lowerer (next s))
                             ;; Cache the next node to be able to reconstruct the previous of the next node after lowering.
                             (let [
                                 #_"FixedNode" nextNode (:next (if (satisfies? FixedWithNextNode node) node (:lastFixedNode lowerer)))
@@ -38594,7 +38231,7 @@ ZeroExtendNode'new-4
                                         (let [
                                             _ (§ ass! node (Lowerable'''lower-2 node, lowerer))
                                         ]
-                                            (when (Node''isDeleted-1 (:guardAnchor lowerer)) => lowerer
+                                            (when (Node''isDeleted-1 (:guardAnchor lowerer)) => lowerer
                                                 ;; TODO nextNode could be deleted but this is not currently supported
                                                 (assoc lowerer :guardAnchor (AbstractBeginNode'prevBegin-1 nextNode))
                                             )
@@ -38634,10 +38271,10 @@ ZeroExtendNode'new-4
 )
 
 (class-ns LoweringTool []
-    (defn #_"LoweringTool" LoweringTool'new-4 [#_"LoweringPhase" phase, #_"AnchoringNode" guardAnchor, #_"{Node}" activeGuards, #_"FixedWithNextNode" lastFixedNode]
+    (defn #_"LoweringTool" LoweringTool'new-4 [#_"LoweringStage" loweringStage, #_"AnchoringNode" guardAnchor, #_"{Node}" activeGuards, #_"FixedWithNextNode" lastFixedNode]
         (merge (LoweringTool'class.)
             (hash-map
-                #_"LoweringPhase" :phase phase
+                #_"LoweringStage" :loweringStage loweringStage
                 #_"{Node}" :activeGuards activeGuards
                 #_"AnchoringNode" :guardAnchor guardAnchor
                 #_"FixedWithNextNode" :lastFixedNode lastFixedNode
@@ -40534,7 +40171,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"boolean" Node''isDeleted-1 [#_"Node" this]
+    (defn #_"boolean" Node''isDeleted-1 [#_"Node" this]
         (<= (:nid this) Node'DELETED_ID_START)
     )
 
@@ -40593,16 +40230,6 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"boolean" Node''checkReplaceWith-2 [#_"Node" this, #_"Node" other]
-        (cond
-            (and (some? (:graph this)) (Graph''isFrozen-1 (:graph this))) (throw! "cannot modify frozen graph")
-            (= other this)                                                (throw! "cannot replace a node with itself")
-            (Node''isDeleted-1 this)                                      (throw! "cannot replace deleted node")
-            (and (some? other) (Node''isDeleted-1 other))                 (throw! (str "cannot replace with deleted node " other))
-            :else                                                         true
-        )
-    )
-
     (defn #_"this" Node''replaceAtUsages-2 [#_"Node" this, #_"Node" other]
         (Node''replaceAtAllUsages-3 this, other, nil)
     )
@@ -40628,7 +40255,6 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"this" Node''replaceAtAllUsages-3 [#_"Node" this, #_"Node" other, #_"Node" toBeDeleted]
-        (Node''checkReplaceWith-2 this, other)
         (when (seq (:nodeUsages this)) => this
             (doseq [#_"Node" node (:nodeUsages this)]
                 (Node''replaceAtUsage-4 this, other, toBeDeleted, node)
@@ -40638,7 +40264,6 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"void" Node''replaceAtUsages-3 [#_"Node" this, #_"InputType" type, #_"Node" other]
-        (Node''checkReplaceWith-2 this, other)
         (doseq [#_"Node" usage (:nodeUsages this) #_"Position" pos (Node''inputPositions-1 usage)]
             (when (and (= (Position''getInputType-1 pos) type) (= (Position''get-2 pos, usage) this))
                 (Position''set-3 pos, usage, other)
@@ -40661,7 +40286,6 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"void" Node''replaceAtPredecessor-2 [#_"Node" this, #_"Node" other]
-        (Node''checkReplaceWith-2 this, other)
         (when (some? (:predecessor this))
             (when-not (NodeClass''replaceFirstSuccessor-4 (:nodeClass (:predecessor this)), (:predecessor this), this, other)
                 (throw! (str "not found in successors, predecessor: " (:predecessor this)))
@@ -40672,7 +40296,6 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"this" Node''replaceAndDelete-2 [#_"Node" this, #_"Node" other]
-        (Node''checkReplaceWith-2 this, other)
         (when (some? other) => (throw! "cannot replace with nil")
             (let [
                 this
@@ -40798,7 +40421,7 @@ ZeroExtendNode'new-4
      ; stored in sets. It can give bad behavior when storing nodes of different graphs in the same set.
      ;;
     (§ override! #_"int" #_"Object." hashCode [#_"Node" this]
-        (if (Node''isDeleted-1 this) (- Node'DELETED_ID_START (:nid this)) (:nid this))
+        (if (Node''isDeleted-1 this) (- Node'DELETED_ID_START (:nid this)) (:nid this))
     )
 
     ;;;
@@ -41041,7 +40664,7 @@ ZeroExtendNode'new-4
     )
 
     (defm MethodCallTargetNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"MethodCallTargetNode" this, #_"SimplifierTool" tool]
+        (#_"this" Simplifiable'''simplify-2 [#_"MethodCallTargetNode" this, #_"Simplifier" tool]
             ;; attempt to devirtualize the call
             (when (some? (InvokeNode''getContextMethod-1 (MethodCallTargetNode''invoke-1 this))) => this ;; avoid invokes with placeholder bcis: they do not have a valid contextType
                 (let [
@@ -41370,7 +40993,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" IfNode''pushNodesThroughIf-2 [#_"IfNode" this, #_"SimplifierTool" tool]
+    (defn- #_"void" IfNode''pushNodesThroughIf-2 [#_"IfNode" this, #_"Simplifier" tool]
         ;; push similar nodes upwards through the if, thereby deduplicating them
         (loop []
             (let [
@@ -41399,7 +41022,7 @@ ZeroExtendNode'new-4
                                     (Graph''addBeforeFixed-3 (:graph this), this, trueNext)
                                     (doseq [#_"Node" usage (:nodeUsages trueNext)]
                                         (when (Node''isAlive-1 usage)
-                                            (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, usage))
+                                            (§ ass! tool (Simplifier''add-2 tool, usage))
                                         )
                                     )
                                     (recur)
@@ -41459,7 +41082,7 @@ ZeroExtendNode'new-4
      ;
      ; @return true if a replacement was done
      ;;
-    (defn- #_"boolean" IfNode''checkForUnsignedCompare-2 [#_"IfNode" this, #_"SimplifierTool" tool]
+    (defn- #_"boolean" IfNode''checkForUnsignedCompare-2 [#_"IfNode" this, #_"Simplifier" tool]
         (and (satisfies? IntegerLessThanNode (:logic this))
             (let [
                 #_"IntegerLessThanNode" lessThan (:logic this)
@@ -41503,7 +41126,8 @@ ZeroExtendNode'new-4
                                         #_"IfNode" newIfNode (Graph''add-2 (:graph this), (IfNode'new-4b below, falseSucc, trueSucc, (- 1.0 (:trueSuccessorProbability this))))
                                     ]
                                         ;; Remove the < 0 test.
-                                        (SimplifierTool'''deleteBranch-2 tool, (:trueSuccessor this))
+                                        (Node''replaceFirstSuccessor-3 (:predecessor (:trueSuccessor this)), (:trueSuccessor this), nil)
+                                        (GraphUtil'killCFG-1 (:trueSuccessor this))
                                         (Graph''removeSplit-3 (:graph this), this, (:falseSuccessor this))
 
                                         ;; Replace the second test with the new one.
@@ -41520,11 +41144,11 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"void" IfNode''removeThroughFalseBranch-3 [#_"IfNode" this, #_"SimplifierTool" tool, #_"AbstractMergeNode" merge]
+    (defn- #_"void" IfNode''removeThroughFalseBranch-3 [#_"IfNode" this, #_"Simplifier" tool, #_"AbstractMergeNode" merge]
         (let [
             #_"AbstractBeginNode" trueBegin (:trueSuccessor this)
             _ (Graph''removeSplitPropagate-3 (:graph this), this, trueBegin)
-            _ (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, trueBegin))
+            _ (§ ass! tool (Simplifier''add-2 tool, trueBegin))
         ]
             (when (some? (:logic this))
                 (GraphUtil'tryKillUnused-1 (:logic this))
@@ -41535,7 +41159,7 @@ ZeroExtendNode'new-4
                         #_"Node" n (loop-when-recur [n end] (and (some? n) (satisfies? BeginNode (:predecessor n))) [(:predecessor n)] => n)
                     ]
                         (when (and (some? n) (satisfies? IfNode (:predecessor n)))
-                            (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (:predecessor n)))
+                            (§ ass! tool (Simplifier''add-2 tool, (:predecessor n)))
                         )
                     )
                 )
@@ -41544,7 +41168,7 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"ValueNode" IfNode''canonicalizeConditionalCascade-4 [#_"IfNode" this, #_"SimplifierTool" tool, #_"ValueNode" trueValue, #_"ValueNode" falseValue]
+    (defn- #_"ValueNode" IfNode''canonicalizeConditionalCascade-4 [#_"IfNode" this, #_"Simplifier" tool, #_"ValueNode" trueValue, #_"ValueNode" falseValue]
         (cond
             (not (= (ValueNode''getStackKind-1 trueValue) (ValueNode''getStackKind-1 falseValue)))
                 nil
@@ -41634,7 +41258,7 @@ ZeroExtendNode'new-4
      ;
      ; @return true if a transformation was made, false otherwise
      ;;
-    (defn- #_"boolean" IfNode''removeOrMaterializeIf-2 [#_"IfNode" this, #_"SimplifierTool" tool]
+    (defn- #_"boolean" IfNode''removeOrMaterializeIf-2 [#_"IfNode" this, #_"Simplifier" tool]
         (let [
             #_"FixedNode" trueEnd (:next (:trueSuccessor this))
             #_"FixedNode" falseEnd (:next (:falseSuccessor this))
@@ -41765,12 +41389,12 @@ ZeroExtendNode'new-4
     ;;;
      ; Connects a set of ends to a given successor, inserting a merge node if there is more than
      ; one end. If {@code ends} is not empty, then {@code successor} is added to {@code tool}'s
-     ; {@linkplain SimplifierTool#addToWorkList(Node) work list}.
+     ; {@linkplain Simplifier#add(Node) work list}.
      ;
      ; @param oldMerge the merge being removed
      ; @param phiValues the values of the phi at the merge, keyed by the merge ends
      ;;
-    (defn- #_"void" IfNode''connectEnds-6 [#_"IfNode" this, #_"EndNode*" ends, #_"{AbstractEndNode ValueNode}" phiValues, #_"AbstractBeginNode" successor, #_"AbstractMergeNode" oldMerge, #_"SimplifierTool" tool]
+    (defn- #_"void" IfNode''connectEnds-6 [#_"IfNode" this, #_"EndNode*" ends, #_"{AbstractEndNode ValueNode}" phiValues, #_"AbstractBeginNode" successor, #_"AbstractMergeNode" oldMerge, #_"Simplifier" tool]
         (when (seq ends)
             (let [
                 _
@@ -41807,7 +41431,7 @@ ZeroExtendNode'new-4
                         )
                     )
             ]
-                (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, successor))
+                (§ ass! tool (Simplifier''add-2 tool, successor))
             )
         )
         nil
@@ -41895,7 +41519,7 @@ ZeroExtendNode'new-4
      ;
      ; @return true if a transformation was made, false otherwise
      ;;
-    (defn- #_"boolean" IfNode''removeIntermediateMaterialization-2 [#_"IfNode" this, #_"SimplifierTool" tool]
+    (defn- #_"boolean" IfNode''removeIntermediateMaterialization-2 [#_"IfNode" this, #_"Simplifier" tool]
         (and (satisfies? AbstractMergeNode (:predecessor this)) (not (satisfies? LoopBeginNode (:predecessor this))) (satisfies? CompareNode (:logic this))
             (let [
                 #_"CompareNode" compare (:logic this)
@@ -42016,7 +41640,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Canonicalize {@code logic} using {@code value} in place of {@code phi}.
      ;;
-    (defn- #_"LogicNode" IfNode'computeCondition-4 [#_"SimplifierTool" tool, #_"LogicNode" logic, #_"PhiNode" phi, #_"Node" value]
+    (defn- #_"LogicNode" IfNode'computeCondition-4 [#_"Simplifier" tool, #_"LogicNode" logic, #_"PhiNode" phi, #_"Node" value]
         (condp satisfies? logic
             ShortCircuitOrNode
                 (when (and (GuardsStage'areDeoptsFixed-1 (:guardsStage (:graph logic))) (not (:isAfterExpandLogic (:graph logic))))
@@ -42106,7 +41730,7 @@ ZeroExtendNode'new-4
      ; where the test would be statically decidable creating a new merge below the approriate side
      ; of the IfNode. Any undecidable tests will continue to use the original IfNode.
      ;;
-    (defn- #_"boolean" IfNode''splitIfAtPhi-2 [#_"IfNode" this, #_"SimplifierTool" tool]
+    (defn- #_"boolean" IfNode''splitIfAtPhi-2 [#_"IfNode" this, #_"Simplifier" tool]
         ;; disabled until we make sure we have no FrameState-less merges at this stage
         (and (not (GuardsStage'areFrameStatesAtSideEffects-1 (:guardsStage (:graph this))))
             (satisfies? MergeNode (:predecessor this))
@@ -42203,7 +41827,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Try to optimize this as if it were a ConditionalNode.
      ;;
-    (defn- #_"boolean" IfNode''conditionalNodeOptimization-2 [#_"IfNode" this, #_"SimplifierTool" tool]
+    (defn- #_"boolean" IfNode''conditionalNodeOptimization-2 [#_"IfNode" this, #_"Simplifier" tool]
         (and (satisfies? AbstractEndNode (:next (:trueSuccessor this)))
              (satisfies? AbstractEndNode (:next (:falseSuccessor this)))
             (let [
@@ -42246,7 +41870,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" IfNode'valuesDistinct-3 [#_"SimplifierTool" tool, #_"ValueNode" a, #_"ValueNode" b]
+    (defn- #_"boolean" IfNode'valuesDistinct-3 [#_"Simplifier" tool, #_"ValueNode" a, #_"ValueNode" b]
         (when (and (satisfies? ConstantNode a) (satisfies? ConstantNode b))
             (let [
                 #_"Boolean" equal (ConstantReflection'constantEquals-2 (:value a), (:value b))
@@ -42260,7 +41884,7 @@ ZeroExtendNode'new-4
         (Stamp'''alwaysDistinct-2 (:stamp a), (:stamp b))
     )
 
-    (defn- #_"boolean" IfNode'prepareForSwap-3 [#_"SimplifierTool" tool, #_"LogicNode" a, #_"LogicNode" b]
+    (defn- #_"boolean" IfNode'prepareForSwap-3 [#_"Simplifier" tool, #_"LogicNode" a, #_"LogicNode" b]
         (condp satisfies? a
             InstanceOfNode
                 (condp satisfies? b
@@ -42308,7 +41932,7 @@ ZeroExtendNode'new-4
     )
 
     (defm IfNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"IfNode" this, #_"SimplifierTool" tool]
+        (#_"this" Simplifiable'''simplify-2 [#_"IfNode" this, #_"Simplifier" tool]
             (let [
                 this
                     (cond
@@ -42332,19 +41956,21 @@ ZeroExtendNode'new-4
                     (when (satisfies? LogicConstantNode (:logic this))
                         (if (:value (:logic this))
                             (do
-                                (SimplifierTool'''deleteBranch-2 tool, (:falseSuccessor this))
-                                (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (:trueSuccessor this)))
+                                (Node''replaceFirstSuccessor-3 (:predecessor (:falseSuccessor this)), (:falseSuccessor this), nil)
+                                (GraphUtil'killCFG-1 (:falseSuccessor this))
+                                (§ ass! tool (Simplifier''add-2 tool, (:trueSuccessor this)))
                                 (Graph''removeSplit-3 (:graph this), this, (:trueSuccessor this))
                             )
                             (do
-                                (SimplifierTool'''deleteBranch-2 tool, (:trueSuccessor this))
-                                (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (:falseSuccessor this)))
+                                (Node''replaceFirstSuccessor-3 (:predecessor (:trueSuccessor this)), (:trueSuccessor this), nil)
+                                (GraphUtil'killCFG-1 (:trueSuccessor this))
+                                (§ ass! tool (Simplifier''add-2 tool, (:falseSuccessor this)))
                                 (Graph''removeSplit-3 (:graph this), this, (:falseSuccessor this))
                             )
                         )
                         :done
                     )
-                    (when (and (CanonicalizerTool'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 (:trueSuccessor this)) (Node''hasNoUsages-1 (:falseSuccessor this)))
+                    (when (and (Canonicalizer'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 (:trueSuccessor this)) (Node''hasNoUsages-1 (:falseSuccessor this)))
                         (IfNode''pushNodesThroughIf-2 this, tool)
                         (when (or (IfNode''checkForUnsignedCompare-2 this, tool) (IfNode''removeOrMaterializeIf-2 this, tool))
                             :done
@@ -42504,14 +42130,15 @@ ZeroExtendNode'new-4
     )
 
     (defm IntegerAddExactSplitNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"IntegerAddExactSplitNode" this, #_"SimplifierTool" tool]
+        (#_"this" Simplifiable'''simplify-2 [#_"IntegerAddExactSplitNode" this, #_"Simplifier" tool]
             (when-not (IntegerStamp'addCanOverflow-2 (:stamp (:x this)), (:stamp (:y this))) => this
-                (SimplifierTool'''deleteBranch-2 tool, (:overflowSuccessor this))
                 (let [
-                    _ (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (:next this)))
+                    _ (Node''replaceFirstSuccessor-3 (:predecessor (:overflowSuccessor this)), (:overflowSuccessor this), nil)
+                    _ (GraphUtil'killCFG-1 (:overflowSuccessor this))
+                    _ (§ ass! tool (Simplifier''add-2 tool, (:next this)))
                     #_"AddNode" replacement (Graph''add-2 (:graph this), (AddNode'new-2 (:x this), (:y this)))
                     _ (Graph''replaceSplitWithFloating-4 (:graph this), this, replacement, (:next this))
-                    _ (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, replacement))
+                    _ (§ ass! tool (Simplifier''add-2 tool, replacement))
                 ]
                     this
                 )
@@ -42532,14 +42159,15 @@ ZeroExtendNode'new-4
     )
 
     (defm IntegerMulExactSplitNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"IntegerMulExactSplitNode" this, #_"SimplifierTool" tool]
+        (#_"this" Simplifiable'''simplify-2 [#_"IntegerMulExactSplitNode" this, #_"Simplifier" tool]
             (when-not (IntegerStamp'multiplicationCanOverflow-2 (:stamp (:x this)), (:stamp (:y this))) => this
-                (SimplifierTool'''deleteBranch-2 tool, (:overflowSuccessor this))
                 (let [
-                    _ (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (:next this)))
+                    _ (Node''replaceFirstSuccessor-3 (:predecessor (:overflowSuccessor this)), (:overflowSuccessor this), nil)
+                    _ (GraphUtil'killCFG-1 (:overflowSuccessor this))
+                    _ (§ ass! tool (Simplifier''add-2 tool, (:next this)))
                     #_"MulNode" replacement (Graph''add-2 (:graph this), (MulNode'new-2 (:x this), (:y this)))
                     _ (Graph''replaceSplitWithFloating-4 (:graph this), this, replacement, (:next this))
-                    _ (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, replacement))
+                    _ (§ ass! tool (Simplifier''add-2 tool, replacement))
                 ]
                     this
                 )
@@ -42560,14 +42188,15 @@ ZeroExtendNode'new-4
     )
 
     (defm IntegerSubExactSplitNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"IntegerSubExactSplitNode" this, #_"SimplifierTool" tool]
+        (#_"this" Simplifiable'''simplify-2 [#_"IntegerSubExactSplitNode" this, #_"Simplifier" tool]
             (when-not (IntegerStamp'subtractionCanOverflow-2 (:stamp (:x this)), (:stamp (:y this))) => this
-                (SimplifierTool'''deleteBranch-2 tool, (:overflowSuccessor this))
                 (let [
-                    _ (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (:next this)))
+                    _ (Node''replaceFirstSuccessor-3 (:predecessor (:overflowSuccessor this)), (:overflowSuccessor this), nil)
+                    _ (GraphUtil'killCFG-1 (:overflowSuccessor this))
+                    _ (§ ass! tool (Simplifier''add-2 tool, (:next this)))
                     #_"SubNode" replacement (Graph''add-2 (:graph this), (SubNode'new-2 (:x this), (:y this)))
                     _ (Graph''replaceSplitWithFloating-4 (:graph this), this, replacement, (:next this))
-                    _ (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, replacement))
+                    _ (§ ass! tool (Simplifier''add-2 tool, replacement))
                 ]
                     this
                 )
@@ -42700,14 +42329,15 @@ ZeroExtendNode'new-4
      ;
      ; @param survivingEdge index of the edge in the SwitchNode#successors list
      ;;
-    (defn #_"void" SwitchNode''killOtherSuccessors-3 [#_"SwitchNode" this, #_"SimplifierTool" tool, #_"int" survivingEdge]
+    (defn #_"void" SwitchNode''killOtherSuccessors-3 [#_"SwitchNode" this, #_"Simplifier" tool, #_"int" survivingEdge]
         (doseq [#_"Node" successor (Node''successors-1 this)]
             ;; Deleting a branch change the successors, so reload the surviving successor each time.
             (when-not (= successor (nth (:successorNodes this) survivingEdge))
-                (SimplifierTool'''deleteBranch-2 tool, successor)
+                (Node''replaceFirstSuccessor-3 (:predecessor successor), successor, nil)
+                (GraphUtil'killCFG-1 successor)
             )
         )
-        (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (nth (:successorNodes this) survivingEdge)))
+        (§ ass! tool (Simplifier''add-2 tool, (nth (:successorNodes this) survivingEdge)))
         (Graph''removeSplit-3 (:graph this), this, (nth (:successorNodes this) survivingEdge))
         nil
     )
@@ -42832,7 +42462,7 @@ ZeroExtendNode'new-4
      ; The code in this method detects array loads from such a stable array and re-wires the
      ; switch to use the keys from the array elements, so that the array load is unnecessary.
      ;;
-    (defn- #_"boolean" IntegerSwitchNode''tryOptimizeEnumSwitch-2 [#_"IntegerSwitchNode" this, #_"SimplifierTool" tool]
+    (defn- #_"boolean" IntegerSwitchNode''tryOptimizeEnumSwitch-2 [#_"IntegerSwitchNode" this, #_"Simplifier" tool]
         (and (satisfies? LoadIndexedNode (:value this))
             ;; Not the switch pattern we are looking for.
             (let [
@@ -42924,11 +42554,11 @@ ZeroExtendNode'new-4
     )
 
     (defm IntegerSwitchNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"IntegerSwitchNode" this, #_"SimplifierTool" tool]
+        (#_"this" Simplifiable'''simplify-2 [#_"IntegerSwitchNode" this, #_"Simplifier" tool]
             (cond
                 (= (count (:successorNodes this)) 1)
                 (let [
-                    _ (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (SwitchNode''defaultSuccessor-1 this)))
+                    _ (§ ass! tool (Simplifier''add-2 tool, (SwitchNode''defaultSuccessor-1 this)))
                 ]
                     (Graph''removeSplitPropagate-3 (:graph this), this, (SwitchNode''defaultSuccessor-1 this))
                 )
@@ -42947,7 +42577,7 @@ ZeroExtendNode'new-4
      ; Remove unreachable keys from the switch based on the stamp of the value,
      ; i.e. based on the known range of the switch value.
      ;;
-    (defn #_"boolean" IntegerSwitchNode''tryRemoveUnreachableKeys-3 [#_"IntegerSwitchNode" this, #_"SimplifierTool" tool, #_"Stamp" stamp]
+    (defn #_"boolean" IntegerSwitchNode''tryRemoveUnreachableKeys-3 [#_"IntegerSwitchNode" this, #_"Simplifier" tool, #_"Stamp" stamp]
         (and (satisfies? IntegerStamp stamp) (not (Stamp'''isUnrestricted-1 stamp))
             (let [
                 #_"[KeyData]" newKeys []
@@ -42970,7 +42600,7 @@ ZeroExtendNode'new-4
                         (let [
                             _
                                 (when (some? tool)
-                                    (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (SwitchNode''defaultSuccessor-1 this)))
+                                    (§ ass! tool (Simplifier''add-2 tool, (SwitchNode''defaultSuccessor-1 this)))
                                 )
                         ]
                             (Graph''removeSplitPropagate-3 (:graph this), this, (SwitchNode''defaultSuccessor-1 this))
@@ -43104,7 +42734,7 @@ ZeroExtendNode'new-4
     )
 
     (defm BeginNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"BeginNode" this, #_"SimplifierTool" tool]
+        (#_"this" Simplifiable'''simplify-2 [#_"BeginNode" this, #_"Simplifier" tool]
             (let [
                 #_"FixedNode" prev (:predecessor this)
             ]
@@ -43117,7 +42747,7 @@ ZeroExtendNode'new-4
                         (let [
                             ;; This begin node can be removed and all guards moved up to the preceding begin node.
                             _ (AbstractBeginNode''prepareDelete-1 this)
-                            _ (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (:next this)))
+                            _ (§ ass! tool (Simplifier''add-2 tool, (:next this)))
                         ]
                             (Graph''removeFixed-2 (:graph this), this)
                         )
@@ -43228,7 +42858,7 @@ ZeroExtendNode'new-4
             this (AbstractMergeNode'''deleteEnd-2 this, pred)
         ]
             (doseq [#_"PhiNode" phi (§ snap (AbstractMergeNode''phis-1 this))]
-                (when-not (Node''isDeleted-1 phi)
+                (when-not (Node''isDeleted-1 phi)
                     (let [
                         #_"ValueNode" removedValue (nth (:phiValues phi) i)
                         _ (§ ass! phi (PhiNode''removeInput-2 phi, i))
@@ -43291,7 +42921,7 @@ ZeroExtendNode'new-4
      ; This simplify method can deal with a nil value for tool, so that it can be used outside of canonicalization.
      ;;
     (defm AbstractMergeNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"AbstractMergeNode" this, #_"SimplifierTool" tool]
+        (#_"this" Simplifiable'''simplify-2 [#_"AbstractMergeNode" this, #_"Simplifier" tool]
             (let [
                 #_"FixedNode" node (:next this)
             ]
@@ -43340,7 +42970,7 @@ ZeroExtendNode'new-4
                                                 #_"AbstractEndNode" end (nth (:ends this) (- n i))
                                                 _
                                                     (when (some? tool)
-                                                        (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, end))
+                                                        (§ ass! tool (Simplifier''add-2 tool, end))
                                                     )
                                                 #_"AbstractEndNode" newEnd
                                                     (if (satisfies? LoopBeginNode merge)
@@ -43365,7 +42995,7 @@ ZeroExtendNode'new-4
                                                 _ (§ ass! end (Node''safeDelete-1 end))
                                                 _
                                                     (when (some? tool)
-                                                        (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (:predecessor newEnd)))
+                                                        (§ ass! tool (Simplifier''add-2 tool, (:predecessor newEnd)))
                                                     )
                                             ]
                                             )
@@ -43409,7 +43039,7 @@ ZeroExtendNode'new-4
                                                     #_"ReturnNode" newReturn (Graph''add-2 (:graph this), (ReturnNode'new-1 (if (nil? returnValuePhi) (:result node) (PhiNode''valueAt-2n returnValuePhi, end))))
                                                     _
                                                         (when (some? tool)
-                                                            (§ ass! tool (SimplifierTool'''addToWorkList-2n tool, (:predecessor end)))
+                                                            (§ ass! tool (Simplifier''add-2 tool, (:predecessor end)))
                                                         )
                                                 ]
                                                     (Node''replaceAtPredecessor-2 end, newReturn)
@@ -43422,7 +43052,7 @@ ZeroExtendNode'new-4
                                             )
                                     ]
                                         (doseq [#_"PhiNode" phi phis]
-                                            (when (and (CanonicalizerTool'''allUsagesAvailable-1 tool) (Node''isAlive-1 phi) (Node''hasNoUsages-1 phi))
+                                            (when (and (Canonicalizer'''allUsagesAvailable-1 tool) (Node''isAlive-1 phi) (Node''hasNoUsages-1 phi))
                                                 (GraphUtil'killWithUnusedFloatingInputs-1 phi)
                                             )
                                         )
@@ -43543,7 +43173,7 @@ ZeroExtendNode'new-4
     )
 
     (defm LoopBeginNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"LoopBeginNode" this, #_"SimplifierTool" tool]
+        (#_"this" Simplifiable'''simplify-2 [#_"LoopBeginNode" this, #_"Simplifier" tool]
             (LoopBeginNode''canonicalizePhis-2 this, tool)
             this
         )
@@ -43604,7 +43234,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Coalesces loop phis that represent the same value.
      ;;
-    (defn #_"void" LoopBeginNode''canonicalizePhis-2 [#_"LoopBeginNode" this, #_"SimplifierTool" tool]
+    (defn #_"void" LoopBeginNode''canonicalizePhis-2 [#_"LoopBeginNode" this, #_"Simplifier" tool]
         (let [
             #_"int" n (count (AbstractMergeNode''phis-1 this))
         ]
@@ -43647,7 +43277,7 @@ ZeroExtendNode'new-4
                                                             )
                                                         )
                                                         (when (some? tool)
-                                                            (§ ass! tool (SimplifierTool'''addToWorkList-2s tool, (:nodeUsages otherPhi)))
+                                                            (§ ass! tool (Simplifier''addAll-2 tool, (:nodeUsages otherPhi)))
                                                         )
                                                         (§ ass! otherPhi (Node''replaceAtUsages-2 otherPhi, phi))
                                                         (GraphUtil'killWithUnusedFloatingInputs-1 otherPhi)
@@ -43728,8 +43358,8 @@ ZeroExtendNode'new-4
     )
 
     (defm LoopExitNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"LoopExitNode" this, #_"SimplifierTool" tool]
-            (loop-when [#_"Node" pred (:predecessor this)] (and (CanonicalizerTool'''allUsagesAvailable-1 tool) (satisfies? BeginNode pred) (Node''hasNoUsages-1 pred))
+        (#_"this" Simplifiable'''simplify-2 [#_"LoopExitNode" this, #_"Simplifier" tool]
+            (loop-when [#_"Node" pred (:predecessor this)] (and (Canonicalizer'''allUsagesAvailable-1 tool) (satisfies? BeginNode pred) (Node''hasNoUsages-1 pred))
                 (let [
                     #_"AbstractBeginNode" begin pred
                     pred (:predecessor pred)
@@ -43863,14 +43493,14 @@ ZeroExtendNode'new-4
     )
 
     (defm MonitorEnterNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"MonitorEnterNode" this, #_"VirtualizerTool" tool]
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"MonitorEnterNode" this, #_"Virtualizer" tool]
             (let [
-                #_"ValueNode" object (VirtualizerTool'''getAlias-2 tool, (:object this))
+                #_"ValueNode" object (Virtualizer''getAlias-2 tool, (:object this))
             ]
                 (when (and (satisfies? VirtualObjectNode object) (:hasIdentity object)) => tool
                     (-> tool
-                        (VirtualizerTool'''addLock-3 object, (:monitorId this))
-                        (VirtualizerTool'''delete-1)
+                        (Virtualizer''addLock-3 object, (:monitorId this))
+                        (Virtualizer''delete-1)
                     )
                 )
             )
@@ -43902,14 +43532,14 @@ ZeroExtendNode'new-4
     )
 
     (defm MonitorExitNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"MonitorExitNode" this, #_"VirtualizerTool" tool]
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"MonitorExitNode" this, #_"Virtualizer" tool]
             (let [
-                #_"ValueNode" object (VirtualizerTool'''getAlias-2 tool, (:object this))
+                #_"ValueNode" object (Virtualizer''getAlias-2 tool, (:object this))
             ]
                 (when (and (satisfies? VirtualObjectNode object) (:hasIdentity object)) => tool
                     (-> tool
-                        (VirtualizerTool'''removeLock-2 object)
-                        (VirtualizerTool'''delete-1)
+                        (Virtualizer''removeLock-2 object)
+                        (Virtualizer''delete-1)
                     )
                 )
             )
@@ -43947,14 +43577,14 @@ ZeroExtendNode'new-4
     )
 
     (defm RawMonitorEnterNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"RawMonitorEnterNode" this, #_"VirtualizerTool" tool]
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"RawMonitorEnterNode" this, #_"Virtualizer" tool]
             (let [
-                #_"ValueNode" object (VirtualizerTool'''getAlias-2 tool, (:object this))
+                #_"ValueNode" object (Virtualizer''getAlias-2 tool, (:object this))
             ]
                 (when (and (satisfies? VirtualObjectNode object) (:hasIdentity object)) => tool
                     (-> tool
-                        (VirtualizerTool'''addLock-3 object, (:monitorId this))
-                        (VirtualizerTool'''delete-1)
+                        (Virtualizer''addLock-3 object, (:monitorId this))
+                        (Virtualizer''delete-1)
                     )
                 )
             )
@@ -44490,21 +44120,21 @@ ZeroExtendNode'new-4
     )
 
     (defm LoadIndexedNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"LoadIndexedNode" this, #_"VirtualizerTool" tool]
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"LoadIndexedNode" this, #_"Virtualizer" tool]
             (let [
-                #_"ValueNode" array (VirtualizerTool'''getAlias-2 tool, (:array this))
+                #_"ValueNode" array (Virtualizer''getAlias-2 tool, (:array this))
             ]
                 (when (satisfies? VirtualObjectNode array) => tool
                     (let [
-                        #_"ValueNode" index (VirtualizerTool'''getAlias-2 tool, (AccessIndexedNode''index-1 this))
+                        #_"ValueNode" index (Virtualizer''getAlias-2 tool, (AccessIndexedNode''index-1 this))
                         #_"int" i (if (satisfies? ConstantNode index) (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 index)) -1)
                     ]
                         (when (< -1 i (VirtualObjectNode'''entryCount-1 array)) => tool
                             (let [
-                                #_"ValueNode" entry (VirtualizerTool'''getEntry-3 tool, array, i)
+                                #_"ValueNode" entry (Virtualizer''getEntry-3 tool, array, i)
                             ]
                                 (when (Stamp'''isCompatible-2s (:stamp this), (:stamp entry)) => tool
-                                    (VirtualizerTool'''replaceWith-2 tool, entry)
+                                    (Virtualizer''replaceWith-2 tool, entry)
                                 )
                             )
                         )
@@ -44515,7 +44145,7 @@ ZeroExtendNode'new-4
     )
 
     (defm LoadIndexedNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"LoadIndexedNode" this, #_"CanonicalizerTool" tool]
+        (#_"Node" Canonicalizable'''canonical-2 [#_"LoadIndexedNode" this, #_"Canonicalizer" tool]
             (or (LoadIndexedNode'tryConstantFold-2 (:array this), (AccessIndexedNode''index-1 this))
                 this
             )
@@ -44562,13 +44192,13 @@ ZeroExtendNode'new-4
     )
 
     (defm StoreIndexedNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"StoreIndexedNode" this, #_"VirtualizerTool" tool]
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"StoreIndexedNode" this, #_"Virtualizer" tool]
             (let [
-                #_"ValueNode" array (VirtualizerTool'''getAlias-2 tool, (:array this))
+                #_"ValueNode" array (Virtualizer''getAlias-2 tool, (:array this))
             ]
                 (when (satisfies? VirtualObjectNode array) => tool
                     (let [
-                        #_"ValueNode" index (VirtualizerTool'''getAlias-2 tool, (AccessIndexedNode''index-1 this))
+                        #_"ValueNode" index (Virtualizer''getAlias-2 tool, (AccessIndexedNode''index-1 this))
                         #_"int" i (if (satisfies? ConstantNode index) (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 index)) -1)
                     ]
                         (when (< -1 i (VirtualObjectNode'''entryCount-1 array)) => tool
@@ -44577,9 +44207,9 @@ ZeroExtendNode'new-4
                             ]
                                 (when (or (ResolvedJavaType'''isPrimitive-1 componentType) (StampTool'isPointerAlwaysNull-1 (:stamp (:value this))) (nil? (ResolvedJavaType'''getSuperclass-1 componentType)) (and (some? (StampTool'typeReferenceOrNull-1 (:stamp (:value this)))) (ResolvedJavaType'''isAssignableFrom-2 componentType, (StampTool'typeOrNull-1 (:stamp (:value this)))))) => tool
                                     (let [
-                                        tool (VirtualizerTool'''setVirtualEntry-4 tool, array, i, (:value this))
+                                        tool (Virtualizer''setVirtualEntry-4 tool, array, i, (:value this))
                                     ]
-                                        (VirtualizerTool'''delete-1 tool)
+                                        (Virtualizer''delete-1 tool)
                                     )
                                 )
                             )
@@ -44737,23 +44367,23 @@ ZeroExtendNode'new-4
             (:object this)
         )
 
-        (#_"ValueNode" Unary'''canonical-3 [#_"LoadFieldNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forObject]
-            (when-not (and (CanonicalizerTool'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this) (not (AccessFieldNode''isVolatile-1 this)) (or (AccessFieldNode''isStatic-1 this) (StampTool'isPointerNeverNull-1 (:stamp forObject))))
-                (LoadFieldNode'canonical-6 this, (:stamp this), forObject, (:field this), (CanonicalizerTool'''canonicalizeReads-1 tool), (CanonicalizerTool'''allUsagesAvailable-1 tool))
+        (#_"ValueNode" Unary'''canonical-3 [#_"LoadFieldNode" this, #_"Canonicalizer" tool, #_"ValueNode" forObject]
+            (when-not (and (Canonicalizer'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this) (not (AccessFieldNode''isVolatile-1 this)) (or (AccessFieldNode''isStatic-1 this) (StampTool'isPointerNeverNull-1 (:stamp forObject))))
+                (LoadFieldNode'canonical-6 this, (:stamp this), forObject, (:field this), (Canonicalizer'''canonicalizeReads-1 tool), (Canonicalizer'''allUsagesAvailable-1 tool))
             )
         )
     )
 
     (defm LoadFieldNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"LoadFieldNode" this, #_"CanonicalizerTool" tool]
+        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"LoadFieldNode" this, #_"Canonicalizer" tool]
             (Unary'''canonical-3 this, tool, (Unary'''getValue-1 this))
         )
     )
 
     (defm LoadFieldNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"LoadFieldNode" this, #_"VirtualizerTool" tool]
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"LoadFieldNode" this, #_"Virtualizer" tool]
             (let [
-                #_"ValueNode" object (VirtualizerTool'''getAlias-2 tool, (:object this))
+                #_"ValueNode" object (Virtualizer''getAlias-2 tool, (:object this))
             ]
                 (when (satisfies? VirtualObjectNode object) => tool
                     (let [
@@ -44761,10 +44391,10 @@ ZeroExtendNode'new-4
                     ]
                         (when-not (= i -1) => tool
                             (let [
-                                #_"ValueNode" entry (VirtualizerTool'''getEntry-3 tool, object, i)
+                                #_"ValueNode" entry (Virtualizer''getEntry-3 tool, object, i)
                             ]
                                 (when (Stamp'''isCompatible-2s (:stamp this), (:stamp entry)) => tool
-                                    (VirtualizerTool'''replaceWith-2 tool, entry)
+                                    (Virtualizer''replaceWith-2 tool, entry)
                                 )
                             )
                         )
@@ -44806,9 +44436,9 @@ ZeroExtendNode'new-4
     )
 
     (defm StoreFieldNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"StoreFieldNode" this, #_"VirtualizerTool" tool]
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"StoreFieldNode" this, #_"Virtualizer" tool]
             (let [
-                #_"ValueNode" object (VirtualizerTool'''getAlias-2 tool, (:object this))
+                #_"ValueNode" object (Virtualizer''getAlias-2 tool, (:object this))
             ]
                 (when (satisfies? VirtualObjectNode object) => tool
                     (let [
@@ -44816,9 +44446,9 @@ ZeroExtendNode'new-4
                     ]
                         (when-not (= i -1) => tool
                             (let [
-                                tool (VirtualizerTool'''setVirtualEntry-4 tool, object, i, (:value this))
+                                tool (Virtualizer''setVirtualEntry-4 tool, object, i, (:value this))
                             ]
-                                (VirtualizerTool'''delete-1 tool)
+                                (Virtualizer''delete-1 tool)
                             )
                         )
                     )
@@ -44901,7 +44531,7 @@ ZeroExtendNode'new-4
             (:array this)
         )
 
-        (#_"ValueNode" Unary'''canonical-3 [#_"ArrayLengthNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+        (#_"ValueNode" Unary'''canonical-3 [#_"ArrayLengthNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
             (or (ArrayLengthNode'readArrayLength-1 value)
                 this
             )
@@ -44909,7 +44539,7 @@ ZeroExtendNode'new-4
     )
 
     (defm ArrayLengthNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"ArrayLengthNode" this, #_"CanonicalizerTool" tool]
+        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"ArrayLengthNode" this, #_"Canonicalizer" tool]
             (Unary'''canonical-3 this, tool, (Unary'''getValue-1 this))
         )
     )
@@ -44963,12 +44593,12 @@ ZeroExtendNode'new-4
     )
 
     (defm ArrayLengthNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"ArrayLengthNode" this, #_"VirtualizerTool" tool]
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"ArrayLengthNode" this, #_"Virtualizer" tool]
             (let [
-                #_"ValueNode" array (VirtualizerTool'''getAlias-2 tool, (:array this))
+                #_"ValueNode" array (Virtualizer''getAlias-2 tool, (:array this))
             ]
                 (when (satisfies? VirtualArrayNode array) => tool
-                    (VirtualizerTool'''replaceWithValue-2 tool, (ConstantNode'forInt-2 (VirtualObjectNode'''entryCount-1 array), (:graph this)))
+                    (Virtualizer''replaceWithValue-2 tool, (ConstantNode'forInt-2 (VirtualObjectNode'''entryCount-1 array), (:graph this)))
                 )
             )
         )
@@ -45276,26 +44906,26 @@ ZeroExtendNode'new-4
     )
 
     (defm CommitAllocationNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"CommitAllocationNode" this, #_"VirtualizerTool" tool]
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"CommitAllocationNode" this, #_"Virtualizer" tool]
             (let [
                 tool
                     (loop-when [tool tool #_"int" j 0 #_"int" i 0] (< i (count (:virtualObjects this))) => tool
                         (let [
                             #_"VirtualObjectNode" virtualObject (nth (:virtualObjects this) i)
                             #_"int" n (VirtualObjectNode'''entryCount-1 virtualObject)
-                            tool (VirtualizerTool'''createVirtualObject-5 tool, virtualObject, (subvec (:comValues this) j (+ j n)), (CommitAllocationNode''getLocks-2 this, i), (nth (:ensureVirtual this) i))
+                            tool (Virtualizer''createVirtualObject-5 tool, virtualObject, (subvec (:comValues this) j (+ j n)), (CommitAllocationNode''getLocks-2 this, i), (nth (:ensureVirtual this) i))
                         ]
                             (recur tool (+ j n) (inc i))
                         )
                     )
             ]
-                (VirtualizerTool'''delete-1 tool)
+                (Virtualizer''delete-1 tool)
             )
         )
     )
 
     (defm CommitAllocationNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"CommitAllocationNode" this, #_"SimplifierTool" tool]
+        (#_"this" Simplifiable'''simplify-2 [#_"CommitAllocationNode" this, #_"Simplifier" tool]
             (let [
                 [#_"[boolean]" used? #_"int" n]
                     (loop [used? (vec (repeat (count (:virtualObjects this)) false)) n 0 #_"seq" s (seq (filter #(satisfies? AllocatedObjectNode %) (:nodeUsages this)))]
@@ -45310,7 +44940,7 @@ ZeroExtendNode'new-4
                     ]
                         (Graph''removeFixed-2 (:graph this), this)
                         (doseq [#_"Node" input inputSnapshot]
-                            (SimplifierTool'''removeIfUnused-2 tool, input)
+                            (GraphUtil'tryKillUnused-1 input)
                         )
                         this
                     )
@@ -45439,7 +45069,7 @@ ZeroExtendNode'new-4
     )
 
     (defm ConditionAnchorNode Unary
-        (#_"Node" Unary'''canonical-3 [#_"ConditionAnchorNode" this, #_"CanonicalizerTool" tool, #_"Node" value]
+        (#_"Node" Unary'''canonical-3 [#_"ConditionAnchorNode" this, #_"Canonicalizer" tool, #_"Node" value]
             (condp satisfies? value
                 LogicNegationNode
                     (ConditionAnchorNode'new-2 (Unary'''getValue-1 value), (not (:negated? this)))
@@ -45447,7 +45077,7 @@ ZeroExtendNode'new-4
                     (when (= (:value value) (:negated? this))
                         (ValueAnchorNode'new-1 nil)
                     )
-                (when-not (and (CanonicalizerTool'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
+                (when-not (and (Canonicalizer'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
                     this
                 )
             )
@@ -45455,7 +45085,7 @@ ZeroExtendNode'new-4
     )
 
     (defm ConditionAnchorNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"ConditionAnchorNode" this, #_"CanonicalizerTool" tool]
+        (#_"Node" Canonicalizable'''canonical-2 [#_"ConditionAnchorNode" this, #_"Canonicalizer" tool]
             (Unary'''canonical-3 this, tool, (Unary'''getValue-1 this))
         )
     )
@@ -45567,7 +45197,7 @@ ZeroExtendNode'new-4
     )
 
     (defm FixedGuardNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"FixedGuardNode" this, #_"SimplifierTool" tool]
+        (#_"this" Simplifiable'''simplify-2 [#_"FixedGuardNode" this, #_"Simplifier" tool]
             (let [
                 this
                     (loop-when-recur this
@@ -45586,7 +45216,8 @@ ZeroExtendNode'new-4
                                         #_"FixedNode" currentNext (:next this)
                                         _
                                             (when (some? currentNext)
-                                                (SimplifierTool'''deleteBranch-2 tool, currentNext)
+                                                (Node''replaceFirstSuccessor-3 (:predecessor currentNext), currentNext, nil)
+                                                (GraphUtil'killCFG-1 currentNext)
                                             )
                                         #_"DeoptimizeNode" deopt (Graph''add-2 (:graph this), (DeoptimizeNode'new-2 (:action this), (:reason this)))
                                         deopt (DeoptBefore'''setStateBefore-2 deopt, (:stateBefore this))
@@ -45711,23 +45342,23 @@ ZeroExtendNode'new-4
     )
 
     (defm NewArrayNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"NewArrayNode" this, #_"VirtualizerTool" tool]
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"NewArrayNode" this, #_"Virtualizer" tool]
             (let [
-                #_"ValueNode" lengthAlias (VirtualizerTool'''getAlias-2 tool, (ArrayLengthProvider'''length-1 this))
+                #_"ValueNode" lengthAlias (Virtualizer''getAlias-2 tool, (ArrayLengthProvider'''length-1 this))
             ]
                 (when (some? (ValueNode''asConstant-1 lengthAlias)) => tool
                     (let [
                         #_"int" constantLength (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 lengthAlias))
                     ]
-                        (when (< -1 constantLength (VirtualizerTool'''getMaximumEntryCount-1 tool)) => tool
+                        (when (< -1 constantLength (Virtualizer''getMaximumEntryCount-1 tool)) => tool
                             (let [
                                 #_"VirtualObjectNode" virtualObject (NewArrayNode''createVirtualArrayNode-2 this, constantLength)
                                 #_"ConstantNode" defaultForKind (when-not (zero? constantLength) (NewArrayNode''defaultElementValue-1 this))
                                 #_"[ValueNode]" state (vec (repeat constantLength defaultForKind))
                             ]
                                 (-> tool
-                                    (VirtualizerTool'''createVirtualObject-5 virtualObject, state, nil, false)
-                                    (VirtualizerTool'''replaceWithVirtual-2 virtualObject)
+                                    (Virtualizer''createVirtualObject-5 virtualObject, state, nil, false)
+                                    (Virtualizer''replaceWithVirtual-2 virtualObject)
                                 )
                             )
                         )
@@ -45747,7 +45378,7 @@ ZeroExtendNode'new-4
     )
 
     (defm NewArrayNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"NewArrayNode" this, #_"SimplifierTool" tool]
+        (#_"this" Simplifiable'''simplify-2 [#_"NewArrayNode" this, #_"Simplifier" tool]
             (when (Node''hasNoUsages-1 this) => this
                 (let [
                     #_"Stamp" stamp (:stamp (ArrayLengthProvider'''length-1 this))
@@ -45799,7 +45430,7 @@ ZeroExtendNode'new-4
     )
 
     (defm NewInstanceNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"NewInstanceNode" this, #_"VirtualizerTool" tool]
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"NewInstanceNode" this, #_"Virtualizer" tool]
             ;; Reference objects can escape into their ReferenceQueue at any safepoint, therefore they're excluded from escape analysis.
             (when-not (ResolvedJavaType'''isAssignableFrom-2 (MetaReflection'lookupJavaType-1c Reference), (:instanceClass this)) => tool
                 (let [
@@ -45807,8 +45438,8 @@ ZeroExtendNode'new-4
                     #_"[ValueNode]" state (vec (map #(NewInstanceNode''defaultFieldValue-2 this, %) (VirtualInstanceNode''getFields-1 virtualObject)))
                 ]
                     (-> tool
-                        (VirtualizerTool'''createVirtualObject-5 virtualObject, state, nil, false)
-                        (VirtualizerTool'''replaceWithVirtual-2 virtualObject)
+                        (Virtualizer''createVirtualObject-5 virtualObject, state, nil, false)
+                        (Virtualizer''replaceWithVirtual-2 virtualObject)
                     )
                 )
             )
@@ -46070,8 +45701,8 @@ ZeroExtendNode'new-4
     )
 
     (defm WriteNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"WriteNode" this, #_"CanonicalizerTool" tool]
-            (when (and (CanonicalizerTool'''canonicalizeReads-1 tool) (Node''hasExactlyOneUsage-1 this) (satisfies? WriteNode (:next this))) => this
+        (#_"Node" Canonicalizable'''canonical-2 [#_"WriteNode" this, #_"Canonicalizer" tool]
+            (when (and (Canonicalizer'''canonicalizeReads-1 tool) (Node''hasExactlyOneUsage-1 this) (satisfies? WriteNode (:next this))) => this
                 (let [
                     #_"WriteNode" write (:next this)
                 ]
@@ -46126,9 +45757,9 @@ ZeroExtendNode'new-4
     )
 
     (defm ReadNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"ReadNode" this, #_"CanonicalizerTool" tool]
+        (#_"Node" Canonicalizable'''canonical-2 [#_"ReadNode" this, #_"Canonicalizer" tool]
             (cond
-                (and (CanonicalizerTool'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
+                (and (Canonicalizer'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
                     nil ;; read without usages or guard can be safely removed
                 (:nullCheck this)
                     this ;; if this read is a nil-check, then replacing it with the value is incorrect for guard-type usages
@@ -46144,8 +45775,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"ValueNode" ReadNode'canonicalizeRead-4 [#_"ValueNode" read, #_"AddressNode" address, #_"LocationIdentity" location, #_"CanonicalizerTool" tool]
-        (when (and (CanonicalizerTool'''canonicalizeReads-1 tool) (satisfies? OffsetAddressNode address)) => read
+    (defn #_"ValueNode" ReadNode'canonicalizeRead-4 [#_"ValueNode" read, #_"AddressNode" address, #_"LocationIdentity" location, #_"Canonicalizer" tool]
+        (when (and (Canonicalizer'''canonicalizeReads-1 tool) (satisfies? OffsetAddressNode address)) => read
             (let [
                 #_"ValueNode" object (AddressNode'''getBase-1 address)
             ]
@@ -46183,7 +45814,7 @@ ZeroExtendNode'new-4
     )
 
     (defm ReadNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"ReadNode" this, #_"VirtualizerTool" tool]
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"ReadNode" this, #_"Virtualizer" tool]
             (throw! "unexpected ReadNode before PEA")
         )
     )
@@ -46242,7 +45873,7 @@ ZeroExtendNode'new-4
     )
 
     (defm JavaReadNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"JavaReadNode" this, #_"CanonicalizerTool" tool]
+        (#_"Node" Canonicalizable'''canonical-2 [#_"JavaReadNode" this, #_"Canonicalizer" tool]
             (ReadNode'canonicalizeRead-4 this, (Access'''getAddress-1 this), (Access'''getLocationIdentity-1 this), tool)
         )
     )
@@ -46306,7 +45937,7 @@ ZeroExtendNode'new-4
     )
 
     (defm FixedBinaryNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"FixedBinaryNode" this, #_"CanonicalizerTool" tool]
+        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"FixedBinaryNode" this, #_"Canonicalizer" tool]
             (Binary'''canonical-4 this, tool, (:x this), (:y this))
         )
     )
@@ -46364,7 +45995,7 @@ ZeroExtendNode'new-4
     )
 
     (defm SignedDivNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"SignedDivNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+        (#_"ValueNode" Binary'''canonical-4 [#_"SignedDivNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (SignedDivNode'canonical-3 this, forX, forY)
         )
     )
@@ -46495,7 +46126,7 @@ ZeroExtendNode'new-4
     )
 
     (defm SignedRemNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"SignedRemNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+        (#_"ValueNode" Binary'''canonical-4 [#_"SignedRemNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (SignedRemNode'canonical-4 this, forX, forY, (:stamp this))
         )
     )
@@ -46547,7 +46178,7 @@ ZeroExtendNode'new-4
     )
 
     (defm UnsignedDivNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"UnsignedDivNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+        (#_"ValueNode" Binary'''canonical-4 [#_"UnsignedDivNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (UnsignedDivNode'canonical-4 this, forX, forY, (:stamp this))
         )
     )
@@ -46570,7 +46201,7 @@ ZeroExtendNode'new-4
     )
 
     (defm UnsignedRemNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"UnsignedRemNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+        (#_"ValueNode" Binary'''canonical-4 [#_"UnsignedRemNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (UnsignedRemNode'canonical-4 this, forX, forY, (:stamp this))
         )
     )
@@ -46702,9 +46333,9 @@ ZeroExtendNode'new-4
     )
 
     (defm FinalFieldBarrierNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"FinalFieldBarrierNode" this, #_"VirtualizerTool" tool]
-            (when (and (some? (:value this)) (satisfies? VirtualObjectNode (VirtualizerTool'''getAlias-2 tool, (:value this)))) => tool
-                (VirtualizerTool'''delete-1 tool)
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"FinalFieldBarrierNode" this, #_"Virtualizer" tool]
+            (when (and (some? (:value this)) (satisfies? VirtualObjectNode (Virtualizer''getAlias-2 tool, (:value this)))) => tool
+                (Virtualizer''delete-1 tool)
             )
         )
     )
@@ -46784,7 +46415,7 @@ ZeroExtendNode'new-4
     )
 
     (defm StateSplitProxyNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"StateSplitProxyNode" this, #_"CanonicalizerTool" tool]
+        (#_"Node" Canonicalizable'''canonical-2 [#_"StateSplitProxyNode" this, #_"Canonicalizer" tool]
             (when (or (and (satisfies? ConstantNode (:object this)) (not (:delayElimination this))) (nil? (:stateAfter this))) => this
                 (:object this)
             )
@@ -46869,8 +46500,8 @@ ZeroExtendNode'new-4
     )
 
     (defm MemoryAnchorNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"MemoryAnchorNode" this, #_"CanonicalizerTool" tool]
-            (when-not (and (CanonicalizerTool'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
+        (#_"Node" Canonicalizable'''canonical-2 [#_"MemoryAnchorNode" this, #_"Canonicalizer" tool]
+            (when-not (and (Canonicalizer'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
                 this
             )
         )
@@ -46960,13 +46591,13 @@ ZeroExtendNode'new-4
     )
 
     (defm SnippetAnchorNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"SnippetAnchorNode" this, #_"SimplifierTool" tool]
+        (#_"this" Simplifiable'''simplify-2 [#_"SnippetAnchorNode" this, #_"Simplifier" tool]
             (let [
                 #_"AbstractBeginNode" prevBegin (AbstractBeginNode'prevBegin-1 this)
             ]
                 (Node''replaceAtUsages-3 this, :InputType'Anchor, prevBegin)
                 (Node''replaceAtUsages-3 this, :InputType'Guard, prevBegin)
-                (when (and (CanonicalizerTool'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
+                (when (and (Canonicalizer'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
                     (Graph''removeFixed-2 (:graph this), this)
                 )
                 this
@@ -47120,7 +46751,7 @@ ZeroExtendNode'new-4
     )
 
     (defm UnsafeAccessNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"UnsafeAccessNode" this, #_"CanonicalizerTool" tool]
+        (#_"Node" Canonicalizable'''canonical-2 [#_"UnsafeAccessNode" this, #_"Canonicalizer" tool]
             (when (and (not (:forceAnyLocation this)) (LocationIdentity''isAny-1 (:locationIdentity this))) => this
                 (when (satisfies? ConstantNode (:offset this))
                     (let [
@@ -47230,13 +46861,13 @@ ZeroExtendNode'new-4
     )
 
     (defm RawLoadNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"RawLoadNode" this, #_"VirtualizerTool" tool]
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"RawLoadNode" this, #_"Virtualizer" tool]
             (let [
-                #_"ValueNode" object (VirtualizerTool'''getAlias-2 tool, (:object this))
+                #_"ValueNode" object (Virtualizer''getAlias-2 tool, (:object this))
             ]
                 (when (satisfies? VirtualObjectNode object) => tool
                     (let [
-                        #_"ValueNode" offset (VirtualizerTool'''getAlias-2 tool, (:offset this))
+                        #_"ValueNode" offset (Virtualizer''getAlias-2 tool, (:offset this))
                     ]
                         (when (satisfies? ConstantNode offset) => tool
                             (let [
@@ -47244,15 +46875,15 @@ ZeroExtendNode'new-4
                             ]
                                 (when-not (= i -1) => tool
                                     (let [
-                                        #_"ValueNode" entry (VirtualizerTool'''getEntry-3 tool, object, i)
+                                        #_"ValueNode" entry (Virtualizer''getEntry-3 tool, object, i)
                                     ]
                                         (when (or (= (ValueNode''getStackKind-1 entry) (ValueNode''getStackKind-1 this)) (= (VirtualObjectNode'''entryKind-2 object, i) (:accessKind this))) => tool
                                             (cond
                                                 (Stamp'''isCompatible-2s (:stamp entry), (:stamp this))
-                                                    (VirtualizerTool'''replaceWith-2 tool, entry)
+                                                    (Virtualizer''replaceWith-2 tool, entry)
                                                 (and (satisfies? PrimitiveStamp (:stamp entry)) (satisfies? PrimitiveStamp (:stamp this)))
                                                     (when (= (:bits (:stamp this)) (:bits (:stamp entry))) => tool
-                                                        (VirtualizerTool'''replaceWith-2 tool, (ß ReinterpretNode'create-2 (:stamp entry), entry))
+                                                        (Virtualizer''replaceWith-2 tool, (ß ReinterpretNode'create-2 (:stamp entry), entry))
                                                     )
                                                 :else
                                                     tool
@@ -47269,7 +46900,7 @@ ZeroExtendNode'new-4
     )
 
     (defm RawLoadNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"RawLoadNode" this, #_"CanonicalizerTool" tool]
+        (#_"Node" Canonicalizable'''canonical-2 [#_"RawLoadNode" this, #_"Canonicalizer" tool]
             (or
                 (when (and (not (:forceAnyLocation this)) (LocationIdentity''isAny-1 (:locationIdentity this)))
                     (let [
@@ -47370,21 +47001,21 @@ ZeroExtendNode'new-4
     )
 
     (defm RawStoreNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"RawStoreNode" this, #_"VirtualizerTool" tool]
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"RawStoreNode" this, #_"Virtualizer" tool]
             (let [
-                #_"ValueNode" object (VirtualizerTool'''getAlias-2 tool, (:object this))
+                #_"ValueNode" object (Virtualizer''getAlias-2 tool, (:object this))
             ]
                 (when (satisfies? VirtualObjectNode object) => tool
                     (let [
-                        #_"ValueNode" offset (VirtualizerTool'''getAlias-2 tool, (:offset this))
+                        #_"ValueNode" offset (Virtualizer''getAlias-2 tool, (:offset this))
                     ]
                         (when (satisfies? ConstantNode offset) => tool
                             (let [
                                 #_"long" off (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 offset))
                                 #_"int" i (VirtualObjectNode'''entryIndexForOffset-3 object, off, (:accessKind this))
                             ]
-                                (when (and (not= i -1) (VirtualizerTool'''setVirtualEntry-6 tool, object, i, (:value this), (:accessKind this), off)) => tool
-                                    (VirtualizerTool'''delete-1 tool)
+                                (when (and (not= i -1) (Virtualizer''setVirtualEntry-6 tool, object, i, (:value this), (:accessKind this), off)) => tool
+                                    (Virtualizer''delete-1 tool)
                                 )
                             )
                         )
@@ -47426,7 +47057,7 @@ ZeroExtendNode'new-4
     )
 
     (defm ValueAnchorNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"ValueAnchorNode" this, #_"SimplifierTool" tool]
+        (#_"this" Simplifiable'''simplify-2 [#_"ValueAnchorNode" this, #_"Simplifier" tool]
             (let [
                 _
                     (loop-when [#_"ValueAnchorNode" nextAnchor (:next this)] (satisfies? ValueAnchorNode nextAnchor)
@@ -47439,7 +47070,7 @@ ZeroExtendNode'new-4
                         )
                     )
             ]
-                (if (and (CanonicalizerTool'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this) (satisfies? FixedAccessNode (:next this)) (= (GuardedNode'''getGuard-1 (:next this)) (:anchored this)))
+                (if (and (Canonicalizer'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this) (satisfies? FixedAccessNode (:next this)) (= (GuardedNode'''getGuard-1 (:next this)) (:anchored this)))
                     (do
                         (GraphUtil'removeFixedWithUnusedInputs-1 this)
                         this
@@ -47464,11 +47095,11 @@ ZeroExtendNode'new-4
     )
 
     (defm ValueAnchorNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"ValueAnchorNode" this, #_"VirtualizerTool" tool]
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"ValueAnchorNode" this, #_"Virtualizer" tool]
             (if (or (nil? (:anchored this)) (satisfies? AbstractBeginNode (:anchored this)))
-                (VirtualizerTool'''delete-1 tool)
-                (when (satisfies? VirtualObjectNode (VirtualizerTool'''getAlias-2 tool, (:anchored this))) => tool
-                    (VirtualizerTool'''delete-1 tool)
+                (Virtualizer''delete-1 tool)
+                (when (satisfies? VirtualObjectNode (Virtualizer''getAlias-2 tool, (:anchored this))) => tool
+                    (Virtualizer''delete-1 tool)
                 )
             )
         )
@@ -47512,9 +47143,9 @@ ZeroExtendNode'new-4
     )
 
     (defm WordCastNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"WordCastNode" this, #_"CanonicalizerTool" tool]
+        (#_"Node" Canonicalizable'''canonical-2 [#_"WordCastNode" this, #_"Canonicalizer" tool]
             (cond
-                (and (CanonicalizerTool'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
+                (and (Canonicalizer'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
                     ;; if the cast is unused, it can be eliminated
                     (:input this)
                 (satisfies? ConstantNode (:input this))
@@ -47799,7 +47430,7 @@ ZeroExtendNode'new-4
     )
 
     (defm OffsetAddressNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"OffsetAddressNode" this, #_"CanonicalizerTool" tool]
+        (#_"Node" Canonicalizable'''canonical-2 [#_"OffsetAddressNode" this, #_"Canonicalizer" tool]
             (condp satisfies? (:base this)
                 OffsetAddressNode
                     ;; Rewrite (&base[offset1])[offset2] to base[offset1 + offset2].
@@ -47851,8 +47482,8 @@ ZeroExtendNode'new-4
     )
 
     (defm AllocatedObjectNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"AllocatedObjectNode" this, #_"VirtualizerTool" tool]
-            (VirtualizerTool'''replaceWithVirtual-2 tool, (:virtualObject this))
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"AllocatedObjectNode" this, #_"Virtualizer" tool]
+            (Virtualizer''replaceWithVirtual-2 tool, (:virtualObject this))
         )
     )
 
@@ -47885,7 +47516,7 @@ ZeroExtendNode'new-4
     )
 
     (defm BinaryNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"BinaryNode" this, #_"CanonicalizerTool" tool]
+        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"BinaryNode" this, #_"Canonicalizer" tool]
             (Binary'''canonical-4 this, tool, (:x this), (:y this))
         )
     )
@@ -47923,7 +47554,7 @@ ZeroExtendNode'new-4
     )
 
     (defm BinaryArithmeticNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"BinaryArithmeticNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+        (#_"ValueNode" Binary'''canonical-4 [#_"BinaryArithmeticNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (or (BinaryArithmeticNode'tryConstantFold-4 (BinaryArithmeticNode''getOp-3 this, forX, forY), forX, forY, (:stamp this))
                 this
             )
@@ -48177,7 +47808,7 @@ ZeroExtendNode'new-4
     )
 
     (defm AddNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"AddNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+        (#_"ValueNode" Binary'''canonical-4 [#_"AddNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (let [
                 #_"ValueNode" ret (Binary'''canonical-4 (§ super BinaryArithmeticNode'iface), tool, forX, forY)
             ]
@@ -48293,7 +47924,7 @@ ZeroExtendNode'new-4
     )
 
     (defm IntegerAddExactNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"IntegerAddExactNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+        (#_"ValueNode" Binary'''canonical-4 [#_"IntegerAddExactNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (if (and (satisfies? ConstantNode forX) (not (satisfies? ConstantNode forY)))
                 (Canonicalizable'''canonical-2 (IntegerAddExactNode'new-2 forY, forX), tool)
                 (do
@@ -48387,7 +48018,7 @@ ZeroExtendNode'new-4
     )
 
     (defm AndNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"AndNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+        (#_"ValueNode" Binary'''canonical-4 [#_"AndNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (let [
                 #_"ValueNode" ret (Binary'''canonical-4 (§ super BinaryArithmeticNode'iface), tool, forX, forY)
             ]
@@ -48434,7 +48065,7 @@ ZeroExtendNode'new-4
     )
 
     (defm IntegerMulHighNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"IntegerMulHighNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+        (#_"ValueNode" Binary'''canonical-4 [#_"IntegerMulHighNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (let [
                 #_"ValueNode" ret (Binary'''canonical-4 (§ super BinaryArithmeticNode'iface), tool, forX, forY)
             ]
@@ -48499,7 +48130,7 @@ ZeroExtendNode'new-4
     )
 
     (defm MulNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"MulNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+        (#_"ValueNode" Binary'''canonical-4 [#_"MulNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (let [
                 #_"ValueNode" ret (Binary'''canonical-4 (§ super BinaryArithmeticNode'iface), tool, forX, forY)
             ]
@@ -48621,7 +48252,7 @@ ZeroExtendNode'new-4
     )
 
     (defm IntegerMulExactNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"IntegerMulExactNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+        (#_"ValueNode" Binary'''canonical-4 [#_"IntegerMulExactNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (cond
                 (and (satisfies? ConstantNode forX) (not (satisfies? ConstantNode forY)))
                     (§ return (Canonicalizable'''canonical-2 (IntegerMulExactNode'new-2 forY, forX), tool))
@@ -48710,7 +48341,7 @@ ZeroExtendNode'new-4
     )
 
     (defm OrNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"OrNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+        (#_"ValueNode" Binary'''canonical-4 [#_"OrNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (let [
                 #_"ValueNode" ret (Binary'''canonical-4 (§ super BinaryArithmeticNode'iface), tool, forX, forY)
             ]
@@ -48876,7 +48507,7 @@ ZeroExtendNode'new-4
     )
 
     (defm SubNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"SubNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+        (#_"ValueNode" Binary'''canonical-4 [#_"SubNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (let [
                 #_"ValueNode" ret (Binary'''canonical-4 (§ super BinaryArithmeticNode'iface), tool, forX, forY)
             ]
@@ -48936,13 +48567,13 @@ ZeroExtendNode'new-4
     )
 
     (defm IntegerSubExactNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"IntegerSubExactNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+        (#_"ValueNode" Binary'''canonical-4 [#_"IntegerSubExactNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (cond
-                (= (GraphUtil'unproxify-1n forX) (GraphUtil'unproxify-1n forY))                                            (ConstantNode'forIntegerStamp-2 (:stamp this), 0)
-                (and (satisfies? ConstantNode forX) (satisfies? ConstantNode forY))                                        (IntegerSubExactNode''canonicalXYconstant-3 this, forX, forY)
+                (= (GraphUtil'unproxify-1n forX) (GraphUtil'unproxify-1n forY))                                           (ConstantNode'forIntegerStamp-2 (:stamp this), 0)
+                (and (satisfies? ConstantNode forX) (satisfies? ConstantNode forY))                                       (IntegerSubExactNode''canonicalXYconstant-3 this, forX, forY)
                 (and (satisfies? ConstantNode forY) (zero? (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forY)))) forX
-                (IntegerStamp'subtractionCanOverflow-2 (:stamp (:x this)), (:stamp (:y this)))                             this
-                :else                                                                                                      (Canonicalizable'''canonical-2 (SubNode'new-2 (:x this), (:y this)), tool)
+                (IntegerStamp'subtractionCanOverflow-2 (:stamp (:x this)), (:stamp (:y this)))                            this
+                :else                                                                                                     (Canonicalizable'''canonical-2 (SubNode'new-2 (:x this), (:y this)), tool)
             )
         )
     )
@@ -48990,7 +48621,7 @@ ZeroExtendNode'new-4
     )
 
     (defm UnsignedMulHighNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"UnsignedMulHighNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+        (#_"ValueNode" Binary'''canonical-4 [#_"UnsignedMulHighNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (let [
                 #_"ValueNode" ret (Binary'''canonical-4 (§ super BinaryArithmeticNode'iface), tool, forX, forY)
             ]
@@ -49058,7 +48689,7 @@ ZeroExtendNode'new-4
     )
 
     (defm XorNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"XorNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+        (#_"ValueNode" Binary'''canonical-4 [#_"XorNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (let [
                 #_"ValueNode" ret (Binary'''canonical-4 (§ super BinaryArithmeticNode'iface), tool, forX, forY)
             ]
@@ -49111,7 +48742,7 @@ ZeroExtendNode'new-4
     )
 
     (defm NormalizeCompareNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"NormalizeCompareNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+        (#_"ValueNode" Binary'''canonical-4 [#_"NormalizeCompareNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (or (NormalizeCompareNode'tryConstantFold-3 (:x this), (:y this), (Stamp'''getStackKind-1 (:stamp this)))
                 this
             )
@@ -49166,7 +48797,7 @@ ZeroExtendNode'new-4
     )
 
     (defm ShiftNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"ShiftNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+        (#_"ValueNode" Binary'''canonical-4 [#_"ShiftNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (or (ShiftNode'canonical-4 (ShiftNode''getOp-2 this, forX), (:stamp this), forX, forY)
                 this
             )
@@ -49240,7 +48871,7 @@ ZeroExtendNode'new-4
     )
 
     (defm LeftShiftNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"LeftShiftNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+        (#_"ValueNode" Binary'''canonical-4 [#_"LeftShiftNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (let [
                 #_"ValueNode" ret (Binary'''canonical-4 (§ super #_"ShiftNode"), tool, forX, forY)
             ]
@@ -49307,7 +48938,7 @@ ZeroExtendNode'new-4
     )
 
     (defm RightShiftNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"RightShiftNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+        (#_"ValueNode" Binary'''canonical-4 [#_"RightShiftNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (let [
                 #_"ValueNode" ret (Binary'''canonical-4 (§ super #_"ShiftNode"), tool, forX, forY)
             ]
@@ -49382,7 +49013,7 @@ ZeroExtendNode'new-4
     )
 
     (defm UnsignedRightShiftNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"UnsignedRightShiftNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+        (#_"ValueNode" Binary'''canonical-4 [#_"UnsignedRightShiftNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (let [
                 #_"ValueNode" ret (Binary'''canonical-4 (§ super #_"ShiftNode"), tool, forX, forY)
             ]
@@ -49403,7 +49034,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Read {@code Class::_klass} to get the hub for a {@link java.lang.Class}. This node mostly exists
  ; to replace {@code _klass._java_mirror._klass} with {@code _klass}. The constant folding could be
- ; handled by ReadNode#canonicalizeRead(ValueNode, AddressNode, LocationIdentity, CanonicalizerTool).
+ ; handled by ReadNode#canonicalizeRead(ValueNode, AddressNode, LocationIdentity, Canonicalizer).
  ;;
 (class-ns ClassGetHubNode [FloatingNode, ValueNode, Node, Lowerable, Canonicalizable, ConvertNode]
     (defn #_"ClassGetHubNode" ClassGetHubNode'new-1 [#_"ValueNode" clazz]
@@ -49438,14 +49069,14 @@ ZeroExtendNode'new-4
     )
 
     (defm ClassGetHubNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"ClassGetHubNode" this, #_"CanonicalizerTool" tool]
-            (ClassGetHubNode'canonical-4 this, (CanonicalizerTool'''allUsagesAvailable-1 tool), (:stamp this), (:class this))
+        (#_"Node" Canonicalizable'''canonical-2 [#_"ClassGetHubNode" this, #_"Canonicalizer" tool]
+            (ClassGetHubNode'canonical-4 this, (Canonicalizer'''allUsagesAvailable-1 tool), (:stamp this), (:class this))
         )
     )
 
     (defm ClassGetHubNode Lowerable
         (#_"this" Lowerable'''lower-2 [#_"ClassGetHubNode" this, #_"LoweringTool" lowerer]
-            (when-not (= (:loweringStage (:phase lowerer)) :LoweringStage'HIGH_TIER) => this
+            (when-not (= (:loweringStage lowerer) :LoweringStage'HIGH_TIER) => this
                 (let [
                     #_"Graph" graph (:graph this)
                     #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, (ConvertNode'''getValue-1 this), HotSpot'klassOffset)
@@ -49693,7 +49324,7 @@ ZeroExtendNode'new-4
     )
 
     (defm ConditionalNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"ConditionalNode" this, #_"CanonicalizerTool" tool]
+        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"ConditionalNode" this, #_"Canonicalizer" tool]
             (or (ConditionalNode'findSynonym-3 (:logic this), (:trueValue this), (:falseValue this))
                 (ConditionalNode'canonicalizeConditional-4 (:logic this), (:trueValue this), (:falseValue this), (:stamp this))
                 this
@@ -50063,7 +49694,7 @@ ZeroExtendNode'new-4
     )
 
     (defm GuardNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"GuardNode" this, #_"CanonicalizerTool" tool]
+        (#_"Node" Canonicalizable'''canonical-2 [#_"GuardNode" this, #_"Canonicalizer" tool]
             (let [
                 #_"LogicNode" logic (:logic this)
             ]
@@ -50178,12 +49809,12 @@ ZeroExtendNode'new-4
     )
 
     (defm FloatingReadNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"FloatingReadNode" this, #_"CanonicalizerTool" tool]
+        (#_"Node" Canonicalizable'''canonical-2 [#_"FloatingReadNode" this, #_"Canonicalizer" tool]
             (let [
                 #_"Node" result (ReadNode'canonicalizeRead-4 this, (Access'''getAddress-1 this), (Access'''getLocationIdentity-1 this), tool)
             ]
                 (when (= result this) => result
-                    (when (and (CanonicalizerTool'''canonicalizeReads-1 tool) (Node''hasMoreThanOneUsage-1 (Access'''getAddress-1 this)) (satisfies? WriteNode (:lastLocationAccess this))) => this
+                    (when (and (Canonicalizer'''canonicalizeReads-1 tool) (Node''hasMoreThanOneUsage-1 (Access'''getAddress-1 this)) (satisfies? WriteNode (:lastLocationAccess this))) => this
                         (let [
                             #_"WriteNode" write (:lastLocationAccess this)
                         ]
@@ -50285,12 +49916,12 @@ ZeroExtendNode'new-4
     )
 
     (defm PiNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"PiNode" this, #_"VirtualizerTool" tool]
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"PiNode" this, #_"Virtualizer" tool]
             (let [
-                #_"ValueNode" object (VirtualizerTool'''getAlias-2 tool, (:object this))
+                #_"ValueNode" object (Virtualizer''getAlias-2 tool, (:object this))
             ]
                 (when (and (satisfies? VirtualObjectNode object) (some? (StampTool'typeOrNull-1 (:stamp this))) (ResolvedJavaType'''isAssignableFrom-2 (StampTool'typeOrNull-1 (:stamp this)), (VirtualObjectNode'''type-1 object))) => tool
-                    (VirtualizerTool'''replaceWithVirtual-2 tool, object)
+                    (Virtualizer''replaceWithVirtual-2 tool, object)
                 )
             )
         )
@@ -50326,7 +49957,7 @@ ZeroExtendNode'new-4
     )
 
     (defm PiNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"PiNode" this, #_"CanonicalizerTool" tool]
+        (#_"Node" Canonicalizable'''canonical-2 [#_"PiNode" this, #_"Canonicalizer" tool]
             (or (PiNode'canonical-3 (:object this), (:stamp this), (GuardedNode'''getGuard-1 this))
                 this
             )
@@ -50362,7 +49993,7 @@ ZeroExtendNode'new-4
     )
 
     (defm PiArrayNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"PiArrayNode" this, #_"CanonicalizerTool" tool]
+        (#_"Node" Canonicalizable'''canonical-2 [#_"PiArrayNode" this, #_"Canonicalizer" tool]
             (when (= (GraphUtil'arrayLength-1 (:object this)) (ArrayLengthProvider'''length-1 this)) => this
                 (Canonicalizable'''canonical-2 (§ super #_"PiNode"), tool)
             )
@@ -50455,7 +50086,7 @@ ZeroExtendNode'new-4
     )
 
     (defm GetClassNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"GetClassNode" this, #_"CanonicalizerTool" tool]
+        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"GetClassNode" this, #_"Canonicalizer" tool]
             (or (GetClassNode'tryFold-1 (:object this))
                 this
             )
@@ -50463,12 +50094,12 @@ ZeroExtendNode'new-4
     )
 
     (defm GetClassNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"GetClassNode" this, #_"VirtualizerTool" tool]
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"GetClassNode" this, #_"Virtualizer" tool]
             (let [
-                #_"ValueNode" alias (VirtualizerTool'''getAlias-2 tool, (:object this))
+                #_"ValueNode" alias (Virtualizer''getAlias-2 tool, (:object this))
             ]
                 (when (satisfies? VirtualObjectNode alias) => tool
-                    (VirtualizerTool'''replaceWithValue-2 tool, (ConstantNode'forConstant-3s (:stamp this), (ConstantReflection'asJavaClass-1 (VirtualObjectNode'''type-1 alias)), (:graph this)))
+                    (Virtualizer''replaceWithValue-2 tool, (ConstantNode'forConstant-3s (:stamp this), (ConstantReflection'asJavaClass-1 (VirtualObjectNode'''type-1 alias)), (:graph this)))
                 )
             )
         )
@@ -50506,8 +50137,8 @@ ZeroExtendNode'new-4
     )
 
     (defm HubGetClassNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"HubGetClassNode" this, #_"CanonicalizerTool" tool]
-            (when-not (and (CanonicalizerTool'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
+        (#_"Node" Canonicalizable'''canonical-2 [#_"HubGetClassNode" this, #_"Canonicalizer" tool]
+            (when-not (and (Canonicalizer'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
                 (when (satisfies? ConstantNode (:hub this)) => this
                     (let [
                         #_"ResolvedJavaType" exact (ConstantReflection'asJavaType-1 (:value (:hub this)))
@@ -50523,7 +50154,7 @@ ZeroExtendNode'new-4
 
     (defm HubGetClassNode Lowerable
         (#_"this" Lowerable'''lower-2 [#_"HubGetClassNode" this, #_"LoweringTool" lowerer]
-            (when-not (= (:loweringStage (:phase lowerer)) :LoweringStage'HIGH_TIER) => this
+            (when-not (= (:loweringStage lowerer) :LoweringStage'HIGH_TIER) => this
                 (let [
                     #_"Graph" graph (:graph this)
                     #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, (:hub this), HotSpot'classMirrorOffset)
@@ -50618,14 +50249,14 @@ ZeroExtendNode'new-4
 
     (defm LoadHubNode Lowerable
         (#_"this" Lowerable'''lower-2 [#_"LoadHubNode" this, #_"LoweringTool" lowerer]
-            (when (and (= (:loweringStage (:phase lowerer)) :LoweringStage'LOW_TIER) (not (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph this))))) => this
+            (when (and (= (:loweringStage lowerer) :LoweringStage'LOW_TIER) (not (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph this))))) => this
                 (Node''replaceAtUsagesAndDelete-2 this, (Lowerer'createReadHub-3 (:graph this), (:value this), lowerer))
             )
         )
     )
 
     (defm LoadHubNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"LoadHubNode" this, #_"CanonicalizerTool" tool]
+        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"LoadHubNode" this, #_"Canonicalizer" tool]
             (or (LoadHubNode'findSynonym-2 (:value this), (:stamp this))
                 this
             )
@@ -50643,12 +50274,12 @@ ZeroExtendNode'new-4
     )
 
     (defm LoadHubNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"LoadHubNode" this, #_"VirtualizerTool" tool]
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"LoadHubNode" this, #_"Virtualizer" tool]
             (let [
-                #_"TypeReference" type (StampTool'typeReferenceOrNull-1 (:stamp (VirtualizerTool'''getAlias-2 tool, (:value this))))
+                #_"TypeReference" type (StampTool'typeReferenceOrNull-1 (:stamp (Virtualizer''getAlias-2 tool, (:value this))))
             ]
                 (when (and (some? type) (:exactReference type)) => tool
-                    (VirtualizerTool'''replaceWithValue-2 tool, (ConstantNode'forConstant-3s (:stamp this), (ConstantReflection'asObjectHub-1 (:type type)), (:graph this)))
+                    (Virtualizer''replaceWithValue-2 tool, (ConstantNode'forConstant-3s (:stamp this), (ConstantReflection'asObjectHub-1 (:type type)), (:graph this)))
                 )
             )
         )
@@ -50709,7 +50340,7 @@ ZeroExtendNode'new-4
     )
 
     (defm BinaryOpLogicNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"BinaryOpLogicNode" this, #_"CanonicalizerTool" tool]
+        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"BinaryOpLogicNode" this, #_"Canonicalizer" tool]
             (Binary'''canonical-4 this, tool, (:x this), (:y this))
         )
     )
@@ -50859,8 +50490,8 @@ ZeroExtendNode'new-4
     )
 
     (defm IntegerEqualsNode Binary
-        (#_"Node" Binary'''canonical-4 [#_"IntegerEqualsNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (or (CompareOp'''canonical-5 IntegerEqualsNode'OP, (CanonicalizerTool'''smallestCompareWidth-1 tool), CanonicalCondition'EQ, forX, forY)
+        (#_"Node" Binary'''canonical-4 [#_"IntegerEqualsNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+            (or (CompareOp'''canonical-5 IntegerEqualsNode'OP, (Canonicalizer'''smallestCompareWidth-1 tool), CanonicalCondition'EQ, forX, forY)
                 this
             )
         )
@@ -50966,8 +50597,8 @@ ZeroExtendNode'new-4
     )
 
     (defm IntegerBelowNode Binary
-        (#_"Node" Binary'''canonical-4 [#_"IntegerBelowNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (or (CompareOp'''canonical-5 IntegerBelowNode'OP, (CanonicalizerTool'''smallestCompareWidth-1 tool), (LowerOp'''getCondition-1 IntegerBelowNode'OP), forX, forY)
+        (#_"Node" Binary'''canonical-4 [#_"IntegerBelowNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+            (or (CompareOp'''canonical-5 IntegerBelowNode'OP, (Canonicalizer'''smallestCompareWidth-1 tool), (LowerOp'''getCondition-1 IntegerBelowNode'OP), forX, forY)
                 this
             )
         )
@@ -50992,8 +50623,8 @@ ZeroExtendNode'new-4
     )
 
     (defm IntegerLessThanNode Binary
-        (#_"Node" Binary'''canonical-4 [#_"IntegerLessThanNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (or (CompareOp'''canonical-5 IntegerLessThanNode'OP, (CanonicalizerTool'''smallestCompareWidth-1 tool), (LowerOp'''getCondition-1 IntegerLessThanNode'OP), forX, forY)
+        (#_"Node" Binary'''canonical-4 [#_"IntegerLessThanNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+            (or (CompareOp'''canonical-5 IntegerLessThanNode'OP, (Canonicalizer'''smallestCompareWidth-1 tool), (LowerOp'''getCondition-1 IntegerLessThanNode'OP), forX, forY)
                 this
             )
         )
@@ -51032,8 +50663,8 @@ ZeroExtendNode'new-4
     )
 
     (defm PointerEqualsNode Binary
-        (#_"Node" Binary'''canonical-4 [#_"PointerEqualsNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (or (CompareOp'''canonical-5 PointerEqualsNode'OP, (CanonicalizerTool'''smallestCompareWidth-1 tool), CanonicalCondition'EQ, forX, forY)
+        (#_"Node" Binary'''canonical-4 [#_"PointerEqualsNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+            (or (CompareOp'''canonical-5 PointerEqualsNode'OP, (Canonicalizer'''smallestCompareWidth-1 tool), CanonicalCondition'EQ, forX, forY)
                 this
             )
         )
@@ -51042,9 +50673,9 @@ ZeroExtendNode'new-4
     (defn #_"LogicNode" PointerEqualsNode'findSynonym-2 [#_"ValueNode" forX, #_"ValueNode" forY]
         (cond
             (= (GraphUtil'unproxify-1n forX) (GraphUtil'unproxify-1n forY)) (LogicConstantNode'tautology-0)
-            (Stamp'''alwaysDistinct-2 (:stamp forX), (:stamp forY))        (LogicConstantNode'contradiction-0)
-            (:always-nil? (:stamp forX))                                  (IsNullNode'create-1 forY)
-            (:always-nil? (:stamp forY))                                  (IsNullNode'create-1 forX)
+            (Stamp'''alwaysDistinct-2 (:stamp forX), (:stamp forY))         (LogicConstantNode'contradiction-0)
+            (:always-nil? (:stamp forX))                                    (IsNullNode'create-1 forY)
+            (:always-nil? (:stamp forY))                                    (IsNullNode'create-1 forX)
         )
     )
 
@@ -51105,26 +50736,26 @@ ZeroExtendNode'new-4
     )
 
     (defm ObjectEqualsNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"ObjectEqualsNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (or (CompareOp'''canonical-5 ObjectEqualsNode'OP, (CanonicalizerTool'''smallestCompareWidth-1 tool), CanonicalCondition'EQ, forX, forY)
+        (#_"ValueNode" Binary'''canonical-4 [#_"ObjectEqualsNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+            (or (CompareOp'''canonical-5 ObjectEqualsNode'OP, (Canonicalizer'''smallestCompareWidth-1 tool), CanonicalCondition'EQ, forX, forY)
                 this
             )
         )
     )
 
-    (defn- #_"void" ObjectEqualsNode''virtualizeNonVirtualComparison-4 [#_"ObjectEqualsNode" this, #_"VirtualObjectNode" virtual, #_"ValueNode" other, #_"VirtualizerTool" tool]
+    (defn- #_"void" ObjectEqualsNode''virtualizeNonVirtualComparison-4 [#_"ObjectEqualsNode" this, #_"VirtualObjectNode" virtual, #_"ValueNode" other, #_"Virtualizer" tool]
         (when (:hasIdentity virtual)
             ;; one of them is virtual: they can never be the same objects
-            (§ ass! tool (VirtualizerTool'''replaceWithValue-2 tool, (LogicConstantNode'contradiction-1 (:graph this))))
+            (§ ass! tool (Virtualizer''replaceWithValue-2 tool, (LogicConstantNode'contradiction-1 (:graph this))))
         )
         nil
     )
 
     (defm ObjectEqualsNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"ObjectEqualsNode" this, #_"VirtualizerTool" tool]
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"ObjectEqualsNode" this, #_"Virtualizer" tool]
             (let [
-                #_"ValueNode" xAlias (VirtualizerTool'''getAlias-2 tool, (:x this))
-                #_"ValueNode" yAlias (VirtualizerTool'''getAlias-2 tool, (:y this))
+                #_"ValueNode" xAlias (Virtualizer''getAlias-2 tool, (:x this))
+                #_"ValueNode" yAlias (Virtualizer''getAlias-2 tool, (:y this))
                 #_"VirtualObjectNode" xVirtual (when (satisfies? VirtualObjectNode xAlias) xAlias)
                 #_"VirtualObjectNode" yVirtual (when (satisfies? VirtualObjectNode yAlias) yAlias)
             ]
@@ -51141,7 +50772,7 @@ ZeroExtendNode'new-4
                                 ;;
                                 ;; In other words: an object created via valueOf can never be equal to one created
                                 ;; by new in the same compilation unit.
-                                (VirtualizerTool'''replaceWithValue-2 tool, (LogicConstantNode'contradiction-1 (:graph this)))
+                                (Virtualizer''replaceWithValue-2 tool, (LogicConstantNode'contradiction-1 (:graph this)))
                             (and (not (:hasIdentity xVirtual)) (not (:hasIdentity yVirtual)))
                                 (let [
                                     #_"ResolvedJavaType" type (VirtualObjectNode'''type-1 xVirtual)
@@ -51149,18 +50780,18 @@ ZeroExtendNode'new-4
                                     (when (and (= type (VirtualObjectNode'''type-1 yVirtual)) (any = type (MetaReflection'lookupJavaType-1c Integer) (MetaReflection'lookupJavaType-1c Long))) => tool
                                         ;; both are virtual without identity: check contents
                                         (let [
-                                            #_"IntegerEqualsNode" equals (IntegerEqualsNode'new-2 (VirtualizerTool'''getEntry-3 tool, xVirtual, 0), (VirtualizerTool'''getEntry-3 tool, yVirtual, 0))
+                                            #_"IntegerEqualsNode" equals (IntegerEqualsNode'new-2 (Virtualizer''getEntry-3 tool, xVirtual, 0), (Virtualizer''getEntry-3 tool, yVirtual, 0))
                                         ]
                                             (-> tool
-                                                (VirtualizerTool'''addNode-2 equals)
-                                                (VirtualizerTool'''replaceWithValue-2 equals)
+                                                (Virtualizer''addNode-2 equals)
+                                                (Virtualizer''replaceWithValue-2 equals)
                                             )
                                         )
                                     )
                                 )
                             :else
                                 ;; both are virtual with identity: check if they refer to the same object
-                                (VirtualizerTool'''replaceWithValue-2 tool, (LogicConstantNode'forBoolean-2 (= xVirtual yVirtual), (:graph this)))
+                                (Virtualizer''replaceWithValue-2 tool, (LogicConstantNode'forBoolean-2 (= xVirtual yVirtual), (:graph this)))
                         )
                     :else
                         tool
@@ -51255,7 +50886,7 @@ ZeroExtendNode'new-4
     )
 
     (defm InstanceOfDynamicNode Binary
-        (#_"LogicNode" Binary'''canonical-4 [#_"InstanceOfDynamicNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forMirror, #_"ValueNode" forObject]
+        (#_"LogicNode" Binary'''canonical-4 [#_"InstanceOfDynamicNode" this, #_"Canonicalizer" tool, #_"ValueNode" forMirror, #_"ValueNode" forObject]
             (or (InstanceOfDynamicNode'findSynonym-4 forMirror, forObject, (:allow-nil? this), (:exact? this))
                 this
             )
@@ -51292,7 +50923,7 @@ ZeroExtendNode'new-4
     )
 
     (defm IntegerTestNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"IntegerTestNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" forX, #_"ValueNode" forY]
+        (#_"ValueNode" Binary'''canonical-4 [#_"IntegerTestNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (cond
                 (and (satisfies? ConstantNode forX) (satisfies? ConstantNode forY))
                     (LogicConstantNode'forBoolean-1 (zero? (& (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forX)) (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forY)))))
@@ -51457,7 +51088,7 @@ ZeroExtendNode'new-4
             (:value this)
         )
 
-        (#_"LogicNode" Unary'''canonical-3 [#_"LogicNegationNode" this, #_"CanonicalizerTool" tool, #_"LogicNode" value]
+        (#_"LogicNode" Unary'''canonical-3 [#_"LogicNegationNode" this, #_"Canonicalizer" tool, #_"LogicNode" value]
             (or (LogicNegationNode'findSynonym-1 value)
                 this
             )
@@ -51465,7 +51096,7 @@ ZeroExtendNode'new-4
     )
 
     (defm LogicNegationNode Canonicalizable
-        (#_"LogicNode" Canonicalizable'''canonical-2 [#_"LogicNegationNode" this, #_"CanonicalizerTool" tool]
+        (#_"LogicNode" Canonicalizable'''canonical-2 [#_"LogicNegationNode" this, #_"Canonicalizer" tool]
             (Unary'''canonical-3 this, tool, (Unary'''getValue-1 this))
         )
     )
@@ -51580,7 +51211,7 @@ ZeroExtendNode'new-4
     )
 
     (defm ShortCircuitOrNode Binary
-        (#_"LogicNode" Binary'''canonical-4 [#_"ShortCircuitOrNode" this, #_"CanonicalizerTool" tool, #_"LogicNode" forX, #_"LogicNode" forY]
+        (#_"LogicNode" Binary'''canonical-4 [#_"ShortCircuitOrNode" this, #_"Canonicalizer" tool, #_"LogicNode" forX, #_"LogicNode" forY]
             (let [
                 #_"ShortCircuitOrNode" canon (ShortCircuitOrNode''canonicalizeNegation-3 this, forX, forY)
             ]
@@ -51646,7 +51277,7 @@ ZeroExtendNode'new-4
     )
 
     (defm ShortCircuitOrNode Canonicalizable
-        (#_"LogicNode" Canonicalizable'''canonical-2 [#_"ShortCircuitOrNode" this, #_"CanonicalizerTool" tool]
+        (#_"LogicNode" Canonicalizable'''canonical-2 [#_"ShortCircuitOrNode" this, #_"Canonicalizer" tool]
             (Binary'''canonical-4 this, tool, (:x this), (:y this))
         )
     )
@@ -51686,7 +51317,7 @@ ZeroExtendNode'new-4
     )
 
     (defm UnaryOpLogicNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"UnaryOpLogicNode" this, #_"CanonicalizerTool" tool]
+        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"UnaryOpLogicNode" this, #_"Canonicalizer" tool]
             (Unary'''canonical-3 this, tool, (Unary'''getValue-1 this))
         )
     )
@@ -51746,7 +51377,7 @@ ZeroExtendNode'new-4
     )
 
     (defm InstanceOfNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"InstanceOfNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+        (#_"ValueNode" Unary'''canonical-3 [#_"InstanceOfNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
             (or (InstanceOfNode'findSynonym-2 (:checkedStamp this), value)
                 this
             )
@@ -51790,12 +51421,12 @@ ZeroExtendNode'new-4
     )
 
     (defm InstanceOfNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"InstanceOfNode" this, #_"VirtualizerTool" tool]
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"InstanceOfNode" this, #_"Virtualizer" tool]
             (let [
-                #_"Boolean" fold (UnaryOpLogicNode'''tryFold-2 this, (:stamp (VirtualizerTool'''getAlias-2 tool, (Unary'''getValue-1 this))))
+                #_"Boolean" fold (UnaryOpLogicNode'''tryFold-2 this, (:stamp (Virtualizer''getAlias-2 tool, (Unary'''getValue-1 this))))
             ]
                 (when (some? fold) => tool
-                    (VirtualizerTool'''replaceWithValue-2 tool, (LogicConstantNode'forBoolean-2 (true? fold), (:graph this)))
+                    (Virtualizer''replaceWithValue-2 tool, (LogicConstantNode'forBoolean-2 (true? fold), (:graph this)))
                 )
             )
         )
@@ -51860,18 +51491,18 @@ ZeroExtendNode'new-4
     )
 
     (defm IsNullNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"IsNullNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+        (#_"ValueNode" Unary'''canonical-3 [#_"IsNullNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
             (IsNullNode'canonicalized-2 this, value)
         )
     )
 
     (defm IsNullNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"IsNullNode" this, #_"VirtualizerTool" tool]
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"IsNullNode" this, #_"Virtualizer" tool]
             (let [
-                #_"Boolean" fold (UnaryOpLogicNode'''tryFold-2 this, (:stamp (VirtualizerTool'''getAlias-2 tool, (Unary'''getValue-1 this))))
+                #_"Boolean" fold (UnaryOpLogicNode'''tryFold-2 this, (:stamp (Virtualizer''getAlias-2 tool, (Unary'''getValue-1 this))))
             ]
                 (when (some? fold) => tool
-                    (VirtualizerTool'''replaceWithValue-2 tool, (LogicConstantNode'forBoolean-2 (true? fold), (:graph this)))
+                    (Virtualizer''replaceWithValue-2 tool, (LogicConstantNode'forBoolean-2 (true? fold), (:graph this)))
                 )
             )
         )
@@ -52034,7 +51665,7 @@ ZeroExtendNode'new-4
     )
 
     (defm PhiNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"PhiNode" this, #_"CanonicalizerTool" tool]
+        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"PhiNode" this, #_"Canonicalizer" tool]
             (when (PhiNode''isLoopPhi-1 this) => (PhiNode''singleValueOrThis-1 this)
                 (let [
                     #_"int" n (count (:phiValues this))
@@ -52192,7 +51823,7 @@ ZeroExtendNode'new-4
     )
 
     (defm ValueProxyNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"ValueProxyNode" this, #_"CanonicalizerTool" tool]
+        (#_"Node" Canonicalizable'''canonical-2 [#_"ValueProxyNode" this, #_"Canonicalizer" tool]
             (if (or (satisfies? ConstantNode (:value this))
                     (and (:loopPhiProxy this) (not (AbstractMergeNode''isPhiAtMerge-2 (:loopBegin (:loopExit this)), (:value this))))
                 )
@@ -52203,12 +51834,12 @@ ZeroExtendNode'new-4
     )
 
     (defm ValueProxyNode Virtualizable
-        (#_"VirtualizerTool" Virtualizable'''virtualize-2 [#_"ValueProxyNode" this, #_"VirtualizerTool" tool]
+        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"ValueProxyNode" this, #_"Virtualizer" tool]
             (let [
-                #_"ValueNode" alias (VirtualizerTool'''getAlias-2 tool, (:value this))
+                #_"ValueNode" alias (Virtualizer''getAlias-2 tool, (:value this))
             ]
                 (when (satisfies? VirtualObjectNode alias) => tool
-                    (VirtualizerTool'''replaceWithVirtual-2 tool, alias)
+                    (Virtualizer''replaceWithVirtual-2 tool, alias)
                 )
             )
         )
@@ -52257,7 +51888,7 @@ ZeroExtendNode'new-4
     )
 
     (defm UnaryNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"UnaryNode" this, #_"CanonicalizerTool" tool]
+        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"UnaryNode" this, #_"Canonicalizer" tool]
             (Unary'''canonical-3 this, tool, (Unary'''getValue-1 this))
         )
     )
@@ -52292,7 +51923,7 @@ ZeroExtendNode'new-4
     )
 
     (defm BitCountNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"BitCountNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+        (#_"ValueNode" Unary'''canonical-3 [#_"BitCountNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
             (when (satisfies? ConstantNode value) => this
                 (let [
                     #_"JavaConstant" constant (ValueNode''asJavaConstant-1 value)
@@ -52381,7 +52012,7 @@ ZeroExtendNode'new-4
     )
 
     (defm CompressionNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"CompressionNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+        (#_"ValueNode" Unary'''canonical-3 [#_"CompressionNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
             (cond
                 (satisfies? ConstantNode value)
                     (ConstantNode'forConstant-4 (:stamp this), (ConvertNode'''convert-2 this, (:value value)), (:stableDimension value), (:isDefaultStable value))
@@ -52460,7 +52091,7 @@ ZeroExtendNode'new-4
     )
 
     (defm CountLeadingZerosNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"CountLeadingZerosNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+        (#_"ValueNode" Unary'''canonical-3 [#_"CountLeadingZerosNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
             (or (CountLeadingZerosNode'tryFold-1 value)
                 this
             )
@@ -52507,7 +52138,7 @@ ZeroExtendNode'new-4
     )
 
     (defm CountTrailingZerosNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"CountTrailingZerosNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+        (#_"ValueNode" Unary'''canonical-3 [#_"CountTrailingZerosNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
             (or (CountTrailingZerosNode'tryFold-1 value)
                 this
             )
@@ -52577,7 +52208,7 @@ ZeroExtendNode'new-4
     )
 
     (defm IntegerConvertNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"IntegerConvertNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+        (#_"ValueNode" Unary'''canonical-3 [#_"IntegerConvertNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
             (or (IntegerConvertNode'findSynonym-5 (IntegerConvertNode''getOp-2 this, value), value, (:inputBits this), (:resultBits this), (:stamp this))
                 this
             )
@@ -52685,7 +52316,7 @@ ZeroExtendNode'new-4
     )
 
     (defm NarrowNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"NarrowNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+        (#_"ValueNode" Unary'''canonical-3 [#_"NarrowNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
             (let [
                 #_"ValueNode" canon (Unary'''canonical-3 (§ super #_"IntegerConvertNode"), tool, value)
             ]
@@ -52813,7 +52444,7 @@ ZeroExtendNode'new-4
     )
 
     (defm SignExtendNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"SignExtendNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+        (#_"ValueNode" Unary'''canonical-3 [#_"SignExtendNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
             (let [
                 #_"ValueNode" ret (Unary'''canonical-3 (§ super #_"IntegerConvertNode"), tool, value)
             ]
@@ -52905,7 +52536,7 @@ ZeroExtendNode'new-4
     )
 
     (defm ZeroExtendNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"ZeroExtendNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+        (#_"ValueNode" Unary'''canonical-3 [#_"ZeroExtendNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
             (let [
                 #_"ValueNode" ret (Unary'''canonical-3 (§ super #_"IntegerConvertNode"), tool, value)
             ]
@@ -52955,7 +52586,7 @@ ZeroExtendNode'new-4
     )
 
     (defm UnaryArithmeticNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"UnaryArithmeticNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+        (#_"ValueNode" Unary'''canonical-3 [#_"UnaryArithmeticNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
             (or (UnaryArithmeticNode'findSynonym-2 value, (UnaryArithmeticNode''getOp-2 this, value))
                 this
             )
@@ -52984,7 +52615,7 @@ ZeroExtendNode'new-4
     )
 
     (defm NegateNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"NegateNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+        (#_"ValueNode" Unary'''canonical-3 [#_"NegateNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
             (or (UnaryArithmeticNode'findSynonym-2 value, (UnaryArithmeticNode''getOp-2 this, value))
                 this
             )
@@ -53036,7 +52667,7 @@ ZeroExtendNode'new-4
     )
 
     (defm NotNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"NotNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+        (#_"ValueNode" Unary'''canonical-3 [#_"NotNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
             (let [
                 #_"ValueNode" ret (Unary'''canonical-3 (§ super #_"UnaryArithmeticNode"), tool, value)
             ]
@@ -53080,7 +52711,7 @@ ZeroExtendNode'new-4
     )
 
     (defm UnpackEndianHalfNode Unary
-        (#_"Node" Unary'''canonical-3 [#_"UnpackEndianHalfNode" this, #_"CanonicalizerTool" tool, #_"ValueNode" value]
+        (#_"Node" Unary'''canonical-3 [#_"UnpackEndianHalfNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
             (if (and (satisfies? ConstantNode value) (Constant'''isDefaultForKind-1 (:value value)))
                 (ConstantNode'defaultForKind-1 (Stamp'''getStackKind-1 (:stamp this)))
                 this
@@ -53140,11 +52771,11 @@ ZeroExtendNode'new-4
     (defn #_"int"     VMConfigNode'logOfHeapRegionGrainBytes-0 []  (VMConfigNode'loadIntConfigValue-1 HotSpot'logOfHeapRegionGrainBytesMark))
 
     (defm VMConfigNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"VMConfigNode" this, #_"CanonicalizerTool" tool]
+        (#_"Node" Canonicalizable'''canonical-2 [#_"VMConfigNode" this, #_"Canonicalizer" tool]
             (condp = (:markId this)
-                0                                               (ConstantNode'forBoolean-1 true)
-                HotSpot'cardTableAddressMark                    (ConstantNode'forLong-1 HotSpot'cardTableAddress)
-                HotSpot'logOfHeapRegionGrainBytesMark           (ConstantNode'forInt-1 HotSpot'logOfHeapRegionGrainBytes)
+                0                                     (ConstantNode'forBoolean-1 true)
+                HotSpot'cardTableAddressMark          (ConstantNode'forLong-1 HotSpot'cardTableAddress)
+                HotSpot'logOfHeapRegionGrainBytesMark (ConstantNode'forInt-1 HotSpot'logOfHeapRegionGrainBytes)
                 this
             )
         )
@@ -54100,136 +53731,6 @@ ZeroExtendNode'new-4
     )
 )
 
-;;;
- ; A compiler phase that can apply an ordered collection of phases to a graph.
- ;;
-(class-ns PhaseSuite [Phase]
-    (defn #_"PhaseSuite" PhaseSuite'new-0 []
-        (merge (PhaseSuite'class.)
-            (hash-map
-                #_"Phase*" :phases nil
-            )
-        )
-    )
-
-    (defn #_"this" PhaseSuite''appendPhase-2 [#_"PhaseSuite" this, #_"Phase" phase]
-        (update this :phases conj' phase)
-    )
-
-    (defm PhaseSuite Phase
-        (#_"Graph" Phase'''run-2 [#_"PhaseSuite" this, #_"Graph" graph]
-            (reduce #(Phase'''run-2 %2, %1) graph (:phases this))
-        )
-    )
-)
-
-(class-ns HighTier [PhaseSuite, Phase]
-    (defn #_"HighTier" HighTier'new-0 []
-        (let [
-            #_"HighTier" this (merge (HighTier'class.) (PhaseSuite'new-0))
-            #_"CanonicalizerPhase" canonicalizer (CanonicalizerPhase'new-0)
-            this (PhaseSuite''appendPhase-2 this, canonicalizer)
-            this
-                (when GraalOptions'conditionalElimination => this
-                    (PhaseSuite''appendPhase-2 this, (IterativeConditionalEliminationPhase'new-2 canonicalizer, false))
-                )
-            this (PhaseSuite''appendPhase-2 this, canonicalizer)
-            this
-                (when GraalOptions'partialEscapeAnalysis => this
-                    (PhaseSuite''appendPhase-2 this, (PartialEscapePhase'new-2 true, canonicalizer))
-                )
-            this
-                (when GraalOptions'optReadElimination => this
-                    (PhaseSuite''appendPhase-2 this, (EarlyReadEliminationPhase'new-1 canonicalizer))
-                )
-            this (PhaseSuite''appendPhase-2 this, (RemoveValueProxyPhase'new-0))
-            this (PhaseSuite''appendPhase-2 this, (LoweringPhase'new-2 canonicalizer, :LoweringStage'HIGH_TIER))
-        ]
-            this
-        )
-    )
-)
-
-;;;
- ; A phase suite that applies canonicalization to a graph after all
- ; phases in the suite have been applied if any of the phases changed the graph.
- ;;
-(class-ns IncrementalCanonicalizerPhase [PhaseSuite, Phase]
-    (defn #_"IncrementalCanonicalizerPhase" IncrementalCanonicalizerPhase'new-2 [#_"CanonicalizerPhase" canonicalizer, #_"Phase" phase]
-        (let [
-            #_"IncrementalCanonicalizerPhase" this
-                (merge (IncrementalCanonicalizerPhase'class.) (PhaseSuite'new-0)
-                    (hash-map
-                        #_"CanonicalizerPhase" :canonicalizer canonicalizer
-                    )
-                )
-        ]
-            (PhaseSuite''appendPhase-2 this, phase)
-        )
-    )
-
-    ; @SuppressWarnings("try")
-    (defm IncrementalCanonicalizerPhase Phase
-        (#_"Graph" Phase'''run-2 [#_"IncrementalCanonicalizerPhase" this, #_"Graph" graph]
-            (let [
-                #_"HashSetNodeEventListener" listener (HashSetNodeEventListener'new-0)
-                graph
-                    (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 graph, listener)])
-                        (Phase'''run-2 (§ super #_"PhaseSuite"), graph)
-                    )
-            ]
-                (when (seq (:changedNodes listener))
-                    (CanonicalizerPhase''applyIncremental-3 (:canonicalizer this), graph, (:changedNodes listener))
-                )
-                graph
-            )
-        )
-    )
-)
-
-(class-ns LowTier [PhaseSuite, Phase]
-    (defn #_"LowTier" LowTier'new-0 []
-        (let [
-            #_"LowTier" this (merge (LowTier'class.) (PhaseSuite'new-0))
-            this (PhaseSuite''appendPhase-2 this, (LoweringPhase'new-2 (CanonicalizerPhase'new-0), :LoweringStage'LOW_TIER))
-            this (PhaseSuite''appendPhase-2 this, (ExpandLogicPhase'new-0))
-            this (PhaseSuite''appendPhase-2 this, (FixReadsPhase'new-1 (SchedulePhase'new-1 :SchedulingStrategy'LATEST_OUT_OF_LOOPS)))
-            this (PhaseSuite''appendPhase-2 this, (AddressLoweringPhase'new-1 (AddressLowering'new-1 HotSpot'heapBaseRegister)))
-            this (PhaseSuite''appendPhase-2 this, (CanonicalizerPhase'new-0))
-            this (PhaseSuite''appendPhase-2 this, (UseTrappingNullChecksPhase'new-0))
-            this (PhaseSuite''appendPhase-2 this, (PropagateDeoptimizeProbabilityPhase'new-0))
-            this (PhaseSuite''appendPhase-2 this, (SchedulePhase'new-1 :SchedulingStrategy'FINAL_SCHEDULE))
-        ]
-            this
-        )
-    )
-)
-
-(class-ns MidTier [PhaseSuite, Phase]
-    (defn #_"MidTier" MidTier'new-0 []
-        (let [
-            #_"MidTier" this (merge (MidTier'class.) (PhaseSuite'new-0))
-            #_"CanonicalizerPhase" canonicalizer (CanonicalizerPhase'new-0)
-            this (PhaseSuite''appendPhase-2 this, (LockEliminationPhase'new-0))
-            this
-                (when GraalOptions'optFloatingReads => this
-                    (PhaseSuite''appendPhase-2 this, (IncrementalCanonicalizerPhase'new-2 canonicalizer, (FloatingReadPhase'new-0)))
-                )
-            this
-                (when GraalOptions'conditionalElimination => this
-                    (PhaseSuite''appendPhase-2 this, (IterativeConditionalEliminationPhase'new-2 canonicalizer, true))
-                )
-            this (PhaseSuite''appendPhase-2 this, (GuardLoweringPhase'new-0))
-            this (PhaseSuite''appendPhase-2 this, (LoweringPhase'new-2 canonicalizer, :LoweringStage'MID_TIER))
-            this (PhaseSuite''appendPhase-2 this, (FrameStateAssignmentPhase'new-0))
-            this (PhaseSuite''appendPhase-2 this, canonicalizer)
-            this (PhaseSuite''appendPhase-2 this, (WriteBarrierAdditionPhase'new-0))
-        ]
-            this
-        )
-    )
-)
-
 (class-ns PhiInfoElement []
     (defn #_"PhiInfoElement" PhiInfoElement'new-0 []
         (merge (PhiInfoElement'class.)
@@ -54245,42 +53746,6 @@ ZeroExtendNode'new-4
 
     (defn #_"InfoElement" PhiInfoElement''get-2 [#_"PhiInfoElement" this, #_"EndNode" end]
         (get (:infoElements this) end)
-    )
-)
-
-(class-ns Plugins []
-    (defn #_"Plugins" Plugins'new-0 []
-        (merge (Plugins'class.)
-            (hash-map
-                #_"TypePlugin*" :typePlugins nil
-                #_"NodePlugin*" :nodePlugins nil
-            )
-        )
-    )
-
-    (defn- #_"this" Plugins''appendTypePlugin-2 [#_"Plugins" this, #_"TypePlugin" plugin] (update this :typePlugins conj' plugin))
-    (defn- #_"this" Plugins''appendNodePlugin-2 [#_"Plugins" this, #_"NodePlugin" plugin] (update this :nodePlugins conj' plugin))
-
-    ;;;
-     ; Creates a new set of plugins.
-     ;;
-    (defn #_"Plugins" Plugins'create-0 []
-        (let [
-            #_"HotSpotNodePlugin" nodePlugin (HotSpotNodePlugin'new-0)
-        ]
-            (-> (Plugins'new-0)
-                (Plugins''appendTypePlugin-2 nodePlugin)
-                (Plugins''appendNodePlugin-2 nodePlugin)
-            )
-        )
-    )
-
-    (defn #_"Stamp" Plugins''getOverridingStamp-4 [#_"Plugins" this, #_"BytecodeParser" parser, #_"JavaType" type, #_"boolean" never-nil?]
-        (loop-when [#_"seq" s (seq (:typePlugins this))] (some? s)
-            (or (TypePlugin'''interceptType-4 (first s), parser, type, never-nil?)
-                (recur (next s))
-            )
-        )
     )
 )
 
@@ -54399,54 +53864,48 @@ ZeroExtendNode'new-4
 ;;;
  ; This phase will make sure that the branch leading towards this deopt has 0.0 probability.
  ;;
-(class-ns PropagateDeoptimizeProbabilityPhase [Phase]
-    (defn #_"PropagateDeoptimizeProbabilityPhase" PropagateDeoptimizeProbabilityPhase'new-0 []
-        (PropagateDeoptimizeProbabilityPhase'class.)
-    )
-
-    (defm PropagateDeoptimizeProbabilityPhase Phase
-        (#_"Graph" Phase'''run-2 [#_"PropagateDeoptimizeProbabilityPhase" this, #_"Graph" graph]
-            (let [
-                ;; Mark all control flow nodes that are post-dominated by a deoptimization.
-                #_"{ControlSplitNode {AbstractBeginNode}}" splits
-                    (loop-when [splits {} #_"seq" s (seq (Graph''getNodes-2 graph, DeoptimizeNode))] (some? s) => splits
-                        (let [
-                            splits
-                                (loop-when [splits splits #_"Node*" stack (list (AbstractBeginNode'prevBegin-1 (first s)))] (seq stack) => splits
-                                    (let [
-                                        [#_"AbstractBeginNode" begin & stack] stack
-                                        #_"FixedNode" fixed (:predecessor begin)
-                                        [splits stack]
-                                            (when (some? fixed) => [splits stack] ;; Can happen for start node.
-                                                (condp satisfies? fixed
-                                                    AbstractMergeNode
-                                                        [splits (into stack (map AbstractBeginNode'prevBegin-1 (:ends fixed)))]
-                                                    ControlSplitNode
-                                                        (if (= (ControlSplitNode'''getSuccessorCount-1 fixed) (dec (count (get splits fixed))))
-                                                            ;; All successors of this split lead to deopt, propagate reachability further upwards.
-                                                            [(dissoc splits fixed) (cons (AbstractBeginNode'prevBegin-1 (:predecessor fixed)) stack)]
-                                                            [(update splits fixed #(conj (apply hash-set %) begin)) stack]
-                                                        )
-                                                    [splits (cons (AbstractBeginNode'prevBegin-1 fixed) stack)]
-                                                )
+(value-ns PropagateDeoptimizeProbabilityPhase
+    (defn #_"Graph" PropagateDeoptimizeProbabilityPhase'run-1 [#_"Graph" graph]
+        (let [
+            ;; Mark all control flow nodes that are post-dominated by a deoptimization.
+            #_"{ControlSplitNode {AbstractBeginNode}}" splits
+                (loop-when [splits {} #_"seq" s (seq (Graph''getNodes-2 graph, DeoptimizeNode))] (some? s) => splits
+                    (let [
+                        splits
+                            (loop-when [splits splits #_"Node*" stack (list (AbstractBeginNode'prevBegin-1 (first s)))] (seq stack) => splits
+                                (let [
+                                    [#_"AbstractBeginNode" begin & stack] stack
+                                    #_"FixedNode" fixed (:predecessor begin)
+                                    [splits stack]
+                                        (when (some? fixed) => [splits stack] ;; Can happen for start node.
+                                            (condp satisfies? fixed
+                                                AbstractMergeNode
+                                                    [splits (into stack (map AbstractBeginNode'prevBegin-1 (:ends fixed)))]
+                                                ControlSplitNode
+                                                    (if (= (ControlSplitNode'''getSuccessorCount-1 fixed) (dec (count (get splits fixed))))
+                                                        ;; All successors of this split lead to deopt, propagate reachability further upwards.
+                                                        [(dissoc splits fixed) (cons (AbstractBeginNode'prevBegin-1 (:predecessor fixed)) stack)]
+                                                        [(update splits fixed #(conj (apply hash-set %) begin)) stack]
+                                                    )
+                                                [splits (cons (AbstractBeginNode'prevBegin-1 fixed) stack)]
                                             )
-                                    ]
-                                        (recur splits stack)
-                                    )
+                                        )
+                                ]
+                                    (recur splits stack)
                                 )
-                        ]
-                            (recur splits (next s))
-                        )
-                    )
-            ]
-                ;; Make sure the probability on the path towards the deoptimization is 0.0.
-                (doseq [[#_"ControlSplitNode" split _] splits #_"AbstractBeginNode" begin _]
-                    (when-not (= (ControlSplitNode'''probability-2 split, begin) 0.0)
-                        (ControlSplitNode'''setProbability-3 split, begin, 0.0)
+                            )
+                    ]
+                        (recur splits (next s))
                     )
                 )
-                graph
+        ]
+            ;; Make sure the probability on the path towards the deoptimization is 0.0.
+            (doseq [[#_"ControlSplitNode" split _] splits #_"AbstractBeginNode" begin _]
+                (when-not (= (ControlSplitNode'''probability-2 split, begin) 0.0)
+                    (ControlSplitNode'''setProbability-3 split, begin, 0.0)
+                )
             )
+            graph
         )
     )
 )
@@ -54972,7 +54431,7 @@ ZeroExtendNode'new-4
                 [#_"ValueNode" value #_"Stamp" stamp] (first s)
                 ;; nodes from this map can be deleted when a loop dies
                 this
-                    (when-not (Node''isDeleted-1 value) => this
+                    (when-not (Node''isDeleted-1 value) => this
                         (RawConditionalEliminationVisitor''registerNewValueStamp-3 this, value, stamp)
                     )
             ]
@@ -55163,7 +54622,7 @@ ZeroExtendNode'new-4
                                                     (let [
                                                         #_"ValueNode" nodeWithNewStamp (nth (:undo this) i)
                                                         _
-                                                            (when-not (or (Node''isDeleted-1 nodeWithNewStamp) (satisfies? LogicNode nodeWithNewStamp) (satisfies? ConstantNode nodeWithNewStamp) (not (contains? node->block nodeWithNewStamp)))
+                                                            (when-not (or (Node''isDeleted-1 nodeWithNewStamp) (satisfies? LogicNode nodeWithNewStamp) (satisfies? ConstantNode nodeWithNewStamp) (not (contains? node->block nodeWithNewStamp)))
                                                                 (let [
                                                                     #_"Block" block (RawConditionalEliminationVisitor'getBlock-2 nodeWithNewStamp, node->block)
                                                                 ]
@@ -55536,34 +54995,28 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns RemoveValueProxyPhase [Phase]
-    (defn #_"RemoveValueProxyPhase" RemoveValueProxyPhase'new-0 []
-        (RemoveValueProxyPhase'class.)
-    )
-
-    (defm RemoveValueProxyPhase Phase
-        (#_"Graph" Phase'''run-2 [#_"RemoveValueProxyPhase" this, #_"Graph" graph]
-            (let [
-                _
-                    (doseq [#_"LoopExitNode" exit (Graph''getNodes-2 graph, LoopExitNode)]
-                        (let [
-                            _
-                                (doseq [#_"ValueProxyNode" vpn (§ snap (LoopExitNode''proxies-1 exit))]
-                                    (§ ass! vpn (Node''replaceAtUsagesAndDelete-2 vpn, (:value vpn)))
-                                )
-                            #_"FrameState" stateAfter (:stateAfter exit)
-                        ]
-                            (when (some? stateAfter)
-                                (§ ass! exit (StateSplit'''setStateAfter-2 exit, nil))
-                                (when (Node''hasNoUsages-1 stateAfter)
-                                    (GraphUtil'killWithUnusedFloatingInputs-1 stateAfter)
-                                )
+(value-ns RemoveValueProxyPhase
+    (defn #_"Graph" RemoveValueProxyPhase'run-1 [#_"Graph" graph]
+        (let [
+            _
+                (doseq [#_"LoopExitNode" exit (Graph''getNodes-2 graph, LoopExitNode)]
+                    (let [
+                        _
+                            (doseq [#_"ValueProxyNode" vpn (§ snap (LoopExitNode''proxies-1 exit))]
+                                (§ ass! vpn (Node''replaceAtUsagesAndDelete-2 vpn, (:value vpn)))
+                            )
+                        #_"FrameState" stateAfter (:stateAfter exit)
+                    ]
+                        (when (some? stateAfter)
+                            (§ ass! exit (StateSplit'''setStateAfter-2 exit, nil))
+                            (when (Node''hasNoUsages-1 stateAfter)
+                                (GraphUtil'killWithUnusedFloatingInputs-1 stateAfter)
                             )
                         )
                     )
-            ]
-                (Graph''setHasValueProxies-2 graph, false)
-            )
+                )
+        ]
+            (Graph''setHasValueProxies-2 graph, false)
         )
     )
 )
@@ -55885,9 +55338,9 @@ ZeroExtendNode'new-4
                                     #_"FixedNode" node (first s')
                                     [this nodes]
                                         (loop-when-recur [this (assoc-in this [:node->block node] block) nodes (conj' nodes node) #_"NodeEntry" e (:head (get mapping node))]
-                                                            (some? e)
-                                                            [(assoc-in this [:node->block (:node e)] block) (conj' nodes (:node e)) (:next e)]
-                                                        => [this nodes]
+                                                         (some? e)
+                                                         [(assoc-in this [:node->block (:node e)] block) (conj' nodes (:node e)) (:next e)]
+                                                      => [this nodes]
                                         )
                                 ]
                                     (recur this nodes (next s'))
@@ -56313,19 +55766,9 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SchedulePhase [Phase]
-    (defn #_"SchedulePhase" SchedulePhase'new-1 [#_"SchedulingStrategy" strategy]
-        (merge (SchedulePhase'class.)
-            (hash-map
-                #_"SchedulingStrategy" :selectedStrategy strategy
-            )
-        )
-    )
-
-    (defm SchedulePhase Phase
-        (#_"Graph" Phase'''run-2 [#_"SchedulePhase" this, #_"Graph" graph]
-            (Schedule''run-1 (Schedule'new-3 nil, graph, (:selectedStrategy this)))
-        )
+(value-ns SchedulePhase
+    (defn #_"Graph" SchedulePhase'run-2 [#_"Graph" graph, #_"SchedulingStrategy" strategy]
+        (Schedule''run-1 (Schedule'new-3 nil, graph, strategy))
     )
 )
 
@@ -56544,8 +55987,8 @@ ZeroExtendNode'new-4
                 )
             #_"ResolvedJavaMethod" method (:method (:info args))
             #_"Graph" graph (Graph'new-1 method)
-            graph (Phase'''run-2 (GraphBuilderPhase'new-0), graph)
-            graph (Phase'''run-2 (CanonicalizerPhase'new-0), graph)
+            graph (GraphBuilderPhase'run-1 graph)
+            graph (Simplifier'run-1 graph)
             ;; copy snippet graph replacing constant parameters with given arguments
             #_"Graph" snippet (Graph'new-1 method)
             _ (Graph''addDuplicates-4m snippet, (Graph''getNodes-1 graph), graph, { (:start graph) (:start snippet) })
@@ -56562,10 +56005,10 @@ ZeroExtendNode'new-4
             ;; perform lowering on the snippet
             snippet
                 (when-not (GuardsStage'allowsFloatingGuards-1 (:guardsStage args)) => snippet
-                    (Phase'''run-2 (GuardLoweringPhase'new-0), snippet)
+                    (GuardLoweringPhase'run-1 snippet)
                 )
             snippet (Graph''setGuardsStage-2 snippet, (:guardsStage args))
-            snippet (Phase'''run-2 (LoweringPhase'new-2 (CanonicalizerPhase'new-0), (:loweringStage args)), snippet)
+            snippet (LoweringPhase'run-2 snippet, (:loweringStage args))
             #_"ValueNode*" placeholderStampedNodes
                 (for [#_"Node" node (Graph''getNodes-1 snippet) :when (and (satisfies? ValueNode node) (= (:stamp node) PlaceholderStamp'SINGLETON))]
                     node
@@ -56591,8 +56034,8 @@ ZeroExtendNode'new-4
                 (for [#_"Node" node (Graph''getNodes-1 snippet) :when (and (satisfies? DeoptimizingNode node) (DeoptimizingNode'''canDeoptimize-1 node))]
                     node
                 )
-            snippet (Phase'''run-2 (FloatingReadPhase'new-2 true, true), snippet)
-            snippet (Phase'''run-2 (RemoveValueProxyPhase'new-0), snippet)
+            snippet (FloatingReadPhase'run-3 snippet, true, true)
+            snippet (RemoveValueProxyPhase'run-1 snippet)
             #_"MemoryAnchorNode" anchor (Graph''add-2 snippet, (MemoryAnchorNode'new-0))
             _ (Node''replaceAtUsages-3 (:start snippet), :InputType'Memory, anchor)
             this (assoc this :snippet snippet)
@@ -56684,7 +56127,7 @@ ZeroExtendNode'new-4
             this (assoc this :placeholderStampedNodes placeholderStampedNodes)
             this (assoc this :snippetNodes (remove #(any = % start (:stateAfter start)) (Graph''getNodes-1 (:snippet this))))
         ]
-            (update this :snippet Graph''freeze-1)
+            this
         )
     )
 
@@ -57130,12 +56573,6 @@ ZeroExtendNode'new-4
         (Stamp'class.)
     )
 
-    (defm Stamp Stamp
-        (#_"boolean" Stamp'''alwaysDistinct-2 [#_"Stamp" this, #_"Stamp" other]
-            (Stamp''isEmpty-1 (Stamp'''join-2 this, other))
-        )
-    )
-
     ;;;
      ; Tests whether this stamp represents an illegal value.
      ;;
@@ -57144,6 +56581,10 @@ ZeroExtendNode'new-4
     )
 
     (defm Stamp Stamp
+        (#_"boolean" Stamp'''alwaysDistinct-2 [#_"Stamp" this, #_"Stamp" other]
+            (Stamp''isEmpty-1 (Stamp'''join-2 this, other))
+        )
+
         (#_"boolean" Stamp'''isUnrestricted-1 [#_"Stamp" this]
             (= this (Stamp'''unrestricted-1 this))
         )
@@ -59957,11 +59398,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns UseTrappingNullChecksPhase [Phase]
-    (defn #_"UseTrappingNullChecksPhase" UseTrappingNullChecksPhase'new-0 []
-        (UseTrappingNullChecksPhase'class.)
-    )
-
+(value-ns UseTrappingNullChecksPhase
     (defn- #_"void" UseTrappingNullChecksPhase'replaceWithTrappingNullCheck-5 [#_"DeoptimizeNode" deopt, #_"IfNode" ifNode, #_"LogicNode" logic, #_"DeoptimizationReason" deoptimizationReason, #_"long" implicitNullCheckLimit]
         (let [
             #_"AbstractBeginNode" nonTrappingContinuation (:falseSuccessor ifNode)
@@ -60051,15 +59488,13 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defm UseTrappingNullChecksPhase Phase
-        (#_"Graph" Phase'''run-2 [#_"UseTrappingNullChecksPhase" this, #_"Graph" graph]
-            (when (and GraalOptions'useTrappingNullChecks (pos? AMD64'implicitNullCheckLimit))
-                (doseq [#_"DeoptimizeNode" deopt (Graph''getNodes-2 graph, DeoptimizeNode)]
-                    (UseTrappingNullChecksPhase'tryUseTrappingNullCheck-4 deopt, (:predecessor deopt), (:reason deopt), AMD64'implicitNullCheckLimit)
-                )
+    (defn #_"Graph" UseTrappingNullChecksPhase'run-1 [#_"Graph" graph]
+        (when (and GraalOptions'useTrappingNullChecks (pos? AMD64'implicitNullCheckLimit))
+            (doseq [#_"DeoptimizeNode" deopt (Graph''getNodes-2 graph, DeoptimizeNode)]
+                (UseTrappingNullChecksPhase'tryUseTrappingNullCheck-4 deopt, (:predecessor deopt), (:reason deopt), AMD64'implicitNullCheckLimit)
             )
-            graph
         )
+        graph
     )
 )
 
@@ -60499,11 +59934,11 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Forwards calls from VirtualizerTool to the actual PartialEscapeBlockState.
+ ; Forwards calls from Virtualizer to the actual PartialEscapeBlockState.
  ;;
-(class-ns VirtualizerTool [CanonicalizerTool]
-    (defn #_"VirtualizerTool" VirtualizerTool'new-1 [#_"PartialEscapeClosure" closure]
-        (merge (VirtualizerTool'class.)
+(class-ns Virtualizer [Canonicalizer]
+    (defn #_"Virtualizer" Virtualizer'new-1 [#_"PartialEscapeClosure" closure]
+        (merge (Virtualizer'class.)
             (hash-map
                 #_"PartialEscapeClosure" :closure closure
                 #_"ConstantNode" :illegalConstant nil
@@ -60516,7 +59951,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"this" VirtualizerTool''reset-5 [#_"VirtualizerTool" this, #_"PartialEscapeBlockState" state, #_"ValueNode" current, #_"FixedNode" position, #_"GraphEffects" effects]
+    (defn #_"this" Virtualizer''reset-5 [#_"Virtualizer" this, #_"PartialEscapeBlockState" state, #_"ValueNode" current, #_"FixedNode" position, #_"GraphEffects" effects]
         (let [
             this (assoc this :deleted false)
             this (assoc this :state state)
@@ -60528,187 +59963,251 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"ValueNode" VirtualizerTool''getIllegalConstant-1 [#_"VirtualizerTool" this]
+    (defn- #_"ValueNode" Virtualizer''getIllegalConstant-1 [#_"Virtualizer" this]
         (let [
             _
                 (when (nil? (:illegalConstant this))
                     (§ ass! this (assoc this :illegalConstant (ConstantNode'forConstant-1 (JavaConstant'forIllegal-0))))
-                    (§ ass! this (VirtualizerTool'''addNode-2 this, (:illegalConstant this)))
+                    (§ ass! this (Virtualizer''addNode-2 this, (:illegalConstant this)))
                 )
         ]
             (:illegalConstant this)
         )
     )
 
-    (defm VirtualizerTool VirtualizerTool
-        (#_"ValueNode" VirtualizerTool'''getAlias-2 [#_"VirtualizerTool" this, #_"ValueNode" value]
-            (PartialEscapeClosure''getAliasAndResolve-3 (:closure this), (:state this), value)
-        )
+    ;;;
+     ; Returns a VirtualObjectNode if the given value is aliased with a virtual object that is still
+     ; virtual, the materialized value of the given value is aliased with a virtual object that was
+     ; materialized, the replacement if the give value was replaced, otherwise the given value.
+     ;
+     ; Replacements via #replaceWithValue(ValueNode) are not immediately committed. This method can be
+     ; used to determine if a value was replaced by another one (e.g. a load field by the loaded value).
+     ;;
+    (defn #_"ValueNode" Virtualizer''getAlias-2 [#_"Virtualizer" this, #_"ValueNode" value]
+        (PartialEscapeClosure''getAliasAndResolve-3 (:closure this), (:state this), value)
+    )
 
-        (#_"ValueNode" VirtualizerTool'''getEntry-3 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index]
-            (ObjectState''getEntry-2 (nth (:objectStates (:state this)) (:oid virtualObject)), index)
-        )
+    (defn #_"ValueNode" Virtualizer''getEntry-3 [#_"Virtualizer" this, #_"VirtualObjectNode" virtualObject, #_"int" index]
+        (ObjectState''getEntry-2 (nth (:objectStates (:state this)) (:oid virtualObject)), index)
+    )
 
-        (#_"boolean" VirtualizerTool'''setVirtualEntry-6 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtual, #_"int" index, #_"ValueNode" value, #_"JavaKind" theAccessKind, #_"long" offset]
-            (let [
-                #_"ObjectState" obj (nth (:objectStates (:state this)) (:oid virtual))
-                #_"JavaKind" entryKind (VirtualObjectNode'''entryKind-2 virtual, index)
-                #_"JavaKind" accessKind (or theAccessKind entryKind)
-                #_"ValueNode" newValue (when (some? value) (PartialEscapeClosure''getAliasAndResolve-3 (:closure this), (:state this), value))
-                #_"ValueNode" oldValue (VirtualizerTool'''getEntry-3 this, virtual, index)
-                #_"boolean" canVirtualize
-                    (or (= entryKind accessKind) (and (= entryKind (JavaKind'getStackKind-1 accessKind)) (satisfies? VirtualInstanceNode virtual))
-                        ;; Special case: If the entryKind is long, allow arbitrary kinds as long as a value of the
-                        ;; same kind is already there. This can only happen if some other node initialized the entry with
-                        ;; a value of a different kind. One example where this happens is the Truffle NewFrameNode.
-                        (and (= entryKind :JavaKind'Long) (= (ValueNode''getStackKind-1 oldValue) (ValueNode''getStackKind-1 newValue)) (JavaKind'isPrimitive-1 (ValueNode''getStackKind-1 oldValue)))
-                        ;; Special case: Allow storing a single long or double value into two consecutive int slots.
-                        (and (= entryKind :JavaKind'Int) (= accessKind :JavaKind'Long) (zero? (% offset 8)) (not (= (VirtualObjectNode'''entryIndexForOffset-3 virtual, (+ offset 4), :JavaKind'Int) -1)))
-                    )
-            ]
-                (when canVirtualize => false ;; should only occur if there are mismatches between the entry and access kind
-                    (let [
-                        _ (§ ass! this (update this :state PartialEscapeBlockState''setEntry-4 (:oid virtual), index, newValue))
-                        _
-                            (when (= entryKind :JavaKind'Int)
-                                (cond
-                                    (JavaKind'needsTwoSlots-1 accessKind)
-                                        ;; storing double word value two int slots
-                                        (§ ass! this (update this :state PartialEscapeBlockState''setEntry-4 (:oid virtual), (inc index), (VirtualizerTool''getIllegalConstant-1 this)))
-                                    (= (ValueNode''getStackKind-1 oldValue) :JavaKind'Long)
-                                        ;; splitting double word constant by storing over it with an int
-                                        (let [
-                                            #_"ValueNode" secondHalf (UnpackEndianHalfNode'create-2 oldValue, false)
-                                        ]
-                                            (§ ass! this (VirtualizerTool'''addNode-2 this, secondHalf))
-                                            (§ ass! this (update this :state PartialEscapeBlockState''setEntry-4 (:oid virtual), (inc index), secondHalf))
-                                        )
-                                )
+    ;;;
+     ; Sets the entry (field or array element) with the given index in the virtualized object.
+     ;
+     ; @param index the index to be set.
+     ; @param value the new value for the given index.
+     ; @param accessKind the kind of the store which might be different than VirtualObjectNode#entryKind(int)
+     ; @return true if the operation was permitted
+     ;;
+    (defn #_"boolean" Virtualizer''setVirtualEntry-6 [#_"Virtualizer" this, #_"VirtualObjectNode" virtual, #_"int" index, #_"ValueNode" value, #_"JavaKind" theAccessKind, #_"long" offset]
+        (let [
+            #_"ObjectState" obj (nth (:objectStates (:state this)) (:oid virtual))
+            #_"JavaKind" entryKind (VirtualObjectNode'''entryKind-2 virtual, index)
+            #_"JavaKind" accessKind (or theAccessKind entryKind)
+            #_"ValueNode" newValue (when (some? value) (PartialEscapeClosure''getAliasAndResolve-3 (:closure this), (:state this), value))
+            #_"ValueNode" oldValue (Virtualizer''getEntry-3 this, virtual, index)
+            #_"boolean" canVirtualize
+                (or (= entryKind accessKind) (and (= entryKind (JavaKind'getStackKind-1 accessKind)) (satisfies? VirtualInstanceNode virtual))
+                    ;; Special case: If the entryKind is long, allow arbitrary kinds as long as a value of the
+                    ;; same kind is already there. This can only happen if some other node initialized the entry with
+                    ;; a value of a different kind. One example where this happens is the Truffle NewFrameNode.
+                    (and (= entryKind :JavaKind'Long) (= (ValueNode''getStackKind-1 oldValue) (ValueNode''getStackKind-1 newValue)) (JavaKind'isPrimitive-1 (ValueNode''getStackKind-1 oldValue)))
+                    ;; Special case: Allow storing a single long or double value into two consecutive int slots.
+                    (and (= entryKind :JavaKind'Int) (= accessKind :JavaKind'Long) (zero? (% offset 8)) (not (= (VirtualObjectNode'''entryIndexForOffset-3 virtual, (+ offset 4), :JavaKind'Int) -1)))
+                )
+        ]
+            (when canVirtualize => false ;; should only occur if there are mismatches between the entry and access kind
+                (let [
+                    _ (§ ass! this (update this :state PartialEscapeBlockState''setEntry-4 (:oid virtual), index, newValue))
+                    _
+                        (when (= entryKind :JavaKind'Int)
+                            (cond
+                                (JavaKind'needsTwoSlots-1 accessKind)
+                                    ;; storing double word value two int slots
+                                    (§ ass! this (update this :state PartialEscapeBlockState''setEntry-4 (:oid virtual), (inc index), (Virtualizer''getIllegalConstant-1 this)))
+                                (= (ValueNode''getStackKind-1 oldValue) :JavaKind'Long)
+                                    ;; splitting double word constant by storing over it with an int
+                                    (let [
+                                        #_"ValueNode" secondHalf (UnpackEndianHalfNode'create-2 oldValue, false)
+                                    ]
+                                        (§ ass! this (Virtualizer''addNode-2 this, secondHalf))
+                                        (§ ass! this (update this :state PartialEscapeBlockState''setEntry-4 (:oid virtual), (inc index), secondHalf))
+                                    )
                             )
-                        _
-                            (when (and (satisfies? ConstantNode oldValue) (= (:value oldValue) (JavaConstant'forIllegal-0)))
-                                ;; storing into second half of double, so replace previous value
-                                (let [
-                                    #_"ValueNode" previous (VirtualizerTool'''getEntry-3 this, virtual, (dec index))
-                                    #_"ValueNode" firstHalf (UnpackEndianHalfNode'create-2 previous, true)
-                                ]
-                                    (§ ass! this (VirtualizerTool'''addNode-2 this, firstHalf))
-                                    (§ ass! this (update this :state PartialEscapeBlockState''setEntry-4 (:oid virtual), (dec index), firstHalf))
-                                )
+                        )
+                    _
+                        (when (and (satisfies? ConstantNode oldValue) (= (:value oldValue) (JavaConstant'forIllegal-0)))
+                            ;; storing into second half of double, so replace previous value
+                            (let [
+                                #_"ValueNode" previous (Virtualizer''getEntry-3 this, virtual, (dec index))
+                                #_"ValueNode" firstHalf (UnpackEndianHalfNode'create-2 previous, true)
+                            ]
+                                (§ ass! this (Virtualizer''addNode-2 this, firstHalf))
+                                (§ ass! this (update this :state PartialEscapeBlockState''setEntry-4 (:oid virtual), (dec index), firstHalf))
                             )
-                    ]
-                        true
-                    )
+                        )
+                ]
+                    true
                 )
             )
         )
+    )
 
-        (#_"this" VirtualizerTool'''setVirtualEntry-4 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"int" index, #_"ValueNode" value]
-            (when-not (VirtualizerTool'''setVirtualEntry-6 this, virtualObject, index, value, nil, 0)
-                (throw! "unexpected failure when updating virtual entry")
-            )
-            this
+    (defn #_"this" Virtualizer''setVirtualEntry-4 [#_"Virtualizer" this, #_"VirtualObjectNode" virtualObject, #_"int" index, #_"ValueNode" value]
+        (when-not (Virtualizer''setVirtualEntry-6 this, virtualObject, index, value, nil, 0)
+            (throw! "unexpected failure when updating virtual entry")
         )
+        this
+    )
 
-        (#_"this" VirtualizerTool'''replaceWithVirtual-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" object]
-            (let [
-                this (update this :closure PartialEscapeClosure''addVirtualAlias-3 object, (:current this))
-                this (update this :effects GraphEffects''deleteNode-2 (:current this))
-            ]
-                (assoc this :deleted true)
-            )
-        )
-
-        (#_"this" VirtualizerTool'''replaceWithValue-2 [#_"VirtualizerTool" this, #_"ValueNode" replacement]
-            (let [
-                this (update this :effects GraphEffects''replaceAtUsages-4 (:current this), (EffectsClosure''getScalarAlias-2 (:closure this), replacement), (:position this))
-                this (update this :closure EffectsClosure''addScalarAlias-3 (:current this), replacement)
-            ]
-                (assoc this :deleted true)
-            )
-        )
-
-        (#_"this" VirtualizerTool'''delete-1 [#_"VirtualizerTool" this]
-            (let [
-                this (update this :effects GraphEffects''deleteNode-2 (:current this))
-            ]
-                (assoc this :deleted true)
-            )
-        )
-
-        (#_"this" VirtualizerTool'''replaceFirstInput-3 [#_"VirtualizerTool" this, #_"Node" oldInput, #_"Node" replacement]
-            (update this :effects GraphEffects''replaceFirstInput-4 (:current this), oldInput, replacement)
-        )
-
-        (#_"this" VirtualizerTool'''addNode-2 [#_"VirtualizerTool" this, #_"ValueNode" node]
-            (if (satisfies? FloatingNode node)
-                (update this :effects GraphEffects''addFloatingNode-2 node)
-                (update this :effects GraphEffects''addFixedNodeBefore-3 node, (:position this))
-            )
-        )
-
-        (#_"this" VirtualizerTool'''createVirtualObject-5 [#_"VirtualizerTool" this, #_"VirtualObjectNode" virtualObject, #_"[ValueNode]" entryState, #_"MonitorIdNode*" locks, #_"boolean" ensureVirtualized]
-            (let [
-                this
-                    (when-not (Node''isAlive-1 virtualObject) => this
-                        (update this :effects GraphEffects''addFloatingNode-2 virtualObject)
-                    )
-                _
-                    (dotimes [#_"int" i (count entryState)]
-                        (§ ass! entryState (update' entryState i #(if (satisfies? VirtualObjectNode %) % (PartialEscapeClosure''getAliasAndResolve-3 (:closure this), (:state this), %))))
-                    )
-                #_"int" id (:oid virtualObject)
-                [this id]
-                    (when (= id -1) => [this id]
-                        (let [
-                            id (count (:peVirtualObjects (:closure this)))
-                            this (update-in this [:closure :peVirtualObjects] conj' virtualObject)
-                            _ (§ ass! virtualObject (VirtualObjectNode''setObjectId-2 virtualObject, id))
-                        ]
-                            [this id]
-                        )
-                    )
-                this (update this :state PartialEscapeBlockState''addObject-3 id, (ObjectState'new-3m entryState, locks, ensureVirtualized))
-                this (update this :closure PartialEscapeClosure''addVirtualAlias-3 virtualObject, virtualObject)
-            ]
-                (update this :effects GraphEffects''addVirtualizationDelta-2 1)
-            )
-        )
-
-        (#_"int" VirtualizerTool'''getMaximumEntryCount-1 [#_"VirtualizerTool" this]
-            GraalOptions'maximumEscapeAnalysisArrayLength
-        )
-
-        (#_"this" VirtualizerTool'''replaceWith-2 [#_"VirtualizerTool" this, #_"ValueNode" node]
-            (if (satisfies? VirtualObjectNode node)
-                (VirtualizerTool'''replaceWithVirtual-2 this, node)
-                (VirtualizerTool'''replaceWithValue-2 this, node)
-            )
-        )
-
-        (#_"boolean" VirtualizerTool'''ensureMaterialized-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" object]
-            (PartialEscapeClosure''ensureMaterialized-5 (:closure this), (:state this), (:oid object), (:position this), (:effects this))
-        )
-
-        (#_"this" VirtualizerTool'''addLock-3 [#_"VirtualizerTool" this, #_"VirtualObjectNode" object, #_"MonitorIdNode" monitorId]
-            (update this :state PartialEscapeBlockState''addLock-3 (:oid object), monitorId)
-        )
-
-        (#_"this" VirtualizerTool'''removeLock-2 [#_"VirtualizerTool" this, #_"VirtualObjectNode" object]
-            (update this :state PartialEscapeBlockState''removeLock-2 (:oid object))
+    ;;;
+     ; Deletes the current node and replaces it with the given virtualized object.
+     ;
+     ; @param virtualObject the virtualized object that should replace the current node.
+     ;;
+    (defn #_"this" Virtualizer''replaceWithVirtual-2 [#_"Virtualizer" this, #_"VirtualObjectNode" object]
+        (let [
+            this (update this :closure PartialEscapeClosure''addVirtualAlias-3 object, (:current this))
+            this (update this :effects GraphEffects''deleteNode-2 (:current this))
+        ]
+            (assoc this :deleted true)
         )
     )
 
-    (defm VirtualizerTool CanonicalizerTool
-        (#_"boolean" CanonicalizerTool'''canonicalizeReads-1 [#_"VirtualizerTool" this]
+    ;;;
+     ; Deletes the current node and replaces it with the given value.
+     ;
+     ; @param replacement the value that should replace the current node.
+     ;;
+    (defn #_"this" Virtualizer''replaceWithValue-2 [#_"Virtualizer" this, #_"ValueNode" replacement]
+        (let [
+            this (update this :effects GraphEffects''replaceAtUsages-4 (:current this), (EffectsClosure''getScalarAlias-2 (:closure this), replacement), (:position this))
+            this (update this :closure EffectsClosure''addScalarAlias-3 (:current this), replacement)
+        ]
+            (assoc this :deleted true)
+        )
+    )
+
+    ;;;
+     ; Deletes the current node.
+     ;;
+    (defn #_"this" Virtualizer''delete-1 [#_"Virtualizer" this]
+        (let [
+            this (update this :effects GraphEffects''deleteNode-2 (:current this))
+        ]
+            (assoc this :deleted true)
+        )
+    )
+
+    ;;;
+     ; Replaces an input of the current node.
+     ;
+     ; @param oldInput the old input value.
+     ; @param replacement the new input value.
+     ;;
+    #_unused
+    (defn #_"this" Virtualizer''replaceFirstInput-3 [#_"Virtualizer" this, #_"Node" oldInput, #_"Node" replacement]
+        (update this :effects GraphEffects''replaceFirstInput-4 (:current this), oldInput, replacement)
+    )
+
+    ;;;
+     ; Adds the given node to the graph.This action will only be performed when, and if, the changes are committed.
+     ;
+     ; @param node the node to add.
+     ;;
+    (defn #_"this" Virtualizer''addNode-2 [#_"Virtualizer" this, #_"ValueNode" node]
+        (if (satisfies? FloatingNode node)
+            (update this :effects GraphEffects''addFloatingNode-2 node)
+            (update this :effects GraphEffects''addFixedNodeBefore-3 node, (:position this))
+        )
+    )
+
+    ;;;
+     ; Introduces a new virtual object to the current state.
+     ;
+     ; @param virtualObject the new virtual object.
+     ; @param entryState the initial state of the virtual object's fields.
+     ; @param locks the initial locking depths.
+     ; @param ensureVirtualized true if this object needs to stay virtual
+     ;;
+    (defn #_"this" Virtualizer''createVirtualObject-5 [#_"Virtualizer" this, #_"VirtualObjectNode" virtualObject, #_"[ValueNode]" entryState, #_"MonitorIdNode*" locks, #_"boolean" ensureVirtualized]
+        (let [
+            this
+                (when-not (Node''isAlive-1 virtualObject) => this
+                    (update this :effects GraphEffects''addFloatingNode-2 virtualObject)
+                )
+            _
+                (dotimes [#_"int" i (count entryState)]
+                    (§ ass! entryState (update' entryState i #(if (satisfies? VirtualObjectNode %) % (PartialEscapeClosure''getAliasAndResolve-3 (:closure this), (:state this), %))))
+                )
+            #_"int" id (:oid virtualObject)
+            [this id]
+                (when (= id -1) => [this id]
+                    (let [
+                        id (count (:peVirtualObjects (:closure this)))
+                        this (update-in this [:closure :peVirtualObjects] conj' virtualObject)
+                        _ (§ ass! virtualObject (VirtualObjectNode''setObjectId-2 virtualObject, id))
+                    ]
+                        [this id]
+                    )
+                )
+            this (update this :state PartialEscapeBlockState''addObject-3 id, (ObjectState'new-3m entryState, locks, ensureVirtualized))
+            this (update this :closure PartialEscapeClosure''addVirtualAlias-3 virtualObject, virtualObject)
+        ]
+            (update this :effects GraphEffects''addVirtualizationDelta-2 1)
+        )
+    )
+
+    ;;;
+     ; This method should be used to query the maximum size of virtualized objects before attempting virtualization.
+     ;
+     ; @return the maximum number of entries for virtualized objects
+     ;;
+    (defn #_"int" Virtualizer''getMaximumEntryCount-1 [#_"Virtualizer" this]
+        GraalOptions'maximumEscapeAnalysisArrayLength
+    )
+
+    ;;;
+     ; This method performs either #replaceWithValue(ValueNode) or #replaceWithVirtual(VirtualObjectNode),
+     ; depending on the given value.
+     ;
+     ; @param value the replacement value
+     ;;
+    (defn #_"this" Virtualizer''replaceWith-2 [#_"Virtualizer" this, #_"ValueNode" node]
+        (if (satisfies? VirtualObjectNode node)
+            (Virtualizer''replaceWithVirtual-2 this, node)
+            (Virtualizer''replaceWithValue-2 this, node)
+        )
+    )
+
+    ;;;
+     ; If state is virtual, materialization is performed for the given state.
+     ;
+     ; @return true if materialization happened, false if not
+     ;;
+    #_unused
+    (defn #_"boolean" Virtualizer''ensureMaterialized-2 [#_"Virtualizer" this, #_"VirtualObjectNode" object]
+        (PartialEscapeClosure''ensureMaterialized-5 (:closure this), (:state this), (:oid object), (:position this), (:effects this))
+    )
+
+    (defn #_"this" Virtualizer''addLock-3 [#_"Virtualizer" this, #_"VirtualObjectNode" object, #_"MonitorIdNode" monitorId]
+        (update this :state PartialEscapeBlockState''addLock-3 (:oid object), monitorId)
+    )
+
+    (defn #_"this" Virtualizer''removeLock-2 [#_"Virtualizer" this, #_"VirtualObjectNode" object]
+        (update this :state PartialEscapeBlockState''removeLock-2 (:oid object))
+    )
+
+    (defm Virtualizer Canonicalizer
+        (#_"boolean" Canonicalizer'''canonicalizeReads-1 [#_"Virtualizer" this]
             false
         )
 
-        (#_"boolean" CanonicalizerTool'''allUsagesAvailable-1 [#_"VirtualizerTool" this]
+        (#_"boolean" Canonicalizer'''allUsagesAvailable-1 [#_"Virtualizer" this]
             true
         )
 
-        (#_"Integer" CanonicalizerTool'''smallestCompareWidth-1 [#_"VirtualizerTool" this]
+        (#_"Integer" Canonicalizer'''smallestCompareWidth-1 [#_"Virtualizer" this]
             (Lowerer'smallestCompareWidth-0)
         )
     )
@@ -61870,11 +61369,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns WriteBarrierAdditionPhase [Phase]
-    (defn #_"WriteBarrierAdditionPhase" WriteBarrierAdditionPhase'new-0 []
-        (WriteBarrierAdditionPhase'class.)
-    )
-
+(value-ns WriteBarrierAdditionPhase
     (defn- #_"void" WriteBarrierAdditionPhase'addG1PreWriteBarrier-6 [#_"FixedAccessNode" node, #_"AddressNode" address, #_"ValueNode" value, #_"boolean" doLoad, #_"boolean" nullCheck, #_"Graph" graph]
         (let [
             #_"G1PreWriteBarrier" preBarrier (Graph''add-2 graph, (G1PreWriteBarrier'new-4 address, value, doLoad, nullCheck))
@@ -61965,19 +61460,17 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defm WriteBarrierAdditionPhase Phase
-        (#_"Graph" Phase'''run-2 [#_"WriteBarrierAdditionPhase" this, #_"Graph" graph]
-            (doseq [#_"Node" node (Graph''getNodes-1 graph)]
-                (condp satisfies? node
-                    ReadNode                      (WriteBarrierAdditionPhase'addReadNodeBarriers-2 node, graph)
-                    WriteNode                     (WriteBarrierAdditionPhase'addWriteNodeBarriers-2 node, graph)
-                    LoweredAtomicReadAndWriteNode (WriteBarrierAdditionPhase'addAtomicReadWriteNodeBarriers-2 node, graph)
-                    AbstractCompareAndSwapNode    (WriteBarrierAdditionPhase'addCASBarriers-2 node, graph)
-                    nil
-                )
+    (defn #_"Graph" WriteBarrierAdditionPhase'run-1 [#_"Graph" graph]
+        (doseq [#_"Node" node (Graph''getNodes-1 graph)]
+            (condp satisfies? node
+                ReadNode                      (WriteBarrierAdditionPhase'addReadNodeBarriers-2 node, graph)
+                WriteNode                     (WriteBarrierAdditionPhase'addWriteNodeBarriers-2 node, graph)
+                LoweredAtomicReadAndWriteNode (WriteBarrierAdditionPhase'addAtomicReadWriteNodeBarriers-2 node, graph)
+                AbstractCompareAndSwapNode    (WriteBarrierAdditionPhase'addCASBarriers-2 node, graph)
+                nil
             )
-            graph
         )
+        graph
     )
 )
 
@@ -62159,15 +61652,64 @@ ZeroExtendNode'new-4
         )
     )
 
+    ; @SuppressWarnings("try")
     (defn- #_"Graph" Compiler'emitFrontEnd-1 [#_"Graph" graph]
         (let [
             graph
                 (when (nil? (:next (:start graph))) => graph
-                    (Phase'''run-2 (GraphBuilderPhase'new-0), graph)
+                    (GraphBuilderPhase'run-1 graph)
                 )
-            graph (Phase'''run-2 (HighTier'new-0), graph)
-            graph (Phase'''run-2 (MidTier'new-0), graph)
-            graph (Phase'''run-2 (LowTier'new-0), graph)
+            ;;; HighTier
+            graph (Simplifier'run-1 graph)
+            graph
+                (when GraalOptions'conditionalElimination => graph
+                    (IterativeConditionalEliminationPhase'run-2 graph, false)
+                )
+            graph (Simplifier'run-1 graph)
+            graph
+                (when GraalOptions'partialEscapeAnalysis => graph
+                    (PartialEscapePhase'run-1 graph)
+                )
+            graph
+                (when GraalOptions'optReadElimination => graph
+                    (EarlyReadEliminationPhase'run-1 graph)
+                )
+            graph (RemoveValueProxyPhase'run-1 graph)
+            graph (LoweringPhase'run-2 graph, :LoweringStage'HIGH_TIER)
+            ;;; MidTier
+            graph (LockEliminationPhase'run-1 graph)
+            graph
+                (when GraalOptions'optFloatingReads => graph
+                    (let [
+                        #_"HashSetNodeEventListener" listener (HashSetNodeEventListener'new-0)
+                        graph
+                            (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 graph, listener)])
+                                (FloatingReadPhase'run-3 graph, true, false)
+                            )
+                    ]
+                        (when (seq (:changedNodes listener)) => graph
+                            (Simplifier'run-2 graph, (:changedNodes listener))
+                        )
+                    )
+                )
+            graph
+                (when GraalOptions'conditionalElimination => graph
+                    (IterativeConditionalEliminationPhase'run-2 graph, true)
+                )
+            graph (GuardLoweringPhase'run-1 graph)
+            graph (LoweringPhase'run-2 graph, :LoweringStage'MID_TIER)
+            graph (FrameStateAssignmentPhase'run-1 graph)
+            graph (Simplifier'run-1 graph)
+            graph (WriteBarrierAdditionPhase'run-1 graph)
+            ;;; LowTier
+            graph (LoweringPhase'run-2 graph, :LoweringStage'LOW_TIER)
+            graph (ExpandLogicPhase'run-1 graph)
+            graph (FixReadsPhase''run-1 graph)
+            graph (AddressLoweringPhase'run-2 graph, (AddressLowering'new-1 HotSpot'heapBaseRegister))
+            graph (Simplifier'run-1 graph)
+            graph (UseTrappingNullChecksPhase'run-1 graph)
+            graph (PropagateDeoptimizeProbabilityPhase'run-1 graph)
+            graph (SchedulePhase'run-2 graph, :SchedulingStrategy'FINAL_SCHEDULE)
         ]
             graph
         )
