@@ -404,8 +404,6 @@ AddressLoweringPhase'run-2
 AddressNode'new-0
 AllocatableRegisters'new-3
 AllocatableValue'new-1
-AllocatedObjectNode''setCommit-2
-AllocatedObjectNode'new-1
 Allocator'allocate-1
 And'new-2
 AndNode'create-2
@@ -689,7 +687,6 @@ BlockClosure''addRegisterHint-6
 BlockClosure''processInstructionBottomUp-2
 BlockClosure'new-2
 BlockData'new-0
-BlockLoopInfo'new-0
 BlockScope''doBlockStart-1
 BlockScope'new-2
 BlockStates'new-1
@@ -887,7 +884,6 @@ CFOptimizer'new-1
 CLOptimization'apply-2
 CRuntimeCallEpilogueOp'new-4
 CRuntimeCallPrologueOp'new-2
-CacheEntry'new-2
 CallOp'new-3
 CallTargetNode''setInvokeKind-2
 CallTargetNode''setTargetMethod-2
@@ -942,10 +938,6 @@ CodeBuffer''getShort-2
 CodeBuffer''position-1
 CodeBuffer'InitialSize
 CodeBuffer'new-1
-CollectVirtualObjectsClosure'new-4
-CommitAllocationNode''addLocks-2
-CommitAllocationNode''getLocks-2
-CommitAllocationNode'new-0
 CommutativeTwoOp'new-5
 CompareAndSwapOp'new-5
 CompareNode''isIdentityComparison-1
@@ -1170,7 +1162,6 @@ DummyGuardHandle'new-1
 EMOptimizer''optimizeMovesAtBlockBegin-2
 EMOptimizer''optimizeMovesAtBlockEnd-2
 EMOptimizer'new-1
-EarlyReadEliminationPhase'run-1
 EdgeInfo'new-4
 EdgeMoveOptimizer'new-0
 Edges''copy-3
@@ -1188,22 +1179,12 @@ Edges'putNodeListUnsafe-3
 Edges'putNodeUnsafe-3
 Edges'translateInto-2
 EdgesType'SET
-EffectsBlockState'isSubMapOf-2
-EffectsBlockState'new-0
-EffectsClosure''addScalarAlias-3
-EffectsClosure''getScalarAlias-2
-EffectsClosure''hasScalarReplacedInputs-2
-EffectsClosure'new-2
-EffectsPhase''runAnalysis-2
-EffectsPhase'new-1
-EffectsPhase'new-2
 EffortClosure''getAverageEffort-1
 EffortClosure'new-2
 EndLockScopeNode'new-0
 EndNode'new-0
 EpilogueBlockEndOp''leaveFrameAndRestoreRbp-2
 EpilogueBlockEndOp'new-0
-EscapeObjectState'new-1
 ExecutableRef''resolve-3
 ExecutableRef'new-2
 ExpandLogicPhase'run-1
@@ -1338,25 +1319,18 @@ GetClassNode'tryFold-1
 GetObjectAddressNode'new-1
 GraalOptions'canOmitFrame
 GraalOptions'conditionalElimination
-GraalOptions'escapeAnalysisIterations
-GraalOptions'escapeAnalysisLoopCutoff
 GraalOptions'lirOptLSRAEliminateSpillMoves
 GraalOptions'lirOptLSRAOptimizeSpillPosition
 GraalOptions'lirOptimization
 GraalOptions'lsraOptSplitOnly
 GraalOptions'lsraOptimization
-GraalOptions'maximumEscapeAnalysisArrayLength
 GraalOptions'mitigateSpeculativeExecutionAttacks
 GraalOptions'optClearNonLiveLocals
-GraalOptions'optEarlyReadElimination
 GraalOptions'optEliminateGuards
 GraalOptions'optFloatingReads
 GraalOptions'optImplicitNullChecks
-GraalOptions'optReadElimination
 GraalOptions'optScheduleOutOfLoops
-GraalOptions'partialEscapeAnalysis
 GraalOptions'rawConditionalElimination
-GraalOptions'readEliminationMaxLoopVisits
 GraalOptions'replaceInputsWithConstantsBasedOnStamps
 GraalOptions'simpleFastInflatedLocking
 GraalOptions'trustFinalDefaultFields
@@ -1376,7 +1350,6 @@ Graph''getNodes-2
 Graph''getParameter-2
 Graph''getReturnStamp-1
 Graph''hasLoops-1
-Graph''hasVirtualizableAllocation-1
 Graph''maybeAddOrUnique-2
 Graph''reduceDegenerateLoopBegin-2
 Graph''reduceTrivialMerge-2
@@ -1398,23 +1371,6 @@ Graph''setHasValueProxies-2
 Graph''unregister-2
 Graph'new-1
 GraphBuilderPhase'run-1
-GraphEffects''add-2
-GraphEffects''addAll-2
-GraphEffects''addFixedNodeBefore-3
-GraphEffects''addFloatingNode-2
-GraphEffects''addVirtualMapping-3
-GraphEffects''addVirtualizationDelta-2
-GraphEffects''apply-4
-GraphEffects''clear-1
-GraphEffects''deleteNode-2
-GraphEffects''initializePhiInput-4
-GraphEffects''insertAll-3
-GraphEffects''isEmpty-1
-GraphEffects''killIfBranch-3
-GraphEffects''replaceAtUsages-4
-GraphEffects''replaceFirstInput-4
-GraphEffects''replaceWithSink-3
-GraphEffects'new-0
 GraphUtil'arrayLength-1
 GraphUtil'checkRedundantPhi-1
 GraphUtil'checkRedundantProxy-1
@@ -2045,7 +2001,6 @@ LinearScanWalker''splitStackInterval-2
 LinearScanWalker''splitWhenPartialRegisterAvailable-3
 LinearScanWalker'isMove-3
 LinearScanWalker'new-3
-LoadCacheEntry'new-2
 LoadConfigValueOp'new-2
 LoadFieldNode'create-2
 LoadFieldNode'create-4
@@ -2082,8 +2037,6 @@ LockEliminationPhase'run-1
 LockStack''makeLockSlot-2
 LockStack'new-2
 LockStackHolder'new-1
-LockState'asList-1
-LockState'new-2
 LogicCompareAndSwapNode'new-4
 LogicCompareAndSwapNode'new-5
 LogicConstantNode'contradiction-0
@@ -2121,12 +2074,6 @@ LoopEndNode'new-1
 LoopExitNode''proxies-1
 LoopExitNode''removeProxies-1
 LoopExitNode'new-1
-LoopKillCache''containsLocation-2
-LoopKillCache''loopKillsLocations-1
-LoopKillCache''rememberLoopKilledLocation-2
-LoopKillCache''setKillsAll-1
-LoopKillCache''visited-1
-LoopKillCache'new-1
 LowerGuards'new-1
 LowerOp''getSucceedingStampForX-5
 LowerOp''getSucceedingStampForXLowerXPlusA-4
@@ -2176,7 +2123,6 @@ MOp'new-4
 MROp'new-4
 MapReplacement'new-1
 MaterializationUsageReplacer'new-5
-MaterializedObjectState'new-2
 MathUtil'add-3
 MathUtil'mul-3
 MathUtil'sub-3
@@ -2215,15 +2161,6 @@ MemoryRMOp'new-4
 MemoryTwoOp'new-5
 MemoryVMConstOp'new-3
 MergeNode'new-0
-MergeProcessor''createValuePhi-2
-MergeProcessor''getPhiValueAt-3
-MergeProcessor''getPhis-1
-MergeProcessor''getPredecessor-2
-MergeProcessor''graph-1
-MergeProcessor''setNewState-2
-MergeProcessor''setPhiInput-4
-MergeProcessor''setStateIndexes-2
-MergeProcessor'new-1
 MetaReflection'encodeDeoptActionAndReason-2
 MetaReflection'lookupJavaType-1c
 MetaReflection'lookupJavaType-1j
@@ -2321,10 +2258,8 @@ Neg'new-0
 NegateNode'create-1
 NegateNode'findSynonym-1
 NegateNode'new-1
-NewArrayNode''createVirtualArrayNode-2
 NewArrayNode''defaultElementValue-1
 NewArrayNode'new-2
-NewInstanceNode''createVirtualInstanceNode-2
 NewInstanceNode''defaultFieldValue-2
 NewInstanceNode'new-1
 NewObjectTemplates''lower-3a
@@ -2431,20 +2366,6 @@ ObjectEqualsNode'createCanonical-2
 ObjectEqualsNode'new-2
 ObjectEqualsOp'new-0
 ObjectStamp'new-4
-ObjectState''addLock-2
-ObjectState''createEscapeObjectState-2
-ObjectState''escape-2
-ObjectState''getEntry-2
-ObjectState''hasLocks-1
-ObjectState''isVirtual-1
-ObjectState''locksEqual-2
-ObjectState''removeLock-1
-ObjectState''setEnsureVirtualized-2
-ObjectState''setEntry-3
-ObjectState''updateMaterializedValue-2
-ObjectState'new-3m
-ObjectState'new-3s
-ObjectState'new-3v
 ObjectWriteBarrier'new-3
 OffsetAddressNode'create-1
 OffsetAddressNode'new-2
@@ -2456,35 +2377,7 @@ OptimizingLinearScanWalker'new-3
 Or'new-2
 OrNode'create-2
 OrNode'new-2
-PEReadEliminationBlockState''addReadCache-8
-PEReadEliminationBlockState''getReadCache-6
-PEReadEliminationBlockState''killReadCache-1
-PEReadEliminationBlockState''killReadCache-3
-PEReadEliminationBlockState'new-0
-PEReadEliminationClosure'new-1
-PEReadEliminationMergeProcessor'new-2
 ParameterNode'new-2
-PartialEscapeBlockState''addLock-3
-PartialEscapeBlockState''addObject-3
-PartialEscapeBlockState''contains-2
-PartialEscapeBlockState''escape-3
-PartialEscapeBlockState''materializeBefore-4
-PartialEscapeBlockState''removeLock-2
-PartialEscapeBlockState''resetObjectStates-1
-PartialEscapeBlockState''setEntry-4
-PartialEscapeBlockState''updateMaterializedValue-3
-PartialEscapeBlockState'identicalObjectStates-1
-PartialEscapeBlockState'identicalObjectStates-2
-PartialEscapeBlockState'new-0
-PartialEscapeClosure''addVirtualAlias-3
-PartialEscapeClosure''ensureMaterialized-5
-PartialEscapeClosure''getAlias-2
-PartialEscapeClosure''getAliasAndResolve-3
-PartialEscapeClosure''getObjectState-3
-PartialEscapeClosure'new-1
-PartialEscapeClosure'updateStatesForMaterialized-3
-PartialEscapeMergeProcessor'new-2
-PartialEscapePhase'run-1
 PhiInfoElement''get-2
 PhiInfoElement''set-3
 PhiInfoElement'new-0
@@ -2518,7 +2411,6 @@ PointerEqualsNode'new-2
 PointerEqualsOp'new-0
 Position''get-2
 Position''getInputType-1
-Position''initialize-3
 Position''set-3
 Position'new-3
 PrefetchAllocateNode'new-1
@@ -2570,15 +2462,6 @@ RawLoadNode'new-5
 RawMonitorEnterNode'new-3
 RawPointerStamp'new-0
 RawStoreNode'new-8
-ReadCacheEntry'new-5
-ReadEliminationBlockState''addCacheEntry-3
-ReadEliminationBlockState''getCacheEntry-2
-ReadEliminationBlockState''killReadCache-1
-ReadEliminationBlockState''killReadCache-2
-ReadEliminationBlockState'new-0
-ReadEliminationClosure'new-2
-ReadEliminationMergeProcessor''getCachedPhi-3
-ReadEliminationMergeProcessor'new-1
 ReadNode'canonicalizeRead-4
 ReadNode'new-4
 ReadRegisterNode'new-4i
@@ -2587,8 +2470,6 @@ ReadTimestampCounter'new-0
 ReassociateMatch''getOtherValue-2
 ReassociateMatch''getValue-2
 RedundantMoveElimination'new-0
-ReentrantBlockIterator'apply-2
-ReentrantBlockIterator'processLoop-3
 ReentrantNodeIterator'apply-3
 ReentrantNodeIterator'processLoop-3
 Register''asValue-1
@@ -2814,7 +2695,6 @@ UnaryOpLogicNode''getSucceedingStampForValue-3
 UnaryOpLogicNode'new-1
 UncompressPointerOp'new-5
 UnpackEndianHalfNode'create-2
-UnpackEndianHalfNode'new-2
 Unsafe'ARRAY_BOOLEAN_BASE_OFFSET
 Unsafe'ARRAY_BOOLEAN_INDEX_SCALE
 Unsafe'ARRAY_BYTE_BASE_OFFSET
@@ -2831,7 +2711,6 @@ Unsafe'ARRAY_SHORT_BASE_OFFSET
 Unsafe'ARRAY_SHORT_INDEX_SCALE
 UnsafeAccessNode'new-6
 UnsafeCompareAndSwapNode'new-6
-UnsafeLoadCacheEntry'new-3
 UnsafeLoadTemplates''lower-3
 UnsafeLoadTemplates'new-0
 UnsignedDivNode'create-2
@@ -2938,36 +2817,7 @@ VariableMap''get-2
 VariableMap''put-3
 VariableMap''remove-2
 VariableMap'new-0
-VirtualArrayNode'entryIndexForOffset-4
-VirtualArrayNode'new-2
-VirtualInstanceNode''field-2
-VirtualInstanceNode''fieldIndex-2
-VirtualInstanceNode''getFields-1
-VirtualInstanceNode'new-2
-VirtualInstanceNode'new-3
-VirtualObjectNode''resetObjectId-1
-VirtualObjectNode''setObjectId-2
-VirtualObjectNode'new-2
-VirtualObjectState'new-2
 VirtualStackSlot'new-2
-VirtualState'new-0
-Virtualizer''addLock-3
-Virtualizer''addNode-2
-Virtualizer''createVirtualObject-5
-Virtualizer''delete-1
-Virtualizer''ensureMaterialized-2
-Virtualizer''getAlias-2
-Virtualizer''getEntry-3
-Virtualizer''getMaximumEntryCount-1
-Virtualizer''removeLock-2
-Virtualizer''replaceFirstInput-3
-Virtualizer''replaceWith-2
-Virtualizer''replaceWithValue-2
-Virtualizer''replaceWithVirtual-2
-Virtualizer''reset-5
-Virtualizer''setVirtualEntry-4
-Virtualizer''setVirtualEntry-6
-Virtualizer'new-1
 VoidStamp'instance
 Word''aboveOrEqual-2i
 Word''aboveOrEqual-2w
@@ -3337,7 +3187,6 @@ ZeroExtendNode'new-4
 
 (defp AllocatableRegisters)
 (defp AllocatableValue)
-(defp AllocatedObjectNode)
 (defp Allocator)
 (defp AnchoringNode)
 (defp And)
@@ -3493,14 +3342,6 @@ ZeroExtendNode'new-4
  ;;
 (defp BlockEndOp)
 
-(defp BlockIteratorClosure #_"<T>"
-    (#_"T" BlockIteratorClosure'''getInitialState-1 [#_"BlockIteratorClosure<T>" this])
-    (#_"T" BlockIteratorClosure'''processBlock-3 [#_"BlockIteratorClosure<T>" this, #_"Block" block, #_"T" currentState])
-    (#_"T" BlockIteratorClosure'''merge-3 [#_"BlockIteratorClosure<T>" this, #_"Block" merge, #_"T*" states])
-    (#_"T*" BlockIteratorClosure'''processLoop-3 [#_"BlockIteratorClosure<T>" this, #_"Loop" _loop, #_"T" initialState])
-)
-
-(defp BlockLoopInfo)
 (defp BlockScope)
 (defp BlockStates)
 (defp BranchOp)
@@ -3547,13 +3388,6 @@ ZeroExtendNode'new-4
 (defp CLOptimization)
 (defp CRuntimeCallEpilogueOp)
 (defp CRuntimeCallPrologueOp)
-
-(defp CacheEntry
-    (#_"CacheEntry" CacheEntry'''duplicateWithObject-2 [#_"CacheEntry" this, #_"ValueNode" newObject])
-    (#_"boolean" CacheEntry'''conflicts-2 [#_"CacheEntry" this, #_"LocationIdentity" other])
-    (#_"LocationIdentity" CacheEntry'''getIdentity-1 [#_"CacheEntry" this])
-)
-
 (defp CallingConvention)
 (defp CallOp)
 (defp CallTargetNode)
@@ -3631,8 +3465,6 @@ ZeroExtendNode'new-4
 )
 
 (defp CodeBuffer)
-(defp CollectVirtualObjectsClosure)
-(defp CommitAllocationNode)
 (defp CommutativeTwoOp)
 (defp CompareAndSwapOp)
 (defp CompareNode)
@@ -3847,7 +3679,6 @@ ZeroExtendNode'new-4
 )
 
 (defp EMOptimizer)
-(defp EarlyReadEliminationPhase)
 (defp EdgeInfo)
 (defp EdgeMoveOptimizer)
 
@@ -3862,40 +3693,10 @@ ZeroExtendNode'new-4
     (#_"void" Edges'''update-4 [#_"Edges" this, #_"Node" node, #_"Node" oldValue, #_"Node" newValue])
 )
 
-(defp Effect
-    (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" this])
-    (#_"[Node]" Effect'''apply-3 [#_"Effect" this, #_"Graph" graph, #_"[Node]" obsoleteNodes])
-)
-
-(defp EffectsBlockState
-    (#_"boolean" EffectsBlockState'''equivalentTo-2 [#_"EffectsBlockState" this, #_"EffectsBlockState" other])
-)
-
-(defp EffectsClosure
-    (#_"boolean" EffectsClosure'''needsApplyEffects-1 [#_"EffectsClosure" this])
-    (#_"void" EffectsClosure'''applyEffects-1 [#_"EffectsClosure" this])
-    ;;;
-     ; Collects the effects of virtualizing the given node.
-     ;
-     ; @return true if the effects include removing the node, false otherwise
-     ;;
-    (#_"boolean" EffectsClosure'''processNode-5 [#_"EffectsClosure" this, #_"Node" node, #_"EffectsBlockState" state, #_"GraphEffects" effects, #_"FixedWithNextNode" lastFixedNode])
-    (#_"EffectsBlockState" EffectsClosure'''stripKilledLoopLocations-3 [#_"EffectsClosure" this, #_"Loop" _loop, #_"EffectsBlockState" initialState])
-    (#_"this" EffectsClosure'''processKilledLoopLocations-4 [#_"EffectsClosure" this, #_"Loop" _loop, #_"EffectsBlockState" initialState, #_"EffectsBlockState" mergedStates])
-    (#_"this" EffectsClosure'''processInitialLoopState-3 [#_"EffectsClosure" this, #_"Loop" _loop, #_"EffectsBlockState" initialState])
-    (#_"void" EffectsClosure'''processLoopExit-5 [#_"EffectsClosure" this, #_"LoopExitNode" exitNode, #_"EffectsBlockState" initialState, #_"EffectsBlockState" exitState, #_"GraphEffects" effects])
-    (#_"MergeProcessor" EffectsClosure'''createMergeProcessor-2 [#_"EffectsClosure" this, #_"Block" merge])
-)
-
-(defp EffectsPhase
-    (#_"EffectsClosure" EffectsPhase'''createEffectsClosure-3 [#_"EffectsPhase" this, #_"Schedule" schedule, #_"ControlFlowGraph" cfg])
-)
-
 (defp EffortClosure)
 (defp EndLockScopeNode)
 (defp EndNode)
 (defp EpilogueBlockEndOp)
-(defp EscapeObjectState)
 (defp ExecutableRef)
 (defp FastAcquireBiasedLockNode)
 (defp FieldInfo)
@@ -3945,7 +3746,6 @@ ZeroExtendNode'new-4
 (defp GetClassNode)
 (defp GetObjectAddressNode)
 (defp Graph)
-(defp GraphEffects)
 (defp GuardNode)
 
 (defp GuardRewirer
@@ -4508,7 +4308,6 @@ ZeroExtendNode'new-4
     (#_"this" LinearScanWalker'''handleSpillSlot-2 [#_"LinearScanWalker" this, #_"Interval" interval])
 )
 
-(defp LoadCacheEntry)
 (defp LoadConfigValueOp)
 
 ;;;
@@ -4539,7 +4338,6 @@ ZeroExtendNode'new-4
 (defp LocationSet)
 (defp LockStack)
 (defp LockStackHolder)
-(defp LockState)
 (defp LogicCompareAndSwapNode)
 (defp LogicConstantNode)
 (defp LogicNegationNode)
@@ -4548,7 +4346,6 @@ ZeroExtendNode'new-4
 (defp LoopBeginNode)
 (defp LoopEndNode)
 (defp LoopExitNode)
-(defp LoopKillCache)
 (defp LowerGuards)
 
 (defp LowerOp
@@ -4587,7 +4384,6 @@ ZeroExtendNode'new-4
 (defp MROp)
 (defp MapReplacement)
 (defp MaterializationUsageReplacer)
-(defp MaterializedObjectState)
 (defp MembarNode)
 (defp MembarOp)
 (defp MemberRef)
@@ -4646,14 +4442,6 @@ ZeroExtendNode'new-4
 (defp MemoryTwoOp)
 (defp MemoryVMConstOp)
 (defp MergeNode)
-
-;;;
- ; The main workhorse for merging states, both for loops and for normal merges.
- ;;
-(defp MergeProcessor
-    (#_"this" MergeProcessor'''merge-2 [#_"MergeProcessor" this, #_"EffectsBlockState*" states])
-)
-
 (defp MetaspaceConstant)
 (defp MethodCallOp)
 (defp MethodCallTargetNode)
@@ -4724,7 +4512,6 @@ ZeroExtendNode'new-4
  ; then there is an edge from this node to the node this field points to.
  ;;
 (defp Node
-    (#_"this" Node'''afterClone-2 [#_"Node" this, #_"Node" other])
     (#_"Node*" Node'''cfgPredecessors-1 [#_"Node" this])
     ;;;
      ; Returns an iterator that will provide all control-flow successors of this node. Normally this
@@ -4735,11 +4522,6 @@ ZeroExtendNode'new-4
 )
 
 (defp NodeClass)
-
-(defp NodeClosure #_"<T implements Node>"
-    (#_"void" NodeClosure'''apply-3 [#_"NodeClosure" this, #_"Node" usage, #_"T" node])
-)
-
 (defp NodeCost)
 (defp NodeEntry)
 
@@ -4880,12 +4662,6 @@ ZeroExtendNode'new-4
  ;;
 (defp NodeWithState)
 
-(value-ns NodeWithState
-    (defn #_"FrameState*" NodeWithState''states-1 [#_"NodeWithState" this]
-        (filter #(satisfies? FrameState %) (Node''inputs-1 this))
-    )
-)
-
 (defp NonMaterializationUsageReplacer)
 (defp NormalizeCompareNode)
 (defp Not)
@@ -4903,7 +4679,6 @@ ZeroExtendNode'new-4
 (defp ObjectEqualsNode)
 (defp ObjectEqualsOp)
 (defp ObjectStamp)
-(defp ObjectState)
 (defp ObjectWriteBarrier)
 (defp OffsetAddressNode)
 (defp OpaqueNode)
@@ -4911,18 +4686,7 @@ ZeroExtendNode'new-4
 (defp OptimizingLinearScanWalker)
 (defp Or)
 (defp OrNode)
-(defp PEReadEliminationBlockState)
-(defp PEReadEliminationClosure)
-(defp PEReadEliminationMergeProcessor)
 (defp ParameterNode)
-
-(defp PartialEscapeBlockState
-    (#_"this" PartialEscapeBlockState'''objectMaterialized-4 [#_"PartialEscapeBlockState" this, #_"VirtualObjectNode" virtual, #_"AllocatedObjectNode" representation, #_"ValueNode*" values])
-)
-
-(defp PartialEscapeClosure)
-(defp PartialEscapeMergeProcessor)
-(defp PartialEscapePhase)
 (defp PhiInfoElement)
 
 ;;;
@@ -4991,10 +4755,6 @@ ZeroExtendNode'new-4
 (defp RawMonitorEnterNode)
 (defp RawPointerStamp)
 (defp RawStoreNode)
-(defp ReadCacheEntry)
-(defp ReadEliminationBlockState)
-(defp ReadEliminationClosure)
-(defp ReadEliminationMergeProcessor)
 (defp ReadNode)
 (defp ReadRegisterNode)
 (defp ReadTimestampCounter)
@@ -5661,7 +5421,6 @@ ZeroExtendNode'new-4
 )
 
 (defp UnsafeCompareAndSwapNode)
-(defp UnsafeLoadCacheEntry)
 (defp UnsafeLoadTemplates)
 (defp UnsignedDivNode)
 (defp UnsignedLong)
@@ -5768,92 +5527,7 @@ ZeroExtendNode'new-4
 (defp Values)
 (defp Variable)
 (defp VariableMap)
-(defp VirtualArrayNode)
-(defp VirtualInstanceNode)
-
-(defp VirtualObjectNode
-    ;;;
-     ; The type of object described by this VirtualObjectNode. In case of arrays, this is
-     ; the array type (and not the component type).
-     ;;
-    (#_"ResolvedJavaType" VirtualObjectNode'''type-1 [#_"VirtualObjectNode" this])
-    ;;;
-     ; The number of entries this virtual object has. Either the number of fields or the number of
-     ; array elements.
-     ;;
-    (#_"int" VirtualObjectNode'''entryCount-1 [#_"VirtualObjectNode" this])
-    ;;;
-     ; If the given index denotes an entry in this virtual object, the index of this entry is
-     ; returned. If no such entry can be found, this method returns -1.
-     ;
-     ; @param constantOffset offset, where the value is placed.
-     ; @param expectedEntryKind specifies which type is expected at this offset, important when
-     ;            doing implicit casts, especially on big endian systems
-     ;;
-    (#_"int" VirtualObjectNode'''entryIndexForOffset-3 [#_"VirtualObjectNode" this, #_"long" constantOffset, #_"JavaKind" expectedEntryKind])
-    ;;;
-     ; Returns the JavaKind of the entry at the given index.
-     ;;
-    (#_"JavaKind" VirtualObjectNode'''entryKind-2 [#_"VirtualObjectNode" this, #_"int" index])
-    ;;;
-     ; Returns an exact duplicate of this virtual object node, which has not been added to the graph yet.
-     ;;
-    (#_"VirtualObjectNode" VirtualObjectNode'''duplicate-1 [#_"VirtualObjectNode" this])
-    ;;;
-     ; Returns a node that can be used to materialize this virtual object. If this returns an
-     ; AllocatedObjectNode then this node will be attached to a CommitAllocationNode,
-     ; otherwise the node will just be added to the graph.
-     ;;
-    (#_"ValueNode" VirtualObjectNode'''getMaterializedRepresentation-4 [#_"VirtualObjectNode" this, #_"FixedNode" fixed, #_"[ValueNode]" entries, #_"LockState" locks])
-)
-
-(defp VirtualObjectState)
 (defp VirtualStackSlot)
-
-;;;
- ; Base class for nodes that contain "virtual" state, like FrameState and VirtualObjectState.
- ; Subclasses of this class will be treated in a special way by the scheduler.
- ;;
-(defp VirtualState
-    (#_"void" VirtualState'''applyToNonVirtual-2 [#_"VirtualState" this, #_"NodeClosure" closure])
-)
-
-;;;
- ; This interface allows a node to convey information about what its effect would be if some of its
- ; inputs were virtualized. The #virtualize(Virtualizer) method will only be called for nodes
- ; that have some interaction with virtualized nodes. However, the virtualized nodes might have
- ; been re-materialized in the meantime.
- ;;
-(defp Virtualizable
-    ;;;
-     ; A node class can implement this method to convey information about what its effect would be
-     ; if some of its inputs were virtualized. All modifications must be made through the supplied
-     ; tool, and not directly on the node, because by the time this method is called the
-     ; virtualized/non-virtualized state is still speculative and might not hold because of loops, etc.
-     ;
-     ; @param tool the tool used to describe the effects of this node
-     ;;
-    (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"Virtualizable" this, #_"Virtualizer" tool])
-)
-
-;;;
- ; This interface allows a node to convey information about what its effect would be if some of its
- ; inputs were virtualized.
- ;
- ; The difference to Virtualizable is that the #virtualize(Virtualizer) method will be called
- ; regardless of whether this node had any interaction with virtualized nodes. This interface can
- ; therefore be used for object allocations, for which virtualization introduces new virtualized objects.
- ;;
-(defp VirtualizableAllocation)
-
-;;;
- ; This tool can be used to query the current state (normal/virtualized/re-materialized) of values
- ; and to describe the actions that would be taken for this state.
- ;
- ; See also Virtualizable.
- ;;
-(defp Virtualizer)
-
 (defp VoidStamp)
 (defp Word)
 (defp WordCastNode)
@@ -8223,12 +7897,6 @@ ZeroExtendNode'new-4
  ; This class encapsulates options that control the behavior of the Graal compiler.
  ;;
 (value-ns GraalOptions
-    ;; escape analysis settings
-    (def #_"boolean" GraalOptions'partialEscapeAnalysis true)
-    (def #_"int" GraalOptions'escapeAnalysisIterations 2)
-    (def #_"int" GraalOptions'escapeAnalysisLoopCutoff 20)
-    (def #_"int" GraalOptions'maximumEscapeAnalysisArrayLength 32)
-
     ;; debugging settings
     (def #_"boolean" GraalOptions'zapStackOnMethodEntry false)
 
@@ -8239,8 +7907,6 @@ ZeroExtendNode'new-4
     (def #_"boolean" GraalOptions'canOmitFrame true)
 
     ;; runtime settings
-    (def #_"boolean" GraalOptions'optReadElimination true)
-    (def #_"int" GraalOptions'readEliminationMaxLoopVisits 5)
     (def #_"boolean" GraalOptions'optScheduleOutOfLoops true)
     (def #_"boolean" GraalOptions'optEliminateGuards true)
     (def #_"boolean" GraalOptions'optImplicitNullChecks true)
@@ -8275,8 +7941,6 @@ ZeroExtendNode'new-4
 
     ;; @Option "Use traps for nil-checks instead of explicit nil-checks."
     (def #_"boolean" GraalOptions'useTrappingNullChecks true)
-
-    (def #_"boolean" GraalOptions'optEarlyReadElimination true)
 )
 
 (value-ns NumUtil
@@ -11055,152 +10719,6 @@ ZeroExtendNode'new-4
             :ProcessBlockState'ENTER_ALWAYS_REACHED
             :ProcessBlockState'LEAVE
             :ProcessBlockState'PROCESS_ALWAYS_REACHED
-        )
-    )
-)
-
-(value-ns ReentrantBlockIterator
-    (defn- #_"<T> boolean" ReentrantBlockIterator'allEndsVisited-3 [#_"{FixedNode T}" states, #_"Block" current, #_"AbstractMergeNode" merge]
-        (loop-when [#_"seq" s (seq (:ends merge))] (some? s) => true
-            (let [
-                #_"AbstractEndNode" forwardEnd (first s)
-            ]
-                (and (or (= forwardEnd (:endNode current)) (contains? states forwardEnd))
-                    (recur (next s))
-                )
-            )
-        )
-    )
-
-    (defn- #_"<T> [Block (Block) {FixedNode T}]" ReentrantBlockIterator'processMultipleSuccessors-4 [#_"(Block)" stack, #_"{FixedNode T}" states, #_"T" state, #_"Block*" successors]
-        (loop-when [stack stack states states #_"seq" s (next successors)] (some? s) => [(first successors) stack states]
-            (let [
-                #_"Block" successor (first s)
-            ]
-                (recur (cons successor stack) (assoc states (:beginNode successor) state) (next s))
-            )
-        )
-    )
-
-    (defn- #_"<T> [T]" ReentrantBlockIterator'mergeStates-5 [#_"{FixedNode T}" states, #_"T" state, #_"Block" current, #_"Block" successor, #_"AbstractMergeNode" merge]
-        (loop-when [#_"[T]" merged [] #_"seq" s (seq (:predecessors successor))] (some? s) => merged
-            (let [
-                #_"Block" predecessor (first s)
-                merged (conj' merged (if (= predecessor current) state (get states (:endNode predecessor))))
-                _ (§ ass! states (dissoc states (:endNode predecessor)))
-            ]
-                (recur merged (next s))
-            )
-        )
-    )
-
-    (defn- #_"<T> [(Block) {FixedNode T}]" ReentrantBlockIterator'recurseIntoLoop-5 [#_"BlockIteratorClosure<T>" closure, #_"(Block)" stack, #_"T" state, #_"{FixedNode T}" states, #_"Block" successor]
-        ;; recurse into the loop
-        (let [
-            #_"T*" exits (BlockIteratorClosure'''processLoop-3 closure, (:loop successor), state)
-        ]
-            (loop-when [stack stack states states #_"int" i 0 #_"seq" s (seq (:loopExits (:loop successor)))] (some? s) => [stack states]
-                (let [
-                    #_"Block" exit (first s)
-                ]
-                    (recur (cons exit stack) (assoc states (:beginNode exit) (nth exits i)) (inc i) (next s))
-                )
-            )
-        )
-    )
-
-    (defn- #_"<T> {FixedNode T}" ReentrantBlockIterator'apply-4 [#_"BlockIteratorClosure<T>" closure, #_"Block" start, #_"T" initialState, #_"fn boolean [Block]" f'stopAtBlock-1]
-        (let [
-            #_"Graph" graph (:graph (:beginNode start))
-        ]
-            ;; States are stored on EndNodes before merges, and on BeginNodes after ControlSplitNodes.
-            (loop [#_"Block" block start #_"(Block)" stack nil #_"T" state initialState #_"{FixedNode T}" states {}]
-                (let [
-                    [block stack state states]
-                        (if (and (some? f'stopAtBlock-1) (f'stopAtBlock-1 block))
-                            (do
-                                [nil stack state (assoc states (:beginNode block) state)]
-                            )
-                            (let [
-                                state (BlockIteratorClosure'''processBlock-3 closure, block, state)
-                                #_"[Block]" successors (:successors block)
-                            ]
-                                (case (count successors)
-                                    0
-                                        [nil stack state states] ;; nothing to do...
-                                    1
-                                        (let [
-                                            #_"Block" successor (nth successors 0)
-                                        ]
-                                            (cond
-                                                (Block''isLoopHeader-1 successor)
-                                                    (if (Block''isLoopEnd-1 block)
-                                                        (do
-                                                            ;; nothing to do... loop ends only lead to loop begins we've already visited
-                                                            [nil stack state (assoc states (:endNode block) state)]
-                                                        )
-                                                        (let [
-                                                            [stack states] (ReentrantBlockIterator'recurseIntoLoop-5 closure, stack, state, states, successor)
-                                                        ]
-                                                            [nil stack state states]
-                                                        )
-                                                    )
-                                                (satisfies? AbstractEndNode (:endNode block))
-                                                    (let [
-                                                        ;; add the end node and see if the merge is ready for processing
-                                                        #_"AbstractMergeNode" merge (AbstractEndNode'''merge-1 (:endNode block))
-                                                    ]
-                                                        (if (ReentrantBlockIterator'allEndsVisited-3 states, block, merge)
-                                                            [successor stack (BlockIteratorClosure'''merge-3 closure, successor, (ReentrantBlockIterator'mergeStates-5 states, state, block, successor, merge)) states]
-                                                            [nil stack state (assoc states (:endNode block) state)]
-                                                        )
-                                                    )
-                                                :else
-                                                    [successor stack state states]
-                                            )
-                                        )
-                                    (let [
-                                        [block stack states] (ReentrantBlockIterator'processMultipleSuccessors-4 stack, states, state, successors)
-                                    ]
-                                        [block stack state states]
-                                    )
-                                )
-                            )
-                        )
-                ]
-                    ;; get next queued block
-                    (cond
-                        (some? block)
-                            (recur block stack state states)
-                        (seq stack)
-                            (let [
-                                [block & stack] stack
-                            ]
-                                (recur block stack (get states (:beginNode block)) (dissoc states (:beginNode block)))
-                            )
-                        :else
-                            states
-                    )
-                )
-            )
-        )
-    )
-
-    (defn #_"<T> void" ReentrantBlockIterator'apply-2 [#_"BlockIteratorClosure<T>" closure, #_"Block" start]
-        (ReentrantBlockIterator'apply-4 closure, start, (BlockIteratorClosure'''getInitialState-1 closure), nil)
-        nil
-    )
-
-    (defn #_"<T> BlockLoopInfo<T>" ReentrantBlockIterator'processLoop-3 [#_"BlockIteratorClosure<T>" closure, #_"Loop" _loop, #_"T" initialState]
-        (let [
-            #_"{FixedNode T}" m'blockEndStates (ReentrantBlockIterator'apply-4 closure, (:header _loop), initialState, #(not (or (= (:loop %) _loop) (Block''isLoopHeader-1 %))))
-        ]
-            (-> (BlockLoopInfo'new-0)
-                ;; make sure all end states are unique objects
-                (assoc :endStates (vec (map (comp m'blockEndStates :endNode) (next (:predecessors (:header _loop))))))
-                ;; make sure all exit states are unique objects
-                (assoc :exitStates (vec (map (comp m'blockEndStates :beginNode) (:loopExits _loop))))
-            )
         )
     )
 )
@@ -16402,1638 +15920,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns EffectsClosure [BlockIteratorClosure #_"<EffectsBlockState>"]
-    (defn #_"EffectsClosure" EffectsClosure'new-2 [#_"Schedule" schedule, #_"ControlFlowGraph" cfg]
-        (merge (EffectsClosure'class.)
-            (hash-map
-                #_"ControlFlowGraph" :cfg cfg
-                #_"Schedule" :schedule schedule
-                ;;;
-                 ; If a node has an alias, this means that it was replaced with another node during analysis.
-                 ; Nodes can be replaced by normal ("scalar") nodes, e.g. a LoadIndexedNode with a ConstantNode,
-                 ; or by virtual nodes, e.g. a NewInstanceNode with a VirtualInstanceNode. A node was replaced
-                 ; with a virtual value iff the alias is a subclass of VirtualObjectNode.
-                 ;
-                 ; This alias map exists only once and is not part of the block state, so that during iterative
-                 ; loop processing the alias of a node may be changed to another value.
-                 ;;
-                #_"{Node ValueNode}" :aliases {}
-                ;;;
-                 ; This set allows for a quick check whether a node has inputs that were replaced with "scalar" values.
-                 ;;
-                #_"{Node}" :hasScalarReplacedInputs #{}
-                ;;;
-                 ; The effects accumulated during analysis of nodes. They may be cleared and re-filled during
-                 ; iterative loop processing.
-                 ;;
-                #_"{Block GraphEffects}" :blockEffects (into {} (for [#_"Block" block (:reversePostOrder cfg)] [block (GraphEffects'new-0)]))
-                ;;;
-                 ; Effects that can only be applied after the effects from within the loop have been applied and
-                 ; that must be applied before any effect from after the loop is applied. E.g., updating phis.
-                 ;;
-                #_"{Loop GraphEffects}" :loopMergeEffects {}
-                ;;;
-                 ; The entry state of loops is needed when loop proxies are processed.
-                 ;;
-                #_"{LoopBeginNode EffectsBlockState}" :loopEntryStates {}
-                ;;;
-                 ; Intended to be used by read-eliminating phases based on the effects phase.
-                 ;;
-                #_"{Loop LoopKillCache}" :loopLocationKillCache {}
-                #_"boolean" :changed? false
-            )
-        )
-    )
-
-    (defm EffectsClosure EffectsClosure
-        (#_"boolean" EffectsClosure'''needsApplyEffects-1 [#_"EffectsClosure" this]
-            true
-        )
-
-        (#_"void" EffectsClosure'''applyEffects-1 [#_"EffectsClosure" this]
-            (let [
-                #_"GraphEffects*'" v'effectLists (volatile! nil)
-                ;; Effects are applied during a ordered iteration over the blocks to apply them in the correct order,
-                ;; e.g. apply the effect that adds a node to the graph before the node is used.
-                #_"BlockIteratorClosure<Void>" closure
-                    (reify BlockIteratorClosure #_"<Void>"
-                        (#_"Void" BlockIteratorClosure'''getInitialState-1 [#_"BlockIteratorClosure<Void>" _]
-                            nil
-                        )
-
-                        (#_"Void" BlockIteratorClosure'''processBlock-3 [#_"BlockIteratorClosure<Void>" _, #_"Block" block, #_"Void" currentState]
-                            (let [
-                                #_"GraphEffects" effects (get (:blockEffects this) block)
-                            ]
-                                (when (and (some? effects) (not (GraphEffects''isEmpty-1 effects)))
-                                    (vswap! v'effectLists conj' effects)
-                                )
-                                currentState
-                            )
-                        )
-
-                        (#_"Void" BlockIteratorClosure'''merge-3 [#_"BlockIteratorClosure<Void>" _, #_"Block" merge, #_"Void*" states]
-                            nil
-                        )
-
-                        (#_"Void*" BlockIteratorClosure'''processLoop-3 [#_"BlockIteratorClosure<Void>" self, #_"Loop" _loop, #_"Void" initialState]
-                            (let [
-                                #_"BlockLoopInfo<Void>" info (ReentrantBlockIterator'processLoop-3 self, _loop, initialState)
-                                #_"GraphEffects" effects (get (:loopMergeEffects this) _loop)
-                            ]
-                                (when (and (some? effects) (not (GraphEffects''isEmpty-1 effects)))
-                                    (vswap! v'effectLists conj' effects)
-                                )
-                                (:exitStates info)
-                            )
-                        )
-                    )
-                _ (ReentrantBlockIterator'apply-2 closure, (ControlFlowGraph''getStartBlock-1 (:cfg this)))
-                #_"Node*" obsoleteNodes (reduce #(GraphEffects''apply-4 %2, (:graph (:cfg this)), %1, false) nil @v'effectLists)
-                ;; Effects that modify the cfg (e.g. removing a branch for an if that got a constant condition)
-                ;; need to be performed after all other effects, because they change phi value indexes.
-                obsoleteNodes (reduce #(GraphEffects''apply-4 %2, (:graph (:cfg this)), %1, true) obsoleteNodes @v'effectLists)
-                _
-                    (doseq [#_"Node" node obsoleteNodes]
-                        (when (and (Node''isAlive-1 node) (Node''hasNoUsages-1 node))
-                            (§ ass! node (Node''replaceAtUsages-2 node, nil))
-                            (GraphUtil'killWithUnusedFloatingInputs-1 node)
-                        )
-                    )
-            ]
-            )
-            nil
-        )
-    )
-
-    ;;;
-     ; Changes to CommitAllocationNodes and AllocatedObjectNodes are not considered to be "important".
-     ; If only changes to those nodes are discovered during analysis, the effects need not be applied.
-     ;;
-    (defn- #_"boolean" EffectsClosure'isSignificantNode-1 [#_"Node" node]
-        (not (or (satisfies? CommitAllocationNode node) (satisfies? AllocatedObjectNode node)))
-    )
-
-    (defn- #_"MergeProcessor" EffectsClosure''doMergeWithoutDead-3 [#_"EffectsClosure" this, #_"MergeProcessor" processor, #_"EffectsBlockState*" states]
-        (let [
-            #_"int" alive (count (remove :dead? states))
-        ]
-            (cond
-                (zero? alive)
-                    (MergeProcessor''setNewState-2 processor, (nth states 0))
-                (= alive (count states))
-                    (let [
-                        #_"[int]" stateIndexes (vec (range alive))
-                    ]
-                        (-> processor
-                            (MergeProcessor''setStateIndexes-2 stateIndexes)
-                            (MergeProcessor''setNewState-2 (BlockIteratorClosure'''getInitialState-1 this))
-                            (MergeProcessor'''merge-2 states)
-                        )
-                    )
-                :else
-                    (let [
-                        #_"[int]" stateIndexes []
-                        #_"[EffectsBlockState]" aliveStates []
-                        _
-                            (dotimes [#_"int" i (count states)]
-                                (when-not (:dead? (nth states i))
-                                    (§ ass! stateIndexes (conj' stateIndexes i))
-                                    (§ ass! aliveStates (conj' aliveStates (nth states i)))
-                                )
-                            )
-                    ]
-                        (-> processor
-                            (MergeProcessor''setStateIndexes-2 stateIndexes)
-                            (MergeProcessor''setNewState-2 (BlockIteratorClosure'''getInitialState-1 this))
-                            (MergeProcessor'''merge-2 aliveStates)
-                        )
-                    )
-            )
-        )
-    )
-
-    (defm EffectsClosure BlockIteratorClosure
-        (#_"EffectsBlockState" BlockIteratorClosure'''processBlock-3 [#_"EffectsClosure" this, #_"Block" block, #_"EffectsBlockState" state]
-            (when-not (:dead? state) => state
-                (let [
-                    #_"GraphEffects" effects (get (:blockEffects this) block)
-                    ;; If we enter an if branch that is known to be unreachable, we mark it as dead and
-                    ;; cease to do any more analysis on it. At merges, these dead branches will be ignored.
-                    _
-                        (when (satisfies? IfNode (:predecessor (:beginNode block)))
-                            (let [
-                                #_"IfNode" ifNode (:predecessor (:beginNode block))
-                                #_"Node" alias (EffectsClosure''getScalarAlias-2 this, (:logic ifNode))
-                            ]
-                                (when (and (satisfies? LogicConstantNode alias) (not (= (:value alias) (= (:beginNode block) (:trueSuccessor ifNode)))))
-                                    (§ ass! state (assoc state :dead? true))
-                                    (§ ass! effects (GraphEffects''killIfBranch-3 effects, ifNode, (:value alias)))
-                                    (§ return state)
-                                )
-                            )
-                        )
-                ]
-                    ;; a lastFixedNode is needed in case we want to insert fixed nodes
-                    (loop-when [#_"FixedWithNextNode" lastFixedNode nil #_"seq" s (seq (if (some? (:schedule this)) (get (:block->nodes (:schedule this)) block) (Block''getNodes-1 block)))] (some? s)
-                        (let [
-                            #_"Node" node (first s)
-                            ;; reset the aliases (may be non-nil due to iterative loop processing)
-                            _ (§ ass! this (update this :aliases assoc node nil))
-                            _
-                                (when (satisfies? LoopExitNode node)
-                                    (loop-when-recur [#_"seq" s (seq (LoopExitNode''proxies-1 node))] (some? s) [(next s)]
-                                        (let [
-                                            #_"ValueProxyNode" proxy (first s)
-                                        ]
-                                            (§ ass! this (update this :aliases assoc proxy nil))
-                                            (§ ass! this (assoc this :changed? (or (:changed? this) (and (EffectsClosure'''processNode-5 this, proxy, state, effects, lastFixedNode) (EffectsClosure'isSignificantNode-1 node)))))
-                                        )
-                                    )
-                                    (EffectsClosure'''processLoopExit-5 this, node, (get (:loopEntryStates this) (:loopBegin node)), state, (get (:blockEffects this) block))
-                                )
-                            _ (§ ass! this (assoc this :changed? (or (:changed? this) (and (EffectsClosure'''processNode-5 this, node, state, effects, lastFixedNode) (EffectsClosure'isSignificantNode-1 node)))))
-                        ]
-                            (when-not (:dead? state)
-                                (recur (if (satisfies? FixedWithNextNode node) node lastFixedNode) (next s))
-                            )
-                        )
-                    )
-
-                    state
-                )
-            )
-        )
-
-        (#_"EffectsBlockState" BlockIteratorClosure'''merge-3 [#_"EffectsClosure" this, #_"Block" merge, #_"EffectsBlockState*" states]
-            (let [
-                #_"MergeProcessor" processor (EffectsClosure'''createMergeProcessor-2 this, merge)
-                processor (EffectsClosure''doMergeWithoutDead-3 this, processor, states)
-                _ (§ ass! this (update-in this [:blockEffects merge] GraphEffects''addAll-2 (:mergeEffects processor)))
-                _ (§ ass! this (update-in this [:blockEffects merge] GraphEffects''addAll-2 (:afterMergeEffects processor)))
-            ]
-                (:newState processor)
-            )
-        )
-
-        (#_"EffectsBlockState*" BlockIteratorClosure'''processLoop-3 [#_"EffectsClosure" this, #_"Loop" _loop, #_"EffectsBlockState" initialState]
-            (if (:dead? initialState)
-                (repeat (count (:loopExits _loop)) initialState)
-                ;; Special case nested loops: To avoid an exponential runtime for nested loops we try to
-                ;; only process them as little times as possible.
-                ;;
-                ;; In the first iteration of an outer most loop we go into the inner most loop(s). We run
-                ;; the first iteration of the inner most loop and then, if necessary, a second iteration.
-                ;;
-                ;; We return from the recursion and finish the first iteration of the outermost loop. If we
-                ;; have to do a second iteration in the outer most loop we go again into the inner most
-                ;; loop(s) but this time we already know all states that are killed by the loop so inside
-                ;; the loop we will only have those changes that propagate from the first iteration of the
-                ;; outer most loop into the current loop. We strip the initial loop state for the inner most
-                ;; loops and do the first iteration with the (possible) changes from outer loops. If there
-                ;; are no changes we only have to do 1 iteration and are done.
-                (let [
-                    #_"EffectsBlockState" initialStateRemovedKilledLocations (EffectsClosure'''stripKilledLoopLocations-3 this, _loop, initialState)
-                    #_"EffectsBlockState" loopEntryState initialStateRemovedKilledLocations
-                    #_"EffectsBlockState" lastMergedState initialStateRemovedKilledLocations
-                    _ (§ ass! this (EffectsClosure'''processInitialLoopState-3 this, _loop, lastMergedState))
-                    #_"MergeProcessor" processor (EffectsClosure'''createMergeProcessor-2 this, (:header _loop))
-                ]
-                    ;; Iterative loop processing: we take the predecessor state as the loop's starting state,
-                    ;; processing the loop contents, merge the states of all loop ends, and check whether the
-                    ;; resulting state is equal to the starting state. If it is, the loop processing has
-                    ;; finished, if not, another iteration is needed.
-                    ;;
-                    ;; This processing converges because the merge processing always makes the starting state
-                    ;; more generic, e.g. adding phis instead of non-phi values.
-                    (loop-when [#_"int" iteration 0] (< iteration 10) => (throw! (str "too many iterations at " _loop))
-                        (let [
-                            #_"BlockLoopInfo<EffectsBlockState>" info (ReentrantBlockIterator'processLoop-3 this, _loop, lastMergedState)
-                            _ (§ ass! processor (EffectsClosure''doMergeWithoutDead-3 this, processor, (cons initialStateRemovedKilledLocations (:endStates info))))
-                        ]
-                            (if (EffectsBlockState'''equivalentTo-2 (:newState processor), lastMergedState)
-                                (let [
-                                    _ (§ ass! this (update-in this [:blockEffects (:header _loop)] GraphEffects''insertAll-3 (:mergeEffects processor), 0))
-                                    _ (§ ass! this (assoc-in this [:loopMergeEffects _loop] (:afterMergeEffects processor)))
-                                    _ (§ ass! this (assoc-in this [:loopEntryStates (:beginNode (:header _loop))] loopEntryState))
-                                    _ (§ ass! this (EffectsClosure'''processKilledLoopLocations-4 this, _loop, initialStateRemovedKilledLocations, (:newState processor)))
-                                ]
-                                    (:exitStates info)
-                                )
-                                (let [
-                                    _ (§ ass lastMergedState (:newState processor))
-                                    _
-                                        (doseq [#_"Block" block (:loopBlocks _loop)]
-                                            (§ ass! this (update-in this [:blockEffects block] GraphEffects''clear-1))
-                                        )
-                                ]
-                                    (recur (inc iteration))
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defm EffectsClosure EffectsClosure
-        (#_"EffectsBlockState" EffectsClosure'''stripKilledLoopLocations-3 [#_"EffectsClosure" this, #_"Loop" _loop, #_"EffectsBlockState" initialState]
-            initialState
-        )
-
-        (#_"this" EffectsClosure'''processKilledLoopLocations-4 [#_"EffectsClosure" this, #_"Loop" _loop, #_"EffectsBlockState" initialState, #_"EffectsBlockState" mergedStates]
-            ;; nothing to do
-            this
-        )
-
-        (#_"this" EffectsClosure'''processInitialLoopState-3 [#_"EffectsClosure" this, #_"Loop" _loop, #_"EffectsBlockState" initialState]
-            ;; nothing to do
-            this
-        )
-    )
-
-    (defn #_"this" EffectsClosure''addScalarAlias-3 [#_"EffectsClosure" this, #_"ValueNode" node, #_"ValueNode" alias]
-        (-> this
-            (update :aliases assoc node alias)
-            (update :hasScalarReplacedInputs into (:nodeUsages node))
-        )
-    )
-
-    (defn #_"boolean" EffectsClosure''hasScalarReplacedInputs-2 [#_"EffectsClosure" this, #_"Node" node]
-        (contains? (:hasScalarReplacedInputs this) node)
-    )
-
-    (defn #_"ValueNode" EffectsClosure''getScalarAlias-2 [#_"EffectsClosure" this, #_"ValueNode" node]
-        (when (and (some? node) (Node''isAlive-1 node) (contains? (:aliases this) node)) => node
-            (let [
-                #_"ValueNode" result (get (:aliases this) node)
-            ]
-                (if (and (some? result) (not (satisfies? VirtualObjectNode result))) result node)
-            )
-        )
-    )
-)
-
-(class-ns PartialEscapeClosure [EffectsClosure, BlockIteratorClosure #_"<PartialEscapeBlockState>"]
-    (defn #_"PartialEscapeClosure" PartialEscapeClosure'new-1 [#_"Schedule" schedule]
-        (let [
-            #_"PartialEscapeClosure" this
-                (merge (PartialEscapeClosure'class.) (EffectsClosure'new-2 schedule, (:cfg schedule))
-                    (hash-map
-                        ;;;
-                         ; Nodes with inputs that were modified during analysis are marked in this bitset - this way
-                         ; nodes that are not influenced at all by analysis can be rejected quickly.
-                         ;;
-                        #_"{Node}" :hasVirtualInputs #{}
-                        ;;;
-                         ; This is handed out to implementers of Virtualizable.
-                         ;;
-                        #_"Virtualizer" :tool nil
-                        ;;;
-                         ; The indexes into this array correspond to VirtualObjectNode#getObjectId().
-                         ;;
-                        #_"VirtualObjectNode*" :peVirtualObjects nil
-                    )
-                )
-            this (assoc this :tool (Virtualizer'new-1 this))
-        ]
-            this
-        )
-    )
-
-    (defm PartialEscapeClosure BlockIteratorClosure
-        (#_"PartialEscapeBlockState" BlockIteratorClosure'''getInitialState-1 [#_"PartialEscapeClosure" this]
-            (PartialEscapeBlockState'new-0)
-        )
-    )
-
-    (defm PartialEscapeClosure EffectsClosure
-        (#_"boolean" EffectsClosure'''needsApplyEffects-1 [#_"PartialEscapeClosure" this]
-            (or (:changed? this)
-                ;; If there is a mismatch between the number of materializations and the number of virtualizations,
-                ;; we need to apply effects, even if there were no other significant changes to the graph.
-                (let [
-                    #_"int" delta 0
-                    delta
-                        (loop-when [delta delta #_"seq" s (seq (:reversePostOrder (:cfg this)))] (some? s) => delta
-                            (let [
-                                #_"GraphEffects" effects (get (:blockEffects this) (first s))
-                            ]
-                                (recur (if (some? effects) (+ delta (:virtualizationDelta effects)) delta) (next s))
-                            )
-                        )
-                    delta
-                        (loop-when [delta delta #_"seq" s (seq (:loops (:cfg this)))] (some? s) => delta
-                            (let [
-                                #_"GraphEffects" effects (get (:loopMergeEffects this) (first s))
-                            ]
-                                (recur (if (some? effects) (+ delta (:virtualizationDelta effects)) delta) (next s))
-                            )
-                        )
-                ]
-                    (not (zero? delta))
-                )
-            )
-        )
-    )
-
-    (defn- #_"boolean" PartialEscapeClosure''processVirtualizable-5 [#_"PartialEscapeClosure" this, #_"ValueNode" node, #_"FixedNode" insertBefore, #_"PartialEscapeBlockState" state, #_"GraphEffects" effects]
-        (let [
-            _ (§ ass! this (update this :tool Virtualizer''reset-5 state, node, insertBefore, effects))
-            _ (§ ass! this (update this :tool #(Virtualizable'''virtualize-2 node, %)))
-        ]
-            true ;; request further processing
-        )
-    )
-
-    (defn- #_"FrameState" PartialEscapeClosure'getUniqueFramestate-2 [#_"NodeWithState" nodeWithState, #_"FrameState" frameState]
-        (when (Node''hasMoreThanOneUsage-1 frameState) => frameState
-            ;; Can happen for example from inlined snippets with multiple state split nodes.
-            (let [
-                #_"FrameState" copy (Node''copyWithInputs-1 frameState)
-            ]
-                (Node''replaceFirstInput-3 nodeWithState, frameState, copy)
-                copy
-            )
-        )
-    )
-
-    (defn- #_"{VirtualObjectNode}" PartialEscapeClosure''collectLockedVirtualObjects-3 [#_"PartialEscapeClosure" this, #_"PartialEscapeBlockState" state, #_"{VirtualObjectNode}" virtual]
-        (loop-when [virtual virtual #_"int" i 0] (< i (count (:objectStates state))) => virtual
-            (let [
-                #_"ObjectState" objState (nth (:objectStates state) i)
-                virtual
-                    (when (and (some? objState) (ObjectState''isVirtual-1 objState) (ObjectState''hasLocks-1 objState)) => virtual
-                        (conj virtual (nth (:peVirtualObjects this) i))
-                    )
-            ]
-                (recur virtual (inc i))
-            )
-        )
-    )
-
-    (defn- #_"{VirtualObjectNode}" PartialEscapeClosure''collectReferencedVirtualObjects-3 [#_"PartialEscapeClosure" this, #_"PartialEscapeBlockState" state, #_"{VirtualObjectNode}" virtual]
-        (loop-when [virtual virtual #_"seq" s (seq virtual)] (some? s) => virtual
-            (let [
-                #_"int" id (:oid (first s))
-                virtual
-                    (when-not (= id -1) => virtual
-                        (let [
-                            #_"ObjectState" objState (when (< id (count (:objectStates state))) (nth (:objectStates state) id))
-                        ]
-                            (when (and (some? objState) (ObjectState''isVirtual-1 objState)) => virtual
-                                (into virtual (filter #(satisfies? VirtualObjectNode %) (:entries objState)))
-                            )
-                        )
-                    )
-            ]
-                (recur virtual (next s))
-            )
-        )
-    )
-
-    (defn- #_"GraphEffects" PartialEscapeClosure''processNodeWithState-4 [#_"PartialEscapeClosure" this, #_"NodeWithState" nodeWithState, #_"PartialEscapeBlockState" state, #_"GraphEffects" effects]
-        (loop-when [effects effects #_"seq" s (seq (NodeWithState''states-1 nodeWithState))] (some? s) => effects
-            (let [
-                #_"FrameState" frameState (PartialEscapeClosure'getUniqueFramestate-2 nodeWithState, (first s))
-                #_"{VirtualObjectNode}" virtual #{}
-                _ (VirtualState'''applyToNonVirtual-2 frameState, (CollectVirtualObjectsClosure'new-4 this, virtual, effects, state))
-                virtual (PartialEscapeClosure''collectLockedVirtualObjects-3 this, state, virtual)
-                virtual (PartialEscapeClosure''collectReferencedVirtualObjects-3 this, state, virtual)
-                effects (reduce #(GraphEffects''addVirtualMapping-3 %1, frameState, (ObjectState''createEscapeObjectState-2 (nth (:objectStates state) (:oid %2)), %2)) effects virtual)
-            ]
-                (recur effects (next s))
-            )
-        )
-    )
-
-    ;;;
-     ; This replaces all inputs that point to virtual or materialized values with the actual value,
-     ; materializing if necessary.
-     ; Also takes care of frame states, adding the necessary VirtualObjectState.
-     ;;
-    (defn- #_"GraphEffects" PartialEscapeClosure''processNodeInputs-5 [#_"PartialEscapeClosure" this, #_"ValueNode" node, #_"FixedNode" insertBefore, #_"PartialEscapeBlockState" state, #_"GraphEffects" effects]
-        (let [
-            effects
-                (loop-when [effects effects #_"seq" s (seq (Node''inputs-1 node))] (some? s) => effects
-                    (let [
-                        #_"Node" input (first s)
-                        effects
-                            (when (satisfies? ValueNode input) => effects
-                                (let [
-                                    #_"ValueNode" alias (PartialEscapeClosure''getAlias-2 this, input)
-                                ]
-                                    (when (satisfies? VirtualObjectNode alias) => effects
-                                        (PartialEscapeClosure''ensureMaterialized-5 this, state, (:oid alias), insertBefore, effects)
-                                        (GraphEffects''replaceFirstInput-4 effects, node, input, (:materializedValue (nth (:objectStates state) (:oid alias))))
-                                    )
-                                )
-                            )
-                    ]
-                        (recur effects (next s))
-                    )
-                )
-        ]
-            (when (satisfies? NodeWithState node) => effects
-                (PartialEscapeClosure''processNodeWithState-4 this, node, state, effects)
-            )
-        )
-    )
-
-    ;;;
-     ; Nodes created during canonicalizations need to be scanned for values that were replaced.
-     ;;
-    (defn- #_"boolean" PartialEscapeClosure''prepareCanonicalNode-3 [#_"PartialEscapeClosure" this, #_"ValueNode" node, #_"PartialEscapeBlockState" state]
-        (loop-when [#_"seq" s (seq (Node''inputPositions-1 node))] (some? s) => true
-            (let [
-                #_"Position" pos (first s)
-                #_"Node" input (Position''get-2 pos, node)
-            ]
-                (and
-                    (when (satisfies? ValueNode input) => true
-                        (if (Node''isAlive-1 input)
-                            (when-not (satisfies? VirtualObjectNode input) => true
-                                (let [
-                                    #_"ObjectState" obj (PartialEscapeClosure''getObjectState-3 this, state, input)
-                                ]
-                                    (if (nil? obj)
-                                        (do
-                                            (Position''initialize-3 pos, node, (EffectsClosure''getScalarAlias-2 this, input))
-                                            true
-                                        )
-                                        (if (ObjectState''isVirtual-1 obj)
-                                            false
-                                            (do
-                                                (Position''initialize-3 pos, node, (:materializedValue obj))
-                                                true
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                            (PartialEscapeClosure''prepareCanonicalNode-3 this, input, state)
-                        )
-                    )
-                    (recur (next s))
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; This tries to canonicalize the node based on improved (replaced) inputs.
-     ;;
-    (defn- #_"boolean" PartialEscapeClosure''processNodeWithScalarReplacedInputs-5 [#_"PartialEscapeClosure" this, #_"ValueNode" node, #_"FixedNode" insertBefore, #_"PartialEscapeBlockState" state, #_"GraphEffects" effects]
-        (let [
-            #_"ValueNode" canonicalizedValue
-                (condp satisfies? node
-                    Unary
-                        (let [
-                            #_"ObjectState" valueObj (PartialEscapeClosure''getObjectState-3 this, state, (Unary'''getValue-1 node))
-                            #_"ValueNode" valueAlias (if (some? valueObj) (:materializedValue valueObj) (EffectsClosure''getScalarAlias-2 this, (Unary'''getValue-1 node)))
-                        ]
-                            (when-not (= valueAlias (Unary'''getValue-1 node)) => node
-                                (Unary'''canonical-3 node, (:tool this), valueAlias)
-                            )
-                        )
-                    Binary
-                        (let [
-                            #_"ObjectState" xObj (PartialEscapeClosure''getObjectState-3 this, state, (:x node))
-                            #_"ValueNode" xAlias (if (some? xObj) (:materializedValue xObj) (EffectsClosure''getScalarAlias-2 this, (:x node)))
-                            #_"ObjectState" yObj (PartialEscapeClosure''getObjectState-3 this, state, (:y node))
-                            #_"ValueNode" yAlias (if (some? yObj) (:materializedValue yObj) (EffectsClosure''getScalarAlias-2 this, (:y node)))
-                        ]
-                            (when-not (and (= xAlias (:x node)) (= yAlias (:y node))) => node
-                                (Binary'''canonical-4 node, (:tool this), xAlias, yAlias)
-                            )
-                        )
-                    (§ return false)
-                )
-        ]
-            (and (some? canonicalizedValue) (not= canonicalizedValue node)
-                (if (Node''isAlive-1 canonicalizedValue)
-                    (let [
-                        #_"ValueNode" alias (PartialEscapeClosure''getAliasAndResolve-3 this, state, canonicalizedValue)
-                    ]
-                        (if (satisfies? VirtualObjectNode alias)
-                            (do
-                                (§ ass! this (PartialEscapeClosure''addVirtualAlias-3 this, alias, node))
-                                (§ ass! effects (GraphEffects''deleteNode-2 effects, node))
-                            )
-                            (do
-                                (§ ass! effects (GraphEffects''replaceAtUsages-4 effects, node, alias, insertBefore))
-                                (§ ass! this (EffectsClosure''addScalarAlias-3 this, node, alias))
-                            )
-                        )
-                        true
-                    )
-                    (and (PartialEscapeClosure''prepareCanonicalNode-3 this, canonicalizedValue, state)
-                        (do
-                            (if (satisfies? ControlSinkNode canonicalizedValue)
-                                (do
-                                    (§ ass! effects (GraphEffects''replaceWithSink-3 effects, (§ cast #_"FixedWithNextNode" node), canonicalizedValue))
-                                    (§ ass! state (assoc state :dead? true))
-                                )
-                                (do
-                                    (§ ass! effects (GraphEffects''replaceAtUsages-4 effects, node, canonicalizedValue, insertBefore))
-                                    (§ ass! this (EffectsClosure''addScalarAlias-3 this, node, canonicalizedValue))
-                                )
-                            )
-                            true
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defn- #_"boolean" PartialEscapeClosure''processNodeInternal-5 [#_"PartialEscapeClosure" this, #_"Node" node, #_"PartialEscapeBlockState" state, #_"GraphEffects" effects, #_"FixedWithNextNode" lastFixedNode]
-        (let [
-            #_"FixedNode" nextFixedNode (when (some? lastFixedNode) (:next lastFixedNode))
-            _
-                (when (satisfies? VirtualizableAllocation node)
-                    (when-not (PartialEscapeClosure''processVirtualizable-5 this, node, nextFixedNode, state, effects)
-                        (§ return false)
-                    )
-                    (when (:deleted (:tool this))
-                        (§ return true)
-                    )
-                )
-            _
-                (when (and (contains? (:hasVirtualInputs this) node) (satisfies? ValueNode node))
-                    (when (satisfies? Virtualizable node)
-                        (when-not (PartialEscapeClosure''processVirtualizable-5 this, node, nextFixedNode, state, effects)
-                            (§ return false)
-                        )
-                        (when (:deleted (:tool this))
-                            (§ return true)
-                        )
-                    )
-                    (§ ass! effects (PartialEscapeClosure''processNodeInputs-5 this, (§ cast #_"ValueNode" node), nextFixedNode, state, effects))
-                )
-        ]
-            (and (EffectsClosure''hasScalarReplacedInputs-2 this, node) (satisfies? ValueNode node) (PartialEscapeClosure''processNodeWithScalarReplacedInputs-5 this, node, nextFixedNode, state, effects))
-        )
-    )
-
-    ;;;
-     ; @return true if the node was deleted, false otherwise
-     ;;
-    (defm PartialEscapeClosure EffectsClosure
-        (#_"boolean" EffectsClosure'''processNode-5 [#_"PartialEscapeClosure" this, #_"Node" node, #_"PartialEscapeBlockState" state, #_"GraphEffects" effects, #_"FixedWithNextNode" lastFixedNode]
-            ;; These checks make up for the fact that an earliest schedule moves CallTargetNodes upwards
-            ;; and thus materializes virtual objects needlessly. Also, FrameStates and ConstantNodes are
-            ;; scheduled, but can safely be ignored.
-            (if (or (satisfies? CallTargetNode node) (satisfies? FrameState node) (satisfies? ConstantNode node))
-                false
-                (if (satisfies? InvokeNode node)
-                    (PartialEscapeClosure''processNodeInternal-5 this, (:callTarget node), state, effects, lastFixedNode)
-                    (PartialEscapeClosure''processNodeInternal-5 this, node, state, effects, lastFixedNode)
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; @return true if materialization happened, false if not
-     ;;
-    (defn #_"boolean" PartialEscapeClosure''ensureMaterialized-5 [#_"PartialEscapeClosure" this, #_"PartialEscapeBlockState" state, #_"int" id, #_"FixedNode" materializeBefore, #_"GraphEffects" effects]
-        (and (ObjectState''isVirtual-1 (nth (:objectStates state) id))
-            (do
-                (§ ass! state (PartialEscapeBlockState''materializeBefore-4 state, materializeBefore, (nth (:peVirtualObjects this) id), effects))
-                true
-            )
-        )
-    )
-
-    (defn #_"boolean" PartialEscapeClosure'updateStatesForMaterialized-3 [#_"PartialEscapeBlockState" state, #_"VirtualObjectNode" virtual, #_"ValueNode" materializedValue]
-        ;; update all existing states with the newly materialized object
-        (loop-when [#_"boolean" changed? false #_"int" i 0] (< i (count (:objectStates state))) => changed?
-            (let [
-                #_"ObjectState" objState (nth (:objectStates state) i)
-                changed?
-                    (when (and (some? objState) (ObjectState''isVirtual-1 objState)) => changed?
-                        (let [
-                            #_"[ValueNode]" entries (:entries objState)
-                        ]
-                            (loop-when [changed? changed? #_"int" j 0] (< j (count entries)) => changed?
-                                (let [
-                                    changed?
-                                        (when (= (nth entries j) virtual) => changed?
-                                            (§ ass! state (PartialEscapeBlockState''setEntry-4 state, i, j, materializedValue))
-                                            true
-                                        )
-                                ]
-                                    (recur changed? (inc j))
-                                )
-                            )
-                        )
-                    )
-            ]
-                (recur changed? (inc i))
-            )
-        )
-    )
-
-    (defm PartialEscapeClosure EffectsClosure
-        (#_"PartialEscapeBlockState" EffectsClosure'''stripKilledLoopLocations-3 [#_"PartialEscapeClosure" this, #_"Loop" _loop, #_"PartialEscapeBlockState" originalInitialState]
-            (let [
-                #_"PartialEscapeBlockState" initialState (EffectsClosure'''stripKilledLoopLocations-3 (§ super EffectsClosure'iface), _loop, originalInitialState)
-            ]
-                (when (< GraalOptions'escapeAnalysisLoopCutoff (:depth _loop)) => initialState
-                    ;; After we've reached the maximum loop nesting, we'll simply materialize everything we
-                    ;; can to make sure that the loops only need to be iterated one time. Care is taken here
-                    ;; to not materialize virtual objects that have the "ensureVirtualized" flag set.
-                    (let [
-                        #_"LoopBeginNode" loopBegin (:beginNode (:header _loop))
-                        #_"AbstractEndNode" end (LoopBeginNode''forwardEnd-1 loopBegin)
-                        #_"Block" loopPredecessor (Block''getFirstPredecessor-1 (:header _loop))
-                        #_"int" n (count (:objectStates initialState))
-                        #_"BitSet" ensureVirtualized (BitSet.)
-                        _
-                            (dotimes [#_"int" i n]
-                                (let [
-                                    #_"ObjectState" state (nth (:objectStates initialState) i)
-                                ]
-                                    (when (and (some? state) (ObjectState''isVirtual-1 state) (:ensureVirtualized state))
-                                        (#_"BitSet" .set ensureVirtualized, i)
-                                    )
-                                )
-                            )
-                        _
-                            (loop []
-                                ;; propagate "ensureVirtualized" flag
-                                (let [
-                                    #_"boolean" changed?
-                                        (loop-when [changed? false #_"int" i 0] (< i n) => changed?
-                                            (let [
-                                                changed?
-                                                    (when-not (#_"BitSet" .get ensureVirtualized, i) => changed?
-                                                        (let [
-                                                            #_"ObjectState" state (nth (:objectStates initialState) i)
-                                                        ]
-                                                            (when (and (some? state) (ObjectState''isVirtual-1 state)) => changed?
-                                                                (loop-when [changed? changed? #_"seq" s (seq (:entries state))] (some? s) => changed?
-                                                                    (let [
-                                                                        #_"ValueNode" entry (first s)
-                                                                    ]
-                                                                        (when (and (satisfies? VirtualObjectNode entry) (#_"BitSet" .get ensureVirtualized, (:oid entry))) => (recur changed? (next s))
-                                                                            (#_"BitSet" .set ensureVirtualized, i)
-                                                                            true
-                                                                        )
-                                                                    )
-                                                                )
-                                                            )
-                                                        )
-                                                    )
-                                            ]
-                                                (recur changed? (inc i))
-                                            )
-                                        )
-                                ]
-                                    (ß recur-if changed? [])
-                                )
-                            )
-                    ]
-                        (loop-when [initialState initialState #_"int" i 0] (< i n) => initialState
-                            (let [
-                                #_"ObjectState" state (nth (:objectStates initialState) i)
-                                initialState
-                                    (when (and (some? state) (ObjectState''isVirtual-1 state) (not (#_"BitSet" .get ensureVirtualized, i))) => initialState
-                                        (PartialEscapeBlockState''materializeBefore-4 initialState, end, (nth (:peVirtualObjects this) i), (get (:blockEffects this) loopPredecessor))
-                                    )
-                            ]
-                                (recur initialState (inc i))
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defm PartialEscapeClosure EffectsClosure
-        (#_"this" EffectsClosure'''processInitialLoopState-3 [#_"PartialEscapeClosure" this, #_"Loop" _loop, #_"PartialEscapeBlockState" initialState]
-            (loop-when [this this #_"seq" s (seq (AbstractMergeNode''phis-1 (:beginNode (:header _loop))))] (some? s) => this
-                (let [
-                    #_"PhiNode" phi (first s)
-                    this
-                        (when (some? (nth (:phiValues phi) 0)) => this
-                            (let [
-                                #_"ValueNode" alias (PartialEscapeClosure''getAliasAndResolve-3 this, initialState, (nth (:phiValues phi) 0))
-                            ]
-                                (if (satisfies? VirtualObjectNode alias)
-                                    (PartialEscapeClosure''addVirtualAlias-3 this, alias, phi)
-                                    (update this :aliases assoc phi nil)
-                                )
-                            )
-                        )
-                ]
-                    (recur this (next s))
-                )
-            )
-        )
-    )
-
-    (defn- #_"void" PartialEscapeClosure'processVirtualAtLoopExit-6 [#_"LoopExitNode" exitNode, #_"GraphEffects" effects, #_"int" object, #_"ObjectState" exitObjState, #_"ObjectState" initialObjState, #_"PartialEscapeBlockState" exitState]
-        (dotimes [#_"int" i (count (:entries exitObjState))]
-            (let [
-                #_"ValueNode" value (ObjectState''getEntry-2 (nth (:objectStates exitState) object), i)
-            ]
-                (when-not (or (satisfies? VirtualObjectNode value) (satisfies? ConstantNode value))
-                    (when-not (and (not (AbstractMergeNode''isPhiAtMerge-2 (:loopBegin exitNode), value)) (some? initialObjState) (ObjectState''isVirtual-1 initialObjState) (= (ObjectState''getEntry-2 initialObjState, i) value))
-                        (let [
-                            #_"ValueProxyNode" proxy (ValueProxyNode'new-2 value, exitNode)
-                            _ (§ ass! exitState (PartialEscapeBlockState''setEntry-4 exitState, object, i, proxy))
-                            _ (§ ass! effects (GraphEffects''addFloatingNode-2 effects, proxy))
-                        ]
-                        )
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (defn- #_"void" PartialEscapeClosure'processMaterializedAtLoopExit-7 [#_"LoopExitNode" exitNode, #_"GraphEffects" effects, #_"{Integer ValueProxyNode}" proxies, #_"int" object, #_"ObjectState" exitObjState, #_"ObjectState" initialObjState, #_"PartialEscapeBlockState" exitState]
-        (when (or (nil? initialObjState) (ObjectState''isVirtual-1 initialObjState))
-            (let [
-                #_"ValueProxyNode" proxy (get proxies object)
-                proxy
-                    (if (nil? proxy)
-                        (let [
-                            proxy (ValueProxyNode'new-2 (:materializedValue exitObjState), exitNode)
-                            _ (§ ass! effects (GraphEffects''addFloatingNode-2 effects, proxy))
-                        ]
-                            proxy
-                        )
-                        (let [
-                            _ (§ ass! effects (GraphEffects''replaceFirstInput-4 effects, proxy, (:value proxy), (:materializedValue exitObjState)))
-                        ]
-                            ;; nothing to do - will be handled in processNode
-                            proxy
-                        )
-                    )
-                _ (§ ass! exitState (PartialEscapeBlockState''updateMaterializedValue-3 exitState, object, proxy))
-            ]
-            )
-        )
-        nil
-    )
-
-    (defm PartialEscapeClosure EffectsClosure
-        (#_"void" EffectsClosure'''processLoopExit-5 [#_"PartialEscapeClosure" this, #_"LoopExitNode" exitNode, #_"PartialEscapeBlockState" initialState, #_"PartialEscapeBlockState" exitState, #_"GraphEffects" effects]
-            (when (:hasValueProxies (:graph exitNode))
-                (let [
-                    #_"{Integer ValueProxyNode}" proxies
-                        (loop-when [proxies {} #_"seq" s (seq (LoopExitNode''proxies-1 exitNode))] (some? s) => proxies
-                            (let [
-                                #_"ValueProxyNode" proxy (first s)
-                                #_"ValueNode" alias (PartialEscapeClosure''getAlias-2 this, (:value proxy))
-                                proxies
-                                    (when (satisfies? VirtualObjectNode alias) => proxies
-                                        (assoc proxies (:oid alias) proxy)
-                                    )
-                            ]
-                                (recur proxies (next s))
-                            )
-                        )
-                ]
-                    (dotimes [#_"int" i (count (:objectStates exitState))]
-                        (let [
-                            #_"ObjectState" exitObjState (nth (:objectStates exitState) i)
-                        ]
-                            (when (some? exitObjState)
-                                (let [
-                                    #_"ObjectState" initialObjState (when (< i (count (:objectStates initialState))) (nth (:objectStates initialState) i))
-                                ]
-                                    (if (ObjectState''isVirtual-1 exitObjState)
-                                        (PartialEscapeClosure'processVirtualAtLoopExit-6 exitNode, effects, i, exitObjState, initialObjState, exitState)
-                                        (PartialEscapeClosure'processMaterializedAtLoopExit-7 exitNode, effects, proxies, i, exitObjState, initialObjState, exitState)
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-            nil
-        )
-    )
-
-    (defm PartialEscapeClosure EffectsClosure
-        (#_"PartialEscapeMergeProcessor" EffectsClosure'''createMergeProcessor-2 [#_"PartialEscapeClosure" this, #_"Block" merge]
-            (PartialEscapeMergeProcessor'new-2 this, merge)
-        )
-    )
-
-    (defn #_"ObjectState" PartialEscapeClosure''getObjectState-3 [#_"PartialEscapeClosure" this, #_"PartialEscapeBlockState" state, #_"ValueNode" value]
-        (when (some? value)
-            (if (and (Node''isAlive-1 value) (contains? (:aliases this) value))
-                (let [
-                    #_"ValueNode" object (get (:aliases this) value)
-                ]
-                    (when (satisfies? VirtualObjectNode object)
-                        (let [#_"int" id (:oid object)] (when (< id (count (:objectStates state))) (nth (:objectStates state) id)))
-                    )
-                )
-                (when (satisfies? VirtualObjectNode value)
-                    (let [#_"int" id (:oid value)] (when (< id (count (:objectStates state))) (nth (:objectStates state) id)))
-                )
-            )
-        )
-    )
-
-    (defn #_"ValueNode" PartialEscapeClosure''getAlias-2 [#_"PartialEscapeClosure" this, #_"ValueNode" value]
-        (if (and (some? value) (not (satisfies? VirtualObjectNode value)) (Node''isAlive-1 value) (contains? (:aliases this) value))
-            (or (get (:aliases this) value)
-                value
-            )
-            value
-        )
-    )
-
-    (defn #_"ValueNode" PartialEscapeClosure''getAliasAndResolve-3 [#_"PartialEscapeClosure" this, #_"PartialEscapeBlockState" state, #_"ValueNode" value]
-        (let [
-            #_"ValueNode" result (PartialEscapeClosure''getAlias-2 this, value)
-        ]
-            (when (satisfies? VirtualObjectNode result) => result
-                (let [
-                    #_"int" id (:oid result)
-                ]
-                    (when-not (or (= id -1) (ObjectState''isVirtual-1 (nth (:objectStates state) id))) => result
-                        (:materializedValue (nth (:objectStates state) id))
-                    )
-                )
-            )
-        )
-    )
-
-    (defn- #_"this" PartialEscapeClosure''markVirtualUsages-2 [#_"PartialEscapeClosure" this, #_"Node" node]
-        (when-not (contains? (:hasVirtualInputs this) node) => this
-            (let [
-                this (update this :hasVirtualInputs conj node)
-            ]
-                (when (satisfies? VirtualState node) => this
-                    (reduce PartialEscapeClosure''markVirtualUsages-2 this (:nodeUsages node))
-                )
-            )
-        )
-    )
-
-    (defn #_"this" PartialEscapeClosure''addVirtualAlias-3 [#_"PartialEscapeClosure" this, #_"VirtualObjectNode" virtual, #_"ValueNode" node]
-        (when (Node''isAlive-1 node) => this
-            (let [
-                this (update this :aliases assoc node virtual)
-            ]
-                (reduce PartialEscapeClosure''markVirtualUsages-2 this (:nodeUsages node))
-            )
-        )
-    )
-)
-
-(class-ns PEReadEliminationClosure [PartialEscapeClosure, EffectsClosure, BlockIteratorClosure #_"<PEReadEliminationBlockState>"]
-    (defn #_"PEReadEliminationClosure" PEReadEliminationClosure'new-1 [#_"Schedule" schedule]
-        (merge (PEReadEliminationClosure'class.) (PartialEscapeClosure'new-1 schedule))
-    )
-
-    (defn- #_"boolean" PEReadEliminationClosure''processLoad-8 [#_"PEReadEliminationClosure" this, #_"FixedNode" load, #_"ValueNode" object, #_"LocationIdentity" location, #_"int" index, #_"JavaKind" kind, #_"PEReadEliminationBlockState" state, #_"GraphEffects" effects]
-        (let [
-            #_"ValueNode" unproxiedObject (GraphUtil'unproxify-1n object)
-            #_"ValueNode" cachedValue (PEReadEliminationBlockState''getReadCache-6 state, unproxiedObject, location, index, kind, this)
-        ]
-            (if (some? cachedValue)
-                (let [
-                    ;; perform the read elimination
-                    _ (§ ass! effects (GraphEffects''replaceAtUsages-4 effects, load, cachedValue, load))
-                    _ (§ ass! this (EffectsClosure''addScalarAlias-3 this, load, cachedValue))
-                ]
-                    true
-                )
-                (let [
-                    _ (§ ass! state (PEReadEliminationBlockState''addReadCache-8 state, unproxiedObject, location, index, kind, false, load, this))
-                ]
-                    false
-                )
-            )
-        )
-    )
-
-    (defn- #_"boolean" PEReadEliminationClosure''processLoadField-4 [#_"PEReadEliminationClosure" this, #_"LoadFieldNode" load, #_"PEReadEliminationBlockState" state, #_"GraphEffects" effects]
-        (if (AccessFieldNode''isVolatile-1 load)
-            (let [
-                _ (§ ass! state (PEReadEliminationBlockState''killReadCache-1 state))
-            ]
-                false
-            )
-            (PEReadEliminationClosure''processLoad-8 this, load, (:object load), (FieldLocationIdentity'new-1 (:field load)), -1, (JavaField''getJavaKind-1 (:field load)), state, effects)
-        )
-    )
-
-    (defn- #_"boolean" PEReadEliminationClosure''processStore-10 [#_"PEReadEliminationClosure" this, #_"FixedNode" store, #_"ValueNode" object, #_"LocationIdentity" location, #_"int" index, #_"JavaKind" accessKind, #_"boolean" overflowAccess, #_"ValueNode" value, #_"PEReadEliminationBlockState" state, #_"GraphEffects" effects]
-        (let [
-            #_"ValueNode" unproxiedObject (GraphUtil'unproxify-1n object)
-            #_"ValueNode" cachedValue (PEReadEliminationBlockState''getReadCache-6 state, object, location, index, accessKind, this)
-            #_"ValueNode" finalValue (EffectsClosure''getScalarAlias-2 this, value)
-            #_"boolean" result
-                (when (= (GraphUtil'unproxify-1n finalValue) (GraphUtil'unproxify-1n cachedValue)) => false
-                    (§ ass! effects (GraphEffects''deleteNode-2 effects, store))
-                    true
-                )
-            _ (§ ass! state (PEReadEliminationBlockState''killReadCache-3 state, location, index))
-            _ (§ ass! state (PEReadEliminationBlockState''addReadCache-8 state, unproxiedObject, location, index, accessKind, overflowAccess, finalValue, this))
-        ]
-            result
-        )
-    )
-
-    (defn- #_"boolean" PEReadEliminationClosure''processStoreField-4 [#_"PEReadEliminationClosure" this, #_"StoreFieldNode" store, #_"PEReadEliminationBlockState" state, #_"GraphEffects" effects]
-        (if (AccessFieldNode''isVolatile-1 store)
-            (let [
-                _ (§ ass! state (PEReadEliminationBlockState''killReadCache-1 state))
-            ]
-                false
-            )
-            (let [
-                #_"JavaKind" kind (JavaField''getJavaKind-1 (:field store))
-            ]
-                (PEReadEliminationClosure''processStore-10 this, store, (:object store), (FieldLocationIdentity'new-1 (:field store)), -1, kind, false, (:value store), state, effects)
-            )
-        )
-    )
-
-    (defn- #_"JavaKind" PEReadEliminationClosure'getElementKindFromStamp-1 [#_"ValueNode" array]
-        (let [
-            #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp array))
-        ]
-            (when (and (some? type) (JavaType''isArray-1 type)) => :JavaKind'Illegal
-                (JavaType'''getJavaKind-1 (JavaType'''getComponentType-1 type))
-            )
-        )
-    )
-
-    (defn- #_"boolean" PEReadEliminationClosure''processLoadIndexed-4 [#_"PEReadEliminationClosure" this, #_"LoadIndexedNode" load, #_"PEReadEliminationBlockState" state, #_"GraphEffects" effects]
-        (and (satisfies? ConstantNode (AccessIndexedNode''index-1 load))
-            (let [
-                #_"int" index (JavaConstant'''asInt-1 (:value (AccessIndexedNode''index-1 load)))
-                ;; BALOAD (with elementKind being Byte) can be used to retrieve values from boolean arrays.
-                #_"JavaKind" elementKind (:elementKind load)
-                elementKind
-                    (when (= elementKind :JavaKind'Byte) => elementKind
-                        (let [
-                            elementKind (PEReadEliminationClosure'getElementKindFromStamp-1 (:array load))
-                        ]
-                            (when (= elementKind :JavaKind'Illegal) => elementKind
-                                (§ return false)
-                            )
-                        )
-                    )
-            ]
-                (PEReadEliminationClosure''processLoad-8 this, load, (:array load), (NamedLocationIdentity'getArrayLocation-1 elementKind), index, elementKind, state, effects)
-            )
-        )
-    )
-
-    (defn- #_"boolean" PEReadEliminationClosure''processStoreIndexed-4 [#_"PEReadEliminationClosure" this, #_"StoreIndexedNode" store, #_"PEReadEliminationBlockState" state, #_"GraphEffects" effects]
-        (let [
-            #_"int" index (if (satisfies? ConstantNode (AccessIndexedNode''index-1 store)) (JavaConstant'''asInt-1 (:value (AccessIndexedNode''index-1 store))) -1)
-            ;; BASTORE (with elementKind being Byte) can be used to store values in boolean arrays.
-            #_"JavaKind" elementKind (:elementKind store)
-            elementKind
-                (when (= elementKind :JavaKind'Byte) => elementKind
-                    (let [
-                        elementKind (PEReadEliminationClosure'getElementKindFromStamp-1 (:array store))
-                    ]
-                        (when (= elementKind :JavaKind'Illegal) => elementKind
-                            ;; Could not determine the actual access kind from stamp. Hence kill both.
-                            (§ ass! state (PEReadEliminationBlockState''killReadCache-3 state, (NamedLocationIdentity'getArrayLocation-1 :JavaKind'Boolean), index))
-                            (§ ass! state (PEReadEliminationBlockState''killReadCache-3 state, (NamedLocationIdentity'getArrayLocation-1 :JavaKind'Byte), index))
-                            (§ return false)
-                        )
-                    )
-                )
-            #_"LocationIdentity" arrayLocation (NamedLocationIdentity'getArrayLocation-1 elementKind)
-        ]
-            (when (= index -1) => (PEReadEliminationClosure''processStore-10 this, store, (:array store), arrayLocation, index, elementKind, false, (:value store), state, effects)
-                (§ ass! state (PEReadEliminationBlockState''killReadCache-3 state, arrayLocation, -1))
-                false
-            )
-        )
-    )
-
-    (defn- #_"boolean" PEReadEliminationClosure''processArrayLength-4 [#_"PEReadEliminationClosure" this, #_"ArrayLengthNode" length, #_"PEReadEliminationBlockState" state, #_"GraphEffects" effects]
-        (PEReadEliminationClosure''processLoad-8 this, length, (:array length), NamedLocationIdentity'ARRAY_LENGTH, -1, :JavaKind'Int, state, effects)
-    )
-
-    (defn- #_"boolean" PEReadEliminationClosure'isOverflowAccess-2 [#_"JavaKind" accessKind, #_"JavaKind" declaredKind]
-        (cond
-            (= accessKind declaredKind)           false
-            (= accessKind :JavaKind'Object)       (case declaredKind (:JavaKind'Object :JavaKind'Long) false true)
-            (JavaKind'isPrimitive-1 declaredKind) (< (JavaKind'getBitCount-1 declaredKind) (JavaKind'getBitCount-1 accessKind))
-            :else                                 true
-        )
-    )
-
-    (defn- #_"boolean" PEReadEliminationClosure''processUnsafeLoad-4 [#_"PEReadEliminationClosure" this, #_"RawLoadNode" load, #_"PEReadEliminationBlockState" state, #_"GraphEffects" effects]
-        (and (satisfies? ConstantNode (:offset load))
-            (let [
-                #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp (:object load)))
-            ]
-                (and (some? type) (JavaType''isArray-1 type)
-                    (let [
-                        #_"JavaKind" accessKind (:accessKind load)
-                        #_"JavaKind" componentKind (JavaType'''getJavaKind-1 (JavaType'''getComponentType-1 type))
-                        #_"long" offset (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:offset load)))
-                        #_"int" index (VirtualArrayNode'entryIndexForOffset-4 offset, accessKind, (JavaType'''getComponentType-1 type), Integer/MAX_VALUE)
-                        #_"ValueNode" object (GraphUtil'unproxify-1n (:object load))
-                        #_"LocationIdentity" location (NamedLocationIdentity'getArrayLocation-1 componentKind)
-                        #_"ValueNode" cachedValue (PEReadEliminationBlockState''getReadCache-6 state, object, location, index, accessKind, this)
-                    ]
-                        (if (some? cachedValue)
-                            (let [
-                                _ (§ ass! effects (GraphEffects''replaceAtUsages-4 effects, load, cachedValue, load))
-                                _ (§ ass! this (EffectsClosure''addScalarAlias-3 this, load, cachedValue))
-                            ]
-                                true
-                            )
-                            (let [
-                                _ (§ ass! state (PEReadEliminationBlockState''addReadCache-8 state, object, location, index, accessKind, (PEReadEliminationClosure'isOverflowAccess-2 accessKind, componentKind), load, this))
-                            ]
-                                false
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defn- #_"PEReadEliminationBlockState" PEReadEliminationClosure'processIdentity-2 [#_"PEReadEliminationBlockState" state, #_"LocationIdentity" location]
-        (if (LocationIdentity''isAny-1 location)
-            (PEReadEliminationBlockState''killReadCache-1 state)
-            (PEReadEliminationBlockState''killReadCache-3 state, location, -1)
-        )
-    )
-
-    (defn- #_"boolean" PEReadEliminationClosure''processUnsafeStore-4 [#_"PEReadEliminationClosure" this, #_"RawStoreNode" store, #_"PEReadEliminationBlockState" state, #_"GraphEffects" effects]
-        (let [
-            #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp (:object store)))
-        ]
-            (if (and (some? type) (JavaType''isArray-1 type))
-                (let [
-                    #_"JavaKind" accessKind (:accessKind store)
-                    #_"JavaKind" componentKind (JavaType'''getJavaKind-1 (JavaType'''getComponentType-1 type))
-                    #_"LocationIdentity" location (NamedLocationIdentity'getArrayLocation-1 componentKind)
-                ]
-                    (if (satisfies? ConstantNode (:offset store))
-                        (let [
-                            #_"long" offset (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:offset store)))
-                            #_"boolean" overflowAccess (PEReadEliminationClosure'isOverflowAccess-2 accessKind, componentKind)
-                            #_"int" index (if overflowAccess -1 (VirtualArrayNode'entryIndexForOffset-4 offset, accessKind, (JavaType'''getComponentType-1 type), Integer/MAX_VALUE))
-                        ]
-                            (PEReadEliminationClosure''processStore-10 this, store, (:object store), location, index, accessKind, overflowAccess, (:value store), state, effects)
-                        )
-                        (let [
-                            _ (§ ass! state (PEReadEliminationClosure'processIdentity-2 state, location))
-                        ]
-                            false
-                        )
-                    )
-                )
-                (let [
-                    _ (§ ass! state (PEReadEliminationBlockState''killReadCache-1 state))
-                ]
-                    false
-                )
-            )
-        )
-    )
-
-    (defm PEReadEliminationClosure BlockIteratorClosure
-        (#_"PEReadEliminationBlockState" BlockIteratorClosure'''getInitialState-1 [#_"PEReadEliminationClosure" this]
-            (PEReadEliminationBlockState'new-0)
-        )
-    )
-
-    (defm PEReadEliminationClosure EffectsClosure
-        (#_"PartialEscapeMergeProcessor<PEReadEliminationBlockState>" EffectsClosure'''createMergeProcessor-2 [#_"PEReadEliminationClosure" this, #_"Block" merge]
-            (PEReadEliminationMergeProcessor'new-2 this, merge)
-        )
-
-        (#_"boolean" EffectsClosure'''processNode-5 [#_"PEReadEliminationClosure" this, #_"Node" node, #_"PEReadEliminationBlockState" state, #_"GraphEffects" effects, #_"FixedWithNextNode" lastFixedNode]
-            (or (EffectsClosure'''processNode-5 (§ super #_"PartialEscapeClosure"), node, state, effects, lastFixedNode)
-                (condp satisfies? node
-                    LoadFieldNode    (PEReadEliminationClosure''processLoadField-4 this, node, state, effects)
-                    StoreFieldNode   (PEReadEliminationClosure''processStoreField-4 this, node, state, effects)
-                    LoadIndexedNode  (PEReadEliminationClosure''processLoadIndexed-4 this, node, state, effects)
-                    StoreIndexedNode (PEReadEliminationClosure''processStoreIndexed-4 this, node, state, effects)
-                    ArrayLengthNode  (PEReadEliminationClosure''processArrayLength-4 this, node, state, effects)
-                    RawLoadNode      (PEReadEliminationClosure''processUnsafeLoad-4 this, node, state, effects)
-                    RawStoreNode     (PEReadEliminationClosure''processUnsafeStore-4 this, node, state, effects)
-                    Single
-                        (let [
-                            #_"LocationIdentity" location (Single'''getLocationIdentity-1 node)
-                            _ (§ ass! state (PEReadEliminationClosure'processIdentity-2 state, location))
-                        ]
-                            false
-                        )
-                    Multi
-                        (let [
-                            _
-                                (doseq [#_"LocationIdentity" location (Multi'''getLocationIdentities-1 node)]
-                                    (§ ass! state (PEReadEliminationClosure'processIdentity-2 state, location))
-                                )
-                        ]
-                            false
-                        )
-                    false
-                )
-            )
-        )
-
-        (#_"thi" EffectsClosure'''processInitialLoopState-3 [#_"PEReadEliminationClosure" this, #_"Loop" _loop, #_"PEReadEliminationBlockState" initialState]
-            (let [
-                this (EffectsClosure'''processInitialLoopState-3 (§ super #_"PartialEscapeClosure"), _loop, initialState)
-            ]
-                (when (seq (:readCache initialState)) => this
-                    (let [
-                        #_"{ValueNode [ValueNode [...]]}" firstValues
-                            (loop-when [firstValues nil #_"seq" s (seq (AbstractMergeNode''phis-1 (:beginNode (:header _loop))))] (some? s) => firstValues
-                                (let [
-                                    #_"PhiNode" phi (first s)
-                                    #_"ValueNode" value (nth (:phiValues phi) 0)
-                                    firstValues
-                                        (when (and (some? value) (JavaKind'isObject-1 (ValueNode''getStackKind-1 phi))) => firstValues
-                                            (let [
-                                                firstValues (or firstValues {})
-                                                value (GraphUtil'unproxify-1n value)
-                                            ]
-                                                (assoc firstValues value [value (get firstValues value)])
-                                            )
-                                        )
-                                ]
-                                    (recur firstValues (next s))
-                                )
-                            )
-                        _
-                            (when (some? firstValues)
-                                (doseq [#_"ReadCacheEntry" k (keys (:readCache initialState))]
-                                    (when (some? (:object k))
-                                        (loop-when-recur [[#_"ValueNode" value #_"[...]" pair :as _] (get firstValues (:object k))] (some? _) [pair]
-                                            (§ ass! initialState (PEReadEliminationBlockState''addReadCache-8 initialState, value, (:identity k), (:index k), (:kind k), (:overflowAccess k), (get (:readCache initialState) k), this))
-                                        )
-                                    )
-                                )
-                            )
-                    ]
-                        this
-                    )
-                )
-            )
-        )
-
-        (#_"void" EffectsClosure'''processLoopExit-5 [#_"PEReadEliminationClosure" this, #_"LoopExitNode" exitNode, #_"PEReadEliminationBlockState" initialState, #_"PEReadEliminationBlockState" exitState, #_"GraphEffects" effects]
-            (EffectsClosure'''processLoopExit-5 (§ super #_"PartialEscapeClosure"), exitNode, initialState, exitState, effects)
-
-            (when (:hasValueProxies (:graph exitNode))
-                (doseq [[#_"ReadCacheEntry" k #_"ValueNode" v] (:readCache exitState)]
-                    (when-not (= (get (:readCache initialState) k) v)
-                        (let [
-                            #_"ValueNode" value (PEReadEliminationBlockState''getReadCache-6 exitState, (:object k), (:identity k), (:index k), (:kind k), this)
-                        ]
-                            (when-not (and (satisfies? ValueProxyNode value) (= (:loopExit value) exitNode))
-                                (let [
-                                    #_"ValueProxyNode" proxy (ValueProxyNode'new-2 value, exitNode)
-                                    _ (§ ass! effects (GraphEffects''addFloatingNode-2 effects, proxy))
-                                    _ (§ ass! exitState (update exitState :readCache assoc k proxy))
-                                ]
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-            nil
-        )
-
-        (#_"this" EffectsClosure'''processKilledLoopLocations-4 [#_"PEReadEliminationClosure" this, #_"Loop" _loop, #_"PEReadEliminationBlockState" initialState, #_"PEReadEliminationBlockState" mergedStates]
-            (when (seq (:readCache initialState)) => this
-                (let [
-                    #_"LoopKillCache" loopKilledLocations (get (:loopLocationKillCache this) _loop)
-                ]
-                    ;; we have fully processed this loop the first time, remember to cache it the next time it is visited
-                    (if (nil? loopKilledLocations)
-                        (let [
-                            _ (§ ass loopKilledLocations (LoopKillCache'new-1 1)) ;; first visit
-                        ]
-                            (update this :loopLocationKillCache assoc _loop loopKilledLocations)
-                        )
-                        (let [
-                            _
-                                (if (< GraalOptions'readEliminationMaxLoopVisits (:visits loopKilledLocations))
-                                    (let [
-                                        ;; we have processed the loop too many times: kill all locations, so
-                                        ;; the inner loop will never be processed more than once again on visit
-                                        _ (§ ass! loopKilledLocations (LoopKillCache''setKillsAll-1 loopKilledLocations))
-                                    ]
-                                    )
-                                    ;; we have fully processed this loop >1 times, update the killed locations
-                                    (let [
-                                        #_"{LocationIdentity}" forwardEndLiveLocations #{}
-                                        _
-                                            (doseq [#_"ReadCacheEntry" k (keys (:readCache initialState))]
-                                                (§ ass! forwardEndLiveLocations (conj forwardEndLiveLocations (:identity k)))
-                                            )
-                                        _
-                                            (doseq [#_"ReadCacheEntry" k (keys (:readCache mergedStates))]
-                                                (§ ass! forwardEndLiveLocations (disj forwardEndLiveLocations (:identity k)))
-                                            )
-                                        ;; every location that is alive before the loop but not after is killed by the loop
-                                        _
-                                            (doseq [#_"LocationIdentity" location forwardEndLiveLocations]
-                                                (§ ass! loopKilledLocations (LoopKillCache''rememberLoopKilledLocation-2 loopKilledLocations, location))
-                                            )
-                                    ]
-                                    )
-                                )
-                            ;; remember the loop visit
-                            _ (§ ass! loopKilledLocations (LoopKillCache''visited-1 loopKilledLocations))
-                        ]
-                            this
-                        )
-                    )
-                )
-            )
-        )
-
-        (#_"PEReadEliminationBlockState" EffectsClosure'''stripKilledLoopLocations-3 [#_"PEReadEliminationClosure" this, #_"Loop" _loop, #_"PEReadEliminationBlockState" originalInitialState]
-            (let [
-                #_"PEReadEliminationBlockState" initialState (EffectsClosure'''stripKilledLoopLocations-3 (§ super #_"PartialEscapeClosure"), _loop, originalInitialState)
-                #_"LoopKillCache" loopKilledLocations (get (:loopLocationKillCache this) _loop)
-            ]
-                (when (and (some? loopKilledLocations) (LoopKillCache''loopKillsLocations-1 loopKilledLocations))
-                    (let [
-                        #_"Iterator<ReadCacheEntry>" it (#_"Iterable" .iterator (keys (:readCache initialState)))
-                    ]
-                        (while (#_"Iterator" .hasNext it)
-                            (when (LoopKillCache''containsLocation-2 loopKilledLocations, (:identity (#_"Iterator" .next it)))
-                                (#_"Iterator" .remove it)
-                            )
-                        )
-                    )
-                )
-                initialState
-            )
-        )
-    )
-)
-
-;;;
- ; This closure initially handled a set of nodes that is disjunct from PEReadEliminationClosure,
- ; but over time both have evolved so that there's a significant overlap.
- ;;
-(class-ns ReadEliminationClosure [EffectsClosure, BlockIteratorClosure #_"<ReadEliminationBlockState>"]
-    (defn #_"ReadEliminationClosure" ReadEliminationClosure'new-2 [#_"ControlFlowGraph" cfg, #_"boolean" considerGuards]
-        (merge (ReadEliminationClosure'class.) (EffectsClosure'new-2 nil, cfg)
-            (hash-map
-                #_"boolean" :considerGuards considerGuards
-            )
-        )
-    )
-
-    (defm ReadEliminationClosure BlockIteratorClosure
-        (#_"ReadEliminationBlockState" BlockIteratorClosure'''getInitialState-1 [#_"ReadEliminationClosure" this]
-            (ReadEliminationBlockState'new-0)
-        )
-    )
-
-    (defn- #_"ReadEliminationBlockState" ReadEliminationClosure'processIdentity-2 [#_"ReadEliminationBlockState" state, #_"LocationIdentity" location]
-        (if (LocationIdentity''isAny-1 location)
-            (ReadEliminationBlockState''killReadCache-1 state)
-            (ReadEliminationBlockState''killReadCache-2 state, location)
-        )
-    )
-
-    (defn- #_"GuardingNode" ReadEliminationClosure'getGuard-1 [#_"ValueNode" node]
-        (when (satisfies? GuardedNode node)
-            (GuardedNode'''getGuard-1 node)
-        )
-    )
-
-    (defn- #_"boolean" ReadEliminationClosure'areValuesReplaceable-3 [#_"ValueNode" originalValue, #_"ValueNode" replacementValue, #_"boolean" considerGuards]
-        (and (Stamp'''isCompatible-2s (:stamp originalValue), (:stamp replacementValue))
-            (or (not considerGuards)
-                (nil? (ReadEliminationClosure'getGuard-1 originalValue))
-                (= (ReadEliminationClosure'getGuard-1 originalValue) (ReadEliminationClosure'getGuard-1 replacementValue))
-            )
-        )
-    )
-
-    (defm ReadEliminationClosure EffectsClosure
-        (#_"MergeProcessor<ReadEliminationBlockState>" EffectsClosure'''createMergeProcessor-2 [#_"ReadEliminationClosure" this, #_"Block" merge]
-            (ReadEliminationMergeProcessor'new-1 merge)
-        )
-
-        (#_"boolean" EffectsClosure'''processNode-5 [#_"ReadEliminationClosure" this, #_"Node" node, #_"ReadEliminationBlockState" state, #_"GraphEffects" effects, #_"FixedWithNextNode" lastFixedNode]
-            (condp satisfies? node
-                AccessFieldNode
-                    (if (AccessFieldNode''isVolatile-1 node)
-                        (let [
-                            _ (§ ass! state (ReadEliminationClosure'processIdentity-2 state, LocationIdentity'ANY))
-                        ]
-                            false
-                        )
-                        (let [
-                            #_"ValueNode" object (GraphUtil'unproxify-1n (:object node))
-                            #_"LoadCacheEntry" identifier (LoadCacheEntry'new-2 object, (FieldLocationIdentity'new-1 (:field node)))
-                            #_"ValueNode" cachedValue (ReadEliminationBlockState''getCacheEntry-2 state, identifier)
-                        ]
-                            (if (satisfies? LoadFieldNode node)
-                                (if (and (some? cachedValue) (Stamp'''isCompatible-2s (:stamp node), (:stamp cachedValue)))
-                                    (let [
-                                        _ (§ ass! effects (GraphEffects''replaceAtUsages-4 effects, node, cachedValue, node))
-                                        _ (§ ass! this (EffectsClosure''addScalarAlias-3 this, node, cachedValue))
-                                    ]
-                                        true
-                                    )
-                                    (let [
-                                        _ (§ ass! state (ReadEliminationBlockState''addCacheEntry-3 state, identifier, node))
-                                    ]
-                                        false
-                                    )
-                                )
-                                (let [
-                                    #_"ValueNode" value (EffectsClosure''getScalarAlias-2 this, (:value node))
-                                    #_"boolean" del? (= (GraphUtil'unproxify-1n value) (GraphUtil'unproxify-1n cachedValue))
-                                    _
-                                        (when del?
-                                            (§ ass! effects (GraphEffects''deleteNode-2 effects, node))
-                                        )
-                                    _ (§ ass! state (ReadEliminationBlockState''killReadCache-2 state, (:identity identifier)))
-                                    _ (§ ass! state (ReadEliminationBlockState''addCacheEntry-3 state, identifier, value))
-                                ]
-                                    del?
-                                )
-                            )
-                        )
-                    )
-                ReadNode
-                    (and (LocationIdentity''isSingle-1 (Access'''getLocationIdentity-1 node))
-                        (let [
-                            #_"ValueNode" object (GraphUtil'unproxify-1n (Access'''getAddress-1 node))
-                            #_"LoadCacheEntry" identifier (LoadCacheEntry'new-2 object, (Access'''getLocationIdentity-1 node))
-                            #_"ValueNode" cachedValue (ReadEliminationBlockState''getCacheEntry-2 state, identifier)
-                        ]
-                            (if (and (some? cachedValue) (ReadEliminationClosure'areValuesReplaceable-3 node, cachedValue, (:considerGuards this)))
-                                (let [
-                                    _ (§ ass! effects (GraphEffects''replaceAtUsages-4 effects, node, cachedValue, node))
-                                    _ (§ ass! this (EffectsClosure''addScalarAlias-3 this, node, cachedValue))
-                                ]
-                                    true
-                                )
-                                (let [
-                                    _ (§ ass! state (ReadEliminationBlockState''addCacheEntry-3 state, identifier, node))
-                                ]
-                                    false
-                                )
-                            )
-                        )
-                    )
-                WriteNode
-                    (if (LocationIdentity''isSingle-1 (Access'''getLocationIdentity-1 node))
-                        (let [
-                            #_"ValueNode" object (GraphUtil'unproxify-1n (Access'''getAddress-1 node))
-                            #_"LoadCacheEntry" identifier (LoadCacheEntry'new-2 object, (Access'''getLocationIdentity-1 node))
-                            #_"ValueNode" cachedValue (ReadEliminationBlockState''getCacheEntry-2 state, identifier)
-                            #_"ValueNode" value (EffectsClosure''getScalarAlias-2 this, (:value node))
-                            #_"boolean" del? (= (GraphUtil'unproxify-1n value) (GraphUtil'unproxify-1n cachedValue))
-                            _
-                                (when del?
-                                    (§ ass! effects (GraphEffects''deleteNode-2 effects, node))
-                                )
-                            _ (§ ass! state (ReadEliminationClosure'processIdentity-2 state, (Access'''getLocationIdentity-1 node)))
-                            _ (§ ass! state (ReadEliminationBlockState''addCacheEntry-3 state, identifier, value))
-                        ]
-                            del?
-                        )
-                        (let [
-                            _ (§ ass! state (ReadEliminationClosure'processIdentity-2 state, (Access'''getLocationIdentity-1 node)))
-                        ]
-                            false
-                        )
-                    )
-                UnsafeAccessNode
-                    (let [
-                        #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp (:object node)))
-                    ]
-                        (and (some? type) (not (JavaType''isArray-1 type))
-                            (if (satisfies? RawLoadNode node)
-                                (and (LocationIdentity''isSingle-1 (:locationIdentity node))
-                                    (let [
-                                        #_"ValueNode" object (GraphUtil'unproxify-1n (:object node))
-                                        #_"UnsafeLoadCacheEntry" identifier (UnsafeLoadCacheEntry'new-3 object, (:offset node), (:locationIdentity node))
-                                        #_"ValueNode" cachedValue (ReadEliminationBlockState''getCacheEntry-2 state, identifier)
-                                    ]
-                                        (if (and (some? cachedValue) (ReadEliminationClosure'areValuesReplaceable-3 node, cachedValue, (:considerGuards this)))
-                                            (let [
-                                                _ (§ ass! effects (GraphEffects''replaceAtUsages-4 effects, node, cachedValue, node))
-                                                _ (§ ass! this (EffectsClosure''addScalarAlias-3 this, node, cachedValue))
-                                            ]
-                                                true
-                                            )
-                                            (let [
-                                                _ (§ ass! state (ReadEliminationBlockState''addCacheEntry-3 state, identifier, node))
-                                            ]
-                                                false
-                                            )
-                                        )
-                                    )
-                                )
-                                (if (LocationIdentity''isSingle-1 (:locationIdentity node))
-                                    (let [
-                                        #_"ValueNode" object (GraphUtil'unproxify-1n (:object node))
-                                        #_"UnsafeLoadCacheEntry" identifier (UnsafeLoadCacheEntry'new-3 object, (:offset node), (:locationIdentity node))
-                                        #_"ValueNode" cachedValue (ReadEliminationBlockState''getCacheEntry-2 state, identifier)
-                                        #_"ValueNode" value (EffectsClosure''getScalarAlias-2 this, (:value node))
-                                        #_"boolean" del? (= (GraphUtil'unproxify-1n value) (GraphUtil'unproxify-1n cachedValue))
-                                        _
-                                            (when del?
-                                                (§ ass! effects (GraphEffects''deleteNode-2 effects, node))
-                                            )
-                                        _ (§ ass! state (ReadEliminationClosure'processIdentity-2 state, (:locationIdentity node)))
-                                        _ (§ ass! state (ReadEliminationBlockState''addCacheEntry-3 state, identifier, value))
-                                    ]
-                                        del?
-                                    )
-                                    (let [
-                                        _ (§ ass! state (ReadEliminationClosure'processIdentity-2 state, (:locationIdentity node)))
-                                    ]
-                                        false
-                                    )
-                                )
-                            )
-                        )
-                    )
-                Single
-                    (let [
-                        #_"LocationIdentity" location (Single'''getLocationIdentity-1 node)
-                        _ (§ ass! state (ReadEliminationClosure'processIdentity-2 state, location))
-                    ]
-                        false
-                    )
-                Multi
-                    (let [
-                        _
-                            (doseq [#_"LocationIdentity" location (Multi'''getLocationIdentities-1 node)]
-                                (§ ass! state (ReadEliminationClosure'processIdentity-2 state, location))
-                            )
-                    ]
-                        false
-                    )
-                false
-            )
-        )
-
-        (#_"void" EffectsClosure'''processLoopExit-5 [#_"ReadEliminationClosure" this, #_"LoopExitNode" exitNode, #_"ReadEliminationBlockState" initialState, #_"ReadEliminationBlockState" exitState, #_"GraphEffects" effects]
-            (when (:hasValueProxies (:graph exitNode))
-                (doseq [[#_"CacheEntry" k #_"ValueNode" v] (:readCache exitState)]
-                    (when-not (= (get (:readCache initialState) k) v)
-                        (let [
-                            #_"ValueProxyNode" proxy (ValueProxyNode'new-2 (ReadEliminationBlockState''getCacheEntry-2 exitState, k), exitNode)
-                            _ (§ ass! effects (GraphEffects''addFloatingNode-2 effects, proxy))
-                            _ (§ ass! exitState (update exitState :readCache assoc k proxy))
-                        ]
-                        )
-                    )
-                )
-            )
-            nil
-        )
-
-        (#_"this" EffectsClosure'''processKilledLoopLocations-4 [#_"ReadEliminationClosure" this, #_"Loop" _loop, #_"ReadEliminationBlockState" initialState, #_"ReadEliminationBlockState" mergedStates]
-            (when (seq (:readCache initialState)) => this
-                (let [
-                    #_"LoopKillCache" loopKilledLocations (get (:loopLocationKillCache this) _loop)
-                ]
-                    ;; we have fully processed this loop the first time, remember to cache it the next time it is visited
-                    (if (nil? loopKilledLocations)
-                        (let [
-                            _ (§ ass loopKilledLocations (LoopKillCache'new-1 1)) ;; first visit
-                        ]
-                            (update this :loopLocationKillCache assoc _loop loopKilledLocations)
-                        )
-                        (let [
-                            _
-                                (if (< GraalOptions'readEliminationMaxLoopVisits (:visits loopKilledLocations))
-                                    (let [
-                                        ;; we have processed the loop too many times: kill all locations, so
-                                        ;; the inner loop will never be processed more than once again on visit
-                                        _ (§ ass! loopKilledLocations (LoopKillCache''setKillsAll-1 loopKilledLocations))
-                                    ]
-                                    )
-                                    ;; we have fully processed this loop >1 times, update the killed locations
-                                    (let [
-                                        #_"{LocationIdentity}" forwardEndLiveLocations #{}
-                                        _
-                                            (doseq [#_"CacheEntry" k (keys (:readCache initialState))]
-                                                (§ ass! forwardEndLiveLocations (conj forwardEndLiveLocations (CacheEntry'''getIdentity-1 k)))
-                                            )
-                                        _
-                                            (doseq [#_"CacheEntry" k (keys (:readCache mergedStates))]
-                                                (§ ass! forwardEndLiveLocations (disj forwardEndLiveLocations (CacheEntry'''getIdentity-1 k)))
-                                            )
-                                        ;; every location that is alive before the loop but not after is killed by the loop
-                                        _
-                                            (doseq [#_"LocationIdentity" location forwardEndLiveLocations]
-                                                (§ ass! loopKilledLocations (LoopKillCache''rememberLoopKilledLocation-2 loopKilledLocations, location))
-                                            )
-                                    ]
-                                    )
-                                )
-                            ;; remember the loop visit
-                            _ (§ ass! loopKilledLocations (LoopKillCache''visited-1 loopKilledLocations))
-                        ]
-                            this
-                        )
-                    )
-                )
-            )
-        )
-
-        (#_"ReadEliminationBlockState" EffectsClosure'''stripKilledLoopLocations-3 [#_"ReadEliminationClosure" this, #_"Loop" _loop, #_"ReadEliminationBlockState" originalInitialState]
-            (let [
-                #_"ReadEliminationBlockState" initialState (EffectsClosure'''stripKilledLoopLocations-3 (§ super EffectsClosure'iface), _loop, originalInitialState)
-                #_"LoopKillCache" loopKilledLocations (get (:loopLocationKillCache this) _loop)
-            ]
-                (when (and (some? loopKilledLocations) (LoopKillCache''loopKillsLocations-1 loopKilledLocations))
-                    (let [
-                        #_"Iterator<CacheEntry>" it (#_"Iterable" .iterator (keys (:readCache initialState)))
-                    ]
-                        (while (#_"Iterator" .hasNext it)
-                            (when (LoopKillCache''containsLocation-2 loopKilledLocations, (CacheEntry'''getIdentity-1 (#_"Iterator" .next it)))
-                                (#_"Iterator" .remove it)
-                            )
-                        )
-                    )
-                )
-                initialState
-            )
-        )
-    )
-)
-
-(class-ns BlockLoopInfo #_"<T>" []
-    (defn #_"BlockLoopInfo" BlockLoopInfo'new-0 []
-        (merge (BlockLoopInfo'class.)
-            (hash-map
-                #_"[T]" :endStates nil
-                #_"[T]" :exitStates nil
-            )
-        )
-    )
-)
-
 (class-ns BlockScope [#_"AutoCloseable"]
     (defn #_"BlockScope" BlockScope'new-2 [#_"LIRGenerator" gen, #_"Block" block]
         (let [
@@ -20561,65 +18447,6 @@ ZeroExtendNode'new-4
             )
         )
         nil
-    )
-)
-
-(class-ns CacheEntry #_"<T>" []
-    (defn #_"CacheEntry" CacheEntry'new-2 [#_"ValueNode" object, #_"T" identity]
-        (merge (CacheEntry'class.)
-            (hash-map
-                #_"ValueNode" :object object
-                #_"T" :identity identity
-            )
-        )
-    )
-)
-
-(class-ns LoadCacheEntry [CacheEntry #_"<LocationIdentity>"]
-    (defn #_"LoadCacheEntry" LoadCacheEntry'new-2 [#_"ValueNode" object, #_"LocationIdentity" identity]
-        (merge (LoadCacheEntry'class.) (CacheEntry'new-2 object, identity))
-    )
-
-    (defm LoadCacheEntry CacheEntry
-        (#_"CacheEntry" CacheEntry'''duplicateWithObject-2 [#_"LoadCacheEntry" this, #_"ValueNode" newObject]
-            (LoadCacheEntry'new-2 newObject, (:identity this))
-        )
-
-        (#_"boolean" CacheEntry'''conflicts-2 [#_"LoadCacheEntry" this, #_"LocationIdentity" other]
-            (= (:identity this) other)
-        )
-
-        (#_"LocationIdentity" CacheEntry'''getIdentity-1 [#_"LoadCacheEntry" this]
-            (:identity this)
-        )
-    )
-)
-
-;;;
- ; CacheEntry describing an Unsafe memory reference. The memory location and the location identity
- ; are separate so both must be considered when looking for optimizable memory accesses.
- ;;
-(class-ns UnsafeLoadCacheEntry [CacheEntry #_"<ValueNode>"]
-    (defn #_"UnsafeLoadCacheEntry" UnsafeLoadCacheEntry'new-3 [#_"ValueNode" object, #_"ValueNode" location, #_"LocationIdentity" locationIdentity]
-        (merge (UnsafeLoadCacheEntry'class.) (CacheEntry'new-2 object, location)
-            (hash-map
-                #_"LocationIdentity" :locationIdentity locationIdentity
-            )
-        )
-    )
-
-    (defm UnsafeLoadCacheEntry CacheEntry
-        (#_"CacheEntry" CacheEntry'''duplicateWithObject-2 [#_"UnsafeLoadCacheEntry" this, #_"ValueNode" newObject]
-            (UnsafeLoadCacheEntry'new-3 newObject, (:identity this), (:locationIdentity this))
-        )
-
-        (#_"boolean" CacheEntry'''conflicts-2 [#_"UnsafeLoadCacheEntry" this, #_"LocationIdentity" other]
-            (= (:locationIdentity this) other)
-        )
-
-        (#_"LocationIdentity" CacheEntry'''getIdentity-1 [#_"UnsafeLoadCacheEntry" this]
-            (:locationIdentity this)
-        )
     )
 )
 
@@ -25260,813 +23087,7 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; A GraphEffects can be used to maintain a list of Effects and backtrack to a previous state by truncating the list.
- ;;
-(class-ns GraphEffects []
-    (defn #_"GraphEffects" GraphEffects'new-0 []
-        (merge (GraphEffects'class.)
-            (hash-map
-                #_"[Effect]" :effects []
-                ;;;
-                 ; Determines how many objects are virtualized (positive) or materialized (negative) by this effect.
-                 ;;
-                #_"int" :virtualizationDelta 0
-            )
-        )
-    )
-
-    (defn #_"this" GraphEffects''clear-1 [#_"GraphEffects" this]
-        (assoc this :effects [], :virtualizationDelta 0)
-    )
-
-    (defn #_"this" GraphEffects''add-2 [#_"GraphEffects" this, #_"Effect" effect]
-        (update this :effects conj' effect)
-    )
-
-    (defn #_"this" GraphEffects''addAll-2 [#_"GraphEffects" this, #_"GraphEffects" that]
-        (update this :effects into' (:effects that))
-    )
-
-    (defn #_"this" GraphEffects''insertAll-3 [#_"GraphEffects" this, #_"GraphEffects" that, #_"int" at]
-        (update this :effects #(catvec (subvec % 0 at) (:effects that) (subvec % at)))
-    )
-
-    (defn #_"boolean" GraphEffects''isEmpty-1 [#_"GraphEffects" this]
-        (empty? (:effects this))
-    )
-
-    (defn #_"[Node]" GraphEffects''apply-4 [#_"GraphEffects" this, #_"Graph" graph, #_"[Node]" obsoleteNodes, #_"boolean" cfgKills]
-        (doseq [#_"Effect" effect (:effects this)]
-            (when (= (Effect'''isCfgKill-1 effect) cfgKills)
-                (§ ass! obsoleteNodes (Effect'''apply-3 effect, graph, obsoleteNodes))
-            )
-        )
-        obsoleteNodes
-    )
-
-    ;;;
-     ; Adds the given fixed node to the graph's control flow, before position (so that the original predecessor of
-     ; position will then be node's predecessor).
-     ;
-     ; @param node The fixed node to be added to the graph.
-     ; @param position The fixed node before which the node should be added.
-     ;;
-    (defn #_"this" GraphEffects''addFixedNodeBefore-3 [#_"GraphEffects" this, #_"FixedWithNextNode" node, #_"FixedNode" position]
-        (GraphEffects''add-2 this,
-            (reify Effect
-                (#_"[Node]" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"[Node]" obsoleteNodes]
-                    (Graph''addBeforeFixed-3 graph, position, (Graph''add-2 graph, node))
-                    obsoleteNodes
-                )
-
-                (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" _]
-                    false
-                )
-            )
-        )
-    )
-
-    (defn #_"this" GraphEffects''addVirtualizationDelta-2 [#_"GraphEffects" this, #_"int" delta]
-        (update this :virtualizationDelta + delta)
-    )
-
-    ;;;
-     ; Add the given floating node to the graph.
-     ;
-     ; @param node The floating node to be added.
-     ;;
-    (defn #_"this" GraphEffects''addFloatingNode-2 [#_"GraphEffects" this, #_"ValueNode" node]
-        (GraphEffects''add-2 this,
-            (reify Effect
-                (#_"[Node]" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"[Node]" obsoleteNodes]
-                    (Graph''addInputs-2 graph, node)
-                    (Graph''add-2 graph, node)
-                    obsoleteNodes
-                )
-
-                (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" _]
-                    false
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Sets the phi node's input at the given index to the given value, adding new phi inputs as needed.
-     ;
-     ; @param node The phi node whose input should be changed.
-     ; @param index The index of the phi input to be changed.
-     ; @param value The new value for the phi input.
-     ;;
-    (defn #_"this" GraphEffects''initializePhiInput-4 [#_"GraphEffects" this, #_"PhiNode" node, #_"int" index, #_"ValueNode" value]
-        (GraphEffects''add-2 this,
-            (reify Effect
-                (#_"[Node]" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"[Node]" obsoleteNodes]
-                    (§ ass! node (PhiNode''initializeValueAt-3 node, index, (Graph''addOrUniqueWithInputs-2 graph, value)))
-                    obsoleteNodes
-                )
-
-                (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" _]
-                    false
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Adds a virtual object's state to the given frame state. If the given reusedVirtualObjects set
-     ; contains the virtual object then old states for this object will be removed.
-     ;
-     ; @param node The frame state to which the state should be added.
-     ; @param state The virtual object state to add.
-     ;;
-    (defn #_"this" GraphEffects''addVirtualMapping-3 [#_"GraphEffects" this, #_"FrameState" node, #_"EscapeObjectState" state]
-        (GraphEffects''add-2 this,
-            (reify Effect
-                (#_"[Node]" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"[Node]" obsoleteNodes]
-                    (when (Node''isAlive-1 node)
-                        (dotimes [#_"int" i (count (:virtualMappings node))]
-                            (let [
-                                #_"Node" o'node (nth (:virtualMappings node) i)
-                            ]
-                                (when (= (:object o'node) (:object state))
-                                    (§ ass! node (update node :virtualMappings dissoc' i))
-                                    (Node''updateUsages-3 node, o'node, nil)
-                                )
-                            )
-                        )
-                        (§ ass! node (FrameState''addVirtualObjectMapping-2 node, (Graph''addOrUniqueWithInputs-2 graph, state)))
-                    )
-                    obsoleteNodes
-                )
-
-                (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" _]
-                    false
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Removes the given fixed node from the control flow and deletes it.
-     ;
-     ; @param node The fixed node that should be deleted.
-     ;;
-    (defn #_"this" GraphEffects''deleteNode-2 [#_"GraphEffects" this, #_"Node" node]
-        (GraphEffects''add-2 this,
-            (reify Effect
-                (#_"[Node]" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"[Node]" obsoleteNodes]
-                    (when (satisfies? FixedWithNextNode node)
-                        (GraphUtil'unlinkFixedNode-1 node)
-                    )
-                    (conj' obsoleteNodes node)
-                )
-
-                (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" _]
-                    false
-                )
-            )
-        )
-    )
-
-    (defn #_"this" GraphEffects''killIfBranch-3 [#_"GraphEffects" this, #_"IfNode" ifNode, #_"boolean" constantCondition]
-        (GraphEffects''add-2 this,
-            (reify Effect
-                (#_"[Node]" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"[Node]" obsoleteNodes]
-                    (Graph''removeSplitPropagate-3 graph, ifNode, (IfNode''getSuccessor-2 ifNode, constantCondition))
-                    obsoleteNodes
-                )
-
-                (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" _]
-                    true
-                )
-            )
-        )
-    )
-
-    (defn #_"this" GraphEffects''replaceWithSink-3 [#_"GraphEffects" this, #_"FixedWithNextNode" node, #_"ControlSinkNode" sink]
-        (GraphEffects''add-2 this,
-            (reify Effect
-                (#_"[Node]" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"[Node]" obsoleteNodes]
-                    (Graph''add-2 graph, sink)
-                    (Node''replaceAtPredecessor-2 node, sink)
-                    (GraphUtil'killCFG-1 node)
-                    obsoleteNodes
-                )
-
-                (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" _]
-                    true
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Replaces the given node at its usages without deleting it. If the current node is a fixed
-     ; node it will be disconnected from the control flow, so that it will be deleted by a
-     ; subsequent DeadCodeEliminationPhase.
-     ;
-     ; @param node The node to be replaced.
-     ; @param replacement The node that should replace the original value. If the replacement is a
-     ;            non-connected FixedWithNextNode it will be added to the control flow.
-     ;;
-    (defn #_"this" GraphEffects''replaceAtUsages-4 [#_"GraphEffects" this, #_"ValueNode" node, #_"ValueNode" replacement, #_"FixedNode" insertBefore]
-        (GraphEffects''add-2 this,
-            (reify Effect
-                (#_"[Node]" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"[Node]" obsoleteNodes]
-                    (let [
-                        #_"ValueNode" replacementNode (Graph''addOrUniqueWithInputs-2 graph, replacement)
-                        _
-                            (when (and (satisfies? FixedWithNextNode replacementNode) (nil? (:next replacementNode)))
-                                (Graph''addBeforeFixed-3 graph, insertBefore, replacementNode)
-                            )
-                        ;; Keep the (better) stamp information when replacing a node with another one if the
-                        ;; replacement has a less precise stamp than the original node. This can happen for
-                        ;; example in the context of read nodes and unguarded pi nodes where the pi will be used
-                        ;; to improve the stamp information of the read. Such a read might later be replaced
-                        ;; with a read with a less precise stamp.
-                        _
-                            (when-not (= (:stamp node) (:stamp replacementNode))
-                                (§ ass replacementNode (Graph''add-2 graph, (PiNode'new-2 replacementNode, (:stamp node))))
-                            )
-                        _ (§ ass! node (Node''replaceAtUsages-2 node, replacementNode))
-                    ]
-                        (when (satisfies? FixedWithNextNode node)
-                            (GraphUtil'unlinkFixedNode-1 node)
-                        )
-                        (conj' obsoleteNodes node)
-                    )
-                )
-
-                (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" _]
-                    false
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Replaces the first occurrence of oldInput in node with newInput.
-     ;
-     ; @param node The node whose input should be changed.
-     ; @param oldInput The value to look for.
-     ; @param newInput The value to replace with.
-     ;;
-    (defn #_"this" GraphEffects''replaceFirstInput-4 [#_"GraphEffects" this, #_"Node" node, #_"Node" oldInput, #_"Node" newInput]
-        (GraphEffects''add-2 this,
-            (reify Effect
-                (#_"[Node]" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"[Node]" obsoleteNodes]
-                    (when (Node''isAlive-1 node)
-                        (Node''replaceFirstInput-3 node, oldInput, newInput)
-                    )
-                    obsoleteNodes
-                )
-
-                (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" _]
-                    false
-                )
-            )
-        )
-    )
-)
-
-(class-ns EffectsBlockState []
-    (defn #_"EffectsBlockState" EffectsBlockState'new-0 []
-        (merge (EffectsBlockState'class.)
-            (hash-map
-                ;;;
-                 ; This flag specifies whether this block is unreachable, which can happen during analysis
-                 ; if conditions turn constant or nodes canonicalize to cfg sinks.
-                 ;;
-                #_"boolean" :dead? false
-            )
-        )
-    )
-
-    ;;;
-     ; Returns true if every value in subMap is also present in the superMap (according to "equals" semantics).
-     ;;
-    (defn #_"<K, V> boolean" EffectsBlockState'isSubMapOf-2 [#_"{K V}" superMap, #_"{K V}" subMap]
-        (or (= superMap subMap)
-            (loop-when [#_"seq" s (seq subMap)] (some? s) => true
-                (let [
-                    [#_"K" k #_"V" v] (first s)
-                    #_"V" v' (get superMap k)
-                ]
-                    (and (or (= v' v) (= v v')) ;; %% oops!
-                        (recur (next s))
-                    )
-                )
-            )
-        )
-    )
-)
-
-(class-ns PartialEscapeBlockState [EffectsBlockState]
-    (defn #_"PartialEscapeBlockState" PartialEscapeBlockState'new-0 []
-        (merge (PartialEscapeBlockState'class.) (EffectsBlockState'new-0)
-            (hash-map
-                ;;;
-                 ; This array contains the state of all virtual objects, indexed by VirtualObjectNode#getObjectId().
-                 ; Entries in this array may be nil if the corresponding virtual object is not alive or reachable currently.
-                 ;;
-                #_"[ObjectState]" :objectStates []
-            )
-        )
-    )
-
-    (defn #_"boolean" PartialEscapeBlockState''contains-2 [#_"PartialEscapeBlockState" this, #_"VirtualObjectNode" value]
-        (loop [#_"seq" s (seq (:objectStates this))]
-            (and (some? s)
-                (or
-                    (let [
-                        #_"ObjectState" state (first s)
-                    ]
-                        (when (and (some? state) (ObjectState''isVirtual-1 state))
-                            (loop-when [#_"seq" s (seq (:entries state))] (some? s)
-                                (or (= (first s) value)
-                                    (recur (next s))
-                                )
-                            )
-                        )
-                    )
-                    (recur (next s))
-                )
-            )
-        )
-    )
-
-    (defn #_"this" PartialEscapeBlockState''setEntry-4 [#_"PartialEscapeBlockState" this, #_"int" id, #_"int" index, #_"ValueNode" value]
-        (when-not (= (ObjectState''getEntry-2 (nth (:objectStates this) id), index) value) => this
-            (update this :objectStates update' id ObjectState''setEntry-3 index, value)
-        )
-    )
-
-    (defn #_"this" PartialEscapeBlockState''escape-3 [#_"PartialEscapeBlockState" this, #_"int" id, #_"ValueNode" materialized]
-        (update this :objectStates update' id ObjectState''escape-2 materialized)
-    )
-
-    (defn #_"this" PartialEscapeBlockState''addLock-3 [#_"PartialEscapeBlockState" this, #_"int" id, #_"MonitorIdNode" monitorId]
-        (update this :objectStates update' id ObjectState''addLock-2 monitorId)
-    )
-
-    (defn #_"this" PartialEscapeBlockState''removeLock-2 [#_"PartialEscapeBlockState" this, #_"int" id]
-        (update this :objectStates update' id ObjectState''removeLock-1)
-    )
-
-    (defn #_"this" PartialEscapeBlockState''updateMaterializedValue-3 [#_"PartialEscapeBlockState" this, #_"int" id, #_"ValueNode" value]
-        (when-not (= (:materializedValue (nth (:objectStates this) id)) value) => this
-            (update this :objectStates update' id ObjectState''updateMaterializedValue-2 value)
-        )
-    )
-
-    (defn- #_"this" PartialEscapeBlockState''materializeWithCommit-8 [#_"PartialEscapeBlockState" this, #_"FixedNode" fixed, #_"VirtualObjectNode" virtual, #_"[AllocatedObjectNode]" objects, #_"[MonitorIdNode*]" locks, #_"[ValueNode]" values, #_"[Boolean]" ensureVirtual, #_"[ValueNode]" otherAllocations]
-        (let [
-            #_"ObjectState" obj (nth (:objectStates this) (:oid virtual))
-            #_"[ValueNode]" entries (:entries obj)
-            #_"ValueNode" representation (VirtualObjectNode'''getMaterializedRepresentation-4 virtual, fixed, entries, (:lockState obj))
-            this (PartialEscapeBlockState''escape-3 this, (:oid virtual), representation)
-            obj (nth (:objectStates this) (:oid virtual))
-            _ (PartialEscapeClosure'updateStatesForMaterialized-3 this, virtual, (:materializedValue obj))
-        ]
-            (if (satisfies? AllocatedObjectNode representation)
-                (let [
-                    _ (§ ass! objects (conj' objects representation))
-                    _ (§ ass! locks (conj' locks (LockState'asList-1 (:lockState obj))))
-                    _ (§ ass! ensureVirtual (conj' ensureVirtual (:ensureVirtualized obj)))
-                    #_"int" pos (count values)
-                    _
-                        (while (< (count values) (+ pos (count entries)))
-                            (§ ass! values (conj' values nil))
-                        )
-                    this
-                        (loop-when [this this #_"int" i 0] (< i (count entries)) => this
-                            (let [
-                                #_"ValueNode" entry (nth entries i)
-                                this
-                                    (if (satisfies? VirtualObjectNode entry)
-                                        (let [
-                                            #_"ObjectState" state (nth (:objectStates this) (:oid entry))
-                                            [this state]
-                                                (when (ObjectState''isVirtual-1 state) => [this state]
-                                                    (let [
-                                                        this (PartialEscapeBlockState''materializeWithCommit-8 this, fixed, entry, objects, locks, values, ensureVirtual, otherAllocations)
-                                                    ]
-                                                        [this (nth (:objectStates this) (:oid entry))]
-                                                    )
-                                                )
-                                            _ (§ ass! values (assoc' values (+ pos i) (:materializedValue state)))
-                                        ]
-                                            this
-                                        )
-                                        (let [
-                                            _ (§ ass! values (assoc' values (+ pos i) entry))
-                                        ]
-                                            this
-                                        )
-                                    )
-                            ]
-                                (recur this (inc i))
-                            )
-                        )
-                ]
-                    (PartialEscapeBlockState'''objectMaterialized-4 this, virtual, (§ cast #_"AllocatedObjectNode" representation), (subvec values pos (+ pos (count entries))))
-                )
-                (let [
-                    _ (§ ass! otherAllocations (conj' otherAllocations representation))
-                ]
-                    this
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Materializes the given virtual object and produces the necessary effects in the effects list.
-     ; This transitively also materializes all other virtual objects that are reachable from the entries.
-     ;;
-    (defn #_"this" PartialEscapeBlockState''materializeBefore-4 [#_"PartialEscapeBlockState" this, #_"FixedNode" fixed, #_"VirtualObjectNode" virtual, #_"GraphEffects" effects]
-        (let [
-            #_"[AllocatedObjectNode]" objects []
-            #_"[MonitorIdNode*]" locks []
-            #_"[ValueNode]" values []
-            #_"[Boolean]" ensureVirtual []
-            #_"[ValueNode]" otherAllocations []
-            this (PartialEscapeBlockState''materializeWithCommit-8 this, fixed, virtual, objects, locks, values, ensureVirtual, otherAllocations)
-            _ (§ ass! effects (GraphEffects''addVirtualizationDelta-2 effects, (- (+ (count objects) (count otherAllocations)))))
-        ]
-            (§ ass! effects (GraphEffects''add-2 effects,
-                (reify Effect
-                    (#_"[Node]" Effect'''apply-3 [#_"Effect" _, #_"Graph" graph, #_"[Node]" obsoleteNodes]
-                        (doseq [#_"ValueNode" alloc otherAllocations]
-                            (let [
-                                #_"ValueNode" otherAllocation (Graph''addOrUniqueWithInputs-2 graph, alloc)
-                            ]
-                                (when (satisfies? FixedWithNextNode otherAllocation)
-                                    (Graph''addBeforeFixed-3 graph, fixed, otherAllocation)
-                                )
-                            )
-                        )
-                        (when (seq objects)
-                            (let [
-                                #_"CommitAllocationNode" commit
-                                    (if (satisfies? CommitAllocationNode (:predecessor fixed))
-                                        (:predecessor fixed)
-                                        (let [
-                                            commit (Graph''add-2 graph, (CommitAllocationNode'new-0))
-                                        ]
-                                            (Graph''addBeforeFixed-3 graph, fixed, commit)
-                                            commit
-                                        )
-                                    )
-                                _
-                                    (doseq [#_"AllocatedObjectNode" obj objects]
-                                        (Graph''add-2 graph, obj)
-                                        (§ ass! commit (update commit :virtualObjects conj' (:virtualObject obj)))
-                                        (Node''updateUsages-3 commit, nil, (:virtualObject obj))
-                                        (§ ass! obj (AllocatedObjectNode''setCommit-2 obj, commit))
-                                    )
-                                _
-                                    (doseq [#_"ValueNode" value values]
-                                        (let [
-                                            #_"Node" node (Graph''addOrUniqueWithInputs-2 graph, value)
-                                            _ (§ ass! commit (update commit :comValues conj' node))
-                                        ]
-                                            (Node''updateUsages-3 commit, nil, node)
-                                        )
-                                    )
-                                _
-                                    (doseq [#_"MonitorIdNode*" monitorIds locks]
-                                        (§ ass! commit (CommitAllocationNode''addLocks-2 commit, monitorIds))
-                                    )
-                                _ (§ ass! commit (update commit :ensureVirtual into' ensureVirtual))
-                                #_"{AllocatedObjectNode}" materializedValues (set (filter #(satisfies? AllocatedObjectNode %) (:nodeUsages commit)))
-                            ]
-                                (dotimes [#_"int" i (count (:comValues commit))]
-                                    (let [
-                                        #_"Node" node (nth (:comValues commit) i)
-                                    ]
-                                        (when (contains? materializedValues node)
-                                            (Node''updateUsages-3 commit, node, (:virtualObject node))
-                                            (§ ass! commit (update commit :comValues assoc' i (:virtualObject node)))
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                        obsoleteNodes
-                    )
-
-                    (#_"boolean" Effect'''isCfgKill-1 [#_"Effect" _]
-                        false
-                    )
-                )
-            ))
-            this
-        )
-    )
-
-    (defm PartialEscapeBlockState PartialEscapeBlockState
-        (#_"this" PartialEscapeBlockState'''objectMaterialized-4 [#_"PartialEscapeBlockState" this, #_"VirtualObjectNode" virtual, #_"AllocatedObjectNode" representation, #_"ValueNode*" values]
-            this
-        )
-    )
-
-    (defn #_"this" PartialEscapeBlockState''addObject-3 [#_"PartialEscapeBlockState" this, #_"int" i, #_"ObjectState" state]
-        (update this :objectStates assoc' i state)
-    )
-
-    (defm PartialEscapeBlockState EffectsBlockState
-        (#_"boolean" EffectsBlockState'''equivalentTo-2 [#_"PartialEscapeBlockState" this, #_"PartialEscapeBlockState" other]
-            (let [
-                #_"int" n (max (count (:objectStates this)) (count (:objectStates other)))
-            ]
-                (loop-when [#_"int" i 0] (< i n) => true
-                    (and (= (when (< i (count (:objectStates this))) (nth (:objectStates this) i)) (when (< i (count (:objectStates other))) (nth (:objectStates other) i)))
-                        (recur (inc i))
-                    )
-                )
-            )
-        )
-    )
-
-    (defn #_"this" PartialEscapeBlockState''resetObjectStates-1 [#_"PartialEscapeBlockState" this]
-        (assoc this :objectStates [])
-    )
-
-    (defn #_"boolean" PartialEscapeBlockState'identicalObjectStates-1 [#_"PartialEscapeBlockState*" states]
-        (loop-when [#_"int" i 1] (< i (count states)) => true
-            (and (= (:objectStates (nth states 0)) (:objectStates (nth states i)))
-                (recur (inc i))
-            )
-        )
-    )
-
-    (defn #_"boolean" PartialEscapeBlockState'identicalObjectStates-2 [#_"PartialEscapeBlockState*" states, #_"int" id]
-        (loop-when [#_"int" i 1] (< i (count states)) => true
-            (and (= (nth (:objectStates (nth states 0)) id) (nth (:objectStates (nth states i)) id))
-                (recur (inc i))
-            )
-        )
-    )
-)
-
-(class-ns PEReadEliminationBlockState [PartialEscapeBlockState #_"<PEReadEliminationBlockState>", EffectsBlockState]
-    (defn #_"PEReadEliminationBlockState" PEReadEliminationBlockState'new-0 []
-        (merge (PEReadEliminationBlockState'class.) (PartialEscapeBlockState'new-0)
-            (hash-map
-                #_"{ReadCacheEntry ValueNode}" :readCache {}
-            )
-        )
-    )
-
-    (defn- #_"JavaKind" PEReadEliminationBlockState'stampToJavaKind-1 [#_"Stamp" stamp]
-        (if (satisfies? IntegerStamp stamp)
-            (case (:bits stamp)
-                 1 :JavaKind'Boolean
-                 8 :JavaKind'Byte
-                16 (if (IntegerStamp''isPositive-1 stamp) :JavaKind'Char :JavaKind'Short)
-                32 :JavaKind'Int
-                64 :JavaKind'Long
-            )
-            (Stamp'''getStackKind-1 stamp)
-        )
-    )
-
-    (defm PEReadEliminationBlockState PartialEscapeBlockState
-        (#_"this" PartialEscapeBlockState'''objectMaterialized-4 [#_"PEReadEliminationBlockState" this, #_"VirtualObjectNode" virtual, #_"AllocatedObjectNode" representation, #_"ValueNode*" values]
-            (when (satisfies? VirtualInstanceNode virtual) => this
-                (dotimes [#_"int" i (VirtualObjectNode'''entryCount-1 virtual)]
-                    (let [
-                        #_"JavaKind" declaredKind (JavaField''getJavaKind-1 (VirtualInstanceNode''field-2 virtual, i))
-                    ]
-                        (when (= declaredKind (PEReadEliminationBlockState'stampToJavaKind-1 (:stamp (nth values i))))
-                            ;; We won't cache unaligned field writes upon instantiation unless we add
-                            ;; support for non-array objects in PEReadEliminationClosure.processUnsafeLoad.
-                            (§ ass! this (update this :readCache assoc (ReadCacheEntry'new-5 (FieldLocationIdentity'new-1 (VirtualInstanceNode''field-2 virtual, i)), representation, -1, declaredKind, false) (nth values i)))
-                        )
-                    )
-                )
-                this
-            )
-        )
-    )
-
-    (defm PEReadEliminationBlockState EffectsBlockState
-        (#_"boolean" EffectsBlockState'''equivalentTo-2 [#_"PEReadEliminationBlockState" this, #_"PEReadEliminationBlockState" other]
-            (and (EffectsBlockState'isSubMapOf-2 (:readCache this), (:readCache other)) (EffectsBlockState'''equivalentTo-2 (§ super PartialEscapeBlockState'iface), other))
-        )
-    )
-
-    (defn #_"this" PEReadEliminationBlockState''addReadCache-8 [#_"PEReadEliminationBlockState" this, #_"ValueNode" object, #_"LocationIdentity" location, #_"int" index, #_"JavaKind" kind, #_"boolean" overflowAccess, #_"ValueNode" value, #_"PartialEscapeClosure" closure]
-        (let [
-            #_"ObjectState" state (PartialEscapeClosure''getObjectState-3 closure, this, object)
-            #_"ValueNode" cacheObject (if (some? state) (:materializedValue state) object)
-            _ (§ ass! this (update this :readCache assoc (ReadCacheEntry'new-5 location, cacheObject, index, kind, overflowAccess) value))
-        ]
-            this
-        )
-    )
-
-    (defn #_"ValueNode" PEReadEliminationBlockState''getReadCache-6 [#_"PEReadEliminationBlockState" this, #_"ValueNode" object, #_"LocationIdentity" location, #_"int" index, #_"JavaKind" kind, #_"PartialEscapeClosure" closure]
-        (let [
-            #_"ObjectState" state (PartialEscapeClosure''getObjectState-3 closure, this, object)
-            #_"ValueNode" cacheObject (if (some? state) (:materializedValue state) object)
-            #_"ValueNode" cacheValue (get (:readCache this) (ReadCacheEntry'new-5 location, cacheObject, index, kind, false))
-            state (PartialEscapeClosure''getObjectState-3 closure, this, cacheValue)
-        ]
-            (if (some? state)
-                (:materializedValue state)
-                (EffectsClosure''getScalarAlias-2 closure, cacheValue)
-            )
-        )
-    )
-
-    (defn #_"this" PEReadEliminationBlockState''killReadCache-1 [#_"PEReadEliminationBlockState" this]
-        (assoc this :readCache {})
-    )
-
-    (defn #_"this" PEReadEliminationBlockState''killReadCache-3 [#_"PEReadEliminationBlockState" this, #_"LocationIdentity" location, #_"int" index]
-        (let [
-            #_"Iterator<ReadCacheEntry>" it (#_"Iterable" .iterator (keys (:readCache this)))
-        ]
-            (while (#_"Iterator" .hasNext it)
-                (let [
-                    #_"ReadCacheEntry" entry (#_"Iterator" .next it)
-                ]
-                    (when (and (= (:identity entry) location) (or (= index -1) (= (:index entry) -1) (= index (:index entry)) (:overflowAccess entry)))
-                        (#_"Iterator" .remove it)
-                    )
-                )
-            )
-            this
-        )
-    )
-)
-
-;;;
- ; This class maintains a set of known values, identified by base object, locations and offset.
- ;;
-(class-ns ReadEliminationBlockState [EffectsBlockState]
-    (defn #_"ReadEliminationBlockState" ReadEliminationBlockState'new-0 []
-        (merge (ReadEliminationBlockState'class.) (EffectsBlockState'new-0)
-            (hash-map
-                #_"{CacheEntry ValueNode}" :readCache {}
-            )
-        )
-    )
-
-    (defm ReadEliminationBlockState EffectsBlockState
-        (#_"boolean" EffectsBlockState'''equivalentTo-2 [#_"ReadEliminationBlockState" this, #_"ReadEliminationBlockState" other]
-            (EffectsBlockState'isSubMapOf-2 (:readCache this), (:readCache other))
-        )
-    )
-
-    (defn #_"this" ReadEliminationBlockState''addCacheEntry-3 [#_"ReadEliminationBlockState" this, #_"CacheEntry" identifier, #_"ValueNode" value]
-        (assoc-in this [:readCache identifier] value)
-    )
-
-    (defn #_"ValueNode" ReadEliminationBlockState''getCacheEntry-2 [#_"ReadEliminationBlockState" this, #_"CacheEntry" identifier]
-        (get (:readCache this) identifier)
-    )
-
-    (defn #_"this" ReadEliminationBlockState''killReadCache-1 [#_"ReadEliminationBlockState" this]
-        (assoc this :readCache {})
-    )
-
-    (defn #_"this" ReadEliminationBlockState''killReadCache-2 [#_"ReadEliminationBlockState" this, #_"LocationIdentity" location]
-        (let [
-            #_"Iterator<CacheEntry>" it (#_"Iterable" .iterator (keys (:readCache this)))
-        ]
-            (while (#_"Iterator" .hasNext it)
-                (when (CacheEntry'''conflicts-2 (#_"Iterator" .next it), location)
-                    (#_"Iterator" .remove it)
-                )
-            )
-            this
-        )
-    )
-)
-
-(class-ns EffectsPhase []
-    (defn #_"EffectsPhase" EffectsPhase'new-1 [#_"int" maxIterations]
-        (EffectsPhase'new-2 maxIterations, false)
-    )
-
-    (defn #_"EffectsPhase" EffectsPhase'new-2 [#_"int" maxIterations, #_"boolean" unscheduled]
-        (merge (EffectsPhase'class.)
-            (hash-map
-                #_"int" :maxIterations maxIterations
-                #_"boolean" :unscheduled unscheduled
-            )
-        )
-    )
-
-    (defn #_"boolean" EffectsPhase''runAnalysis-2 [#_"EffectsPhase" this, #_"Graph" graph]
-        (loop-when [#_"boolean" changed? false #_"int" iteration 0] (< iteration (:maxIterations this)) => changed?
-            (let [
-                [#_"Schedule" schedule #_"ControlFlowGraph" cfg]
-                    (if (:unscheduled this)
-                        [nil (ControlFlowGraph'compute-3 graph, false, false)]
-                        (let [
-                            _ (§ ass! graph (SchedulePhase'run-2 graph, :SchedulingStrategy'EARLIEST))
-                            schedule (:lastSchedule graph)
-                        ]
-                            [schedule (:cfg schedule)]
-                        )
-                    )
-                #_"EffectsClosure" closure (EffectsPhase'''createEffectsClosure-3 this, schedule, cfg)
-                _ (ReentrantBlockIterator'apply-2 closure, (ControlFlowGraph''getStartBlock-1 cfg))
-                _
-                    (when (EffectsClosure'''needsApplyEffects-1 closure)
-                        ;; apply the effects collected during this iteration
-                        (let [
-                            #_"HashSetNodeEventListener" listener (HashSetNodeEventListener'new-0)
-                            _
-                                (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 graph, listener)])
-                                    (EffectsClosure'''applyEffects-1 closure)
-                                )
-                            #_"{Node}" changedNodes (:changedNodes listener)
-                            _
-                                (doseq [#_"Node" node (Graph''getNodes-1 graph)]
-                                    (when (satisfies? Simplifiable node)
-                                        (§ ass! changedNodes (conj changedNodes node))
-                                    )
-                                )
-                            _ (§ ass! graph (Simplifier'run-2 graph, changedNodes))
-                        ]
-                        )
-                    )
-            ]
-                (when (:changed? closure) => changed?
-                    (recur true (inc iteration))
-                )
-            )
-        )
-    )
-)
-
-(class-ns EarlyReadEliminationPhase [EffectsPhase]
-    (defn- #_"EarlyReadEliminationPhase" EarlyReadEliminationPhase'new-0 []
-        (merge (EarlyReadEliminationPhase'class.) (EffectsPhase'new-2 1, true))
-    )
-
-    (defm EarlyReadEliminationPhase EffectsPhase
-        (#_"EffectsClosure" EffectsPhase'''createEffectsClosure-3 [#_"EarlyReadEliminationPhase" this, #_"Schedule" schedule, #_"ControlFlowGraph" cfg]
-            (ReadEliminationClosure'new-2 cfg, true)
-        )
-    )
-
-    (defn #_"Graph" EarlyReadEliminationPhase'run-1 [#_"Graph" graph]
-        (EffectsPhase''runAnalysis-2 (EarlyReadEliminationPhase'new-0), graph)
-        graph
-    )
-)
-
-(class-ns PartialEscapePhase [EffectsPhase]
-    (defn- #_"PartialEscapePhase" PartialEscapePhase'new-2 [#_"boolean" iterative?, #_"boolean" readElimination]
-        (merge (PartialEscapePhase'class.) (EffectsPhase'new-1 (if iterative? GraalOptions'escapeAnalysisIterations 1))
-            (hash-map
-                #_"boolean" :readElimination readElimination
-            )
-        )
-    )
-
-    (defn- #_"PartialEscapePhase" PartialEscapePhase'new-1 [#_"boolean" iterative?]
-        (PartialEscapePhase'new-2 iterative?, GraalOptions'optEarlyReadElimination)
-    )
-
-    (defn #_"Graph" PartialEscapePhase'run-1 [#_"Graph" graph]
-        (let [
-            #_"PartialEscapePhase" this (PartialEscapePhase'new-1 true)
-        ]
-            (when (or (:readElimination this) (Graph''hasVirtualizableAllocation-1 graph))
-                (EffectsPhase''runAnalysis-2 this, graph)
-            )
-            graph
-        )
-    )
-
-    (defm PartialEscapePhase EffectsPhase
-        (#_"EffectsClosure" EffectsPhase'''createEffectsClosure-3 [#_"PartialEscapePhase" this, #_"Schedule" schedule, #_"ControlFlowGraph" cfg]
-            (let [
-                _
-                    (doseq [#_"VirtualObjectNode" virtual (Graph''getNodes-2 (:graph cfg), VirtualObjectNode)]
-                        (§ ass! virtual (VirtualObjectNode''resetObjectId-1 virtual))
-                    )
-            ]
-                (if (:readElimination this)
-                    (PEReadEliminationClosure'new-1 schedule)
-                    (PartialEscapeClosure'new-1 schedule)
-                )
-            )
-        )
-    )
-)
-
-;;;
- ; This closure is used internally to determine the average effort for a certain strategy on a
- ; given switch instruction.
+ ; This closure is used internally to determine the average effort for a certain strategy on a given switch instruction.
  ;;
 (class-ns EffortClosure [SwitchClosure]
     (defn #_"EffortClosure" EffortClosure'new-2 [#_"SwitchStrategy" strategy, #_"[LabelRef]" keyTargets]
@@ -29166,16 +26187,6 @@ ZeroExtendNode'new-4
 
     (defn #_"this" Graph''setAfterExpandLogic-1 [#_"Graph" this]
         (assoc this :isAfterExpandLogic true)
-    )
-
-    (defn #_"boolean" Graph''hasVirtualizableAllocation-1 [#_"Graph" this]
-        (loop [#_"seq" s (seq (Graph''getNodes-1 this))]
-            (and (some? s)
-                (or (satisfies? VirtualizableAllocation (first s))
-                    (recur (next s))
-                )
-            )
-        )
     )
 )
 
@@ -37879,25 +34890,6 @@ ZeroExtendNode'new-4
     )
 )
 
-;;;
- ; The class implements a simple linked list of MonitorIdNodes, which can be used to describe the
- ; current lock state of an object.
- ;;
-(class-ns LockState []
-    (defn #_"LockState" LockState'new-2 [#_"MonitorIdNode" monitorId, #_"LockState" _next]
-        (merge (LockState'class.)
-            (hash-map
-                #_"MonitorIdNode" :monitorId monitorId
-                #_"LockState" :next _next
-            )
-        )
-    )
-
-    (defn #_"MonitorIdNode*" LockState'asList-1 [#_"LockState" state]
-        (->> state (iterate :next) (take-while some?) (map :monitorId))
-    )
-)
-
 (class-ns Loop []
     (defn #_"Loop" Loop'new-3 [#_"Loop" parent, #_"int" index, #_"Block" header]
         (merge (Loop'class.)
@@ -37964,56 +34956,6 @@ ZeroExtendNode'new-4
 
     (defn #_"boolean" Loop''canKill-2 [#_"Loop" this, #_"LocationIdentity" location]
         (LocationSet''contains-2 (Loop''getKillLocations-1 this), location)
-    )
-)
-
-(class-ns LoopKillCache []
-    (defn #_"LoopKillCache" LoopKillCache'new-1 [#_"int" visits]
-        (merge (LoopKillCache'class.)
-            (hash-map
-                #_"int" :visits visits
-                #_"LocationIdentity" :firstLocation nil
-                #_"{LocationIdentity}" :killedLocations nil
-                #_"boolean" :killsAll false
-            )
-        )
-    )
-
-    (defn #_"this" LoopKillCache''visited-1 [#_"LoopKillCache" this]
-        (update this :visits inc)
-    )
-
-    (defn #_"this" LoopKillCache''setKillsAll-1 [#_"LoopKillCache" this]
-        (let [
-            this (assoc this :killsAll true)
-            this (assoc this :firstLocation nil)
-            this (assoc this :killedLocations nil)
-        ]
-            this
-        )
-    )
-
-    (defn #_"boolean" LoopKillCache''containsLocation-2 [#_"LoopKillCache" this, #_"LocationIdentity" location]
-        (or (:killsAll this)
-            (and (some? (:firstLocation this))
-                (or (= (:firstLocation this) location)
-                    (and (some? (:killedLocations this)) (contains? (:killedLocations this) location))
-                )
-            )
-        )
-    )
-
-    (defn #_"this" LoopKillCache''rememberLoopKilledLocation-2 [#_"LoopKillCache" this, #_"LocationIdentity" location]
-        (when-not (:killsAll this) => this
-            (if (any = (:firstLocation this) nil location)
-                (assoc this :firstLocation location)
-                (update this :killedLocations #(conj (apply hash-set %) location))
-            )
-        )
-    )
-
-    (defn #_"boolean" LoopKillCache''loopKillsLocations-1 [#_"LoopKillCache" this]
-        (or (:killsAll this) (some? (:firstLocation this)))
     )
 )
 
@@ -38441,790 +35383,6 @@ ZeroExtendNode'new-4
 
         (#_"LocationIdentity*" MemoryMap'''getLocations-1 [#_"MemoryMap0" this]
             (keys (:lastMemorySnapshot this))
-        )
-    )
-)
-
-(class-ns MergeProcessor []
-    (defn #_"MergeProcessor" MergeProcessor'new-1 [#_"Block" mergeBlock]
-        (merge (MergeProcessor'class.)
-            (hash-map
-                #_"Block" :mergeBlock mergeBlock
-                #_"AbstractMergeNode" :merge (§ cast #_"AbstractMergeNode" (:beginNode mergeBlock))
-                #_"GraphEffects" :mergeEffects (GraphEffects'new-0)
-                #_"GraphEffects" :afterMergeEffects (GraphEffects'new-0)
-                ;;;
-                 ; The indexes are used to map from an index in the list of active (non-dead) predecessors
-                 ; to an index in the list of all predecessors (the latter may be larger).
-                 ;;
-                #_"[int]" :stateIndexes nil
-                #_"EffectsBlockState" :newState nil
-            )
-        )
-    )
-
-    (defn #_"this" MergeProcessor''setNewState-2 [#_"MergeProcessor" this, #_"EffectsBlockState" state]
-        (-> this
-            (assoc :newState state)
-            (update :mergeEffects GraphEffects''clear-1)
-            (update :afterMergeEffects GraphEffects''clear-1)
-        )
-    )
-
-    (defn #_"MergeProcessor" MergeProcessor''setStateIndexes-2 [#_"MergeProcessor" this, #_"[int]" stateIndexes]
-        (assoc this :stateIndexes stateIndexes)
-    )
-
-    (defn #_"Block" MergeProcessor''getPredecessor-2 [#_"MergeProcessor" this, #_"int" index]
-        (nth (:predecessors (:mergeBlock this)) (nth (:stateIndexes this) index))
-    )
-
-    (defn #_"PhiNode*" MergeProcessor''getPhis-1 [#_"MergeProcessor" this]
-        (AbstractMergeNode''phis-1 (:merge this))
-    )
-
-    (defn #_"ValueNode" MergeProcessor''getPhiValueAt-3 [#_"MergeProcessor" this, #_"PhiNode" phi, #_"int" index]
-        (nth (:phiValues phi) (nth (:stateIndexes this) index))
-    )
-
-    (defn #_"ValuePhiNode" MergeProcessor''createValuePhi-2 [#_"MergeProcessor" this, #_"Stamp" stamp]
-        (ValuePhiNode'new-2 stamp, (:merge this))
-    )
-
-    (defn #_"this" MergeProcessor''setPhiInput-4 [#_"MergeProcessor" this, #_"PhiNode" phi, #_"int" index, #_"ValueNode" value]
-        (update this :afterMergeEffects GraphEffects''initializePhiInput-4 phi, (nth (:stateIndexes this) index), value)
-    )
-
-    (defn #_"Graph" MergeProcessor''graph-1 [#_"MergeProcessor" this]
-        (:graph (:merge this))
-    )
-)
-
-(class-ns PartialEscapeMergeProcessor [MergeProcessor]
-    (defn #_"PartialEscapeMergeProcessor" PartialEscapeMergeProcessor'new-2 [#_"PartialEscapeClosure" peClosure, #_"Block" mergeBlock]
-        (merge (PartialEscapeMergeProcessor'class.) (MergeProcessor'new-1 mergeBlock)
-            (hash-map
-                #_"PartialEscapeClosure" :peClosure peClosure
-            )
-        )
-    )
-
-    (defn- #_"boolean" PartialEscapeMergeProcessor'intersectObjectState-2 [#_"PartialEscapeBlockState*" states, #_"int" index]
-        (loop-when [#_"int" i 0] (< i (count states)) => true
-            (and (some? (when (< index (count (:objectStates (nth states i)))) (nth (:objectStates (nth states i)) index)))
-                (recur (inc i))
-            )
-        )
-    )
-
-    (defn- #_"int*" PartialEscapeMergeProcessor'intersectVirtualObjects-1 [#_"PartialEscapeBlockState*" states]
-        (let [
-            #_"int" m
-                (loop-when-recur [m (count (:objectStates (nth states 0))) #_"int" i 1]
-                                 (< i (count states))
-                                 [(min m (count (:objectStates (nth states i)))) (inc i)]
-                              => m
-                )
-        ]
-            (filter #(PartialEscapeMergeProcessor'intersectObjectState-2 states, %) (range m))
-        )
-    )
-
-    (defn- #_"boolean" PartialEscapeMergeProcessor''isSingleUsageAllocation-4 [#_"PartialEscapeMergeProcessor" this, #_"ValueNode" value, #_"VirtualObjectNode*" objects, #_"PartialEscapeBlockState" state]
-        ;; If the phi input is an allocation, we know that it is a "fresh" value, i.e. that
-        ;; this is a value that will only appear through this source, and cannot appear anywhere
-        ;; else. If the phi is also the only usage of this input, we know that no other place
-        ;; can check object identity against it, so it is safe to lose the object identity here.
-        (and (satisfies? AllocatedObjectNode value) (Node''hasExactlyOneUsage-1 value)
-            ;; Check that the state only references the one virtual object from the Phi.
-            (loop-when [#_"VirtualObjectNode" singleVirtual nil #_"int" i 0] (< i (count objects)) => true
-                (let [
-                    singleVirtual
-                        (when (PartialEscapeBlockState''contains-2 state, (nth objects i)) => singleVirtual
-                            (cond
-                                (nil? singleVirtual)              (nth objects i)
-                                (= singleVirtual (nth objects i)) singleVirtual
-                                :else
-                                    ;; More than one virtual object is visible in the object state.
-                                    (§ return false)
-                            )
-                        )
-                ]
-                    (recur singleVirtual (inc i))
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Fill the inputs of the PhiNode corresponding to one JavaKind#Object entry in the virtual object.
-     ;
-     ; @return true if materialization happened during the merge, false otherwise
-     ;;
-    (defn- #_"boolean" PartialEscapeMergeProcessor''mergeObjectEntry-5 [#_"PartialEscapeMergeProcessor" this, #_"fn int [int]" f'objectId-1, #_"PartialEscapeBlockState*" states, #_"PhiNode" phi, #_"int" index]
-        (loop-when [#_"boolean" materialized? false #_"int" i 0] (< i (count states)) => materialized?
-            (let [
-                #_"int" object (f'objectId-1 i)
-                #_"ObjectState" state (nth (:objectStates (nth states i)) object)
-            ]
-                (when (ObjectState''isVirtual-1 state) => materialized?
-                    (let [
-                        #_"ValueNode" entry (ObjectState''getEntry-2 state, index)
-                        [materialized? entry]
-                            (when (satisfies? VirtualObjectNode entry) => [materialized? entry]
-                                (let [
-                                    #_"Block" predecessor (MergeProcessor''getPredecessor-2 this, i)
-                                    materialized? (or materialized? (PartialEscapeClosure''ensureMaterialized-5 (:peClosure this), (nth states i), (:oid entry), (:endNode predecessor), (get (:blockEffects (:peClosure this)) predecessor)))
-                                    entry
-                                        (when (ObjectState''isVirtual-1 (nth (:objectStates (nth states i)) object)) => entry
-                                            (let [
-                                                entry (:materializedValue (nth (:objectStates (nth states i)) (:oid entry)))
-                                                _ (§ ass! (nth states i) (PartialEscapeBlockState''setEntry-4 (nth states i), object, index, entry))
-                                            ]
-                                                entry
-                                            )
-                                        )
-                                ]
-                                    [materialized? entry]
-                                )
-                            )
-                        _ (§ ass! this (MergeProcessor''setPhiInput-4 this, phi, i, entry))
-                    ]
-                        (recur materialized? (inc i))
-                    )
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Try to merge multiple virtual object states into a single object state. If the incoming
-     ; object states are compatible, then this method will create PhiNodes for the object's
-     ; entries where needed. If they are incompatible, then all incoming virtual objects will be
-     ; materialized, and a PhiNode for the materialized values will be created. Object states
-     ; can be incompatible if they contain {@code long} or {@code double} values occupying two
-     ; {@code int} slots in such a way that that their values cannot be merged using PhiNodes.
-     ;
-     ; @param states the predecessor block states of the merge
-     ; @return true if materialization happened during the merge, false otherwise
-     ;;
-    (defn- #_"boolean" PartialEscapeMergeProcessor''mergeObjectStates-4 [#_"PartialEscapeMergeProcessor" this, #_"int" resultObject, #_"int*" sourceObjects, #_"PartialEscapeBlockState*" states]
-        (let [
-            #_"fn int [int]" f'getObject-1 #(if (some? sourceObjects) (nth sourceObjects %) resultObject)
-            #_"VirtualObjectNode" virtual (nth (:peVirtualObjects (:peClosure this)) resultObject)
-            #_"int" entryCount (VirtualObjectNode'''entryCount-1 virtual)
-            ;; determine all entries that have a two-slot value
-            [#_"boolean" ensure? #_"boolean" compatible? #_"[JavaKind]" twoSlotKinds]
-                (loop-when [ensure? true #_"int" j 0 twoSlotKinds nil] (< j (count states)) => [ensure? true twoSlotKinds]
-                    (let [
-                        #_"ObjectState" objectState (nth (:objectStates (nth states j)) (f'getObject-1 j))
-                        #_"[ValueNode]" entries (:entries objectState)
-                        ensure? (and ensure? (:ensureVirtualized objectState))
-                        [compatible? twoSlotKinds]
-                            (loop-when [twoSlotKinds twoSlotKinds #_"int" i 0] (< i entryCount) => [true twoSlotKinds]
-                                (let [
-                                    #_"JavaKind" otherKind (ValueNode''getStackKind-1 (nth entries i))
-                                    #_"JavaKind" entryKind (VirtualObjectNode'''entryKind-2 virtual, i)
-                                ]
-                                    (when (and (= entryKind :JavaKind'Int) (JavaKind'needsTwoSlots-1 otherKind)) => (recur twoSlotKinds (inc i))
-                                        (let [
-                                            twoSlotKinds (or twoSlotKinds (vec (repeat entryCount nil)))
-                                        ]
-                                            (when (or (nil? (nth twoSlotKinds i)) (= (nth twoSlotKinds i) otherKind)) => [false twoSlotKinds]
-                                                (§ ass! twoSlotKinds (assoc' twoSlotKinds i otherKind))
-                                                ;; skip the next entry
-                                                (recur twoSlotKinds (+ i 2))
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                    ]
-                        (recur-if compatible? [ensure? (inc j) twoSlotKinds] => [ensure? false twoSlotKinds])
-                    )
-                )
-            compatible?
-                (when (and compatible? (some? twoSlotKinds)) => compatible?
-                    ;; if there are two-slot values then make sure the incoming states can be merged
-                    (loop-when [#_"int" i 0] (< i entryCount) => true
-                        (let [
-                            compatible?
-                                (when (some? (nth twoSlotKinds i)) => true
-                                    (loop-when [#_"int" j 0] (< j (count states)) => true
-                                        (let [
-                                            #_"int" object (f'getObject-1 j)
-                                            #_"ObjectState" objectState (nth (:objectStates (nth states j)) object)
-                                            #_"ValueNode" value (ObjectState''getEntry-2 objectState, i)
-                                            #_"JavaKind" valueKind (ValueNode''getStackKind-1 value)
-                                            compatible?
-                                                (when-not (= valueKind (nth twoSlotKinds i)) => true
-                                                    (let [
-                                                        #_"ValueNode" nextValue (ObjectState''getEntry-2 objectState, (inc i))
-                                                    ]
-                                                        (and (satisfies? ConstantNode value) (= (:value value) JavaConstant'INT_0) (satisfies? ConstantNode nextValue) (= (:value nextValue) JavaConstant'INT_0)
-                                                            (let [
-                                                                ;; rewrite to a zero constant of the larger kind
-                                                                _ (§ ass! (nth states j) (PartialEscapeBlockState''setEntry-4 (nth states j), object, i, (ConstantNode'defaultForKind-2 (nth twoSlotKinds i), (MergeProcessor''graph-1 this))))
-                                                                _ (§ ass! (nth states j) (PartialEscapeBlockState''setEntry-4 (nth states j), object, (inc i), (ConstantNode'forConstant-2c (JavaConstant'forIllegal-0), (MergeProcessor''graph-1 this))))
-                                                            ]
-                                                                true
-                                                            )
-                                                        )
-                                                    )
-                                                )
-                                        ]
-                                            (recur-if compatible? [(inc j)] => false)
-                                        )
-                                    )
-                                )
-                        ]
-                            (recur-if compatible? [(inc i)] => false)
-                        )
-                    )
-                )
-        ]
-            (if compatible?
-                ;; virtual objects are compatible: create phis for all entries that need them
-                (let [
-                    #_"[ValueNode]" values (§ snap (:entries (nth (:objectStates (nth states 0)) (f'getObject-1 0))))
-                    #_"[PhiNode]" phis (vec (repeat (VirtualObjectNode'''entryCount-1 virtual) nil))
-                    _
-                        (loop-when [#_"int" i 0] (< i (count values))
-                            (let [
-                                _
-                                    (loop-when-recur [#_"int" j 1] (< j (count states)) [(inc j)]
-                                        (when-not (or (some? (nth phis i)) (= (nth values i) (ObjectState''getEntry-2 (nth (:objectStates (nth states j)) (f'getObject-1 j)), i)))
-                                            (§ ass! phis (assoc' phis i (MergeProcessor''createValuePhi-2 this, (Stamp'''unrestricted-1 (:stamp (nth values i))))))
-                                        )
-                                    )
-                                _
-                                    (when (and (some? (nth phis i)) (not (Stamp'''isCompatible-2s (:stamp (nth phis i)), (:stamp (nth values i)))))
-                                        (§ ass! phis (assoc' phis i (MergeProcessor''createValuePhi-2 this, (Stamp'''unrestricted-1 (:stamp (nth values i))))))
-                                    )
-                                i
-                                    (when (and (some? twoSlotKinds) (some? (nth twoSlotKinds i))) => i
-                                        ;; skip an entry after a long/double value that occupies two int slots
-                                        (let [
-                                            i (inc i)
-                                            _ (§ ass! phis (assoc' phis i nil))
-                                            _ (§ ass! values (assoc' values i (ConstantNode'forConstant-2c (JavaConstant'forIllegal-0), (MergeProcessor''graph-1 this))))
-                                        ]
-                                            i
-                                        )
-                                    )
-                            ]
-                                (recur (inc i))
-                            )
-                        )
-                    #_"boolean" materialized?
-                        (loop-when [materialized? false #_"int" i 0] (< i (count values)) => materialized?
-                            (let [
-                                #_"PhiNode" phi (nth phis i)
-                                materialized?
-                                    (when (some? phi) => materialized?
-                                        (let [
-                                            _ (§ ass! this (update this :mergeEffects GraphEffects''addFloatingNode-2 phi))
-                                            materialized?
-                                                (if (= (VirtualObjectNode'''entryKind-2 virtual, i) :JavaKind'Object)
-                                                    (or materialized? (PartialEscapeMergeProcessor''mergeObjectEntry-5 this, f'getObject-1, states, phi, i))
-                                                    (loop-when [#_"int" j 0] (< j (count states)) => materialized?
-                                                        (let [
-                                                            #_"ObjectState" state (nth (:objectStates (nth states j)) (f'getObject-1 j))
-                                                        ]
-                                                            (when (ObjectState''isVirtual-1 state) => materialized?
-                                                                (§ ass! this (MergeProcessor''setPhiInput-4 this, phi, j, (ObjectState''getEntry-2 state, i)))
-                                                                (recur (inc j))
-                                                            )
-                                                        )
-                                                    )
-                                                )
-                                            _ (§ ass! values (assoc' values i phi))
-                                        ]
-                                            materialized?
-                                        )
-                                    )
-                            ]
-                                (recur materialized? (inc i))
-                            )
-                        )
-                    _ (§ ass! this (update this :newState PartialEscapeBlockState''addObject-3 resultObject, (ObjectState'new-3s values, (:lockState (nth (:objectStates (nth states 0)) (f'getObject-1 0))), ensure?)))
-                ]
-                    materialized?
-                )
-                ;; not compatible: materialize in all predecessors
-                (let [
-                    #_"PhiNode" materializedValuePhi (MergeProcessor''createValuePhi-2 this, (StampFactory'forKind-1 :JavaKind'Object))
-                    _
-                        (dotimes [#_"int" i (count states)]
-                            (let [
-                                #_"Block" predecessor (MergeProcessor''getPredecessor-2 this, i)
-                                _
-                                    (when (and (not ensure?) (ObjectState''isVirtual-1 (nth (:objectStates (nth states i)) (f'getObject-1 i))))
-                                        ;; we can materialize if not all inputs are "ensureVirtualized"
-                                        (§ ass! (nth (:objectStates (nth states i)) (f'getObject-1 i)) (ObjectState''setEnsureVirtualized-2 (nth (:objectStates (nth states i)) (f'getObject-1 i)), false))
-                                    )
-                            ]
-                                (PartialEscapeClosure''ensureMaterialized-5 (:peClosure this), (nth states i), (f'getObject-1 i), (:endNode predecessor), (get (:blockEffects (:peClosure this)) predecessor))
-                                (§ ass! this (MergeProcessor''setPhiInput-4 this, materializedValuePhi, i, (:materializedValue (nth (:objectStates (nth states i)) (f'getObject-1 i)))))
-                            )
-                        )
-                    _ (§ ass! this (update this :newState PartialEscapeBlockState''addObject-3 resultObject, (ObjectState'new-3v materializedValuePhi, nil, ensure?)))
-                ]
-                    true
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Examine a PhiNode and try to replace it with merging of virtual objects if all its inputs refer to
-     ; virtual object states. In order for the merging to happen, all incoming object states need to be
-     ; compatible and without object identity (meaning that their object identity if not used later on).
-     ;
-     ; @param phi the PhiNode that should be processed
-     ; @param states the predecessor block states of the merge
-     ; @return true if materialization happened during the merge, false otherwise
-     ;;
-    (defn- #_"boolean" PartialEscapeMergeProcessor''processPhi-3 [#_"PartialEscapeMergeProcessor" this, #_"ValuePhiNode" phi, #_"PartialEscapeBlockState*" states]
-        ;; determine how many inputs are virtual and if they're all the same virtual object
-        (let [
-            [#_"[VirtualObjectNode]" objects #_"boolean" unique? #_"boolean" ensure? #_"int" virtuals]
-                (loop-when [objects (vec (repeat (count states) nil)) unique? true ensure? true virtuals 0 #_"int" i 0] (< i (count states)) => [objects unique? ensure? virtuals]
-                    (let [
-                        #_"ValueNode" alias (PartialEscapeClosure''getAlias-2 (:peClosure this), (MergeProcessor''getPhiValueAt-3 this, phi, i))
-                        [objects unique? ensure? virtuals]
-                            (when (satisfies? VirtualObjectNode alias) => [objects unique? ensure? virtuals]
-                                (let [
-                                    objects (assoc' objects i alias)
-                                    #_"ObjectState" objectState (when (< (:oid alias) (count (:objectStates (nth states i)))) (nth (:objectStates (nth states i)) (:oid alias)))
-                                ]
-                                    (when (some? objectState)
-                                        (when (ObjectState''isVirtual-1 objectState) => [objects unique? ensure? virtuals]
-                                            [objects (and (= (nth objects 0) alias) unique?) (and ensure? (:ensureVirtualized objectState)) (inc virtuals)]
-                                        )
-                                    )
-                                )
-                            )
-                    ]
-                        (recur-if (some? objects) [objects unique? ensure? virtuals (inc i)])
-                    )
-                )
-        ]
-            (when (some? objects) => false
-                (let [
-                    _
-                        (when (= virtuals (count states))
-                            (if unique?
-                                (let [
-                                    ;; all inputs refer to the same object: just make the phi node an alias
-                                    _ (§ ass! this (update this :peClosure PartialEscapeClosure''addVirtualAlias-3 (nth objects 0), phi))
-                                    _ (§ ass! this (update this :mergeEffects GraphEffects''deleteNode-2 phi))
-                                ]
-                                    (§ return false)
-                                )
-                                ;; all inputs are virtual: check if they're compatible and without identity
-                                (let [
-                                    #_"boolean" compatible?
-                                        (loop-when [#_"int" i 0] (< i (count states)) => true
-                                            (and
-                                                (= (VirtualObjectNode'''type-1 (nth objects 0)) (VirtualObjectNode'''type-1 (nth objects i)))
-                                                (= (VirtualObjectNode'''entryCount-1 (nth objects 0)) (VirtualObjectNode'''entryCount-1 (nth objects i)))
-                                                (ObjectState''locksEqual-2 (nth (:objectStates (nth states 0)) (:oid (nth objects 0))), (nth (:objectStates (nth states i)) (:oid (nth objects i))))
-                                                (recur (inc i))
-                                            )
-                                        )
-                                    compatible?
-                                        (and compatible?
-                                            (loop-when [compatible? true #_"int" i 0] (< i (count states)) => compatible?
-                                                ;; check whether we trivially see that this is the only reference to this allocation
-                                                (let [
-                                                    compatible?
-                                                        (and compatible?
-                                                            (or (not (:hasIdentity (nth objects i))) (PartialEscapeMergeProcessor''isSingleUsageAllocation-4 this, (MergeProcessor''getPhiValueAt-3 this, phi, i), objects, (nth states i)))
-                                                        )
-                                                ]
-                                                    (recur compatible? (inc i))
-                                                )
-                                            )
-                                        )
-                                ]
-                                    (when compatible?
-                                        (let [
-                                            #_"VirtualObjectNode" virtual (VirtualObjectNode'''duplicate-1 (nth objects 0))
-                                            _ (§ ass! this (update this :mergeEffects GraphEffects''addFloatingNode-2 virtual))
-                                            _ (§ ass! this (update this :mergeEffects GraphEffects''deleteNode-2 phi))
-                                            _
-                                                (when (= (:oid virtual) -1)
-                                                    (let [
-                                                        #_"int" id (count (:peVirtualObjects (:peClosure this)))
-                                                    ]
-                                                        (§ ass! this (update-in this [:peClosure :peVirtualObjects] conj' virtual))
-                                                        (§ ass! virtual (VirtualObjectNode''setObjectId-2 virtual, id))
-                                                    )
-                                                )
-                                            #_"boolean" materialized? (PartialEscapeMergeProcessor''mergeObjectStates-4 this, (:oid virtual), (map :oid objects), states)
-                                            _ (§ ass! this (update this :peClosure PartialEscapeClosure''addVirtualAlias-3 virtual, virtual))
-                                            _ (§ ass! this (update this :peClosure PartialEscapeClosure''addVirtualAlias-3 virtual, phi))
-                                        ]
-                                            (§ return materialized?)
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                ]
-
-                    ;; otherwise: materialize all phi inputs
-                    (let [
-                        #_"boolean" materialized?
-                            (and (pos? virtuals)
-                                (loop-when [materialized? false #_"int" i 0] (< i (count states)) => materialized?
-                                    (let [
-                                        materialized?
-                                            (when (some? (nth objects i)) => materialized?
-                                                (let [
-                                                    #_"Block" predecessor (MergeProcessor''getPredecessor-2 this, i)
-                                                    #_"ObjectState" objectState (nth (:objectStates (nth states i)) (:oid (nth objects i)))
-                                                    _
-                                                        (when (and (not ensure?) (ObjectState''isVirtual-1 objectState))
-                                                            ;; we can materialize if not all inputs are "ensureVirtualized"
-                                                            (§ ass! objectState (ObjectState''setEnsureVirtualized-2 objectState, false))
-                                                        )
-                                                ]
-                                                    (or materialized?
-                                                        (PartialEscapeClosure''ensureMaterialized-5 (:peClosure this), (nth states i), (:oid (nth objects i)), (:endNode predecessor), (get (:blockEffects (:peClosure this)) predecessor))
-                                                    )
-                                                )
-                                            )
-                                    ]
-                                        (recur materialized? (inc i))
-                                    )
-                                )
-                            )
-                        _
-                            (dotimes [#_"int" i (count states)]
-                                (when (some? (nth objects i))
-                                    (§ ass! this (MergeProcessor''setPhiInput-4 this, phi, i, (PartialEscapeClosure''getAliasAndResolve-3 (:peClosure this), (nth states i), (nth objects i))))
-                                )
-                            )
-                    ]
-                        materialized?
-                    )
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Merge all predecessor block states into one block state. This is an iterative process,
-     ; because merging states can lead to materializations which make previous parts of the
-     ; merging operation invalid. The merging process is executed until a stable state has been
-     ; reached. This method needs to be careful to place the effects of the merging operation
-     ; into the correct blocks.
-     ;
-     ; @param states the predecessor block states of the merge
-     ;;
-    (defm PartialEscapeMergeProcessor MergeProcessor
-        (#_"this" MergeProcessor'''merge-2 [#_"PartialEscapeMergeProcessor" this, #_"PartialEscapeBlockState*" states]
-            (let [
-                ;; calculate the set of virtual objects that exist in all predecessors
-                #_"int*" intersection (PartialEscapeMergeProcessor'intersectVirtualObjects-1 states)
-            ]
-                (loop [this this]
-                    (let [
-                        [this #_"boolean" materialized?]
-                            (if (PartialEscapeBlockState'identicalObjectStates-1 states)
-                                (let [
-                                    this (update this :newState assoc :objectStates (:objectStates (nth states 0)))
-                                ]
-                                    [this false]
-                                )
-                                (loop-when [this this materialized? false #_"seq" s (seq intersection)] (some? s) => [this materialized?]
-                                    (let [
-                                        #_"int" id (first s)
-                                        [this materialized?]
-                                            (when (PartialEscapeBlockState'identicalObjectStates-2 states, id) => [this materialized?]
-                                                (let [
-                                                    this (update this :newState PartialEscapeBlockState''addObject-3 id, (nth (:objectStates (nth states 0)) id))
-                                                    ;; determine if all inputs are virtual or the same materialized value
-                                                    #_"ObjectState" startObj (nth (:objectStates (nth states 0)) id)
-                                                    [#_"boolean" ensureVirtual #_"int" virtualCount #_"ValueNode" uniqueMaterializedValue #_"boolean" locksMatch]
-                                                        (loop-when [ensureVirtual true virtualCount 0 uniqueMaterializedValue (when-not (ObjectState''isVirtual-1 startObj) (:materializedValue startObj)) locksMatch true #_"int" i 0] (< i (count states)) => [ensureVirtual virtualCount uniqueMaterializedValue locksMatch]
-                                                            (let [
-                                                                #_"ObjectState" obj (nth (:objectStates (nth states i)) id)
-                                                                ensureVirtual (and ensureVirtual (:ensureVirtualized obj))
-                                                                [virtualCount uniqueMaterializedValue locksMatch]
-                                                                    (if (ObjectState''isVirtual-1 obj)
-                                                                        [(inc virtualCount) nil (and locksMatch (ObjectState''locksEqual-2 obj, startObj))]
-                                                                        [virtualCount (when (= (:materializedValue obj) uniqueMaterializedValue) uniqueMaterializedValue) locksMatch]
-                                                                    )
-                                                            ]
-                                                                (recur ensureVirtual virtualCount uniqueMaterializedValue locksMatch (inc i))
-                                                            )
-                                                        )
-                                                ]
-                                                    (cond
-                                                        (and (= virtualCount (count states)) locksMatch)
-                                                            [this (or materialized? (PartialEscapeMergeProcessor''mergeObjectStates-4 this, id, nil, states))]
-                                                        (some? uniqueMaterializedValue)
-                                                            (let [
-                                                                this (update this :newState PartialEscapeBlockState''addObject-3 id, (ObjectState'new-3v uniqueMaterializedValue, nil, ensureVirtual))
-                                                            ]
-                                                                [this materialized?]
-                                                            )
-                                                        :else
-                                                            (let [
-                                                                #_"PhiNode" materializedValuePhi (MergeProcessor''createValuePhi-2 this, (StampFactory'forKind-1 :JavaKind'Object))
-                                                                this (update this :mergeEffects GraphEffects''addFloatingNode-2 materializedValuePhi)
-                                                                [this materialized?]
-                                                                    (loop-when [this this materialized? materialized? #_"int" i 0] (< i (count states)) => [this materialized?]
-                                                                        (let [
-                                                                            #_"ObjectState" obj (nth (:objectStates (nth states i)) id)
-                                                                            [materialized? obj]
-                                                                                (when (ObjectState''isVirtual-1 obj) => [materialized? obj]
-                                                                                    (let [
-                                                                                        #_"Block" predecessor (MergeProcessor''getPredecessor-2 this, i)
-                                                                                        _
-                                                                                            (when (and (not ensureVirtual) (ObjectState''isVirtual-1 obj))
-                                                                                                ;; we can materialize if not all inputs are "ensureVirtualized"
-                                                                                                (§ ass! obj (ObjectState''setEnsureVirtualized-2 obj, false))
-                                                                                            )
-                                                                                    ]
-                                                                                        [(or materialized? (PartialEscapeClosure''ensureMaterialized-5 (:peClosure this), (nth states i), id, (:endNode predecessor), (get (:blockEffects (:peClosure this)) predecessor))) (nth (:objectStates (nth states i)) id)]
-                                                                                    )
-                                                                                )
-                                                                            this (MergeProcessor''setPhiInput-4 this, materializedValuePhi, i, (:materializedValue obj))
-                                                                        ]
-                                                                            (recur this materialized? (inc i))
-                                                                        )
-                                                                    )
-                                                                this (update this :newState PartialEscapeBlockState''addObject-3 id, (ObjectState'new-3v materializedValuePhi, nil, false))
-                                                            ]
-                                                                [this materialized?]
-                                                            )
-                                                    )
-                                                )
-                                            )
-                                    ]
-                                        (recur this materialized? (next s))
-                                    )
-                                )
-                            )
-                        [this materialized?]
-                            (loop-when [this this materialized? materialized? #_"seq" s (seq (MergeProcessor''getPhis-1 this))] (some? s) => [this materialized?]
-                                (let [
-                                    #_"PhiNode" phi (first s)
-                                    this (assoc-in this [:peClosure :aliases phi] nil)
-                                ]
-                                    (recur this (or materialized? (and (contains? (:hasVirtualInputs (:peClosure this)) phi) (satisfies? ValuePhiNode phi) (PartialEscapeMergeProcessor''processPhi-3 this, phi, states))) (next s))
-                                )
-                            )
-                        this
-                            (when materialized? => this
-                                (-> this
-                                    (update :newState PartialEscapeBlockState''resetObjectStates-1)
-                                    (update :mergeEffects GraphEffects''clear-1)
-                                    (update :afterMergeEffects GraphEffects''clear-1)
-                                )
-                            )
-                    ]
-                        (recur-if materialized? [this] => this)
-                    )
-                )
-            )
-        )
-    )
-)
-
-(class-ns PEReadEliminationMergeProcessor [PartialEscapeMergeProcessor #_"<PEReadEliminationBlockState>", MergeProcessor]
-    (defn #_"PEReadEliminationMergeProcessor" PEReadEliminationMergeProcessor'new-2 [#_"PEReadEliminationClosure" reClosure, #_"Block" mergeBlock]
-        (merge (PEReadEliminationMergeProcessor'class.) (PartialEscapeMergeProcessor'new-2 reClosure, mergeBlock))
-    )
-
-    (defn- #_"this" PEReadEliminationMergeProcessor''mergeReadCachePhi-7 [#_"PEReadEliminationMergeProcessor" this, #_"PhiNode" phi, #_"LocationIdentity" location, #_"int" index, #_"JavaKind" kind, #_"boolean" overflowAccess, #_"PEReadEliminationBlockState*" states]
-        (let [
-            #_"ValueNode" value (PEReadEliminationBlockState''getReadCache-6 (nth states 0), (MergeProcessor''getPhiValueAt-3 this, phi, 0), location, index, kind, (:peClosure this))
-        ]
-            (when (some? value) => this
-                (loop [this this #_"[ValueNode]" values [ value ] #_"int" i 1]
-                    (if (< i (count states))
-                        (let [
-                            value (PEReadEliminationBlockState''getReadCache-6 (nth states i), (MergeProcessor''getPhiValueAt-3 this, phi, i), location, index, kind, (:peClosure this))
-                        ]
-                            ;; e.g. unsafe loads/stores with same identity, but different access kinds, see mergeReadCache(states)
-                            (when (and (some? value) (Stamp'''isCompatible-2s (:stamp (nth values (dec i))), (:stamp value))) => this
-                                (recur this (assoc' values i value) (inc i))
-                            )
-                        )
-                        (let [
-                            #_"PhiNode" phiNode (MergeProcessor''createValuePhi-2 this, (Stamp'''unrestricted-1 (:stamp (nth values 0))))
-                            this (update this :mergeEffects GraphEffects''addFloatingNode-2 phiNode)
-                            this (reduce #(MergeProcessor''setPhiInput-4 %1, phiNode, %2, (nth values %2)) this (range (count values)))
-                        ]
-                            (update-in this [:newState :readCache] assoc (ReadCacheEntry'new-5 location, phi, index, kind, overflowAccess) phiNode)
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defn- #_"this" PEReadEliminationMergeProcessor''mergeReadCache-2 [#_"PEReadEliminationMergeProcessor" this, #_"PEReadEliminationBlockState*" states]
-        (let [
-            this
-                (loop-when [this this #_"seq" s (seq (:readCache (nth states 0)))] (some? s) => this
-                    (let [
-                        [#_"ReadCacheEntry" k #_"ValueNode" v] (first s)
-                        [#_"ValueNode" value #_"boolean" phi?]
-                            (loop-when [value v phi? false #_"int" i 1] (< i (count states)) => [value phi?]
-                                (let [
-                                    #_"ValueNode" other (get (:readCache (nth states i)) k)
-                                ]
-                                    ;; e.g. unsafe loads/stores with different access kinds have different stamps although location,
-                                    ;; object and offset are the same, in this case we cannot create a phi nor can we set a common value
-                                    (when (and (some? other) (Stamp'''isCompatible-2s (:stamp value), (:stamp other))) => [nil false]
-                                        (recur value (or phi? (not (= other value))) (inc i))
-                                    )
-                                )
-                            )
-                        this
-                            (cond
-                                phi?
-                                    (let [
-                                        #_"PhiNode" phi (MergeProcessor''createValuePhi-2 this, (Stamp'''unrestricted-1 (:stamp value)))
-                                        this (update this :mergeEffects GraphEffects''addFloatingNode-2 phi)
-                                        this (reduce #(MergeProcessor''setPhiInput-4 %1, phi, %2, (PEReadEliminationBlockState''getReadCache-6 (nth states %2), (:object k), (:identity k), (:index k), (:kind k), (:peClosure this))) this (range (count states)))
-                                    ]
-                                        (update-in this [:newState :readCache] assoc k phi)
-                                    )
-                                (some? value)
-                                    (update-in this [:newState :readCache] assoc k value)
-                                :else
-                                    this
-                            )
-                    ]
-                        (recur this (next s))
-                    )
-                )
-        ]
-            ;; For object phis, see if there are known reads on all predecessors, for which we could create new phis.
-            (doseq [#_"PhiNode" phi (MergeProcessor''getPhis-1 this) :when (= (ValueNode''getStackKind-1 phi) :JavaKind'Object)]
-                (doseq [#_"ReadCacheEntry" k (keys (:readCache (nth states 0))) :when (= (:object k) (MergeProcessor''getPhiValueAt-3 this, phi, 0))]
-                    (§ ass! this (PEReadEliminationMergeProcessor''mergeReadCachePhi-7 this, phi, (:identity k), (:index k), (:kind k), (:overflowAccess k), states))
-                )
-            )
-            this
-        )
-    )
-
-    (defm PEReadEliminationMergeProcessor MergeProcessor
-        (#_"this" MergeProcessor'''merge-2 [#_"PEReadEliminationMergeProcessor" this, #_"PEReadEliminationBlockState*" states]
-            (let [
-                this (MergeProcessor'''merge-2 (§ super #_"PartialEscapeMergeProcessor"), states)
-            ]
-                (PEReadEliminationMergeProcessor''mergeReadCache-2 this, states)
-            )
-        )
-    )
-)
-
-(class-ns ReadEliminationMergeProcessor [MergeProcessor]
-    (defn #_"ReadEliminationMergeProcessor" ReadEliminationMergeProcessor'new-1 [#_"Block" mergeBlock]
-        (merge (ReadEliminationMergeProcessor'class.) (MergeProcessor'new-1 mergeBlock)
-            (hash-map
-                #_"{Object ValuePhiNode}" :materializedPhis {}
-            )
-        )
-    )
-
-    (defn #_"ValuePhiNode" ReadEliminationMergeProcessor''getCachedPhi-3 [#_"ReadEliminationMergeProcessor" this, #_"CacheEntry" virtual, #_"Stamp" stamp]
-        (or (get (:materializedPhis this) virtual)
-            (let [
-                #_"ValuePhiNode" result (MergeProcessor''createValuePhi-2 this, stamp)
-                _ (§ ass! this (update this :materializedPhis assoc virtual result))
-            ]
-                result
-            )
-        )
-    )
-
-    (defn- #_"this" ReadEliminationMergeProcessor''mergeReadCachePhi-4 [#_"ReadEliminationMergeProcessor" this, #_"PhiNode" phi, #_"CacheEntry" identifier, #_"ReadEliminationBlockState*" states]
-        (let [
-            #_"ValueNode" value (ReadEliminationBlockState''getCacheEntry-2 (nth states 0), (CacheEntry'''duplicateWithObject-2 identifier, (MergeProcessor''getPhiValueAt-3 this, phi, 0)))
-        ]
-            (when (some? value) => this
-                (loop [this this #_"[ValueNode]" values [ value ] #_"int" i 1]
-                    (if (< i (count states))
-                        (let [
-                            value (ReadEliminationBlockState''getCacheEntry-2 (nth states i), (CacheEntry'''duplicateWithObject-2 identifier, (MergeProcessor''getPhiValueAt-3 this, phi, i)))
-                        ]
-                            ;; e.g. unsafe loads/stores with same identity, but different access kinds, see mergeReadCache(states)
-                            (when (and (some? value) (Stamp'''isCompatible-2s (:stamp (nth values (dec i))), (:stamp value))) => this
-                                (recur this (assoc' values i value) (inc i))
-                            )
-                        )
-                        (let [
-                            #_"CacheEntry" newIdentifier (CacheEntry'''duplicateWithObject-2 identifier, phi)
-                            #_"PhiNode" phiNode (ReadEliminationMergeProcessor''getCachedPhi-3 this, newIdentifier, (Stamp'''unrestricted-1 (:stamp (nth values 0))))
-                            this (update this :mergeEffects GraphEffects''addFloatingNode-2 phiNode)
-                            this (reduce #(MergeProcessor''setPhiInput-4 %1, phiNode, %2, (nth values %2)) this (range (count values)))
-                        ]
-                            (update this :newState ReadEliminationBlockState''addCacheEntry-3 newIdentifier, phiNode)
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defm ReadEliminationMergeProcessor MergeProcessor
-        (#_"this" MergeProcessor'''merge-2 [#_"ReadEliminationMergeProcessor" this, #_"ReadEliminationBlockState*" states]
-            (let [
-                this
-                    (loop-when [this this #_"seq" s (seq (:readCache (nth states 0)))] (some? s) => this
-                        (let [
-                            [#_"CacheEntry" k #_"ValueNode" v] (first s)
-                            [#_"ValueNode" value #_"boolean" phi?]
-                                (loop-when [value v phi? false #_"int" i 1] (< i (count states)) => [value phi?]
-                                    (let [
-                                        #_"ValueNode" other (get (:readCache (nth states i)) k)
-                                    ]
-                                        ;; e.g. unsafe loads/stores with different access kinds have different stamps although location,
-                                        ;; object and offset are the same, in this case we cannot create a phi nor can we set a common value
-                                        (when (and (some? other) (Stamp'''isCompatible-2s (:stamp value), (:stamp other))) => [nil false]
-                                            (recur value (or phi? (not (= other value))) (inc i))
-                                        )
-                                    )
-                                )
-                            this
-                                (cond
-                                    phi?
-                                        (let [
-                                            #_"PhiNode" phi (ReadEliminationMergeProcessor''getCachedPhi-3 this, k, (Stamp'''unrestricted-1 (:stamp value)))
-                                            this (update this :mergeEffects GraphEffects''addFloatingNode-2 phi)
-                                            this (reduce #(MergeProcessor''setPhiInput-4 %1, phi, %2, (ReadEliminationBlockState''getCacheEntry-2 (nth states %2), k)) this (range (count states)))
-                                        ]
-                                            (update this :newState ReadEliminationBlockState''addCacheEntry-3 k, phi)
-                                        )
-                                    (some? value)
-                                        ;; there is the same value on all branches
-                                        (update this :newState ReadEliminationBlockState''addCacheEntry-3 k, value)
-                                    :else
-                                        this
-                                )
-                        ]
-                            (recur this (next s))
-                        )
-                    )
-            ]
-                ;; For object phis, see if there are known reads on all predecessors, for which we could create new phis.
-                (doseq [#_"PhiNode" phi (MergeProcessor''getPhis-1 this) :when (= (ValueNode''getStackKind-1 phi) :JavaKind'Object)]
-                    (doseq [#_"CacheEntry" k (keys (:readCache (nth states 0))) :when (= (:object k) (MergeProcessor''getPhiValueAt-3 this, phi, 0))]
-                        (§ ass! this (ReadEliminationMergeProcessor''mergeReadCachePhi-4 this, phi, k, states))
-                    )
-                )
-                this
-            )
         )
     )
 )
@@ -39835,42 +35993,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CollectVirtualObjectsClosure [NodeClosure #_"<ValueNode>"]
-    (defn #_"CollectVirtualObjectsClosure" CollectVirtualObjectsClosure'new-4 [#_"PartialEscapeClosure" peClosure, #_"{VirtualObjectNode}" virtual, #_"GraphEffects" effects, #_"PartialEscapeBlockState" state]
-        (merge (CollectVirtualObjectsClosure'class.)
-            (hash-map
-                #_"PartialEscapeClosure" :peClosure peClosure
-                #_"{VirtualObjectNode}" :virtual virtual
-                #_"GraphEffects" :effects effects
-                #_"PartialEscapeBlockState" :state state
-            )
-        )
-    )
-
-    (defm CollectVirtualObjectsClosure NodeClosure
-        (#_"void" NodeClosure'''apply-3 [#_"CollectVirtualObjectsClosure" this, #_"Node" usage, #_"ValueNode" value]
-            (if (satisfies? VirtualObjectNode value)
-                (let [
-                    #_"int" id (:oid value)
-                ]
-                    (when (and (not= id -1) (some? (when (< id (count (:objectStates (:state this)))) (nth (:objectStates (:state this)) id))))
-                        (§ ass! this (update this :virtual conj value))
-                    )
-                )
-                (let [
-                    #_"ValueNode" alias (PartialEscapeClosure''getAlias-2 (:peClosure this), value)
-                ]
-                    (when (satisfies? VirtualObjectNode alias)
-                        (§ ass! this (update this :virtual conj alias))
-                        (§ ass! this (update this :effects GraphEffects''replaceFirstInput-4 usage, value, alias))
-                    )
-                )
-            )
-            nil
-        )
-    )
-)
-
 ;;;
  ; Costs associated with a block.
  ;;
@@ -40398,15 +36520,11 @@ ZeroExtendNode'new-4
                 )
             node (assoc node :nodeUsages [])
         ]
-            (Node'''afterClone-2 node, this)
+            node
         )
     )
 
     (defm Node Node
-        (#_"this" Node'''afterClone-2 [#_"Node" this, #_"Node" other]
-            this
-        )
-
         (#_"Node*" Node'''cfgPredecessors-1 [#_"Node" this]
             (when (some? (:predecessor this)) (list (:predecessor this)))
         )
@@ -42952,7 +39070,7 @@ ZeroExtendNode'new-4
                                                 (let [
                                                     #_"Node" usage (first s)
                                                 ]
-                                                    (if (and (not (satisfies? VirtualState usage)) (not (AbstractMergeNode''isPhiAtMerge-2 merge, usage)))
+                                                    (if (and (not (satisfies? FrameState usage)) (not (AbstractMergeNode''isPhiAtMerge-2 merge, usage)))
                                                         :done
                                                         (recur (next s))
                                                     )
@@ -43467,7 +39585,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The MonitorEnterNode represents the acquisition of a monitor.
  ;;
-(class-ns MonitorEnterNode [AccessMonitorNode, AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, DeoptBefore, DeoptimizingNode, DeoptAfter, Virtualizable, Lowerable, MonitorEnter, Single]
+(class-ns MonitorEnterNode [AccessMonitorNode, AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, DeoptBefore, DeoptimizingNode, DeoptAfter, Lowerable, MonitorEnter, Single]
     (defn #_"MonitorEnterNode" MonitorEnterNode'new-2 [#_"ValueNode" object, #_"MonitorIdNode" monitorId]
         (merge (MonitorEnterNode'class.) (AccessMonitorNode'new-2 object, monitorId))
     )
@@ -43491,27 +39609,12 @@ ZeroExtendNode'new-4
             )
         )
     )
-
-    (defm MonitorEnterNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"MonitorEnterNode" this, #_"Virtualizer" tool]
-            (let [
-                #_"ValueNode" object (Virtualizer''getAlias-2 tool, (:object this))
-            ]
-                (when (and (satisfies? VirtualObjectNode object) (:hasIdentity object)) => tool
-                    (-> tool
-                        (Virtualizer''addLock-3 object, (:monitorId this))
-                        (Virtualizer''delete-1)
-                    )
-                )
-            )
-        )
-    )
 )
 
 ;;;
  ; The MonitorExitNode represents a monitor release.
  ;;
-(class-ns MonitorExitNode [AccessMonitorNode, AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, DeoptBefore, DeoptimizingNode, DeoptAfter, Virtualizable, Lowerable, MonitorExit, Single]
+(class-ns MonitorExitNode [AccessMonitorNode, AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, DeoptBefore, DeoptimizingNode, DeoptAfter, Lowerable, MonitorExit, Single]
     (defn #_"MonitorExitNode" MonitorExitNode'new-2 [#_"ValueNode" object, #_"MonitorIdNode" monitorId]
         (merge (MonitorExitNode'class.) (AccessMonitorNode'new-2 object, monitorId))
     )
@@ -43530,28 +39633,13 @@ ZeroExtendNode'new-4
             this
         )
     )
-
-    (defm MonitorExitNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"MonitorExitNode" this, #_"Virtualizer" tool]
-            (let [
-                #_"ValueNode" object (Virtualizer''getAlias-2 tool, (:object this))
-            ]
-                (when (and (satisfies? VirtualObjectNode object) (:hasIdentity object)) => tool
-                    (-> tool
-                        (Virtualizer''removeLock-2 object)
-                        (Virtualizer''delete-1)
-                    )
-                )
-            )
-        )
-    )
 )
 
 ;;;
  ; The RawMonitorEnterNode represents the acquisition of a monitor. The object needs to
  ; already be non-nil and the hub is an additional parameter to the node.
  ;;
-(class-ns RawMonitorEnterNode [AccessMonitorNode, AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, DeoptBefore, DeoptimizingNode, DeoptAfter, Virtualizable, Lowerable, MonitorEnter, Single]
+(class-ns RawMonitorEnterNode [AccessMonitorNode, AbstractMemoryCheckpoint, AbstractStateSplit, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, NodeWithState, MemoryCheckpoint, MemoryNode, DeoptBefore, DeoptimizingNode, DeoptAfter, Lowerable, MonitorEnter, Single]
     (defn #_"RawMonitorEnterNode" RawMonitorEnterNode'new-3 [#_"ValueNode" object, #_"ValueNode" hub, #_"MonitorIdNode" monitorId]
         (merge (RawMonitorEnterNode'class.) (AccessMonitorNode'new-2 object, monitorId)
             (hash-map
@@ -43573,21 +39661,6 @@ ZeroExtendNode'new-4
                 (MonitorTemplates''lower-3i Lowerer'monitorSnippets, this, lowerer)
             )
             this
-        )
-    )
-
-    (defm RawMonitorEnterNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"RawMonitorEnterNode" this, #_"Virtualizer" tool]
-            (let [
-                #_"ValueNode" object (Virtualizer''getAlias-2 tool, (:object this))
-            ]
-                (when (and (satisfies? VirtualObjectNode object) (:hasIdentity object)) => tool
-                    (-> tool
-                        (Virtualizer''addLock-3 object, (:monitorId this))
-                        (Virtualizer''delete-1)
-                    )
-                )
-            )
         )
     )
 )
@@ -43800,12 +39873,6 @@ ZeroExtendNode'new-4
 
     (defn #_"InvokeKind" InvokeNode''getInvokeKind-1 [#_"InvokeNode" this]
         (:invokeKind (:callTarget this))
-    )
-
-    (defm InvokeNode Node
-        (#_"this" Node'''afterClone-2 [#_"InvokeNode" this, #_"Node" other]
-            this
-        )
     )
 
     (defm InvokeNode Single
@@ -44050,7 +40117,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The LoadIndexedNode represents a read from an element of an array.
  ;;
-(class-ns LoadIndexedNode [AccessIndexedNode, AccessArrayNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, Virtualizable, Canonicalizable]
+(class-ns LoadIndexedNode [AccessIndexedNode, AccessArrayNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, Canonicalizable]
     (defn #_"LoadIndexedNode" LoadIndexedNode'new-4 [#_"Stamp" stamp, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind]
         (merge (LoadIndexedNode'class.) (AccessIndexedNode'new-4 stamp, array, index, elementKind))
     )
@@ -44119,31 +40186,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm LoadIndexedNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"LoadIndexedNode" this, #_"Virtualizer" tool]
-            (let [
-                #_"ValueNode" array (Virtualizer''getAlias-2 tool, (:array this))
-            ]
-                (when (satisfies? VirtualObjectNode array) => tool
-                    (let [
-                        #_"ValueNode" index (Virtualizer''getAlias-2 tool, (AccessIndexedNode''index-1 this))
-                        #_"int" i (if (satisfies? ConstantNode index) (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 index)) -1)
-                    ]
-                        (when (< -1 i (VirtualObjectNode'''entryCount-1 array)) => tool
-                            (let [
-                                #_"ValueNode" entry (Virtualizer''getEntry-3 tool, array, i)
-                            ]
-                                (when (Stamp'''isCompatible-2s (:stamp this), (:stamp entry)) => tool
-                                    (Virtualizer''replaceWith-2 tool, entry)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
     (defm LoadIndexedNode Canonicalizable
         (#_"Node" Canonicalizable'''canonical-2 [#_"LoadIndexedNode" this, #_"Canonicalizer" tool]
             (or (LoadIndexedNode'tryConstantFold-2 (:array this), (AccessIndexedNode''index-1 this))
@@ -44153,7 +40195,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LoadIndexedPointerNode [LoadIndexedNode, AccessIndexedNode, AccessArrayNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, Virtualizable, Canonicalizable]
+(class-ns LoadIndexedPointerNode [LoadIndexedNode, AccessIndexedNode, AccessArrayNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, Canonicalizable]
     (defn #_"LoadIndexedPointerNode" LoadIndexedPointerNode'new-3 [#_"Stamp" stamp, #_"ValueNode" array, #_"ValueNode" index]
         (merge (LoadIndexedPointerNode'class.) (LoadIndexedNode'new-4 stamp, array, index, :JavaKind'Illegal))
     )
@@ -44168,7 +40210,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The StoreIndexedNode represents a write to an array element.
  ;;
-(class-ns StoreIndexedNode [AccessIndexedNode, AccessArrayNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, StateSplit, NodeWithState, Virtualizable]
+(class-ns StoreIndexedNode [AccessIndexedNode, AccessArrayNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, StateSplit, NodeWithState]
     (defm StoreIndexedNode StateSplit
         (#_"this" StateSplit'''setStateAfter-2 [#_"StoreIndexedNode" this, #_"FrameState" x]
             (Node''updateUsages-3 this, (:stateAfter this), x)
@@ -44187,35 +40229,6 @@ ZeroExtendNode'new-4
                 #_"ValueNode" :value value
                 ; @OptionalInput
                 #_"FrameState" :stateAfter nil
-            )
-        )
-    )
-
-    (defm StoreIndexedNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"StoreIndexedNode" this, #_"Virtualizer" tool]
-            (let [
-                #_"ValueNode" array (Virtualizer''getAlias-2 tool, (:array this))
-            ]
-                (when (satisfies? VirtualObjectNode array) => tool
-                    (let [
-                        #_"ValueNode" index (Virtualizer''getAlias-2 tool, (AccessIndexedNode''index-1 this))
-                        #_"int" i (if (satisfies? ConstantNode index) (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 index)) -1)
-                    ]
-                        (when (< -1 i (VirtualObjectNode'''entryCount-1 array)) => tool
-                            (let [
-                                #_"ResolvedJavaType" componentType (JavaType'''getComponentType-1 (VirtualObjectNode'''type-1 array))
-                            ]
-                                (when (or (ResolvedJavaType'''isPrimitive-1 componentType) (StampTool'isPointerAlwaysNull-1 (:stamp (:value this))) (nil? (ResolvedJavaType'''getSuperclass-1 componentType)) (and (some? (StampTool'typeReferenceOrNull-1 (:stamp (:value this)))) (ResolvedJavaType'''isAssignableFrom-2 componentType, (StampTool'typeOrNull-1 (:stamp (:value this)))))) => tool
-                                    (let [
-                                        tool (Virtualizer''setVirtualEntry-4 tool, array, i, (:value this))
-                                    ]
-                                        (Virtualizer''delete-1 tool)
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
             )
         )
     )
@@ -44301,7 +40314,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The LoadFieldNode represents a read of a static or instance field.
  ;;
-(class-ns LoadFieldNode [AccessFieldNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, Unary #_"<ValueNode>", Canonicalizable, Virtualizable]
+(class-ns LoadFieldNode [AccessFieldNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, Unary #_"<ValueNode>", Canonicalizable]
     (defn #_"LoadFieldNode" LoadFieldNode'new-3 [#_"Stamp" stamp, #_"ValueNode" object, #_"ResolvedJavaField" field]
         (merge (LoadFieldNode'class.) (AccessFieldNode'new-3 stamp, object, field))
     )
@@ -44379,36 +40392,12 @@ ZeroExtendNode'new-4
             (Unary'''canonical-3 this, tool, (Unary'''getValue-1 this))
         )
     )
-
-    (defm LoadFieldNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"LoadFieldNode" this, #_"Virtualizer" tool]
-            (let [
-                #_"ValueNode" object (Virtualizer''getAlias-2 tool, (:object this))
-            ]
-                (when (satisfies? VirtualObjectNode object) => tool
-                    (let [
-                        #_"int" i (VirtualInstanceNode''fieldIndex-2 object, (:field this))
-                    ]
-                        (when-not (= i -1) => tool
-                            (let [
-                                #_"ValueNode" entry (Virtualizer''getEntry-3 tool, object, i)
-                            ]
-                                (when (Stamp'''isCompatible-2s (:stamp this), (:stamp entry)) => tool
-                                    (Virtualizer''replaceWith-2 tool, entry)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
 )
 
 ;;;
  ; The StoreFieldNode represents a write to a static or instance field.
  ;;
-(class-ns StoreFieldNode [AccessFieldNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, StateSplit, NodeWithState, Virtualizable]
+(class-ns StoreFieldNode [AccessFieldNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, StateSplit, NodeWithState]
     (defn #_"StoreFieldNode" StoreFieldNode'new-4 [#_"ValueNode" object, #_"ResolvedJavaField" field, #_"ValueNode" value, #_"FrameState" state]
         (merge (StoreFieldNode'class.) (AccessFieldNode'new-3 VoidStamp'instance, object, field)
             (hash-map
@@ -44432,28 +40421,6 @@ ZeroExtendNode'new-4
 
         (#_"boolean" StateSplit'''hasSideEffect-1 [#_"StoreFieldNode" this]
             true
-        )
-    )
-
-    (defm StoreFieldNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"StoreFieldNode" this, #_"Virtualizer" tool]
-            (let [
-                #_"ValueNode" object (Virtualizer''getAlias-2 tool, (:object this))
-            ]
-                (when (satisfies? VirtualObjectNode object) => tool
-                    (let [
-                        #_"int" i (VirtualInstanceNode''fieldIndex-2 object, (:field this))
-                    ]
-                        (when-not (= i -1) => tool
-                            (let [
-                                tool (Virtualizer''setVirtualEntry-4 tool, object, i, (:value this))
-                            ]
-                                (Virtualizer''delete-1 tool)
-                            )
-                        )
-                    )
-                )
-            )
         )
     )
 )
@@ -44486,7 +40453,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The ArrayLength instruction gets the length of an array.
  ;;
-(class-ns ArrayLengthNode [FixedWithNextNode, FixedNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, Lowerable, Virtualizable]
+(class-ns ArrayLengthNode [FixedWithNextNode, FixedNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, Lowerable]
     (defn #_"ArrayLengthNode" ArrayLengthNode'new-1 [#_"ValueNode" array]
         (merge (ArrayLengthNode'class.) (FixedWithNextNode'new-1 StampFactory'nonNegativeInt)
             (hash-map
@@ -44591,18 +40558,6 @@ ZeroExtendNode'new-4
             )
         )
     )
-
-    (defm ArrayLengthNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"ArrayLengthNode" this, #_"Virtualizer" tool]
-            (let [
-                #_"ValueNode" array (Virtualizer''getAlias-2 tool, (:array this))
-            ]
-                (when (satisfies? VirtualArrayNode array) => tool
-                    (Virtualizer''replaceWithValue-2 tool, (ConstantNode'forInt-2 (VirtualObjectNode'''entryCount-1 array), (:graph this)))
-                )
-            )
-        )
-    )
 )
 
 (class-ns BindToRegisterNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable]
@@ -44637,375 +40592,6 @@ ZeroExtendNode'new-4
     (defm BlackholeNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"BlackholeNode" this, #_"LIRBuilder" builder]
             (update builder :gen LIRGenerator''emitBlackhole-2 (LIRBuilder''operand-2 builder, (:value this)))
-        )
-    )
-)
-
-(class-ns CommitAllocationNode [FixedWithNextNode, FixedNode, ValueNode, Node, VirtualizableAllocation, Virtualizable, Lowerable, Simplifiable, Single, MemoryCheckpoint, MemoryNode]
-    (defn #_"CommitAllocationNode" CommitAllocationNode'new-0 []
-        (merge (CommitAllocationNode'class.) (FixedWithNextNode'new-1 VoidStamp'instance)
-            (hash-map
-                ; @Input
-                #_"[VirtualObjectNode]" :virtualObjects []
-                ; @Input
-                #_"[ValueNode]" :comValues []
-                ; @Input
-                #_"[MonitorIdNode]" :lockNodes []
-                #_"[Integer]" :lockIndexes [ 0 ]
-                #_"[Boolean]" :ensureVirtual []
-            )
-        )
-    )
-
-    (defn #_"this" CommitAllocationNode''addLocks-2 [#_"CommitAllocationNode" this, #_"MonitorIdNode*" monitorIds]
-        (let [
-            this
-                (loop-when [this this #_"seq" s (seq monitorIds)] (some? s) => this
-                    (let [
-                        #_"MonitorIdNode" node (first s)
-                        this (update this :lockNodes conj' node)
-                    ]
-                        (Node''updateUsages-3 this, nil, node)
-                        (recur this (next s))
-                    )
-                )
-        ]
-            (update this :lockIndexes conj' (count (:lockNodes this)))
-        )
-    )
-
-    (defn #_"MonitorIdNode*" CommitAllocationNode''getLocks-2 [#_"CommitAllocationNode" this, #_"int" i]
-        (subvec (:lockNodes this) (nth (:lockIndexes this) i) (nth (:lockIndexes this) (inc i)))
-    )
-
-    ;;;
-     ; Insert the required MemoryBarriers#STORE_STORE barrier for an allocation and also include
-     ; the MemoryBarriers#LOAD_STORE required for final fields if any final fields are being written,
-     ; as if FinalFieldBarrierNode were emitted.
-     ;;
-    (defn- #_"void" CommitAllocationNode''insertAllocationBarrier-1 [#_"CommitAllocationNode" this]
-        (let [
-            #_"boolean" final?
-                (loop-when [#_"seq" s (seq (:virtualObjects this))] (some? s) => false
-                    (or
-                        (loop-when [#_"seq" s (seq (ResolvedJavaType'''getInstanceFields-2 (VirtualObjectNode'''type-1 (first s)), true))] (some? s) => false
-                            (or
-                                (ResolvedJavaField''isFinal-1 (first s))
-                                (recur (next s))
-                            )
-                        )
-                        (recur (next s))
-                    )
-                )
-            #_"int" barrier (| MemoryBarriers'STORE_STORE (if final? MemoryBarriers'LOAD_STORE 0))
-        ]
-            (Graph''addAfterFixed-3 (:graph this), this, (Graph''add-2 (:graph this), (MembarNode'new-2 barrier, LocationIdentity'INIT)))
-        )
-        nil
-    )
-
-    (defn- #_"void" CommitAllocationNode''finishAllocatedObjects-3 [#_"CommitAllocationNode" this, #_"LoweringTool" lowerer, #_"[ValueNode]" allocations]
-        (let [
-            _
-                (dotimes [#_"int" i (count (:virtualObjects this))]
-                    (let [
-                        #_"FixedValueAnchorNode" anchor (Graph''add-2 (:graph this), (FixedValueAnchorNode'new-1 (nth allocations i)))
-                        _ (§ ass! allocations (assoc' allocations i anchor))
-                    ]
-                        (Graph''addBeforeFixed-3 (:graph this), this, anchor)
-                    )
-                )
-            ;; Note that the FrameState that is assigned to these MonitorEnterNodes isn't the correct state.
-            ;; It will be the state from before the allocation occurred instead of a valid state after the
-            ;; locking is performed. In practice this should be fine since these are newly allocated objects.
-            ;; The bytecodes themselves permit allocating an object, doing a monitorenter and then dropping
-            ;; all references to the object which would produce the same state, though that would normally
-            ;; produce an IllegalMonitorStateException. In HotSpot some form of fast path locking should
-            ;; always occur so the FrameState should never actually be used.
-            #_"[MonitorEnterNode]" enters
-                (loop-when [enters nil #_"int" i 0] (< i (count (:virtualObjects this))) => enters
-                    (let [
-                        #_"MonitorIdNode*" locks (CommitAllocationNode''getLocks-2 this, i)
-                        ;; ensure that the lock operations are performed in lock depth order
-                        locks
-                            (when (< 1 (count locks)) => locks
-                                (sort-by :lockDepth locks)
-                            )
-                        enters
-                            (loop-when [enters enters #_"seq" s (seq locks)] (some? s) => enters
-                                (let [
-                                    #_"MonitorEnterNode" enter (Graph''add-2 (:graph this), (MonitorEnterNode'new-2 (nth allocations i), (first s)))
-                                ]
-                                    (Graph''addBeforeFixed-3 (:graph this), this, enter)
-                                    (recur (conj' enters enter) (next s))
-                                )
-                            )
-                    ]
-                        (recur enters (inc i))
-                    )
-                )
-            _
-                (doseq [#_"Node" usage (:nodeUsages this)]
-                    (if (satisfies? AllocatedObjectNode usage)
-                        (§ ass! usage (Node''replaceAtUsagesAndDelete-2 usage, (nth allocations (index-of (:virtualObjects this) (:virtualObject usage)))))
-                        (Node''replaceAtUsages-3 this, :InputType'Memory, (peek' enters))
-                    )
-                )
-            _
-                (doseq [#_"MonitorEnterNode" enter enters]
-                    (§ ass! enter (Lowerable'''lower-2 enter, lowerer))
-                )
-        ]
-            (CommitAllocationNode''insertAllocationBarrier-1 this)
-        )
-        nil
-    )
-
-    (defn- #_"void" CommitAllocationNode'ensureVirtualFailure-2 [#_"Node" location, #_"Stamp" stamp]
-        (let [
-            #_"String" additionalReason
-                (when (satisfies? FixedWithNextNode location) => ""
-                    (let [
-                        #_"FixedNode" _next (:next location)
-                    ]
-                        (condp satisfies? _next
-                            StoreFieldNode " (must not store virtual object into a field)"
-                            InvokeNode     " (must not pass virtual object into an invoke that cannot be inlined)"
-                                      (str " (must not let virtual object escape at node " _next ")")
-                        )
-                    )
-                )
-        ]
-            (throw! (str "instance of type " (JavaType'''getName-1 (StampTool'typeOrNull-1 stamp)) " should not be materialized" additionalReason))
-        )
-        nil
-    )
-
-    (defm CommitAllocationNode Lowerable
-        (#_"this" Lowerable'''lower-2 [#_"CommitAllocationNode" this, #_"LoweringTool" lowerer]
-            (dotimes [#_"int" i (count (:virtualObjects this))]
-                (when (nth (:ensureVirtual this) i)
-                    (CommitAllocationNode'ensureVirtualFailure-2 this, (:stamp (nth (:virtualObjects this) i)))
-                )
-            )
-            (when (= (:guardsStage (:graph this)) :GuardsStage'FIXED_DEOPTS) => this
-                (let [
-                    #_"[AbstractNewObjectNode]" recursiveLowerings []
-                    #_"BitSet" omittedValues (BitSet.)
-                    #_"[ValueNode]" allocations
-                        (loop-when [allocations [] #_"int" valuePos 0 #_"seq" s (seq (:virtualObjects this))] (some? s) => allocations
-                            (let [
-                                #_"VirtualObjectNode" virtual (first s)
-                                #_"int" entryCount (VirtualObjectNode'''entryCount-1 virtual)
-                                #_"AbstractNewObjectNode" newObject
-                                    (if (satisfies? VirtualInstanceNode virtual)
-                                        (Graph''add-2 (:graph this), (NewInstanceNode'new-1 (VirtualObjectNode'''type-1 virtual)))
-                                        (Graph''add-2 (:graph this), (NewArrayNode'new-2 (:componentType virtual), (ConstantNode'forInt-2 entryCount, (:graph this))))
-                                    )
-                                _ (§ ass! recursiveLowerings (conj' recursiveLowerings newObject))
-                                _ (Graph''addBeforeFixed-3 (:graph this), this, newObject)
-                                allocations (conj' allocations newObject)
-                                valuePos
-                                    (loop-when [valuePos valuePos #_"int" i 0] (< i entryCount) => valuePos
-                                        (let [
-                                            #_"ValueNode" value (nth (:comValues this) valuePos)
-                                            value
-                                                (when (satisfies? VirtualObjectNode value) => value
-                                                    (nth allocations (index-of (:virtualObjects this) value))
-                                                )
-                                        ]
-                                            (cond
-                                                (nil? value)
-                                                    (#_"BitSet" .set omittedValues, valuePos)
-                                                (not (and (satisfies? ConstantNode value) (Constant'''isDefaultForKind-1 (:value value))))
-                                                    ;; Constant.illegal is always the defaultForKind, so it is skipped
-                                                    (let [
-                                                        #_"JavaKind" valueKind (ValueNode''getStackKind-1 value)
-                                                        #_"JavaKind" entryKind (VirtualObjectNode'''entryKind-2 virtual, i)
-                                                        [#_"AddressNode" address #_"BarrierType" barrierType]
-                                                            (if (satisfies? VirtualInstanceNode virtual)
-                                                                (let [
-                                                                    #_"long" offset (ResolvedJavaField'''getOffset-1 (VirtualInstanceNode''field-2 virtual, i))
-                                                                ]
-                                                                    (when (<= 0 offset)
-                                                                        [(Lowerer'createOffsetAddress-3 (:graph this), newObject, offset) (Lowerer'fieldInitializationBarrier-1 entryKind)]
-                                                                    )
-                                                                )
-                                                                [(Lowerer'createOffsetAddress-3 (:graph this), newObject, (+ (HotSpot'arrayBaseOffset-1 entryKind) (* i (HotSpot'arrayIndexScale-1 entryKind)))) (Lowerer'arrayInitializationBarrier-1 entryKind)]
-                                                            )
-                                                    ]
-                                                        (when (some? address)
-                                                            (Graph''addAfterFixed-3 (:graph this), newObject, (Graph''add-2 (:graph this), (WriteNode'new-4 address, LocationIdentity'INIT, (Lowerer'implicitStoreConvert-3 (:graph this), entryKind, value), barrierType)))
-                                                        )
-                                                    )
-                                            )
-                                            (recur (inc valuePos) (inc i))
-                                        )
-                                    )
-                            ]
-                                (recur allocations valuePos (next s))
-                            )
-                        )
-                    _
-                        (loop-when [#_"int" valuePos 0 #_"int" objIndex 0] (< objIndex (count (:virtualObjects this)))
-                            (let [
-                                #_"VirtualObjectNode" virtual (nth (:virtualObjects this) objIndex)
-                                #_"int" entryCount (VirtualObjectNode'''entryCount-1 virtual)
-                                #_"ValueNode" newObject (nth allocations objIndex)
-                                valuePos
-                                    (loop-when [valuePos valuePos #_"int" i 0] (< i entryCount) => valuePos
-                                        (when (#_"BitSet" .get omittedValues, valuePos)
-                                            (let [
-                                                #_"ValueNode" value (nth (:comValues this) valuePos)
-                                                #_"ValueNode" allocValue (nth allocations (index-of (:virtualObjects this) value))
-                                            ]
-                                                (when-not (and (satisfies? ConstantNode allocValue) (Constant'''isDefaultForKind-1 (:value allocValue)))
-                                                    (let [
-                                                        [#_"AddressNode" address #_"BarrierType" barrierType]
-                                                            (if (satisfies? VirtualInstanceNode virtual)
-                                                                [(Lowerer'createFieldAddress-3 (:graph this), newObject, (VirtualInstanceNode''field-2 virtual, i)) :BarrierType'IMPRECISE]
-                                                                [(Lowerer'createArrayAddress-4 (:graph this), newObject, (VirtualObjectNode'''entryKind-2 virtual, i), (ConstantNode'forInt-2 i, (:graph this))) :BarrierType'PRECISE]
-                                                            )
-                                                    ]
-                                                        (when (some? address)
-                                                            (Graph''addBeforeFixed-3 (:graph this), this, (Graph''add-2 (:graph this), (WriteNode'new-4 address, LocationIdentity'INIT, (Lowerer'implicitStoreConvert-3 (:graph this), :JavaKind'Object, allocValue), barrierType)))
-                                                        )
-                                                    )
-                                                )
-                                            )
-                                        )
-                                        (recur (inc valuePos) (inc i))
-                                    )
-                            ]
-                                (recur valuePos (inc objIndex))
-                            )
-                        )
-                ]
-                    (CommitAllocationNode''finishAllocatedObjects-3 this, lowerer, allocations)
-                    (Graph''removeFixed-2 (:graph this), this)
-
-                    (doseq [#_"AbstractNewObjectNode" recursiveLowering recursiveLowerings]
-                        (§ ass! recursiveLowering (Lowerable'''lower-2 recursiveLowering, lowerer))
-                    )
-                    this
-                )
-            )
-        )
-    )
-
-    (defm CommitAllocationNode Single
-        (#_"LocationIdentity" Single'''getLocationIdentity-1 [#_"CommitAllocationNode" this]
-            (if (empty? (:lockNodes this)) LocationIdentity'INIT LocationIdentity'ANY)
-        )
-    )
-
-    (defm CommitAllocationNode Node
-        (#_"this" Node'''afterClone-2 [#_"CommitAllocationNode" this, #_"Node" other]
-            (assoc this :lockIndexes (§ snap (:lockIndexes this)))
-        )
-    )
-
-    (defm CommitAllocationNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"CommitAllocationNode" this, #_"Virtualizer" tool]
-            (let [
-                tool
-                    (loop-when [tool tool #_"int" j 0 #_"int" i 0] (< i (count (:virtualObjects this))) => tool
-                        (let [
-                            #_"VirtualObjectNode" virtualObject (nth (:virtualObjects this) i)
-                            #_"int" n (VirtualObjectNode'''entryCount-1 virtualObject)
-                            tool (Virtualizer''createVirtualObject-5 tool, virtualObject, (subvec (:comValues this) j (+ j n)), (CommitAllocationNode''getLocks-2 this, i), (nth (:ensureVirtual this) i))
-                        ]
-                            (recur tool (+ j n) (inc i))
-                        )
-                    )
-            ]
-                (Virtualizer''delete-1 tool)
-            )
-        )
-    )
-
-    (defm CommitAllocationNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"CommitAllocationNode" this, #_"Simplifier" tool]
-            (let [
-                [#_"[boolean]" used? #_"int" n]
-                    (loop [used? (vec (repeat (count (:virtualObjects this)) false)) n 0 #_"seq" s (seq (filter #(satisfies? AllocatedObjectNode %) (:nodeUsages this)))]
-                        (when (some? s) => [used? n]
-                            (recur (assoc' used? (index-of (:virtualObjects this) (:virtualObject (first s))) true) (inc n) (next s))
-                        )
-                    )
-            ]
-                (if (zero? n)
-                    (let [
-                        #_"Node*" inputSnapshot (§ snap (Node''inputs-1 this))
-                    ]
-                        (Graph''removeFixed-2 (:graph this), this)
-                        (doseq [#_"Node" input inputSnapshot]
-                            (GraphUtil'tryKillUnused-1 input)
-                        )
-                        this
-                    )
-                    (let [
-                        [used? n]
-                            (loop [used? used? n n]
-                                (let [
-                                    [used? n #_"boolean" progress?]
-                                        (loop-when [used? used? n n progress? false #_"int" valuePos 0 #_"int" objIndex 0] (< objIndex (count (:virtualObjects this))) => [used? n progress?]
-                                            (let [
-                                                #_"VirtualObjectNode" virtualObject (nth (:virtualObjects this) objIndex)
-                                                [used? n progress?]
-                                                    (when (nth used? objIndex) => [used? n progress?]
-                                                        (loop-when [used? used? n n progress? progress? #_"int" i 0] (< i (VirtualObjectNode'''entryCount-1 virtualObject)) => [used? n progress?]
-                                                            (let [
-                                                                #_"int" index (index-of (:virtualObjects this) (nth (:comValues this) (+ valuePos i)))
-                                                                [used? n progress?]
-                                                                    (when (and (not= index -1) (not (nth used? index))) => [used? n progress?]
-                                                                        [(assoc' used? index true) (inc n) true]
-                                                                    )
-                                                            ]
-                                                                (recur used? n progress? (inc i))
-                                                            )
-                                                        )
-                                                    )
-                                            ]
-                                                (recur used? n progress? (+ valuePos (VirtualObjectNode'''entryCount-1 virtualObject)) (inc objIndex))
-                                            )
-                                        )
-                                ]
-                                    (recur-if progress? [used? n] => [used? n])
-                                )
-                            )
-                    ]
-                        (when (< n (count (:virtualObjects this))) => this
-                            (let [
-                                #_"[VirtualObjectNode]" virtualObjects []
-                                #_"[MonitorIdNode]" lockNodes []
-                                #_"[Integer]" lockIndexes [ 0 ]
-                                #_"[ValueNode]" values []
-                                #_"[Boolean]" ensureVirtual []
-                                this
-                                    (loop-when [this this #_"int" j 0 #_"int" i 0] (< i (count (:virtualObjects this))) => this
-                                        (let [
-                                            #_"VirtualObjectNode" virtualObject (nth (:virtualObjects this) i)
-                                            #_"int" n (VirtualObjectNode'''entryCount-1 virtualObject)
-                                            _
-                                                (when (nth used? i)
-                                                    (§ ass! virtualObjects (conj' virtualObjects virtualObject))
-                                                    (§ ass! lockNodes (into' lockNodes (CommitAllocationNode''getLocks-2 this, i)))
-                                                    (§ ass! lockIndexes (conj' lockIndexes (count lockNodes)))
-                                                    (§ ass! values (catvec values (subvec (:comValues this) j (+ j n))))
-                                                    (§ ass! ensureVirtual (conj' ensureVirtual (nth (:ensureVirtual this) i)))
-                                                )
-                                        ]
-                                            (recur this (+ j n) (inc i))
-                                        )
-                                    )
-                            ]
-                                (assoc this :virtualObjects virtualObjects, :lockNodes lockNodes, :lockIndexes lockIndexes, :comValues values, :ensureVirtual ensureVirtual)
-                            )
-                        )
-                    )
-                )
-            )
         )
     )
 )
@@ -45121,12 +40707,6 @@ ZeroExtendNode'new-4
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"ControlFlowAnchorNode" this, #_"LIRBuilder" builder]
             ;; do nothing
             builder
-        )
-    )
-
-    (defm ControlFlowAnchorNode Node
-        (#_"this" Node'''afterClone-2 [#_"ControlFlowAnchorNode" this, #_"Node" other]
-            this
         )
     )
 )
@@ -45315,7 +40895,7 @@ ZeroExtendNode'new-4
 ;;;
  ; NewArrayNode represents the allocation of an array.
  ;;
-(class-ns NewArrayNode [AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, ArrayLengthProvider, VirtualizableAllocation, Virtualizable, Simplifiable]
+(class-ns NewArrayNode [AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, ArrayLengthProvider, Simplifiable]
     (defn #_"NewArrayNode" NewArrayNode'new-2 [#_"ResolvedJavaType" elementType, #_"ValueNode" length]
         (merge (NewArrayNode'class.) (AbstractNewObjectNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 (JavaType'''getArrayClass-1 elementType))))
             (hash-map
@@ -45339,37 +40919,6 @@ ZeroExtendNode'new-4
         (#_"ValueNode" ArrayLengthProvider'''length-1 [#_"NewArrayNode" this]
             (:length this)
         )
-    )
-
-    (defm NewArrayNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"NewArrayNode" this, #_"Virtualizer" tool]
-            (let [
-                #_"ValueNode" lengthAlias (Virtualizer''getAlias-2 tool, (ArrayLengthProvider'''length-1 this))
-            ]
-                (when (some? (ValueNode''asConstant-1 lengthAlias)) => tool
-                    (let [
-                        #_"int" constantLength (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 lengthAlias))
-                    ]
-                        (when (< -1 constantLength (Virtualizer''getMaximumEntryCount-1 tool)) => tool
-                            (let [
-                                #_"VirtualObjectNode" virtualObject (NewArrayNode''createVirtualArrayNode-2 this, constantLength)
-                                #_"ConstantNode" defaultForKind (when-not (zero? constantLength) (NewArrayNode''defaultElementValue-1 this))
-                                #_"[ValueNode]" state (vec (repeat constantLength defaultForKind))
-                            ]
-                                (-> tool
-                                    (Virtualizer''createVirtualObject-5 virtualObject, state, nil, false)
-                                    (Virtualizer''replaceWithVirtual-2 virtualObject)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defn #_"VirtualArrayNode" NewArrayNode''createVirtualArrayNode-2 [#_"NewArrayNode" this, #_"int" constantLength]
-        (VirtualArrayNode'new-2 (:elementType this), constantLength)
     )
 
     ;; Factored out in a separate method so that subclasses can override it.
@@ -45408,7 +40957,7 @@ ZeroExtendNode'new-4
 ;;;
  ; NewInstanceNode represents the allocation of an instance class object.
  ;;
-(class-ns NewInstanceNode [AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable, VirtualizableAllocation, Virtualizable]
+(class-ns NewInstanceNode [AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Lowerable]
     (defn #_"NewInstanceNode" NewInstanceNode'new-1 [#_"ResolvedJavaType" type]
         (merge (NewInstanceNode'class.) (AbstractNewObjectNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 type)))
             (hash-map
@@ -45427,27 +40976,6 @@ ZeroExtendNode'new-4
             )
             this
         )
-    )
-
-    (defm NewInstanceNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"NewInstanceNode" this, #_"Virtualizer" tool]
-            ;; Reference objects can escape into their ReferenceQueue at any safepoint, therefore they're excluded from escape analysis.
-            (when-not (ResolvedJavaType'''isAssignableFrom-2 (MetaReflection'lookupJavaType-1c Reference), (:instanceClass this)) => tool
-                (let [
-                    #_"VirtualInstanceNode" virtualObject (NewInstanceNode''createVirtualInstanceNode-2 this, true)
-                    #_"[ValueNode]" state (vec (map #(NewInstanceNode''defaultFieldValue-2 this, %) (VirtualInstanceNode''getFields-1 virtualObject)))
-                ]
-                    (-> tool
-                        (Virtualizer''createVirtualObject-5 virtualObject, state, nil, false)
-                        (Virtualizer''replaceWithVirtual-2 virtualObject)
-                    )
-                )
-            )
-        )
-    )
-
-    (defn #_"VirtualInstanceNode" NewInstanceNode''createVirtualInstanceNode-2 [#_"NewInstanceNode" this, #_"boolean" hasIdentity]
-        (VirtualInstanceNode'new-2 (:instanceClass this), hasIdentity)
     )
 
     ;; Factored out in a separate method so that subclasses can override it.
@@ -45741,7 +41269,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Reads an accessed value.
  ;;
-(class-ns ReadNode [FloatableAccessNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, LIRLowerableAccess, LIRLowerable, Canonicalizable, Virtualizable, GuardingNode]
+(class-ns ReadNode [FloatableAccessNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, NodeWithState, Access, GuardedNode, HeapAccess, LIRLowerableAccess, LIRLowerable, Canonicalizable, GuardingNode]
     (defn #_"ReadNode" ReadNode'new-4 [#_"AddressNode" address, #_"LocationIdentity" location, #_"Stamp" stamp, #_"BarrierType" barrierType]
         (merge (ReadNode'class.) (FloatableAccessNode'new-4 address, location, stamp, barrierType))
     )
@@ -45810,12 +41338,6 @@ ZeroExtendNode'new-4
                     (CanonicalizableLocation'''canonicalizeRead-4 location, read, address, object)
                 )
             )
-        )
-    )
-
-    (defm ReadNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"ReadNode" this, #_"Virtualizer" tool]
-            (throw! "unexpected ReadNode before PEA")
         )
     )
 
@@ -46322,20 +41844,12 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FinalFieldBarrierNode [FixedWithNextNode, FixedNode, ValueNode, Node, Virtualizable, Lowerable]
+(class-ns FinalFieldBarrierNode [FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable]
     (defn #_"FinalFieldBarrierNode" FinalFieldBarrierNode'new-1 [#_"ValueNode" value]
         (merge (FinalFieldBarrierNode'class.) (FixedWithNextNode'new-1 VoidStamp'instance)
             (hash-map
                 ; @OptionalInput
                 #_"ValueNode" :value value
-            )
-        )
-    )
-
-    (defm FinalFieldBarrierNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"FinalFieldBarrierNode" this, #_"Virtualizer" tool]
-            (when (and (some? (:value this)) (satisfies? VirtualObjectNode (Virtualizer''getAlias-2 tool, (:value this)))) => tool
-                (Virtualizer''delete-1 tool)
             )
         )
     )
@@ -46789,7 +42303,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Load of a value from a location specified as an offset relative to an object. No nil-check is performed before the load.
  ;;
-(class-ns RawLoadNode [UnsafeAccessNode, FixedWithNextNode, FixedNode, ValueNode, Node, Canonicalizable, Lowerable, Virtualizable]
+(class-ns RawLoadNode [UnsafeAccessNode, FixedWithNextNode, FixedNode, ValueNode, Node, Canonicalizable, Lowerable]
     (§ intrinsic! #_"Word" RawLoadNode'loadWordFromObjectIntrinsic-4 [#_"Object" object, #_"long" offset, #_"LocationIdentity" location, #_"JavaKind" wordKind])
 
     #_unused
@@ -46860,45 +42374,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm RawLoadNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"RawLoadNode" this, #_"Virtualizer" tool]
-            (let [
-                #_"ValueNode" object (Virtualizer''getAlias-2 tool, (:object this))
-            ]
-                (when (satisfies? VirtualObjectNode object) => tool
-                    (let [
-                        #_"ValueNode" offset (Virtualizer''getAlias-2 tool, (:offset this))
-                    ]
-                        (when (satisfies? ConstantNode offset) => tool
-                            (let [
-                                #_"int" i (VirtualObjectNode'''entryIndexForOffset-3 object, (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 offset)), (:accessKind this))
-                            ]
-                                (when-not (= i -1) => tool
-                                    (let [
-                                        #_"ValueNode" entry (Virtualizer''getEntry-3 tool, object, i)
-                                    ]
-                                        (when (or (= (ValueNode''getStackKind-1 entry) (ValueNode''getStackKind-1 this)) (= (VirtualObjectNode'''entryKind-2 object, i) (:accessKind this))) => tool
-                                            (cond
-                                                (Stamp'''isCompatible-2s (:stamp entry), (:stamp this))
-                                                    (Virtualizer''replaceWith-2 tool, entry)
-                                                (and (satisfies? PrimitiveStamp (:stamp entry)) (satisfies? PrimitiveStamp (:stamp this)))
-                                                    (when (= (:bits (:stamp this)) (:bits (:stamp entry))) => tool
-                                                        (Virtualizer''replaceWith-2 tool, (ß ReinterpretNode'create-2 (:stamp entry), entry))
-                                                    )
-                                                :else
-                                                    tool
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
     (defm RawLoadNode Canonicalizable
         (#_"Node" Canonicalizable'''canonical-2 [#_"RawLoadNode" this, #_"Canonicalizer" tool]
             (or
@@ -46956,7 +42431,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Store of a value at a location specified as an offset relative to an object. No nil-check is performed before the store.
  ;;
-(class-ns RawStoreNode [UnsafeAccessNode, FixedWithNextNode, FixedNode, ValueNode, Node, Canonicalizable, StateSplit, NodeWithState, Lowerable, Virtualizable, Single, MemoryCheckpoint, MemoryNode]
+(class-ns RawStoreNode [UnsafeAccessNode, FixedWithNextNode, FixedNode, ValueNode, Node, Canonicalizable, StateSplit, NodeWithState, Lowerable, Single, MemoryCheckpoint, MemoryNode]
     (defn #_"RawStoreNode" RawStoreNode'new-8 [#_"ValueNode" object, #_"ValueNode" offset, #_"ValueNode" value, #_"JavaKind" accessKind, #_"LocationIdentity" location, #_"boolean" needsBarrier, #_"FrameState" stateAfter, #_"boolean" forceAnyLocation]
         (merge (RawStoreNode'class.) (UnsafeAccessNode'new-6 VoidStamp'instance, object, offset, accessKind, location, forceAnyLocation)
             (hash-map
@@ -47000,31 +42475,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm RawStoreNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"RawStoreNode" this, #_"Virtualizer" tool]
-            (let [
-                #_"ValueNode" object (Virtualizer''getAlias-2 tool, (:object this))
-            ]
-                (when (satisfies? VirtualObjectNode object) => tool
-                    (let [
-                        #_"ValueNode" offset (Virtualizer''getAlias-2 tool, (:offset this))
-                    ]
-                        (when (satisfies? ConstantNode offset) => tool
-                            (let [
-                                #_"long" off (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 offset))
-                                #_"int" i (VirtualObjectNode'''entryIndexForOffset-3 object, off, (:accessKind this))
-                            ]
-                                (when (and (not= i -1) (Virtualizer''setVirtualEntry-6 tool, object, i, (:value this), (:accessKind this), off)) => tool
-                                    (Virtualizer''delete-1 tool)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
     (defm RawStoreNode UnsafeAccessNode
         (#_"ValueNode" UnsafeAccessNode'''cloneAsFieldAccess-2 [#_"RawStoreNode" this, #_"ResolvedJavaField" field]
             (StoreFieldNode'new-4 (:object this), field, (:value this), (:stateAfter this))
@@ -47039,7 +42489,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The ValueAnchor instruction keeps non-CFG (floating) nodes above a certain point in the graph.
  ;;
-(class-ns ValueAnchorNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, Simplifiable, Virtualizable, AnchoringNode, GuardingNode]
+(class-ns ValueAnchorNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, Simplifiable, AnchoringNode, GuardingNode]
     (defn #_"ValueAnchorNode" ValueAnchorNode'new-1 [#_"ValueNode" value]
         (merge (ValueAnchorNode'class.) (FixedWithNextNode'new-1 VoidStamp'instance)
             (hash-map
@@ -47089,17 +42539,6 @@ ZeroExtendNode'new-4
                     ]
                         this
                     )
-                )
-            )
-        )
-    )
-
-    (defm ValueAnchorNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"ValueAnchorNode" this, #_"Virtualizer" tool]
-            (if (or (nil? (:anchored this)) (satisfies? AbstractBeginNode (:anchored this)))
-                (Virtualizer''delete-1 tool)
-                (when (satisfies? VirtualObjectNode (Virtualizer''getAlias-2 tool, (:anchored this))) => tool
-                    (Virtualizer''delete-1 tool)
                 )
             )
         )
@@ -47456,42 +42895,6 @@ ZeroExtendNode'new-4
 
         (#_"ValueNode" AddressNode'''getIndex-1 [#_"OffsetAddressNode" this]
             nil
-        )
-    )
-)
-
-;;;
- ; Selects one object from a CommitAllocationNode. The object is identified by its
- ; VirtualObjectNode.
- ;;
-(class-ns AllocatedObjectNode [FloatingNode, ValueNode, Node, Virtualizable, ArrayLengthProvider]
-    (defn #_"AllocatedObjectNode" AllocatedObjectNode'new-1 [#_"VirtualObjectNode" virtualObject]
-        (merge (AllocatedObjectNode'class.) (FloatingNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 (VirtualObjectNode'''type-1 virtualObject))))
-            (hash-map
-                ; @Input
-                #_"VirtualObjectNode" :virtualObject virtualObject
-                ; @Input
-                #_"CommitAllocationNode" :commit nil
-            )
-        )
-    )
-
-    (defn #_"this" AllocatedObjectNode''setCommit-2 [#_"AllocatedObjectNode" this, #_"CommitAllocationNode" node]
-        (Node''updateUsages-3 this, (:commit this), node)
-        (assoc this :commit node)
-    )
-
-    (defm AllocatedObjectNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"AllocatedObjectNode" this, #_"Virtualizer" tool]
-            (Virtualizer''replaceWithVirtual-2 tool, (:virtualObject this))
-        )
-    )
-
-    (defm AllocatedObjectNode ArrayLengthProvider
-        (#_"ValueNode" ArrayLengthProvider'''length-1 [#_"AllocatedObjectNode" this]
-            (when (satisfies? ArrayLengthProvider (:virtualObject this))
-                (ArrayLengthProvider'''length-1 (:virtualObject this))
-            )
         )
     )
 )
@@ -49373,9 +44776,9 @@ ZeroExtendNode'new-4
         (ConstantNode'new-4 value, stamp, 0, false)
     )
 
-    (defn- #_"boolean" ConstantNode''onlyUsedInVirtualState-1 [#_"ConstantNode" this]
+    (defn- #_"boolean" ConstantNode''onlyUsedInFrameState-1 [#_"ConstantNode" this]
         (loop-when [#_"seq" s (seq (:nodeUsages this))] (some? s) => true
-            (and (satisfies? VirtualState (first s))
+            (and (satisfies? FrameState (first s))
                 (recur (next s))
             )
         )
@@ -49386,7 +44789,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"ValueKind" kind (Stamp'''getValueKind-1 (:stamp this))
             ]
-                (if (ConstantNode''onlyUsedInVirtualState-1 this)
+                (if (ConstantNode''onlyUsedInFrameState-1 this)
                     (LIRBuilder''setResult-3 builder, this, (ConstantValue'new-2 kind, (:value this)))
                     (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitConstant-3 (:gen builder), kind, (:value this)))
                 )
@@ -49854,7 +45257,8 @@ ZeroExtendNode'new-4
  ; input is as narrow or narrower than the PiNode's type. The PiNode, and therefore
  ; also the scheduling restriction enforced by the guard, will go away.
  ;;
-(class-ns PiNode [FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, LIRLowerable, Virtualizable, Canonicalizable, ValueProxy, LimitedValueProxy, Proxy]
+(class-ns PiNode [FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, LIRLowerable, Canonicalizable, ValueProxy, LimitedValueProxy, Proxy]
+    #_unused
     (defn #_"PiNode" PiNode'new-2 [#_"ValueNode" object, #_"Stamp" stamp]
         (PiNode'new-3 object, stamp, nil)
     )
@@ -49915,18 +45319,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm PiNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"PiNode" this, #_"Virtualizer" tool]
-            (let [
-                #_"ValueNode" object (Virtualizer''getAlias-2 tool, (:object this))
-            ]
-                (when (and (satisfies? VirtualObjectNode object) (some? (StampTool'typeOrNull-1 (:stamp this))) (ResolvedJavaType'''isAssignableFrom-2 (StampTool'typeOrNull-1 (:stamp this)), (VirtualObjectNode'''type-1 object))) => tool
-                    (Virtualizer''replaceWithVirtual-2 tool, object)
-                )
-            )
-        )
-    )
-
     (defn #_"ValueNode" PiNode'canonical-3 [#_"ValueNode" object, #_"Stamp" stamp, #_"GuardingNode" guard]
         ;; Use most up to date stamp.
         (let [
@@ -49976,7 +45368,7 @@ ZeroExtendNode'new-4
  ; that reads the array length, such as an ArrayLengthNode, can be canonicalized based on
  ; this information.
  ;;
-(class-ns PiArrayNode [PiNode, FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, LIRLowerable, Virtualizable, Canonicalizable, ValueProxy, LimitedValueProxy, Proxy, ArrayLengthProvider]
+(class-ns PiArrayNode [PiNode, FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, LIRLowerable, Canonicalizable, ValueProxy, LimitedValueProxy, Proxy, ArrayLengthProvider]
     (defm PiArrayNode ArrayLengthProvider
         (#_"ValueNode" ArrayLengthProvider'''length-1 [#_"PiArrayNode" this]
             (:length this)
@@ -50054,7 +45446,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Loads an object's class (i.e. this node can be created for {@code object.getClass()}).
  ;;
-(class-ns GetClassNode [FloatingNode, ValueNode, Node, Lowerable, Canonicalizable, Virtualizable]
+(class-ns GetClassNode [FloatingNode, ValueNode, Node, Lowerable, Canonicalizable]
     #_unused
     (defn #_"GetClassNode" GetClassNode'new-2 [#_"Stamp" stamp, #_"ValueNode" object]
         (merge (GetClassNode'class.) (FloatingNode'new-1 stamp)
@@ -50089,18 +45481,6 @@ ZeroExtendNode'new-4
         (#_"ValueNode" Canonicalizable'''canonical-2 [#_"GetClassNode" this, #_"Canonicalizer" tool]
             (or (GetClassNode'tryFold-1 (:object this))
                 this
-            )
-        )
-    )
-
-    (defm GetClassNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"GetClassNode" this, #_"Virtualizer" tool]
-            (let [
-                #_"ValueNode" alias (Virtualizer''getAlias-2 tool, (:object this))
-            ]
-                (when (satisfies? VirtualObjectNode alias) => tool
-                    (Virtualizer''replaceWithValue-2 tool, (ConstantNode'forConstant-3s (:stamp this), (ConstantReflection'asJavaClass-1 (VirtualObjectNode'''type-1 alias)), (:graph this)))
-                )
             )
         )
     )
@@ -50220,7 +45600,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Loads an object's hub. The object is not nil-checked by this operation.
  ;;
-(class-ns LoadHubNode [FloatingNode, ValueNode, Node, Lowerable, Canonicalizable, Virtualizable]
+(class-ns LoadHubNode [FloatingNode, ValueNode, Node, Lowerable, Canonicalizable]
     (defn #_"ValueNode" LoadHubNode'create-1 [#_"ValueNode" value]
         (let [
             #_"Stamp" stamp KlassPointerStamp'KLASS_NON_NULL
@@ -50269,18 +45649,6 @@ ZeroExtendNode'new-4
         ]
             (when (and (some? type) (:exactReference type))
                 (ConstantNode'forConstant-2s stamp, (ConstantReflection'asObjectHub-1 (:type type)))
-            )
-        )
-    )
-
-    (defm LoadHubNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"LoadHubNode" this, #_"Virtualizer" tool]
-            (let [
-                #_"TypeReference" type (StampTool'typeReferenceOrNull-1 (:stamp (Virtualizer''getAlias-2 tool, (:value this))))
-            ]
-                (when (and (some? type) (:exactReference type)) => tool
-                    (Virtualizer''replaceWithValue-2 tool, (ConstantNode'forConstant-3s (:stamp this), (ConstantReflection'asObjectHub-1 (:type type)), (:graph this)))
-                )
             )
         )
     )
@@ -50715,7 +46083,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ObjectEqualsNode [PointerEqualsNode, CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable, BinaryCommutative, Virtualizable]
+(class-ns ObjectEqualsNode [PointerEqualsNode, CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable, BinaryCommutative]
     (def- #_"ObjectEqualsOp" ObjectEqualsNode'OP (§ soon ObjectEqualsOp'new-0))
 
     (defn #_"ObjectEqualsNode" ObjectEqualsNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
@@ -50739,63 +46107,6 @@ ZeroExtendNode'new-4
         (#_"ValueNode" Binary'''canonical-4 [#_"ObjectEqualsNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
             (or (CompareOp'''canonical-5 ObjectEqualsNode'OP, (Canonicalizer'''smallestCompareWidth-1 tool), CanonicalCondition'EQ, forX, forY)
                 this
-            )
-        )
-    )
-
-    (defn- #_"void" ObjectEqualsNode''virtualizeNonVirtualComparison-4 [#_"ObjectEqualsNode" this, #_"VirtualObjectNode" virtual, #_"ValueNode" other, #_"Virtualizer" tool]
-        (when (:hasIdentity virtual)
-            ;; one of them is virtual: they can never be the same objects
-            (§ ass! tool (Virtualizer''replaceWithValue-2 tool, (LogicConstantNode'contradiction-1 (:graph this))))
-        )
-        nil
-    )
-
-    (defm ObjectEqualsNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"ObjectEqualsNode" this, #_"Virtualizer" tool]
-            (let [
-                #_"ValueNode" xAlias (Virtualizer''getAlias-2 tool, (:x this))
-                #_"ValueNode" yAlias (Virtualizer''getAlias-2 tool, (:y this))
-                #_"VirtualObjectNode" xVirtual (when (satisfies? VirtualObjectNode xAlias) xAlias)
-                #_"VirtualObjectNode" yVirtual (when (satisfies? VirtualObjectNode yAlias) yAlias)
-            ]
-                (cond
-                    (and (some? xVirtual) (nil? yVirtual))
-                        (do (ObjectEqualsNode''virtualizeNonVirtualComparison-4 this, xVirtual, yAlias, tool) tool)
-                    (and (nil? xVirtual) (some? yVirtual))
-                        (do (ObjectEqualsNode''virtualizeNonVirtualComparison-4 this, yVirtual, xAlias, tool) tool)
-                    (and (some? xVirtual) (some? yVirtual))
-                        (cond
-                            (bit-xor (:hasIdentity xVirtual) (:hasIdentity yVirtual))
-                                ;; One of the two objects has identity, the other doesn't. In code, this looks like
-                                ;; "Integer.valueOf(a) == new Integer(b)", which is always false.
-                                ;;
-                                ;; In other words: an object created via valueOf can never be equal to one created
-                                ;; by new in the same compilation unit.
-                                (Virtualizer''replaceWithValue-2 tool, (LogicConstantNode'contradiction-1 (:graph this)))
-                            (and (not (:hasIdentity xVirtual)) (not (:hasIdentity yVirtual)))
-                                (let [
-                                    #_"ResolvedJavaType" type (VirtualObjectNode'''type-1 xVirtual)
-                                ]
-                                    (when (and (= type (VirtualObjectNode'''type-1 yVirtual)) (any = type (MetaReflection'lookupJavaType-1c Integer) (MetaReflection'lookupJavaType-1c Long))) => tool
-                                        ;; both are virtual without identity: check contents
-                                        (let [
-                                            #_"IntegerEqualsNode" equals (IntegerEqualsNode'new-2 (Virtualizer''getEntry-3 tool, xVirtual, 0), (Virtualizer''getEntry-3 tool, yVirtual, 0))
-                                        ]
-                                            (-> tool
-                                                (Virtualizer''addNode-2 equals)
-                                                (Virtualizer''replaceWithValue-2 equals)
-                                            )
-                                        )
-                                    )
-                                )
-                            :else
-                                ;; both are virtual with identity: check if they refer to the same object
-                                (Virtualizer''replaceWithValue-2 tool, (LogicConstantNode'forBoolean-2 (= xVirtual yVirtual), (:graph this)))
-                        )
-                    :else
-                        tool
-                )
             )
         )
     )
@@ -51326,7 +46637,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The InstanceOfNode represents an instanceof test.
  ;;
-(class-ns InstanceOfNode [UnaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Unary #_"<ValueNode>", Canonicalizable, Lowerable, Virtualizable]
+(class-ns InstanceOfNode [UnaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Unary #_"<ValueNode>", Canonicalizable, Lowerable]
     (defn #_"InstanceOfNode" InstanceOfNode'new-3 [#_"ObjectStamp" checkedStamp, #_"ValueNode" object, #_"AnchoringNode" anchor]
         (merge (InstanceOfNode'class.) (UnaryOpLogicNode'new-1 object)
             (hash-map
@@ -51420,18 +46731,6 @@ ZeroExtendNode'new-4
         (StampTool'typeReferenceOrNull-1 (:checkedStamp this))
     )
 
-    (defm InstanceOfNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"InstanceOfNode" this, #_"Virtualizer" tool]
-            (let [
-                #_"Boolean" fold (UnaryOpLogicNode'''tryFold-2 this, (:stamp (Virtualizer''getAlias-2 tool, (Unary'''getValue-1 this))))
-            ]
-                (when (some? fold) => tool
-                    (Virtualizer''replaceWithValue-2 tool, (LogicConstantNode'forBoolean-2 (true? fold), (:graph this)))
-                )
-            )
-        )
-    )
-
     (defm InstanceOfNode UnaryOpLogicNode
         (#_"Stamp" UnaryOpLogicNode'''getSucceedingStampForValue-2 [#_"InstanceOfNode" this, #_"boolean" negated?]
             (when-not negated? (:checkedStamp this))
@@ -51457,7 +46756,7 @@ ZeroExtendNode'new-4
 ;;;
  ; An IsNullNode will be true if the supplied value is nil, and false if it is non-nil.
  ;;
-(class-ns IsNullNode [UnaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Unary #_"<ValueNode>", Canonicalizable, Virtualizable]
+(class-ns IsNullNode [UnaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Unary #_"<ValueNode>", Canonicalizable]
     (defn #_"IsNullNode" IsNullNode'new-1 [#_"ValueNode" object]
         (merge (IsNullNode'class.) (UnaryOpLogicNode'new-1 object))
     )
@@ -51493,18 +46792,6 @@ ZeroExtendNode'new-4
     (defm IsNullNode Unary
         (#_"ValueNode" Unary'''canonical-3 [#_"IsNullNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
             (IsNullNode'canonicalized-2 this, value)
-        )
-    )
-
-    (defm IsNullNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"IsNullNode" this, #_"Virtualizer" tool]
-            (let [
-                #_"Boolean" fold (UnaryOpLogicNode'''tryFold-2 this, (:stamp (Virtualizer''getAlias-2 tool, (Unary'''getValue-1 this))))
-            ]
-                (when (some? fold) => tool
-                    (Virtualizer''replaceWithValue-2 tool, (LogicConstantNode'forBoolean-2 (true? fold), (:graph this)))
-                )
-            )
         )
     )
 
@@ -51803,7 +47090,7 @@ ZeroExtendNode'new-4
  ; A proxy is inserted at loop exits for any value that is created inside the loop (i.e. was not
  ; live on entry to the loop) and is (potentially) used after the loop.
  ;;
-(class-ns ValueProxyNode [FloatingNode, ValueNode, Node, Canonicalizable, Virtualizable, ValueProxy, LimitedValueProxy, Proxy]
+(class-ns ValueProxyNode [FloatingNode, ValueNode, Node, Canonicalizable, ValueProxy, LimitedValueProxy, Proxy]
     (defn #_"ValueProxyNode" ValueProxyNode'new-2 [#_"ValueNode" value, #_"LoopExitNode" loopExit]
         (merge (ValueProxyNode'class.) (FloatingNode'new-1 (:stamp value))
             (hash-map
@@ -51829,18 +47116,6 @@ ZeroExtendNode'new-4
                 )
                 (:value this)
                 this
-            )
-        )
-    )
-
-    (defm ValueProxyNode Virtualizable
-        (#_"Virtualizer" Virtualizable'''virtualize-2 [#_"ValueProxyNode" this, #_"Virtualizer" tool]
-            (let [
-                #_"ValueNode" alias (Virtualizer''getAlias-2 tool, (:value this))
-            ]
-                (when (satisfies? VirtualObjectNode alias) => tool
-                    (Virtualizer''replaceWithVirtual-2 tool, alias)
-                )
             )
         )
     )
@@ -52695,7 +47970,7 @@ ZeroExtendNode'new-4
  ; Produces the platform dependent first or second half of a long or double value as an int.
  ;;
 (class-ns UnpackEndianHalfNode [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, Lowerable]
-    (defn #_"UnpackEndianHalfNode" UnpackEndianHalfNode'new-2 [#_"ValueNode" value, #_"boolean" firstHalf]
+    (defn- #_"UnpackEndianHalfNode" UnpackEndianHalfNode'new-2 [#_"ValueNode" value, #_"boolean" firstHalf]
         (merge (UnpackEndianHalfNode'class.) (UnaryNode'new-2 (StampFactory'forKind-1 :JavaKind'Int), value)
             (hash-map
                 #_"boolean" :firstHalf firstHalf
@@ -52703,6 +47978,7 @@ ZeroExtendNode'new-4
         )
     )
 
+    #_unused
     (defn #_"ValueNode" UnpackEndianHalfNode'create-2 [#_"ValueNode" value, #_"boolean" firstHalf]
         (if (and (satisfies? ConstantNode value) (Constant'''isDefaultForKind-1 (:value value)))
             (ConstantNode'defaultForKind-1 :JavaKind'Int)
@@ -52807,259 +48083,12 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns VirtualObjectNode [ValueNode, Node, LIRLowerable]
-    (defn #_"VirtualObjectNode" VirtualObjectNode'new-2 [#_"ResolvedJavaType" type, #_"boolean" hasIdentity]
-        (merge (VirtualObjectNode'class.) (ValueNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 type)))
-            (hash-map
-                ;;;
-                 ; Specifies whether this virtual object has an object identity. If not, then the result of
-                 ; a comparison of two virtual objects is determined by comparing their contents.
-                 ;;
-                #_"boolean" :hasIdentity hasIdentity
-                #_"int" :oid -1
-            )
-        )
-    )
-
-    (defn #_"this" VirtualObjectNode''resetObjectId-1 [#_"VirtualObjectNode" this]
-        (assoc this :oid -1)
-    )
-
-    (defn #_"this" VirtualObjectNode''setObjectId-2 [#_"VirtualObjectNode" this, #_"int" objectId]
-        (assoc this :oid objectId)
-    )
-
-    (defm VirtualObjectNode Node
-        (#_"this" Node'''afterClone-2 [#_"VirtualObjectNode" this, #_"Node" other]
-            (let [
-                this (Node'''afterClone-2 (§ super #_"ValueNode"), other)
-            ]
-                (VirtualObjectNode''resetObjectId-1 this)
-            )
-        )
-    )
-
-    (defm VirtualObjectNode LIRLowerable
-        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"VirtualObjectNode" this, #_"LIRBuilder" builder]
-            ;; nothing to do...
-            builder
-        )
-    )
-)
-
-(class-ns VirtualArrayNode [VirtualObjectNode, ValueNode, Node, LIRLowerable, ArrayLengthProvider]
-    (defn #_"VirtualArrayNode" VirtualArrayNode'new-2 [#_"ResolvedJavaType" componentType, #_"int" length]
-        (merge (VirtualArrayNode'class.) (VirtualObjectNode'new-2 (JavaType'''getArrayClass-1 componentType), true)
-            (hash-map
-                #_"ResolvedJavaType" :componentType componentType
-                #_"int" :length length
-            )
-        )
-    )
-
-    (defm VirtualArrayNode VirtualObjectNode
-        (#_"ResolvedJavaType" VirtualObjectNode'''type-1 [#_"VirtualArrayNode" this]
-            (JavaType'''getArrayClass-1 (:componentType this))
-        )
-
-        (#_"int" VirtualObjectNode'''entryCount-1 [#_"VirtualArrayNode" this]
-            (:length this)
-        )
-    )
-
-    (defm VirtualArrayNode LIRLowerable
-        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"VirtualArrayNode" this, #_"LIRBuilder" builder]
-            ;; nothing to do...
-            builder
-        )
-    )
-
-    (defm VirtualArrayNode VirtualObjectNode
-        (#_"int" VirtualObjectNode'''entryIndexForOffset-3 [#_"VirtualArrayNode" this, #_"long" constantOffset, #_"JavaKind" expectedEntryKind]
-            (VirtualArrayNode'entryIndexForOffset-4 constantOffset, expectedEntryKind, (:componentType this), (:length this))
-        )
-    )
-
-    (defn #_"int" VirtualArrayNode'entryIndexForOffset-4 [#_"long" constantOffset, #_"JavaKind" expectedEntryKind, #_"ResolvedJavaType" componentType, #_"int" length]
-        (let [
-            #_"int" baseOffset (HotSpot'arrayBaseOffset-1 (JavaType'''getJavaKind-1 componentType))
-            #_"int" indexScale (HotSpot'arrayIndexScale-1 (JavaType'''getJavaKind-1 componentType))
-            #_"long" offset
-                (when (and (= (ByteOrder/nativeOrder) ByteOrder/BIG_ENDIAN) (ResolvedJavaType'''isPrimitive-1 componentType)) => constantOffset
-                    ;; on big endian, we expect the value to be correctly aligned in memory
-                    (let [
-                        #_"int" componentByteCount (JavaKind'getByteCount-1 (JavaType'''getJavaKind-1 componentType))
-                    ]
-                        (- constantOffset (- componentByteCount (min componentByteCount (+ 4 (JavaKind'getByteCount-1 expectedEntryKind)))))
-                    )
-                )
-            #_"long" index (- offset baseOffset)
-        ]
-            (when (zero? (% index indexScale)) => -1
-                (let [
-                    #_"long" elementIndex (quot index indexScale)
-                ]
-                    (when (< -1 elementIndex length) => -1
-                        (int elementIndex)
-                    )
-                )
-            )
-        )
-    )
-
-    (defm VirtualArrayNode VirtualObjectNode
-        (#_"JavaKind" VirtualObjectNode'''entryKind-2 [#_"VirtualArrayNode" this, #_"int" index]
-            (JavaType'''getJavaKind-1 (:componentType this))
-        )
-
-        (#_"VirtualArrayNode" VirtualObjectNode'''duplicate-1 [#_"VirtualArrayNode" this]
-            (VirtualArrayNode'new-2 (:componentType this), (:length this))
-        )
-
-        (#_"ValueNode" VirtualObjectNode'''getMaterializedRepresentation-4 [#_"VirtualArrayNode" this, #_"FixedNode" fixed, #_"[ValueNode]" entries, #_"LockState" locks]
-            (AllocatedObjectNode'new-1 this)
-        )
-    )
-
-    (defm VirtualArrayNode ArrayLengthProvider
-        (#_"ValueNode" ArrayLengthProvider'''length-1 [#_"VirtualArrayNode" this]
-            (ConstantNode'forInt-1 (:length this))
-        )
-    )
-)
-
-(class-ns VirtualInstanceNode [VirtualObjectNode, ValueNode, Node, LIRLowerable]
-    (defn #_"VirtualInstanceNode" VirtualInstanceNode'new-3 [#_"ResolvedJavaType" type, #_"ResolvedJavaField*" fields, #_"boolean" hasIdentity]
-        (merge (VirtualInstanceNode'class.) (VirtualObjectNode'new-2 type, hasIdentity)
-            (hash-map
-                #_"ResolvedJavaType" :type type
-                #_"[ResolvedJavaField]" :fields (vec fields)
-            )
-        )
-    )
-
-    (defn #_"VirtualInstanceNode" VirtualInstanceNode'new-2 [#_"ResolvedJavaType" type, #_"boolean" hasIdentity]
-        (VirtualInstanceNode'new-3 type, (ResolvedJavaType'''getInstanceFields-2 type, true), hasIdentity)
-    )
-
-    (defm VirtualInstanceNode VirtualObjectNode
-        (#_"ResolvedJavaType" VirtualObjectNode'''type-1 [#_"VirtualInstanceNode" this]
-            (:type this)
-        )
-
-        (#_"int" VirtualObjectNode'''entryCount-1 [#_"VirtualInstanceNode" this]
-            (count (:fields this))
-        )
-    )
-
-    (defn #_"ResolvedJavaField" VirtualInstanceNode''field-2 [#_"VirtualInstanceNode" this, #_"int" index]
-        (nth (:fields this) index)
-    )
-
-    (defn #_"[ResolvedJavaField]" VirtualInstanceNode''getFields-1 [#_"VirtualInstanceNode" this]
-        (:fields this)
-    )
-
-    (defn #_"int" VirtualInstanceNode''fieldIndex-2 [#_"VirtualInstanceNode" this, #_"ResolvedJavaField" field]
-        ;; on average fields.length == ~6, so a linear search is fast enough
-        (loop-when [#_"int" i 0] (< i (count (:fields this))) => -1
-            (if (= (nth (:fields this) i) field)
-                i
-                (recur (inc i))
-            )
-        )
-    )
-
-    (defm VirtualInstanceNode VirtualObjectNode
-        (#_"int" VirtualObjectNode'''entryIndexForOffset-3 [#_"VirtualInstanceNode" this, #_"long" constantOffset, #_"JavaKind" expectedEntryKind]
-            (VirtualInstanceNode''fieldIndex-2 this, (ResolvedJavaType'''findInstanceFieldWithOffset-3 (:type this), constantOffset, expectedEntryKind))
-        )
-
-        (#_"JavaKind" VirtualObjectNode'''entryKind-2 [#_"VirtualInstanceNode" this, #_"int" index]
-            (JavaField''getJavaKind-1 (nth (:fields this) index))
-        )
-
-        (#_"VirtualInstanceNode" VirtualObjectNode'''duplicate-1 [#_"VirtualInstanceNode" this]
-            (VirtualInstanceNode'new-3 (:type this), (:fields this), (:hasIdentity this))
-        )
-
-        (#_"ValueNode" VirtualObjectNode'''getMaterializedRepresentation-4 [#_"VirtualInstanceNode" this, #_"FixedNode" fixed, #_"[ValueNode]" entries, #_"LockState" locks]
-            (AllocatedObjectNode'new-1 this)
-        )
-    )
-)
-
-(class-ns VirtualState [Node]
-    (defn #_"VirtualState" VirtualState'new-0 []
-        (merge (VirtualState'class.) (Node'new-0))
-    )
-)
-
-(class-ns EscapeObjectState [VirtualState, Node]
-    (defn #_"EscapeObjectState" EscapeObjectState'new-1 [#_"VirtualObjectNode" object]
-        (merge (EscapeObjectState'class.) (VirtualState'new-0)
-            (hash-map
-                ; @Input
-                #_"VirtualObjectNode" :object object
-            )
-        )
-    )
-)
-
-;;;
- ; This class encapsulated the materialized state of an escape analyzed object.
- ;;
-(class-ns MaterializedObjectState [EscapeObjectState, VirtualState, Node]
-    (defn #_"MaterializedObjectState" MaterializedObjectState'new-2 [#_"VirtualObjectNode" object, #_"ValueNode" materializedValue]
-        (merge (MaterializedObjectState'class.) (EscapeObjectState'new-1 object)
-            (hash-map
-                ; @Input
-                #_"ValueNode" :materializedValue materializedValue
-            )
-        )
-    )
-
-    (defm MaterializedObjectState VirtualState
-        (#_"void" VirtualState'''applyToNonVirtual-2 [#_"MaterializedObjectState" this, #_"NodeClosure" closure]
-            (NodeClosure'''apply-3 closure, this, (:materializedValue this))
-            nil
-        )
-    )
-)
-
-;;;
- ; This class encapsulated the virtual state of an escape analyzed object.
- ;;
-(class-ns VirtualObjectState [EscapeObjectState, VirtualState, Node]
-    (defn #_"VirtualObjectState" VirtualObjectState'new-2 [#_"VirtualObjectNode" object, #_"ValueNode*" values]
-        (merge (VirtualObjectState'class.) (EscapeObjectState'new-1 object)
-            (hash-map
-                ; @OptionalInput
-                #_"[ValueNode]" :vosValues (vec values)
-            )
-        )
-    )
-
-    (defm VirtualObjectState VirtualState
-        (#_"void" VirtualState'''applyToNonVirtual-2 [#_"VirtualObjectState" this, #_"NodeClosure" closure]
-            (doseq [#_"ValueNode" value (:vosValues this)]
-                (when (some? value)
-                    (NodeClosure'''apply-3 closure, this, value)
-                )
-            )
-            nil
-        )
-    )
-)
-
 ;;;
  ; The FrameState class encapsulates the frame state (i.e. local variables and operand stack) at a particular
  ; point in the abstract interpretation.
- ;
- ; This can be used as debug or deoptimization information.
  ;;
-(class-ns FrameState [VirtualState, Node]
-    (defn- #_"FrameState" FrameState'new-7i [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"int" localsSize, #_"int" stackSize, #_"MonitorIdNode*" monitorIds, #_"EscapeObjectState*" virtualMappings]
+(class-ns FrameState [Node]
+    (defn- #_"FrameState" FrameState'new-7i [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"int" localsSize, #_"int" stackSize, #_"MonitorIdNode*" monitorIds, #_"EscapeObjectState*" virtualMappings]
         (when (some? code)
             ;; Make sure the bci is within range of the bytecodes. If the code size is 0 then allow any value, otherwise the
             ;; bci must be less than the code size. Any negative value is also allowed to represent special bytecode states.
@@ -53071,7 +48100,7 @@ ZeroExtendNode'new-4
                 )
             )
         )
-        (merge (FrameState'class.) (VirtualState'new-0)
+        (merge (FrameState'class.) (Node'new-0)
             (hash-map
                 #_"int" :localsSize localsSize
                 #_"int" :stackSize stackSize
@@ -53085,7 +48114,7 @@ ZeroExtendNode'new-4
                 ; @Input
                 #_"[MonitorIdNode]" :monitorNodes (when (seq monitorIds) (vec monitorIds))
                 ; @OptionalInput
-                #_"[EscapeObjectState]" :virtualMappings (when (seq virtualMappings) (vec virtualMappings))
+                #_"[EscapeObjectState]" :virtualMappings (when (seq virtualMappings) (vec virtualMappings))
                 ;;;
                  ; The bytecode index to which this frame state applies.
                  ;;
@@ -53098,7 +48127,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"FrameState" FrameState'new-8 [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"ValueNode*" values, #_"int" localsSize, #_"int" stackSize, #_"MonitorIdNode*" monitorIds, #_"EscapeObjectState*" virtualMappings]
+    (defn- #_"FrameState" FrameState'new-8 [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"ValueNode*" values, #_"int" localsSize, #_"int" stackSize, #_"MonitorIdNode*" monitorIds, #_"EscapeObjectState*" virtualMappings]
         (let [
             #_"FrameState" this (FrameState'new-7i outerFrameState, code, bci, localsSize, stackSize, monitorIds, virtualMappings)
         ]
@@ -53146,7 +48175,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"this" FrameState''addVirtualObjectMapping-2 [#_"FrameState" this, #_"EscapeObjectState" virtualObject]
+    (defn #_"this" FrameState''addVirtualObjectMapping-2 [#_"FrameState" this, #_"EscapeObjectState" virtualObject]
         (let [
             this (update this :virtualMappings conj' virtualObject)
         ]
@@ -53273,32 +48302,6 @@ ZeroExtendNode'new-4
     #_unused
     (defn #_"MonitorIdNode" FrameState''monitorIdAt-2 [#_"FrameState" this, #_"int" i]
         (nth (:monitorNodes this) i)
-    )
-
-    (defm FrameState VirtualState
-        (#_"void" VirtualState'''applyToNonVirtual-2 [#_"FrameState" this, #_"NodeClosure" closure]
-            (doseq [#_"ValueNode" value (:fsValues this)]
-                (when (some? value)
-                    (NodeClosure'''apply-3 closure, this, value)
-                )
-            )
-            (when (some? (:monitorNodes this))
-                (doseq [#_"MonitorIdNode" monitorId (:monitorNodes this)]
-                    (when (some? monitorId)
-                        (NodeClosure'''apply-3 closure, this, monitorId)
-                    )
-                )
-            )
-            (when (some? (:virtualMappings this))
-                (doseq [#_"EscapeObjectState" state (:virtualMappings this)]
-                    (VirtualState'''applyToNonVirtual-2 state, closure)
-                )
-            )
-            (when (some? (:outerFrameState this))
-                (VirtualState'''applyToNonVirtual-2 (:outerFrameState this), closure)
-            )
-            nil
-        )
     )
 )
 
@@ -53578,145 +48581,6 @@ ZeroExtendNode'new-4
     )
 )
 
-;;;
- ; This class describes the state of a virtual object while iterating over the graph.
- ; It describes the fields or array elements (called "entries") and the lock count if the object is
- ; still virtual. If the object was materialized, it contains the current materialized value.
- ;;
-(class-ns ObjectState []
-    (defn- #_"ObjectState" ObjectState'init-0 []
-        (hash-map
-            ;;;
-             ; Users of this method are not allowed to change the entries of the returned array.
-             ;;
-            #_"[ValueNode]" :entries nil
-            #_"ValueNode" :materializedValue nil
-            #_"LockState" :lockState nil
-            #_"boolean" :ensureVirtualized false
-            #_"EscapeObjectState" :cachedState nil
-        )
-    )
-
-    (defn #_"ObjectState" ObjectState'new-3s [#_"[ValueNode]" entries, #_"LockState" lockState, #_"boolean" ensureVirtualized]
-        (let [
-            #_"ObjectState" this
-                (merge (ObjectState'class.)
-                    (ObjectState'init-0)
-                )
-            this (assoc this :entries entries)
-            this (assoc this :lockState lockState)
-            this (assoc this :ensureVirtualized ensureVirtualized)
-        ]
-            this
-        )
-    )
-
-    (defn #_"ObjectState" ObjectState'new-3m [#_"[ValueNode]" entries, #_"MonitorIdNode*" locks, #_"boolean" ensureVirtualized]
-        (let [
-            #_"ObjectState" this (merge (ObjectState'class.) (ObjectState'new-3s entries, nil, ensureVirtualized))
-        ]
-            (loop-when-recur [this this #_"int" i (dec (count locks))]
-                             (<= 0 i)
-                             [(assoc this :lockState (LockState'new-2 (nth locks i), (:lockState this))) (dec i)]
-                          => this
-            )
-        )
-    )
-
-    (defn #_"ObjectState" ObjectState'new-3v [#_"ValueNode" materializedValue, #_"LockState" lockState, #_"boolean" ensureVirtualized]
-        (let [
-            #_"ObjectState" this
-                (merge (ObjectState'class.)
-                    (ObjectState'init-0)
-                )
-            this (assoc this :materializedValue materializedValue)
-            this (assoc this :lockState lockState)
-            this (assoc this :ensureVirtualized ensureVirtualized)
-        ]
-            this
-        )
-    )
-
-    (defn #_"EscapeObjectState" ObjectState''createEscapeObjectState-2 [#_"ObjectState" this, #_"VirtualObjectNode" virtual]
-        (when (nil? (:cachedState this))
-            (if (ObjectState''isVirtual-1 this)
-                ;; Clear out entries that are default values anyway.
-                (let [
-                    #_"[ValueNode]" entries (§ snap (:entries this))
-                    _
-                        (dotimes [#_"int" i (count entries)]
-                            (when (= (ValueNode''asJavaConstant-1 (nth entries i)) (JavaConstant'defaultForKind-1 (JavaKind'getStackKind-1 (VirtualObjectNode'''entryKind-2 virtual, i))))
-                                (§ ass! entries (assoc' entries i nil))
-                            )
-                        )
-                ]
-                    (§ ass! this (assoc this :cachedState (VirtualObjectState'new-2 virtual, entries)))
-                )
-                (§ ass! this (assoc this :cachedState (MaterializedObjectState'new-2 virtual, (:materializedValue this))))
-            )
-        )
-        (:cachedState this)
-    )
-
-    (defn #_"boolean" ObjectState''isVirtual-1 [#_"ObjectState" this]
-        (nil? (:materializedValue this))
-    )
-
-    (defn #_"ValueNode" ObjectState''getEntry-2 [#_"ObjectState" this, #_"int" index]
-        (nth (:entries this) index)
-    )
-
-    (defn #_"this" ObjectState''setEntry-3 [#_"ObjectState" this, #_"int" index, #_"ValueNode" value]
-        (let [
-            this (assoc this :cachedState nil)
-        ]
-            (update this :entries assoc' index value)
-        )
-    )
-
-    (defn #_"this" ObjectState''escape-2 [#_"ObjectState" this, #_"ValueNode" materialized]
-        (assoc this :materializedValue materialized, :entries nil, :cachedState nil)
-    )
-
-    (defn #_"this" ObjectState''updateMaterializedValue-2 [#_"ObjectState" this, #_"ValueNode" value]
-        (assoc this :cachedState nil, :materializedValue value)
-    )
-
-    (defn #_"this" ObjectState''addLock-2 [#_"ObjectState" this, #_"MonitorIdNode" monitorId]
-        (update this :lockState #(LockState'new-2 monitorId, %))
-    )
-
-    (defn #_"this" ObjectState''removeLock-1 [#_"ObjectState" this]
-        (update this :lockState :next)
-    )
-
-    (defn #_"boolean" ObjectState''hasLocks-1 [#_"ObjectState" this]
-        (some? (:lockState this))
-    )
-
-    (defn #_"boolean" ObjectState''locksEqual-2 [#_"ObjectState" this, #_"ObjectState" other]
-        (loop-when-recur [#_"LockState" a (:lockState this) #_"LockState" b (:lockState other)]
-                         (and (some? a) (some? b) (= (:monitorId a) (:monitorId b)))
-                         [(:next a) (:next b)]
-                      => (and (nil? a) (nil? b))
-        )
-    )
-
-    (defn #_"this" ObjectState''setEnsureVirtualized-2 [#_"ObjectState" this, #_"boolean" ensureVirtualized]
-        (assoc this :ensureVirtualized ensureVirtualized)
-    )
-
-    (§ override! #_"boolean" #_"Object." equals [#_"ObjectState" this, #_"Object" that]
-        (or (= this that)
-            (and (some? that) (= (#_"Object" .getClass this) (#_"Object" .getClass that))
-                (= (:entries this) (:entries that))
-                (ObjectState''locksEqual-2 this, that)
-                (= (:materializedValue this) (:materializedValue that))
-            )
-        )
-    )
-)
-
 (class-ns OperandModeAnnotation []
     (defn #_"OperandModeAnnotation" OperandModeAnnotation'new-0 []
         (merge (OperandModeAnnotation'class.)
@@ -53797,18 +48661,6 @@ ZeroExtendNode'new-4
                     (Node''updateUsages-3 node, (nth nodeList (:subIndex this)), value)
                     (Node''updatePredecessor-3 node, (nth nodeList (:subIndex this)), value)
                 )
-                (§ ass! nodeList (assoc' nodeList (:subIndex this) value))
-            )
-        )
-        nil
-    )
-
-    (defn #_"void" Position''initialize-3 [#_"Position" this, #_"Node" node, #_"Node" value]
-        (if (< (:index this) (:directCount (:edges this)))
-            (§ ass! node (Edges''initializeNode-4 (:edges this), node, (:index this), value))
-            (let [
-                #_"[Node]" nodeList (Edges'getNodeList-3 node, (:offsets (:edges this)), (:index this))
-            ]
                 (§ ass! nodeList (assoc' nodeList (:subIndex this) value))
             )
         )
@@ -54826,21 +49678,6 @@ ZeroExtendNode'new-4
             (when (some? _next) => (or (RawEdgesIterator''forward-1 this) (throw! "NoSuchElementException"))
                 (§ ass! this (assoc this :nextValue nil))
                 _next
-            )
-        )
-    )
-)
-
-(class-ns ReadCacheEntry []
-    (defn #_"ReadCacheEntry" ReadCacheEntry'new-5 [#_"LocationIdentity" identity, #_"ValueNode" object, #_"int" index, #_"JavaKind" kind, #_"boolean" overflowAccess]
-        (merge (ReadCacheEntry'class.)
-            (hash-map
-                #_"LocationIdentity" :identity identity
-                #_"ValueNode" :object object
-                #_"int" :index index
-                #_"JavaKind" :kind kind
-                ;; This flag does not affect hashCode or equals implementations.
-                #_"boolean" :overflowAccess overflowAccess
             )
         )
     )
@@ -59933,286 +54770,6 @@ ZeroExtendNode'new-4
     )
 )
 
-;;;
- ; Forwards calls from Virtualizer to the actual PartialEscapeBlockState.
- ;;
-(class-ns Virtualizer [Canonicalizer]
-    (defn #_"Virtualizer" Virtualizer'new-1 [#_"PartialEscapeClosure" closure]
-        (merge (Virtualizer'class.)
-            (hash-map
-                #_"PartialEscapeClosure" :closure closure
-                #_"ConstantNode" :illegalConstant nil
-                #_"boolean" :deleted false
-                #_"PartialEscapeBlockState" :state nil
-                #_"ValueNode" :current nil
-                #_"FixedNode" :position nil
-                #_"GraphEffects" :effects nil
-            )
-        )
-    )
-
-    (defn #_"this" Virtualizer''reset-5 [#_"Virtualizer" this, #_"PartialEscapeBlockState" state, #_"ValueNode" current, #_"FixedNode" position, #_"GraphEffects" effects]
-        (let [
-            this (assoc this :deleted false)
-            this (assoc this :state state)
-            this (assoc this :current current)
-            this (assoc this :position position)
-            this (assoc this :effects effects)
-        ]
-            this
-        )
-    )
-
-    (defn- #_"ValueNode" Virtualizer''getIllegalConstant-1 [#_"Virtualizer" this]
-        (let [
-            _
-                (when (nil? (:illegalConstant this))
-                    (§ ass! this (assoc this :illegalConstant (ConstantNode'forConstant-1 (JavaConstant'forIllegal-0))))
-                    (§ ass! this (Virtualizer''addNode-2 this, (:illegalConstant this)))
-                )
-        ]
-            (:illegalConstant this)
-        )
-    )
-
-    ;;;
-     ; Returns a VirtualObjectNode if the given value is aliased with a virtual object that is still
-     ; virtual, the materialized value of the given value is aliased with a virtual object that was
-     ; materialized, the replacement if the give value was replaced, otherwise the given value.
-     ;
-     ; Replacements via #replaceWithValue(ValueNode) are not immediately committed. This method can be
-     ; used to determine if a value was replaced by another one (e.g. a load field by the loaded value).
-     ;;
-    (defn #_"ValueNode" Virtualizer''getAlias-2 [#_"Virtualizer" this, #_"ValueNode" value]
-        (PartialEscapeClosure''getAliasAndResolve-3 (:closure this), (:state this), value)
-    )
-
-    (defn #_"ValueNode" Virtualizer''getEntry-3 [#_"Virtualizer" this, #_"VirtualObjectNode" virtualObject, #_"int" index]
-        (ObjectState''getEntry-2 (nth (:objectStates (:state this)) (:oid virtualObject)), index)
-    )
-
-    ;;;
-     ; Sets the entry (field or array element) with the given index in the virtualized object.
-     ;
-     ; @param index the index to be set.
-     ; @param value the new value for the given index.
-     ; @param accessKind the kind of the store which might be different than VirtualObjectNode#entryKind(int)
-     ; @return true if the operation was permitted
-     ;;
-    (defn #_"boolean" Virtualizer''setVirtualEntry-6 [#_"Virtualizer" this, #_"VirtualObjectNode" virtual, #_"int" index, #_"ValueNode" value, #_"JavaKind" theAccessKind, #_"long" offset]
-        (let [
-            #_"ObjectState" obj (nth (:objectStates (:state this)) (:oid virtual))
-            #_"JavaKind" entryKind (VirtualObjectNode'''entryKind-2 virtual, index)
-            #_"JavaKind" accessKind (or theAccessKind entryKind)
-            #_"ValueNode" newValue (when (some? value) (PartialEscapeClosure''getAliasAndResolve-3 (:closure this), (:state this), value))
-            #_"ValueNode" oldValue (Virtualizer''getEntry-3 this, virtual, index)
-            #_"boolean" canVirtualize
-                (or (= entryKind accessKind) (and (= entryKind (JavaKind'getStackKind-1 accessKind)) (satisfies? VirtualInstanceNode virtual))
-                    ;; Special case: If the entryKind is long, allow arbitrary kinds as long as a value of the
-                    ;; same kind is already there. This can only happen if some other node initialized the entry with
-                    ;; a value of a different kind. One example where this happens is the Truffle NewFrameNode.
-                    (and (= entryKind :JavaKind'Long) (= (ValueNode''getStackKind-1 oldValue) (ValueNode''getStackKind-1 newValue)) (JavaKind'isPrimitive-1 (ValueNode''getStackKind-1 oldValue)))
-                    ;; Special case: Allow storing a single long or double value into two consecutive int slots.
-                    (and (= entryKind :JavaKind'Int) (= accessKind :JavaKind'Long) (zero? (% offset 8)) (not (= (VirtualObjectNode'''entryIndexForOffset-3 virtual, (+ offset 4), :JavaKind'Int) -1)))
-                )
-        ]
-            (when canVirtualize => false ;; should only occur if there are mismatches between the entry and access kind
-                (let [
-                    _ (§ ass! this (update this :state PartialEscapeBlockState''setEntry-4 (:oid virtual), index, newValue))
-                    _
-                        (when (= entryKind :JavaKind'Int)
-                            (cond
-                                (JavaKind'needsTwoSlots-1 accessKind)
-                                    ;; storing double word value two int slots
-                                    (§ ass! this (update this :state PartialEscapeBlockState''setEntry-4 (:oid virtual), (inc index), (Virtualizer''getIllegalConstant-1 this)))
-                                (= (ValueNode''getStackKind-1 oldValue) :JavaKind'Long)
-                                    ;; splitting double word constant by storing over it with an int
-                                    (let [
-                                        #_"ValueNode" secondHalf (UnpackEndianHalfNode'create-2 oldValue, false)
-                                    ]
-                                        (§ ass! this (Virtualizer''addNode-2 this, secondHalf))
-                                        (§ ass! this (update this :state PartialEscapeBlockState''setEntry-4 (:oid virtual), (inc index), secondHalf))
-                                    )
-                            )
-                        )
-                    _
-                        (when (and (satisfies? ConstantNode oldValue) (= (:value oldValue) (JavaConstant'forIllegal-0)))
-                            ;; storing into second half of double, so replace previous value
-                            (let [
-                                #_"ValueNode" previous (Virtualizer''getEntry-3 this, virtual, (dec index))
-                                #_"ValueNode" firstHalf (UnpackEndianHalfNode'create-2 previous, true)
-                            ]
-                                (§ ass! this (Virtualizer''addNode-2 this, firstHalf))
-                                (§ ass! this (update this :state PartialEscapeBlockState''setEntry-4 (:oid virtual), (dec index), firstHalf))
-                            )
-                        )
-                ]
-                    true
-                )
-            )
-        )
-    )
-
-    (defn #_"this" Virtualizer''setVirtualEntry-4 [#_"Virtualizer" this, #_"VirtualObjectNode" virtualObject, #_"int" index, #_"ValueNode" value]
-        (when-not (Virtualizer''setVirtualEntry-6 this, virtualObject, index, value, nil, 0)
-            (throw! "unexpected failure when updating virtual entry")
-        )
-        this
-    )
-
-    ;;;
-     ; Deletes the current node and replaces it with the given virtualized object.
-     ;
-     ; @param virtualObject the virtualized object that should replace the current node.
-     ;;
-    (defn #_"this" Virtualizer''replaceWithVirtual-2 [#_"Virtualizer" this, #_"VirtualObjectNode" object]
-        (let [
-            this (update this :closure PartialEscapeClosure''addVirtualAlias-3 object, (:current this))
-            this (update this :effects GraphEffects''deleteNode-2 (:current this))
-        ]
-            (assoc this :deleted true)
-        )
-    )
-
-    ;;;
-     ; Deletes the current node and replaces it with the given value.
-     ;
-     ; @param replacement the value that should replace the current node.
-     ;;
-    (defn #_"this" Virtualizer''replaceWithValue-2 [#_"Virtualizer" this, #_"ValueNode" replacement]
-        (let [
-            this (update this :effects GraphEffects''replaceAtUsages-4 (:current this), (EffectsClosure''getScalarAlias-2 (:closure this), replacement), (:position this))
-            this (update this :closure EffectsClosure''addScalarAlias-3 (:current this), replacement)
-        ]
-            (assoc this :deleted true)
-        )
-    )
-
-    ;;;
-     ; Deletes the current node.
-     ;;
-    (defn #_"this" Virtualizer''delete-1 [#_"Virtualizer" this]
-        (let [
-            this (update this :effects GraphEffects''deleteNode-2 (:current this))
-        ]
-            (assoc this :deleted true)
-        )
-    )
-
-    ;;;
-     ; Replaces an input of the current node.
-     ;
-     ; @param oldInput the old input value.
-     ; @param replacement the new input value.
-     ;;
-    #_unused
-    (defn #_"this" Virtualizer''replaceFirstInput-3 [#_"Virtualizer" this, #_"Node" oldInput, #_"Node" replacement]
-        (update this :effects GraphEffects''replaceFirstInput-4 (:current this), oldInput, replacement)
-    )
-
-    ;;;
-     ; Adds the given node to the graph.This action will only be performed when, and if, the changes are committed.
-     ;
-     ; @param node the node to add.
-     ;;
-    (defn #_"this" Virtualizer''addNode-2 [#_"Virtualizer" this, #_"ValueNode" node]
-        (if (satisfies? FloatingNode node)
-            (update this :effects GraphEffects''addFloatingNode-2 node)
-            (update this :effects GraphEffects''addFixedNodeBefore-3 node, (:position this))
-        )
-    )
-
-    ;;;
-     ; Introduces a new virtual object to the current state.
-     ;
-     ; @param virtualObject the new virtual object.
-     ; @param entryState the initial state of the virtual object's fields.
-     ; @param locks the initial locking depths.
-     ; @param ensureVirtualized true if this object needs to stay virtual
-     ;;
-    (defn #_"this" Virtualizer''createVirtualObject-5 [#_"Virtualizer" this, #_"VirtualObjectNode" virtualObject, #_"[ValueNode]" entryState, #_"MonitorIdNode*" locks, #_"boolean" ensureVirtualized]
-        (let [
-            this
-                (when-not (Node''isAlive-1 virtualObject) => this
-                    (update this :effects GraphEffects''addFloatingNode-2 virtualObject)
-                )
-            _
-                (dotimes [#_"int" i (count entryState)]
-                    (§ ass! entryState (update' entryState i #(if (satisfies? VirtualObjectNode %) % (PartialEscapeClosure''getAliasAndResolve-3 (:closure this), (:state this), %))))
-                )
-            #_"int" id (:oid virtualObject)
-            [this id]
-                (when (= id -1) => [this id]
-                    (let [
-                        id (count (:peVirtualObjects (:closure this)))
-                        this (update-in this [:closure :peVirtualObjects] conj' virtualObject)
-                        _ (§ ass! virtualObject (VirtualObjectNode''setObjectId-2 virtualObject, id))
-                    ]
-                        [this id]
-                    )
-                )
-            this (update this :state PartialEscapeBlockState''addObject-3 id, (ObjectState'new-3m entryState, locks, ensureVirtualized))
-            this (update this :closure PartialEscapeClosure''addVirtualAlias-3 virtualObject, virtualObject)
-        ]
-            (update this :effects GraphEffects''addVirtualizationDelta-2 1)
-        )
-    )
-
-    ;;;
-     ; This method should be used to query the maximum size of virtualized objects before attempting virtualization.
-     ;
-     ; @return the maximum number of entries for virtualized objects
-     ;;
-    (defn #_"int" Virtualizer''getMaximumEntryCount-1 [#_"Virtualizer" this]
-        GraalOptions'maximumEscapeAnalysisArrayLength
-    )
-
-    ;;;
-     ; This method performs either #replaceWithValue(ValueNode) or #replaceWithVirtual(VirtualObjectNode),
-     ; depending on the given value.
-     ;
-     ; @param value the replacement value
-     ;;
-    (defn #_"this" Virtualizer''replaceWith-2 [#_"Virtualizer" this, #_"ValueNode" node]
-        (if (satisfies? VirtualObjectNode node)
-            (Virtualizer''replaceWithVirtual-2 this, node)
-            (Virtualizer''replaceWithValue-2 this, node)
-        )
-    )
-
-    ;;;
-     ; If state is virtual, materialization is performed for the given state.
-     ;
-     ; @return true if materialization happened, false if not
-     ;;
-    #_unused
-    (defn #_"boolean" Virtualizer''ensureMaterialized-2 [#_"Virtualizer" this, #_"VirtualObjectNode" object]
-        (PartialEscapeClosure''ensureMaterialized-5 (:closure this), (:state this), (:oid object), (:position this), (:effects this))
-    )
-
-    (defn #_"this" Virtualizer''addLock-3 [#_"Virtualizer" this, #_"VirtualObjectNode" object, #_"MonitorIdNode" monitorId]
-        (update this :state PartialEscapeBlockState''addLock-3 (:oid object), monitorId)
-    )
-
-    (defn #_"this" Virtualizer''removeLock-2 [#_"Virtualizer" this, #_"VirtualObjectNode" object]
-        (update this :state PartialEscapeBlockState''removeLock-2 (:oid object))
-    )
-
-    (defm Virtualizer Canonicalizer
-        (#_"boolean" Canonicalizer'''canonicalizeReads-1 [#_"Virtualizer" this]
-            false
-        )
-
-        (#_"boolean" Canonicalizer'''allUsagesAvailable-1 [#_"Virtualizer" this]
-            true
-        )
-
-        (#_"Integer" Canonicalizer'''smallestCompareWidth-1 [#_"Virtualizer" this]
-            (Lowerer'smallestCompareWidth-0)
-        )
-    )
-)
-
 (class-ns Word []
     (defn- #_"Word" Word'new-1 [#_"long" rawValue]
         (merge (Word'class.)
@@ -61666,14 +56223,6 @@ ZeroExtendNode'new-4
                     (IterativeConditionalEliminationPhase'run-2 graph, false)
                 )
             graph (Simplifier'run-1 graph)
-            graph
-                (when GraalOptions'partialEscapeAnalysis => graph
-                    (PartialEscapePhase'run-1 graph)
-                )
-            graph
-                (when GraalOptions'optReadElimination => graph
-                    (EarlyReadEliminationPhase'run-1 graph)
-                )
             graph (RemoveValueProxyPhase'run-1 graph)
             graph (LoweringPhase'run-2 graph, :LoweringStage'HIGH_TIER)
             ;;; MidTier
