@@ -146,7 +146,6 @@ MetaspaceOperation
 MetaspaceOperation''opcode-1
 MonitorSnippets
 NewObjectSnippets
-NodeEvent
 OperandFlag
 OptionalInput
 RegisterPriority''ordinal-1
@@ -890,7 +889,6 @@ CallingConventionType'SET
 CanonicalCondition'BT
 CanonicalCondition'EQ
 CanonicalCondition'LT
-ChainedNodeEventListener'new-2
 ClassGetHubNode'canonical-4
 ClassGetHubNode'create-2
 ClassGetHubNode'intrinsify-3
@@ -1363,7 +1361,6 @@ GuardsStage'allowsFloatingGuards-1
 GuardsStage'areDeoptsFixed-1
 GuardsStage'areFrameStatesAtDeopts-1
 GuardsStage'areFrameStatesAtSideEffects-1
-HashSetNodeEventListener'new-0
 HeapBaseNode'new-1
 HotSpot'ageMaskInPlace
 HotSpot'allocateInstancePrefetchLines
@@ -2234,10 +2231,9 @@ Node''inputs-1
 Node''isAlive-1
 Node''isDeleted-1
 Node''markDeleted-1
-Node''maybeNotifyZeroUsages-2
 Node''removeUsage-2
 Node''replaceAndDelete-2
-Node''replaceAtAllUsages-3
+Node''replaceAtAllUsages-2
 Node''replaceAtPredecessor-2
 Node''replaceAtUsages-2
 Node''replaceAtUsages-3
@@ -2273,10 +2269,6 @@ NodeClass'replaceFirstEdge-4
 NodeClass'updateEdgesInPlace-3
 NodeCost'new-3
 NodeEntry'new-1
-NodeEvent'SET
-NodeEventListener''event-3
-NodeEventListener'new-0
-NodeEventScope'new-2
 NodeFieldsScanner''scan-3
 NodeFieldsScanner'new-1
 NodeLoopInfo'new-0
@@ -3321,7 +3313,6 @@ ZeroExtendNode'new-4
 (defp CallTargetNode)
 (defp CanonicalCondition)
 (defp CanonicalizedCondition)
-(defp ChainedNodeEventListener)
 (defp ClassGetHubNode)
 (defp ClassRef)
 (defp Classfile)
@@ -3615,7 +3606,6 @@ ZeroExtendNode'new-4
 )
 
 (defp GuardingNode)
-(defp HashSetNodeEventListener)
 
 ;;;
  ; Marker interface for nodes that accesses the heap.
@@ -4331,43 +4321,6 @@ ZeroExtendNode'new-4
 (defp NodeClass)
 (defp NodeCost)
 (defp NodeEntry)
-
-;;;
- ; Client interested in one or more node related events.
- ;;
-(defp NodeEventListener
-    ;;;
-     ; Notifies this listener about any change event in the graph.
-     ;
-     ; @param e an event
-     ; @param node the node related to {@code e}
-     ;;
-    (#_"void" NodeEventListener'''changed-3 [#_"NodeEventListener" this, #_"NodeEvent" e, #_"Node" node])
-    ;;;
-     ; Notifies this listener about a change in a node's inputs.
-     ;
-     ; @param node a node who has had one of its inputs changed
-     ;;
-    (#_"void" NodeEventListener'''inputChanged-2 [#_"NodeEventListener" this, #_"Node" node])
-    ;;;
-     ; Notifies this listener of a node becoming unused.
-     ;
-     ; @param node a node whose Node#usages() just became empty
-     ;;
-    (#_"void" NodeEventListener'''usagesDroppedToZero-2 [#_"NodeEventListener" this, #_"Node" node])
-    ;;;
-     ; Notifies this listener of an added node.
-     ;
-     ; @param node a node that was just added to the graph
-     ;;
-    (#_"void" NodeEventListener'''nodeAdded-2 [#_"NodeEventListener" this, #_"Node" node])
-    ;;;
-     ; Notifies this listener of a removed node.
-     ;;
-    (#_"void" NodeEventListener'''nodeRemoved-2 [#_"NodeEventListener" this, #_"Node" node])
-)
-
-(defp NodeEventScope)
 (defp NodeFieldsScanner)
 
 (defp NodeIteratorClosure #_"<T>"
@@ -9762,32 +9715,6 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; The type of events sent to a NodeEventListener.
- ;;
-(value-ns NodeEvent
-    (def #_"ordered {NodeEvent}" NodeEvent'SET
-        (ordered-set
-            ;;;
-             ; A node's input is changed.
-             ;;
-            :NodeEvent'INPUT_CHANGED
-            ;;;
-             ; A node's {@linkplain Node#usages() usages} count dropped to zero.
-             ;;
-            :NodeEvent'ZERO_USAGES
-            ;;;
-             ; A node was added to a graph.
-             ;;
-            :NodeEvent'NODE_ADDED
-            ;;;
-             ; A node was removed from the graph.
-             ;;
-            :NodeEvent'NODE_REMOVED
-        )
-    )
-)
-
-;;;
  ; The different stages of the compilation of a Graph regarding the status of {@link GuardNode guards},
  ; {@link DeoptimizingNode deoptimizations} and {@link FrameState framestates}.
  ; The stage of a graph progresses monotonously.
@@ -9990,9 +9917,9 @@ ZeroExtendNode'new-4
                                     (Node''replaceFirstInput-3 exit, merge, nil)
                                 )
                             )
-                            (§ ass! merge (update merge :graph Graph''reduceDegenerateLoopBegin-2 merge))
+                            (§ ass! merge (update merge :graph Graph''reduceDegenerateLoopBegin-2 merge))
                         )
-                        (Graph''reduceTrivialMerge-2 (:graph merge), merge)
+                        (Graph''reduceTrivialMerge-2 (:graph merge), merge)
                     )
                 )
             )
@@ -10129,9 +10056,6 @@ ZeroExtendNode'new-4
                     (let [
                         _ (§ ass! in (Node''removeUsage-2 in, node))
                     ]
-                        (when (Node''hasNoUsages-1 in)
-                            (Node''maybeNotifyZeroUsages-2 node, in)
-                        )
                         (when (GraphUtil'isFloatingNode-1 in)
                             (cond
                                 (Node''hasNoUsages-1 in)
@@ -10644,7 +10568,7 @@ ZeroExtendNode'new-4
                                     (nil? phiResult)
                                         ;; Found a second result value, so create phi node.
                                         (let [
-                                            phiResult (Graph''add-2 (:graph merge), (ValuePhiNode'new-2 (Stamp'''unrestricted-1 (:stamp result)), merge))
+                                            phiResult (Graph''add-2 (:graph merge), (ValuePhiNode'new-2 (Stamp'''unrestricted-1 (:stamp result)), merge))
                                             phiResult (reduce PhiNode''addInput-2 phiResult (repeat (count (:ends merge)) singleResult))
                                             phiResult (PhiNode''addInput-2 phiResult, result)
                                         ]
@@ -10656,7 +10580,7 @@ ZeroExtendNode'new-4
                                 )
                             )
                         ;; create and wire up a new EndNode
-                        #_"EndNode" endNode (Graph''add-2 (:graph merge), (EndNode'new-0))
+                        #_"EndNode" endNode (Graph''add-2 (:graph merge), (EndNode'new-0))
                         _ (§ ass! merge (AbstractMergeNode''addForwardEnd-2 merge, endNode))
                         _
                             (if (some? f'lastInstrFunction-1)
@@ -10709,7 +10633,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"ReadNode" Lowerer'createReadArrayLength-3 [#_"ValueNode" array, #_"FixedNode" before, #_"LoweringTool" lowerer]
         (let [
-            #_"Graph" graph (:graph array)
+            #_"Graph" graph (:graph array)
             #_"ValueNode" canonicalArray (Lowerer'createNullCheckedValue-3 (GraphUtil'skipPiWhileNonNull-1 array), before, lowerer)
             #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, canonicalArray, HotSpot'arrayLengthOffset)
             #_"ReadNode" readArrayLength (Graph''add-2 graph, (ReadNode'new-4 address, NamedLocationIdentity'ARRAY_LENGTH, StampFactory'nonNegativeInt, :BarrierType'NONE))
@@ -10850,20 +10774,20 @@ ZeroExtendNode'new-4
             #_"ValueNode" arrayLength (ArrayLengthNode'readArrayLength-1 array)
             arrayLength
                 (if (some? arrayLength)
-                    (if (Node''isAlive-1 arrayLength) arrayLength (Graph''addOrUniqueWithInputs-2 (:graph node), arrayLength))
+                    (if (Node''isAlive-1 arrayLength) arrayLength (Graph''addOrUniqueWithInputs-2 (:graph node), arrayLength))
                     (Lowerer'createReadArrayLength-3 array, node, lowerer)
                 )
             #_"LogicNode" boundsCheck (IntegerBelowNode'create-2 (AccessIndexedNode''index-1 node), arrayLength)
         ]
             (when-not (LogicNode''isTautology-1 boundsCheck)
-                (LoweringTool''createGuard-5 lowerer, node, (Graph''addOrUniqueWithInputs-2 (:graph node), boundsCheck), :DeoptimizationReason'BoundsCheckException, :DeoptimizationAction'InvalidateReprofile)
+                (LoweringTool''createGuard-5 lowerer, node, (Graph''addOrUniqueWithInputs-2 (:graph node), boundsCheck), :DeoptimizationReason'BoundsCheckException, :DeoptimizationAction'InvalidateReprofile)
             )
         )
     )
 
     (defn #_"GuardingNode" Lowerer'createNullCheck-3 [#_"ValueNode" object, #_"FixedNode" before, #_"LoweringTool" lowerer]
         (when-not (StampTool'isPointerNeverNull-1 (:stamp object))
-            (LoweringTool''createGuard-6 lowerer, before, (Graph''add-2 (:graph before), (IsNullNode'create-1 object)), :DeoptimizationReason'NullCheckException, :DeoptimizationAction'InvalidateReprofile, true)
+            (LoweringTool''createGuard-6 lowerer, before, (Graph''add-2 (:graph before), (IsNullNode'create-1 object)), :DeoptimizationReason'NullCheckException, :DeoptimizationAction'InvalidateReprofile, true)
         )
     )
 
@@ -10872,7 +10796,7 @@ ZeroExtendNode'new-4
             #_"GuardingNode" nullCheck (Lowerer'createNullCheck-3 object, before, lowerer)
         ]
             (when (some? nullCheck) => object
-                (Graph''maybeAddOrUnique-2 (:graph before), (PiNode'create-3 object, (Stamp'''join-2 (:stamp object), StampFactory'objectNonNullStamp), nullCheck))
+                (Graph''maybeAddOrUnique-2 (:graph before), (PiNode'create-3 object, (Stamp'''join-2 (:stamp object), StampFactory'objectNonNullStamp), nullCheck))
             )
         )
     )
@@ -11448,8 +11372,8 @@ ZeroExtendNode'new-4
         (if (InstanceOfSnippetsTemplates'canMaterialize-1 usage)
             (MaterializationUsageReplacer'new-5 instantiation, (:trueValue usage), (:falseValue usage), instanceOf, usage)
             (let [
-                #_"ValueNode" trueValue (ConstantNode'forInt-2 1, (:graph usage))
-                #_"ValueNode" falseValue (ConstantNode'forInt-2 0, (:graph usage))
+                #_"ValueNode" trueValue (ConstantNode'forInt-2 1, (:graph usage))
+                #_"ValueNode" falseValue (ConstantNode'forInt-2 0, (:graph usage))
                 [trueValue falseValue]
                     (if (and (Instantiation''isInitialized-1 instantiation) (not (and (= trueValue (:trueValue instantiation)) (= falseValue (:falseValue instantiation)))))
                         ;; This code doesn't really care what values are used, so adopt the values from the previous instantiation.
@@ -11515,8 +11439,8 @@ ZeroExtendNode'new-4
                     ;; If non-nil, this is the only type that could pass the type check, because the target of the type check is a final
                     ;; class or has been speculated to be a final class and this value is the only concrete subclass of the target type.
                     #_"ResolvedJavaType" exact (when (and (some? targetType) (:exactReference targetType)) type)
-                    #_"ConstantNode" hub (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (HotSpotResolvedObjectType'''klass-1 type), (:graph instanceOf))
-                    #_"Graph" graph (:graph instanceOf)
+                    #_"ConstantNode" hub (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (HotSpotResolvedObjectType'''klass-1 type), (:graph instanceOf))
+                    #_"Graph" graph (:graph instanceOf)
                 ]
                     (cond
                         (some? exact)
@@ -11548,7 +11472,7 @@ ZeroExtendNode'new-4
                     #_"InstanceOfDynamicNode" instanceOf (:instanceOf replacer)
                     #_"ValueNode" object (:y instanceOf)
                 ]
-                    (Arguments'new-4* (:instanceofDynamic this), (:guardsStage (:graph instanceOf)), (:loweringStage lowerer),
+                    (Arguments'new-4* (:instanceofDynamic this), (:guardsStage (:graph instanceOf)), (:loweringStage lowerer),
                         (:x instanceOf),
                         object,
                         (:trueValue replacer),
@@ -11577,12 +11501,12 @@ ZeroExtendNode'new-4
         (let [
             #_"Arguments" args
                 (if (:useFastLocking this)
-                    (Arguments'new-4* (:monitorenter this), (:guardsStage (:graph node)), (:loweringStage lowerer),
+                    (Arguments'new-4* (:monitorenter this), (:guardsStage (:graph node)), (:loweringStage lowerer),
                         (:object node),
                         (:hub node),
                         (:lockDepth (:monitorId node))
                     )
-                    (Arguments'new-4* (:monitorenterStub this), (:guardsStage (:graph node)), (:loweringStage lowerer),
+                    (Arguments'new-4* (:monitorenterStub this), (:guardsStage (:graph node)), (:loweringStage lowerer),
                         (:object node),
                         (:lockDepth (:monitorId node))
                     )
@@ -11596,7 +11520,7 @@ ZeroExtendNode'new-4
     (defn #_"void" MonitorTemplates''lower-3o [#_"MonitorTemplates" this, #_"MonitorExitNode" node, #_"LoweringTool" lowerer]
         (let [
             #_"Arguments" args
-                (Arguments'new-4* (if (:useFastLocking this) (:monitorexit this) (:monitorexitStub this)), (:guardsStage (:graph node)), (:loweringStage lowerer),
+                (Arguments'new-4* (if (:useFastLocking this) (:monitorexit this) (:monitorexitStub this)), (:guardsStage (:graph node)), (:loweringStage lowerer),
                     (:object node),
                     (:lockDepth (:monitorId node))
                 )
@@ -11621,9 +11545,9 @@ ZeroExtendNode'new-4
         (let [
             #_"HotSpotResolvedObjectType" type (:instanceClass node)
             #_"Arguments" args
-                (Arguments'new-4* (:allocateInstance this), (:guardsStage (:graph node)), (:loweringStage lowerer),
+                (Arguments'new-4* (:allocateInstance this), (:guardsStage (:graph node)), (:loweringStage lowerer),
                     (HotSpotResolvedObjectType'''instanceSize-1 type),
-                    (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (HotSpotResolvedObjectType'''klass-1 type), (:graph node)),
+                    (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (HotSpotResolvedObjectType'''klass-1 type), (:graph node)),
                     (HotSpotResolvedObjectType'''prototypeMarkWord-1 type)
                 )
         ]
@@ -11638,9 +11562,9 @@ ZeroExtendNode'new-4
             #_"JavaKind" elementKind (JavaType'''getJavaKind-1 (:elementType node))
             #_"ValueNode" length (ArrayLengthProvider'''length-1 node)
             #_"Arguments" args
-                (Arguments'new-4* (:allocateArray this), (:guardsStage (:graph node)), (:loweringStage lowerer),
-                    (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (HotSpotResolvedObjectType'''klass-1 arrayType), (:graph node)),
-                    (if (Node''isAlive-1 length) length (Graph''addOrUniqueWithInputs-2 (:graph node), length)),
+                (Arguments'new-4* (:allocateArray this), (:guardsStage (:graph node)), (:loweringStage lowerer),
+                    (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (HotSpotResolvedObjectType'''klass-1 arrayType), (:graph node)),
+                    (if (Node''isAlive-1 length) length (Graph''addOrUniqueWithInputs-2 (:graph node), length)),
                     (HotSpotResolvedObjectType'''prototypeMarkWord-1 arrayType),
                     (HotSpot'arrayBaseOffset-1 elementKind),
                     (NumUtil'log2-1 (HotSpot'arrayIndexScale-1 elementKind)),
@@ -11665,7 +11589,7 @@ ZeroExtendNode'new-4
     (defn #_"void" UnsafeLoadTemplates''lower-3 [#_"UnsafeLoadTemplates" this, #_"RawLoadNode" node, #_"LoweringTool" lowerer]
         (let [
             #_"Arguments" args
-                (Arguments'new-4* (:lowerUnsafeLoad this), (:guardsStage (:graph node)), (:loweringStage lowerer),
+                (Arguments'new-4* (:lowerUnsafeLoad this), (:guardsStage (:graph node)), (:loweringStage lowerer),
                     (:object node),
                     (:offset node)
                 )
@@ -11694,10 +11618,10 @@ ZeroExtendNode'new-4
         (let [
             #_"Arguments" args
                 (if (:precise? node)
-                    (Arguments'new-4* (:serialPreciseWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage lowerer),
+                    (Arguments'new-4* (:serialPreciseWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage lowerer),
                         (:address node)
                     )
-                    (Arguments'new-4* (:serialImpreciseWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage lowerer),
+                    (Arguments'new-4* (:serialImpreciseWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage lowerer),
                         (AddressNode'''getBase-1 (:address node))
                     )
                 )
@@ -11715,7 +11639,7 @@ ZeroExtendNode'new-4
                     (CompressionNode'uncompress-2 expected, (:oopEncoding this))
                 )
             #_"Arguments" args
-                (Arguments'new-4* (:g1PreWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage lowerer),
+                (Arguments'new-4* (:g1PreWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage lowerer),
                     (:address node),
                     (when (satisfies? OffsetAddressNode (:address node)) (AddressNode'''getBase-1 (:address node))),
                     expected,
@@ -11736,7 +11660,7 @@ ZeroExtendNode'new-4
                     (CompressionNode'uncompress-2 expected, (:oopEncoding this))
                 )
             #_"Arguments" args
-                (Arguments'new-4* (:g1ReferentReadBarrier this), (:guardsStage (:graph node)), (:loweringStage lowerer),
+                (Arguments'new-4* (:g1ReferentReadBarrier this), (:guardsStage (:graph node)), (:loweringStage lowerer),
                     (:address node),
                     (when (satisfies? OffsetAddressNode (:address node)) (AddressNode'''getBase-1 (:address node))),
                     expected,
@@ -11750,14 +11674,14 @@ ZeroExtendNode'new-4
     )
 
     (§ defn #_"void" WriteBarrierTemplates''lower-3 [#_"WriteBarrierTemplates" this, #_"G1PostWriteBarrier" node, #_"LoweringTool" lowerer]
-        (when-not (:always-nil? node) => (Graph''removeFixed-2 (:graph node), node)
+        (when-not (:always-nil? node) => (Graph''removeFixed-2 (:graph node), node)
             (let [
                 #_"ValueNode" value
                     (when (satisfies? NarrowOopStamp (:stamp (:value node))) => (:value node)
                         (CompressionNode'uncompress-2 (:value node), (:oopEncoding this))
                     )
                 #_"Arguments" args
-                    (Arguments'new-4* (:g1PostWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage lowerer),
+                    (Arguments'new-4* (:g1PostWriteBarrier this), (:guardsStage (:graph node)), (:loweringStage lowerer),
                         (:address node),
                         (when (satisfies? OffsetAddressNode (:address node)) (AddressNode'''getBase-1 (:address node))),
                         value,
@@ -11899,7 +11823,7 @@ ZeroExtendNode'new-4
                     (and (some? (:heapBaseRegister this)) (= (:base encoding) (:heapBase this)))
                         (and (nil? other)
                             (do
-                                (§ ass! addr (AMD64AddressNode''setBase-2 addr, (Graph''add-2 (:graph compression), (HeapBaseNode'new-1 (:heapBaseRegister this)))))
+                                (§ ass! addr (AMD64AddressNode''setBase-2 addr, (Graph''add-2 (:graph compression), (HeapBaseNode'new-1 (:heapBaseRegister this)))))
                                 true
                             )
                         )
@@ -12030,10 +11954,10 @@ ZeroExtendNode'new-4
         (let [
             #_"AMD64AddressNode" addr (AMD64AddressNode'new-2 base, offset)
         ]
-            (while (AddressLowering''improve-5 this, (:graph base), addr, false, false)
+            (while (AddressLowering''improve-5 this, (:graph base), addr, false, false)
                 nil
             )
-            (Graph''add-2 (:graph base), addr)
+            (Graph''add-2 (:graph base), addr)
         )
     )
 
@@ -15985,7 +15909,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"ValueNode" BytecodeParser''addPush-3 [#_"BytecodeParser" this, #_"JavaKind" kind, #_"ValueNode" value]
         (let [
-            value (if (some? (:graph value)) value (BytecodeParser''append-2 this, value))
+            value (if (some? (:graph value)) value (BytecodeParser''append-2 this, value))
             _ (§ ass! this (BytecodeParser''push-3 this, kind, value))
         ]
             (when (and (satisfies? StateSplit value) (nil? (:stateAfter value)) (StateSplit'''hasSideEffect-1 value)) => value
@@ -16585,7 +16509,7 @@ ZeroExtendNode'new-4
      ; @return either the node added or an equivalent node
      ;;
     (defn #_"ValueNode" BytecodeParser''append-2 [#_"BytecodeParser" this, #_"ValueNode" node]
-        (if (some? (:graph node))
+        (if (some? (:graph node))
             node
             (let [
                 #_"ValueNode" added (Graph''addOrUniqueWithInputs-2 (:graph this), node)
@@ -16636,7 +16560,7 @@ ZeroExtendNode'new-4
             #_"ConstantNode" falseValue (Graph''add-2 (:graph this), (ConstantNode'forInt-1 falseBlockInt))
             #_"ValueNode" conditionalNode (ConditionalNode'create-3 logic, trueValue, falseValue)
             conditionalNode
-                (when (nil? (:graph conditionalNode)) => conditionalNode
+                (when (nil? (:graph conditionalNode)) => conditionalNode
                     (Graph''addOrUniqueWithInputs-2 (:graph this), conditionalNode)
                 )
         ]
@@ -16683,7 +16607,7 @@ ZeroExtendNode'new-4
         ]
             (when-not (satisfies? LogicConstantNode logic) => (BytecodeParser''genConstantTargetIf-4 this, trueBlock, falseBlock, logic)
                 (let [
-                    logic (if (nil? (:graph logic)) (BytecodeParser''genUnique-2 this, logic) logic)
+                    logic (if (nil? (:graph logic)) (BytecodeParser''genUnique-2 this, logic) logic)
                     #_"int" oldBci (:curBCI (:stream this))
                     #_"int" trueBlockInt (BytecodeParser''checkPositiveIntConstantPushed-2 this, trueBlock)
                 ]
@@ -21675,7 +21599,7 @@ ZeroExtendNode'new-4
                     (§ ass secondIfTrueProbability (ExpandLogicPhase'sanitizeProbability-1 (- 1.0 (/ (ControlSplitNode'''probability-2 ifNode, falseTarget) (- 1.0 firstIfTrueProbability)))))
                 )
             _ (Node''clearSuccessors-1 ifNode)
-            #_"Graph" graph (:graph ifNode)
+            #_"Graph" graph (:graph ifNode)
             #_"AbstractMergeNode" trueTargetMerge (Graph''add-2 graph, (MergeNode'new-0))
             trueTargetMerge (FixedWithNextNode''setNext-2 trueTargetMerge, trueTarget)
             #_"EndNode" firstTrueEnd (Graph''add-2 graph, (EndNode'new-0))
@@ -21706,7 +21630,7 @@ ZeroExtendNode'new-4
         (let [
             #_"ValueNode" trueTarget (:trueValue conditional)
             #_"ValueNode" falseTarget (:falseValue conditional)
-            #_"Graph" graph (:graph conditional)
+            #_"Graph" graph (:graph conditional)
             #_"ConditionalNode" secondConditional (Graph''add-2 graph, (ConditionalNode'new-3 y, (if yNegated falseTarget trueTarget), (if yNegated trueTarget falseTarget)))
             #_"ConditionalNode" firstConditional (Graph''add-2 graph, (ConditionalNode'new-3 x, (if xNegated secondConditional trueTarget), (if xNegated trueTarget secondConditional)))
             _ (§ ass! conditional (Node''replaceAndDelete-2 conditional, firstConditional))
@@ -21733,7 +21657,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" ExpandLogicPhase'processNormalizeCompareNode-1 [#_"NormalizeCompareNode" normalize]
         (let [
-            #_"Graph" graph (:graph normalize)
+            #_"Graph" graph (:graph normalize)
             #_"ValueNode" x (:x normalize)
             #_"ValueNode" y (:y normalize)
             #_"LogicNode" equalComp (Graph''addOrUniqueWithInputs-2 graph, (IntegerEqualsNode'create-2 x, y))
@@ -22167,7 +22091,7 @@ ZeroExtendNode'new-4
                                         ]
                                             (cond
                                                 (not= replacement oldEdge)                                  replacement
-                                                (and (= (:graph oldEdge) graph) (= type :EdgesType'Inputs)) oldEdge ;; patch to the outer world
+                                                (and (= (:graph oldEdge) graph) (= type :EdgesType'Inputs)) oldEdge ;; patch to the outer world
                                             )
                                         )
                                     )
@@ -22200,7 +22124,7 @@ ZeroExtendNode'new-4
                             ]
                                 (cond
                                     (not= replacement node)                                  replacement
-                                    (and (= (:graph node) graph) (= type :EdgesType'Inputs)) node ;; patch to the outer world
+                                    (and (= (:graph node) graph) (= type :EdgesType'Inputs)) node ;; patch to the outer world
                                 )
                             )
                         )
@@ -22472,9 +22396,6 @@ ZeroExtendNode'new-4
                     ]
                         (when (some? n)
                             (§ ass! n (Node''removeUsage-2 n, node))
-                            (when (Node''hasNoUsages-1 n)
-                                (Node''maybeNotifyZeroUsages-2 node, n)
-                            )
                             (§ ass! node (Edges'putNodeUnsafe-3 node, offset, nil))
                         )
                     )
@@ -22488,9 +22409,6 @@ ZeroExtendNode'new-4
                                 ]
                                     (when (some? n)
                                         (§ ass! n (Node''removeUsage-2 n, node))
-                                        (when (Node''hasNoUsages-1 n)
-                                            (Node''maybeNotifyZeroUsages-2 node, n)
-                                        )
                                     )
                                 )
                             )
@@ -24177,7 +24095,6 @@ ZeroExtendNode'new-4
                          ; The number of nodes which have been deleted from this graph.
                          ;;
                         #_"int" :nodesDeleted 0
-                        #_"NodeEventListener" :nodeEventListener nil
                         #_"StartNode" :start nil
                         ;;;
                          ; The root method from which this graph was built, or nil
@@ -24210,7 +24127,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"Node" Graph''add-2 [#_"Graph" this, #_"Node" node]
         (let [
-            _ (§ ass! node (assoc node :graph this))
+            _ (§ ass! node (assoc node :graph this))
             _ (§ ass! this (Graph''register-2 this, node))
             #_"NodeClass<? implements Node>" c (:nodeClass node)
         ]
@@ -24264,24 +24181,15 @@ ZeroExtendNode'new-4
         (let [
             #_"int" id (count (:gNodes this))
             _ (§ ass! node (assoc node :nid id))
-            this (update this :gNodes assoc' id node)
         ]
-            (when (some? (:nodeEventListener this))
-                (NodeEventListener''event-3 (:nodeEventListener this), :NodeEvent'NODE_ADDED, node)
-            )
-            this
+            (update this :gNodes assoc' id node)
         )
     )
 
     (defn #_"this" Graph''unregister-2 [#_"Graph" this, #_"Node" node]
-        (let [
-            this (update this :gNodes assoc' (:nid node) nil)
-            this (update this :nodesDeleted inc)
-        ]
-            (when (some? (:nodeEventListener this))
-                (NodeEventListener''event-3 (:nodeEventListener this), :NodeEvent'NODE_ADDED, node)
-            )
-            this
+        (-> this
+            (update :gNodes assoc' (:nid node) nil)
+            (update :nodesDeleted inc)
         )
     )
 
@@ -24674,7 +24582,7 @@ ZeroExtendNode'new-4
     (defm MaterializationUsageReplacer InstanceOfUsageReplacer
         (#_"this" InstanceOfUsageReplacer'''replaceUsingInstantiation-1 [#_"MaterializationUsageReplacer" this]
             (let [
-                #_"ValueNode" newValue (Instantiation''asMaterialization-4 (:instantiation this), (:graph (:usage this)), (:trueValue this), (:falseValue this))
+                #_"ValueNode" newValue (Instantiation''asMaterialization-4 (:instantiation this), (:graph (:usage this)), (:trueValue this), (:falseValue this))
                 this (update this :usage Node''replaceAtUsages-2 newValue)
             ]
                 (GraphUtil'killWithUnusedFloatingInputs-1 (:usage this))
@@ -24770,12 +24678,12 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"LogicNode" Instantiation''asCondition-2 [#_"Instantiation" this, #_"ValueNode" testValue]
         (if (satisfies? ConstantNode (:result this))
-            (LogicConstantNode'forBoolean-2 (= (:value (:result this)) (ValueNode''asConstant-1 testValue)), (:graph (:result this)))
+            (LogicConstantNode'forBoolean-2 (= (:value (:result this)) (ValueNode''asConstant-1 testValue)), (:graph (:result this)))
             (let [
                 _
                     (when-not (and (some? (:logic this)) (satisfies? CompareNode (:logic this)) (= (:y (:logic this)) testValue))
                         ;; re-use previously generated condition if the trueValue for the test is the same
-                        (§ ass! this (assoc this :logic (CompareNode'createCompareNode-4g (:graph (:result this)), CanonicalCondition'EQ, (:result this), testValue)))
+                        (§ ass! this (assoc this :logic (CompareNode'createCompareNode-4g (:graph (:result this)), CanonicalCondition'EQ, (:result this), testValue)))
                     )
             ]
                 (:logic this)
@@ -33392,7 +33300,7 @@ ZeroExtendNode'new-4
                                                 ;; For example the when a FixedGuard followed by a loop exit is lowered to
                                                 ;; a control-split + deopt.
                                                 (let [
-                                                    #_"AbstractBeginNode" begin (Graph''add-2 (:graph node), (BeginNode'new-0))
+                                                    #_"AbstractBeginNode" begin (Graph''add-2 (:graph node), (BeginNode'new-0))
                                                 ]
                                                     (Node''replaceFirstSuccessor-3 predecessor, nextNode, begin)
                                                     (FixedWithNextNode''setNext-2 begin, nextNode)
@@ -33430,7 +33338,7 @@ ZeroExtendNode'new-4
 
     (defn #_"GuardingNode" LoweringTool''createGuard-6 [#_"LoweringTool" this, #_"FixedNode" before, #_"LogicNode" logic, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action, #_"boolean" negated?]
         (let [
-            #_"Graph" graph (:graph before)
+            #_"Graph" graph (:graph before)
         ]
             (when GraalOptions'optEliminateGuards
                 (loop-when [#_"seq" s (seq (:nodeUsages logic))] (some? s)
@@ -33444,7 +33352,7 @@ ZeroExtendNode'new-4
                     )
                 )
             )
-            (if (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph logic)))
+            (if (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph logic)))
                 (let [
                     #_"GuardNode" newGuard (Graph''add-2 graph, (GuardNode'new-5 logic, (:guardAnchor this), reason, action, negated?))
                     _
@@ -34094,165 +34002,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns NodeEventListener []
-    (defn #_"NodeEventListener" NodeEventListener'new-0 []
-        (NodeEventListener'class.)
-    )
-
-    ;;;
-     ; A method called when a change event occurs.
-     ;
-     ; This method dispatches the event to user-defined triggers. The methods that change the
-     ; graph (typically in Graph and Node) must call this method to dispatch the event.
-     ;
-     ; @param e an event
-     ; @param node the node related to {@code e}
-     ;;
-    (defn #_"void" NodeEventListener''event-3 [#_"NodeEventListener" this, #_"NodeEvent" e, #_"Node" node]
-        (condp = e
-            :NodeEvent'INPUT_CHANGED (NodeEventListener'''inputChanged-2 this, node)
-            :NodeEvent'ZERO_USAGES   (NodeEventListener'''usagesDroppedToZero-2 this, node)
-            :NodeEvent'NODE_ADDED    (NodeEventListener'''nodeAdded-2 this, node)
-            :NodeEvent'NODE_REMOVED  (NodeEventListener'''nodeRemoved-2 this, node)
-            nil
-        )
-        (NodeEventListener'''changed-3 this, e, node)
-        nil
-    )
-
-    (defm NodeEventListener NodeEventListener
-        (#_"void" NodeEventListener'''changed-3 [#_"NodeEventListener" this, #_"NodeEvent" e, #_"Node" node]
-            nil
-        )
-
-        (#_"void" NodeEventListener'''inputChanged-2 [#_"NodeEventListener" this, #_"Node" node]
-            nil
-        )
-
-        (#_"void" NodeEventListener'''usagesDroppedToZero-2 [#_"NodeEventListener" this, #_"Node" node]
-            nil
-        )
-
-        (#_"void" NodeEventListener'''nodeAdded-2 [#_"NodeEventListener" this, #_"Node" node]
-            nil
-        )
-
-        (#_"void" NodeEventListener'''nodeRemoved-2 [#_"NodeEventListener" this, #_"Node" node]
-            nil
-        )
-    )
-)
-
-(class-ns ChainedNodeEventListener [NodeEventListener]
-    (defn #_"ChainedNodeEventListener" ChainedNodeEventListener'new-2 [#_"NodeEventListener" head, #_"NodeEventListener" _next]
-        (merge (ChainedNodeEventListener'class.) (NodeEventListener'new-0)
-            (hash-map
-                #_"NodeEventListener" :head head
-                #_"NodeEventListener" :next _next
-            )
-        )
-    )
-
-    (defm ChainedNodeEventListener NodeEventListener
-        (#_"void" NodeEventListener'''nodeAdded-2 [#_"ChainedNodeEventListener" this, #_"Node" node]
-            (NodeEventListener''event-3 (:head this), :NodeEvent'NODE_ADDED, node)
-            (NodeEventListener''event-3 (:next this), :NodeEvent'NODE_ADDED, node)
-            nil
-        )
-
-        (#_"void" NodeEventListener'''inputChanged-2 [#_"ChainedNodeEventListener" this, #_"Node" node]
-            (NodeEventListener''event-3 (:head this), :NodeEvent'INPUT_CHANGED, node)
-            (NodeEventListener''event-3 (:next this), :NodeEvent'INPUT_CHANGED, node)
-            nil
-        )
-
-        (#_"void" NodeEventListener'''usagesDroppedToZero-2 [#_"ChainedNodeEventListener" this, #_"Node" node]
-            (NodeEventListener''event-3 (:head this), :NodeEvent'ZERO_USAGES, node)
-            (NodeEventListener''event-3 (:next this), :NodeEvent'ZERO_USAGES, node)
-            nil
-        )
-
-        (#_"void" NodeEventListener'''nodeRemoved-2 [#_"ChainedNodeEventListener" this, #_"Node" node]
-            (NodeEventListener''event-3 (:head this), :NodeEvent'NODE_REMOVED, node)
-            (NodeEventListener''event-3 (:next this), :NodeEvent'NODE_REMOVED, node)
-            nil
-        )
-
-        (#_"void" NodeEventListener'''changed-3 [#_"ChainedNodeEventListener" this, #_"NodeEvent" e, #_"Node" node]
-            (NodeEventListener''event-3 (:head this), e, node)
-            (NodeEventListener''event-3 (:next this), e, node)
-            nil
-        )
-    )
-)
-
-;;;
- ; A simple NodeEventListener implementation that accumulates event nodes in a HashSet.
- ;;
-(class-ns HashSetNodeEventListener [NodeEventListener]
-    ;;;
-     ; Creates a NodeEventListener that collects nodes from all events that match a given filter.
-     ;;
-    (defn- #_"HashSetNodeEventListener" HashSetNodeEventListener'new-1 [#_"{NodeEvent}" filter]
-        (merge (HashSetNodeEventListener'class.) (NodeEventListener'new-0)
-            (hash-map
-                ;;;
-                 ; The set being used to accumulate the nodes communicated to this listener.
-                 ;;
-                #_"{Node}" :changedNodes #{}
-                #_"{NodeEvent}" :filter filter
-            )
-        )
-    )
-
-    ;;;
-     ; Creates a NodeEventListener that collects nodes from all events.
-     ;;
-    (defn #_"HashSetNodeEventListener" HashSetNodeEventListener'new-0 []
-        (HashSetNodeEventListener'new-1 NodeEvent'SET)
-    )
-
-    (defm HashSetNodeEventListener NodeEventListener
-        (#_"void" NodeEventListener'''changed-3 [#_"HashSetNodeEventListener" this, #_"NodeEvent" e, #_"Node" node]
-            (when (contains? (:filter this) e)
-                (§ ass! this (update this :changedNodes conj node))
-            )
-            nil
-        )
-    )
-)
-
-;;;
- ; Registers a given NodeEventListener with the enclosing graph until this object is {@linkplain #close() closed}.
- ;;
-(class-ns NodeEventScope [#_"AutoCloseable"]
-    (defn #_"NodeEventScope" NodeEventScope'new-2 [#_"Graph" graph, #_"NodeEventListener" listener]
-        (let [
-            #_"NodeEventScope" this
-                (merge (NodeEventScope'class.)
-                    (hash-map
-                        #_"Graph" :graph graph
-                    )
-                )
-            _
-                (if (nil? (:nodeEventListener (:graph this)))
-                    (§ ass! (:nodeEventListener (:graph this)) listener)
-                    (§ ass! (:nodeEventListener (:graph this)) (ChainedNodeEventListener'new-2 listener, (:nodeEventListener (:graph this))))
-                )
-        ]
-            this
-        )
-    )
-
-    (§ override! #_"void" #_"AutoCloseable." close [#_"NodeEventScope" this]
-        (if (satisfies? ChainedNodeEventListener (:nodeEventListener (:graph this)))
-            (§ ass! (:nodeEventListener (:graph this)) (:next (:nodeEventListener (:graph this))))
-            (§ ass! (:nodeEventListener (:graph this)) nil)
-        )
-        nil
-    )
-)
-
 ;;;
  ; This class is the base class for all nodes. It represents a node that can be inserted in a Graph.
  ;
@@ -34273,7 +34022,7 @@ ZeroExtendNode'new-4
             (hash-map
                 #_"NodeClass<? implements Node>" :nodeClass nil
                 #_"int" :nid Node'INITIAL_ID
-                #_"Graph" :graph nil
+                #_"Graph" :graph nil
                 #_"[Node]" :nodeUsages []
                 #_"Node" :predecessor nil
             )
@@ -34366,19 +34115,6 @@ ZeroExtendNode'new-4
         (<= Node'ALIVE_ID_START (:nid this))
     )
 
-    (defn- #_"void" Node''maybeNotifyInputChanged-2 [#_"Node" this, #_"Node" node]
-        (when (some? (:graph this))
-            (let [
-                #_"NodeEventListener" listener (:nodeEventListener (:graph this))
-            ]
-                (when (some? listener)
-                    (NodeEventListener''event-3 listener, :NodeEvent'INPUT_CHANGED, node)
-                )
-            )
-        )
-        nil
-    )
-
     ;;;
      ; Updates the usages sets of the given nodes after an input slot is changed from
      ; {@code oldInput} to {@code newInput} by removing this node from {@code oldInput}'s usages and
@@ -34389,12 +34125,8 @@ ZeroExtendNode'new-4
             (when (some? oldInput)
                 (§ ass! oldInput (Node''removeUsage-2 oldInput, this))
             )
-            (Node''maybeNotifyInputChanged-2 this, this)
             (when (some? newInput)
                 (§ ass! newInput (Node''addUsage-2 newInput, this))
-            )
-            (when (and (some? oldInput) (Node''hasNoUsages-1 oldInput))
-                (Node''maybeNotifyZeroUsages-2 this, oldInput)
             )
         )
         nil
@@ -34418,33 +34150,29 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"this" Node''replaceAtUsages-2 [#_"Node" this, #_"Node" other]
-        (Node''replaceAtAllUsages-3 this, other, nil)
+        (Node''replaceAtAllUsages-2 this, other)
     )
 
     (defn #_"this" Node''replaceAtUsagesAndDelete-2 [#_"Node" this, #_"Node" other]
         (let [
-            this (Node''replaceAtAllUsages-3 this, other, this)
+            this (Node''replaceAtAllUsages-2 this, other)
         ]
             (Node''safeDelete-1 this)
         )
     )
 
-    (defn- #_"void" Node''replaceAtUsage-4 [#_"Node" this, #_"Node" other, #_"Node" toBeDeleted, #_"Node" usage]
+    (defn- #_"void" Node''replaceAtUsage-3 [#_"Node" this, #_"Node" other, #_"Node" usage]
         (NodeClass''replaceFirstInput-4 (:nodeClass usage), usage, this, other)
-        ;; Don't notify for nodes which are about to be deleted.
-        (when (or (nil? toBeDeleted) (not= usage toBeDeleted))
-            (Node''maybeNotifyInputChanged-2 this, usage)
-        )
         (when (some? other)
             (§ ass! other (Node''addUsage-2 other, usage))
         )
         nil
     )
 
-    (defn #_"this" Node''replaceAtAllUsages-3 [#_"Node" this, #_"Node" other, #_"Node" toBeDeleted]
+    (defn #_"this" Node''replaceAtAllUsages-2 [#_"Node" this, #_"Node" other]
         (when (seq (:nodeUsages this)) => this
             (doseq [#_"Node" node (:nodeUsages this)]
-                (Node''replaceAtUsage-4 this, other, toBeDeleted, node)
+                (Node''replaceAtUsage-3 this, other, node)
             )
             (assoc this :nodeUsages [])
         )
@@ -34454,19 +34182,6 @@ ZeroExtendNode'new-4
         (doseq [#_"Node" usage (:nodeUsages this) #_"Position" pos (Node''inputPositions-1 usage)]
             (when (and (= (Position''getInputType-1 pos) type) (= (Position''get-2 pos, usage) this))
                 (Position''set-3 pos, usage, other)
-            )
-        )
-        nil
-    )
-
-    (defn #_"void" Node''maybeNotifyZeroUsages-2 [#_"Node" this, #_"Node" node]
-        (when (some? (:graph this))
-            (let [
-                #_"NodeEventListener" listener (:nodeEventListener (:graph this))
-            ]
-                (when (and (some? listener) (Node''isAlive-1 node))
-                    (NodeEventListener''event-3 listener, :NodeEvent'ZERO_USAGES, node)
-                )
             )
         )
         nil
@@ -34531,7 +34246,7 @@ ZeroExtendNode'new-4
 
     (defn #_"this" Node''markDeleted-1 [#_"Node" this]
         (-> this
-            (update :graph Graph''unregister-2 this)
+            (update :graph Graph''unregister-2 this)
             (update :nid #(- Node'DELETED_ID_START %))
         )
     )
@@ -34565,7 +34280,7 @@ ZeroExtendNode'new-4
             node (assoc node :nodeClass (:nodeClass this))
             _ (Node''copyOrClearEdgesForClone-4 this, node, :EdgesType'Inputs, edgesToCopy)
             _ (Node''copyOrClearEdgesForClone-4 this, node, :EdgesType'Successors, edgesToCopy)
-            node (assoc node :graph graph)
+            node (assoc node :graph graph)
             node (assoc node :nid Node'INITIAL_ID)
             _
                 (when (some? graph)
@@ -35149,13 +34864,13 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"void" IntegerExactArithmeticSplitNode'lower-2 [#_"LoweringTool" lowerer, #_"IntegerExactArithmeticNode" node]
-        (when (= (:guardsStage (:graph node)) :GuardsStage'FIXED_DEOPTS)
+        (when (= (:guardsStage (:graph node)) :GuardsStage'FIXED_DEOPTS)
             (let [
                 #_"FixedWithNextNode" previous (:lastFixedNode lowerer)
                 #_"FixedNode" _next (:next previous)
                 _ (§ ass! previous (FixedWithNextNode''setNext-2 previous, nil))
-                #_"DeoptimizeNode" deopt (Graph''add-2 (:graph node), (DeoptimizeNode'new-2 :DeoptimizationAction'InvalidateReprofile, :DeoptimizationReason'ArithmeticException))
-                #_"AbstractBeginNode" normalBegin (Graph''add-2 (:graph node), (BeginNode'new-0))
+                #_"DeoptimizeNode" deopt (Graph''add-2 (:graph node), (DeoptimizeNode'new-2 :DeoptimizationAction'InvalidateReprofile, :DeoptimizationReason'ArithmeticException))
+                #_"AbstractBeginNode" normalBegin (Graph''add-2 (:graph node), (BeginNode'new-0))
                 _ (§ ass! normalBegin (FixedWithNextNode''setNext-2 normalBegin, _next))
                 #_"IntegerExactArithmeticSplitNode" split (IntegerExactArithmeticNode'''createSplit-3 node, normalBegin, (BeginNode'begin-1 deopt))
                 _ (§ ass! previous (FixedWithNextNode''setNext-2 previous, split))
@@ -35457,7 +35172,7 @@ ZeroExtendNode'new-4
     (defn #_"AbstractBeginNode" BeginNode'begin-1 [#_"FixedNode" with]
         (when-not (satisfies? AbstractBeginNode with) => with
             (let [
-                #_"BeginNode" begin (Graph''add-2 (:graph with), (BeginNode'new-0))
+                #_"BeginNode" begin (Graph''add-2 (:graph with), (BeginNode'new-0))
             ]
                 (FixedWithNextNode''setNext-2 begin, with)
             )
@@ -35719,7 +35434,7 @@ ZeroExtendNode'new-4
                 #_"LoopExitNode" loopexit (first s)
                 _ (LoopExitNode''removeProxies-1 loopexit)
                 #_"FrameState" loopStateAfter (:stateAfter loopexit)
-                this (update this :graph Graph''replaceFixedWithFixed-3 loopexit, (Graph''add-2 (:graph this), (BeginNode'new-0)))
+                this (update this :graph Graph''replaceFixedWithFixed-3 loopexit, (Graph''add-2 (:graph this), (BeginNode'new-0)))
             ]
                 (when (some? loopStateAfter)
                     (GraphUtil'tryKillUnused-1 loopStateAfter)
@@ -35896,12 +35611,12 @@ ZeroExtendNode'new-4
         (#_"this" Lowerable'''lower-2 [#_"MonitorEnterNode" this, #_"LoweringTool" lowerer]
             (let [
                 #_"ValueNode" object (Lowerer'createNullCheckedValue-3 (:object this), this, lowerer)
-                #_"ValueNode" hub (Graph''add-2 (:graph this), (LoadHubNode'create-1 object))
-                #_"RawMonitorEnterNode" rawMonitorEnter (Graph''add-2 (:graph this), (RawMonitorEnterNode'new-3 object, hub, (:monitorId this)))
+                #_"ValueNode" hub (Graph''add-2 (:graph this), (LoadHubNode'create-1 object))
+                #_"RawMonitorEnterNode" rawMonitorEnter (Graph''add-2 (:graph this), (RawMonitorEnterNode'new-3 object, hub, (:monitorId this)))
                 _ (§ ass! rawMonitorEnter (DeoptBefore'''setStateBefore-2 rawMonitorEnter, (:stateBefore this)))
                 _ (§ ass! rawMonitorEnter (StateSplit'''setStateAfter-2 rawMonitorEnter, (:stateAfter this)))
             ]
-                (update this :graph Graph''replaceFixedWithFixed-3 this, rawMonitorEnter)
+                (update this :graph Graph''replaceFixedWithFixed-3 this, rawMonitorEnter)
             )
         )
     )
@@ -35923,7 +35638,7 @@ ZeroExtendNode'new-4
 
     (defm MonitorExitNode Lowerable
         (#_"this" Lowerable'''lower-2 [#_"MonitorExitNode" this, #_"LoweringTool" lowerer]
-            (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
+            (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
                 (MonitorTemplates''lower-3o Lowerer'monitorSnippets, this, lowerer)
             )
             this
@@ -35953,7 +35668,7 @@ ZeroExtendNode'new-4
 
     (defm RawMonitorEnterNode Lowerable
         (#_"this" Lowerable'''lower-2 [#_"RawMonitorEnterNode" this, #_"LoweringTool" lowerer]
-            (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
+            (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
                 (MonitorTemplates''lower-3i Lowerer'monitorSnippets, this, lowerer)
             )
             this
@@ -36020,7 +35735,7 @@ ZeroExtendNode'new-4
     (defm AtomicReadAndWriteNode Lowerable
         (#_"this" Lowerable'''lower-2 [#_"AtomicReadAndWriteNode" this, #_"LoweringTool" lowerer]
             (let [
-                #_"Graph" graph (:graph this)
+                #_"Graph" graph (:graph this)
                 #_"ValueNode" newValue (Lowerer'implicitStoreConvert-3 graph, (:javaKind this), (:newValue this))
                 #_"AddressNode" address (Graph''add-2 graph, (OffsetAddressNode'new-2 (:object this), (:offset this)))
                 #_"BarrierType" barrierType (Lowerer'storeBarrierType-2 (:object this), (:newValue this))
@@ -36195,7 +35910,7 @@ ZeroExtendNode'new-4
                             )
                         )
                     #_"[JavaType]" signature (Signature''toParameterTypes-2 (JavaMethod'''getSignature-1 (:targetMethod callTarget)), (when-not (MethodCallTargetNode''isStatic-1 callTarget) (JavaMethod'''getDeclaringType-1 (:targetMethod callTarget))))
-                    #_"LoweredCallTargetNode" loweredCallTarget (Graph''add-2 (:graph this), (HotSpotDirectCallTargetNode'new-6 parameters, (:returnStamp callTarget), signature, (:targetMethod callTarget), :CallingConventionType'JavaCall, (:invokeKind callTarget)))
+                    #_"LoweredCallTargetNode" loweredCallTarget (Graph''add-2 (:graph this), (HotSpotDirectCallTargetNode'new-6 parameters, (:returnStamp callTarget), signature, (:targetMethod callTarget), :CallingConventionType'JavaCall, (:invokeKind callTarget)))
                     _ (§ ass! callTarget (Node''replaceAndDelete-2 callTarget, loweredCallTarget))
                 ]
                     this
@@ -36265,7 +35980,7 @@ ZeroExtendNode'new-4
     (defm UnsafeCompareAndSwapNode Lowerable
         (#_"this" Lowerable'''lower-2 [#_"UnsafeCompareAndSwapNode" this, #_"LoweringTool" lowerer]
             (let [
-                #_"Graph" graph (:graph this)
+                #_"Graph" graph (:graph this)
                 #_"ValueNode" expectedValue (Lowerer'implicitStoreConvert-3 graph, (:javaKind this), (:expected this))
                 #_"ValueNode" newValue (Lowerer'implicitStoreConvert-3 graph, (:javaKind this), (:newValue this))
                 #_"AddressNode" address (Graph''add-2 graph, (OffsetAddressNode'new-2 (:object this), (:offset this)))
@@ -36347,12 +36062,12 @@ ZeroExtendNode'new-4
             #_"ValueNode" array (Lowerer'createNullCheckedValue-3 (:array this), this, lowerer)
             #_"Stamp" loadStamp (Lowerer'loadStamp-3 (:stamp this), (:elementKind this), true)
             #_"GuardingNode" boundsCheck (Lowerer'getBoundsCheck-3 this, array, lowerer)
-            #_"AddressNode" address (AccessIndexedNode'createArrayIndexAddress-5 (:graph this), array, (:elementKind this), (AccessIndexedNode''index-1 this), boundsCheck)
-            #_"ReadNode" memoryRead (Graph''add-2 (:graph this), (ReadNode'new-4 address, (NamedLocationIdentity'getArrayLocation-1 (:elementKind this)), loadStamp, :BarrierType'NONE))
+            #_"AddressNode" address (AccessIndexedNode'createArrayIndexAddress-5 (:graph this), array, (:elementKind this), (AccessIndexedNode''index-1 this), boundsCheck)
+            #_"ReadNode" memoryRead (Graph''add-2 (:graph this), (ReadNode'new-4 address, (NamedLocationIdentity'getArrayLocation-1 (:elementKind this)), loadStamp, :BarrierType'NONE))
             memoryRead (GuardedNode'''setGuard-2 memoryRead, boundsCheck)
-            this (Node''replaceAtUsages-2 this, (Lowerer'implicitLoadConvert-3 (:graph this), (:elementKind this), memoryRead))
+            this (Node''replaceAtUsages-2 this, (Lowerer'implicitLoadConvert-3 (:graph this), (:elementKind this), memoryRead))
         ]
-            (update this :graph Graph''replaceFixed-3 this, memoryRead)
+            (update this :graph Graph''replaceFixed-3 this, memoryRead)
         )
     )
 
@@ -36372,23 +36087,23 @@ ZeroExtendNode'new-4
                             ]
                                 (when-not (ResolvedJavaType''isJavaLangObject-1 elementType)
                                     (let [
-                                        #_"LogicNode" typeTest (Graph''addOrUniqueWithInputs-2 (:graph this), (InstanceOfNode'create-2 (TypeReference'createTrusted-1 elementType), (:value this)))
+                                        #_"LogicNode" typeTest (Graph''addOrUniqueWithInputs-2 (:graph this), (InstanceOfNode'create-2 (TypeReference'createTrusted-1 elementType), (:value this)))
                                     ]
-                                        (LogicNode'or-3 (Graph''add-2 (:graph this), (IsNullNode'create-1 (:value this))), typeTest, GraalDirectives'UNLIKELY_PROBABILITY)
+                                        (LogicNode'or-3 (Graph''add-2 (:graph this), (IsNullNode'create-1 (:value this))), typeTest, GraalDirectives'UNLIKELY_PROBABILITY)
                                     )
                                 )
                             )
                             ;; The guard on the read hub should be the nil-check of the array that was introduced earlier.
                             (let [
-                                #_"LogicNode" typeTest (Graph''add-2 (:graph this), (InstanceOfDynamicNode'create-3 (Lowerer'createReadArrayComponentHub-3 (:graph this), (Lowerer'createReadHub-3 (:graph this), array, lowerer), this), (:value this), false))
+                                #_"LogicNode" typeTest (Graph''add-2 (:graph this), (InstanceOfDynamicNode'create-3 (Lowerer'createReadArrayComponentHub-3 (:graph this), (Lowerer'createReadHub-3 (:graph this), array, lowerer), this), (:value this), false))
                             ]
-                                (LogicNode'or-3 (Graph''add-2 (:graph this), (IsNullNode'create-1 (:value this))), typeTest, GraalDirectives'UNLIKELY_PROBABILITY)
+                                (LogicNode'or-3 (Graph''add-2 (:graph this), (IsNullNode'create-1 (:value this))), typeTest, GraalDirectives'UNLIKELY_PROBABILITY)
                             )
                         )
                     )
                 )
-            #_"AddressNode" address (AccessIndexedNode'createArrayIndexAddress-5 (:graph this), array, (:elementKind this), (AccessIndexedNode''index-1 this), boundsCheck)
-            #_"WriteNode" memoryWrite (Graph''add-2 (:graph this), (WriteNode'new-4 address, (NamedLocationIdentity'getArrayLocation-1 (:elementKind this)), (Lowerer'implicitStoreConvert-3 (:graph this), (:elementKind this), (:value this)), (Lowerer'arrayStoreBarrierType-1 (:elementKind this))))
+            #_"AddressNode" address (AccessIndexedNode'createArrayIndexAddress-5 (:graph this), array, (:elementKind this), (AccessIndexedNode''index-1 this), boundsCheck)
+            #_"WriteNode" memoryWrite (Graph''add-2 (:graph this), (WriteNode'new-4 address, (NamedLocationIdentity'getArrayLocation-1 (:elementKind this)), (Lowerer'implicitStoreConvert-3 (:graph this), (:elementKind this), (:value this)), (Lowerer'arrayStoreBarrierType-1 (:elementKind this))))
             memoryWrite (GuardedNode'''setGuard-2 memoryWrite, boundsCheck)
             _
                 (when (some? logic)
@@ -36396,7 +36111,7 @@ ZeroExtendNode'new-4
                 )
             memoryWrite (StateSplit'''setStateAfter-2 memoryWrite, (:stateAfter this))
         ]
-            (update this :graph Graph''replaceFixedWithFixed-3 this, memoryWrite)
+            (update this :graph Graph''replaceFixedWithFixed-3 this, memoryWrite)
         )
     )
 
@@ -36554,18 +36269,18 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" AccessFieldNode''lowerLoadFieldNode-2 [#_"LoadFieldNode" this, #_"LoweringTool" lowerer]
         (let [
-            #_"ValueNode" object (if (AccessFieldNode''isStatic-1 this) (AccessFieldNode'staticFieldBase-2 (:graph this), (:field this)) (:object this))
+            #_"ValueNode" object (if (AccessFieldNode''isStatic-1 this) (AccessFieldNode'staticFieldBase-2 (:graph this), (:field this)) (:object this))
             object (Lowerer'createNullCheckedValue-3 object, this, lowerer)
             #_"Stamp" loadStamp (Lowerer'loadStamp-3 (:stamp this), (JavaField''getJavaKind-1 (:field this)), true)
-            #_"AddressNode" address (Lowerer'createFieldAddress-3 (:graph this), object, (:field this))
-            #_"ReadNode" memoryRead (Graph''add-2 (:graph this), (ReadNode'new-4 address, (FieldLocationIdentity'new-1 (:field this)), loadStamp, (Lowerer'fieldLoadBarrierType-1 (:field this))))
-            #_"ValueNode" readValue (Lowerer'implicitLoadConvert-3 (:graph this), (JavaField''getJavaKind-1 (:field this)), memoryRead)
+            #_"AddressNode" address (Lowerer'createFieldAddress-3 (:graph this), object, (:field this))
+            #_"ReadNode" memoryRead (Graph''add-2 (:graph this), (ReadNode'new-4 address, (FieldLocationIdentity'new-1 (:field this)), loadStamp, (Lowerer'fieldLoadBarrierType-1 (:field this))))
+            #_"ValueNode" readValue (Lowerer'implicitLoadConvert-3 (:graph this), (JavaField''getJavaKind-1 (:field this)), memoryRead)
             this (Node''replaceAtUsages-2 this, readValue)
-            this (update this :graph Graph''replaceFixed-3 this, memoryRead)
+            this (update this :graph Graph''replaceFixed-3 this, memoryRead)
         ]
             (when (AccessFieldNode''isVolatile-1 this)
-                (Graph''addBeforeFixed-3 (:graph this), memoryRead, (Graph''add-2 (:graph this), (MembarNode'new-1 MemoryBarriers'JMM_PRE_VOLATILE_READ)))
-                (Graph''addAfterFixed-3 (:graph this), memoryRead, (Graph''add-2 (:graph this), (MembarNode'new-1 MemoryBarriers'JMM_POST_VOLATILE_READ)))
+                (Graph''addBeforeFixed-3 (:graph this), memoryRead, (Graph''add-2 (:graph this), (MembarNode'new-1 MemoryBarriers'JMM_PRE_VOLATILE_READ)))
+                (Graph''addAfterFixed-3 (:graph this), memoryRead, (Graph''add-2 (:graph this), (MembarNode'new-1 MemoryBarriers'JMM_POST_VOLATILE_READ)))
             )
             this
         )
@@ -36573,17 +36288,17 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" AccessFieldNode''lowerStoreFieldNode-2 [#_"StoreFieldNode" this, #_"LoweringTool" lowerer]
         (let [
-            #_"ValueNode" object (if (AccessFieldNode''isStatic-1 this) (AccessFieldNode'staticFieldBase-2 (:graph this), (:field this)) (:object this))
+            #_"ValueNode" object (if (AccessFieldNode''isStatic-1 this) (AccessFieldNode'staticFieldBase-2 (:graph this), (:field this)) (:object this))
             object (Lowerer'createNullCheckedValue-3 object, this, lowerer)
-            #_"ValueNode" value (Lowerer'implicitStoreConvert-3 (:graph this), (JavaField''getJavaKind-1 (:field this)), (:value this))
-            #_"AddressNode" address (Lowerer'createFieldAddress-3 (:graph this), object, (:field this))
-            #_"WriteNode" memoryWrite (Graph''add-2 (:graph this), (WriteNode'new-4 address, (FieldLocationIdentity'new-1 (:field this)), value, (Lowerer'fieldStoreBarrierType-1 (:field this))))
+            #_"ValueNode" value (Lowerer'implicitStoreConvert-3 (:graph this), (JavaField''getJavaKind-1 (:field this)), (:value this))
+            #_"AddressNode" address (Lowerer'createFieldAddress-3 (:graph this), object, (:field this))
+            #_"WriteNode" memoryWrite (Graph''add-2 (:graph this), (WriteNode'new-4 address, (FieldLocationIdentity'new-1 (:field this)), value, (Lowerer'fieldStoreBarrierType-1 (:field this))))
             memoryWrite (StateSplit'''setStateAfter-2 memoryWrite, (:stateAfter this))
-            this (update this :graph Graph''replaceFixedWithFixed-3 this, memoryWrite)
+            this (update this :graph Graph''replaceFixedWithFixed-3 this, memoryWrite)
         ]
             (when (AccessFieldNode''isVolatile-1 this)
-                (Graph''addBeforeFixed-3 (:graph this), memoryWrite, (Graph''add-2 (:graph this), (MembarNode'new-1 MemoryBarriers'JMM_PRE_VOLATILE_WRITE)))
-                (Graph''addAfterFixed-3 (:graph this), memoryWrite, (Graph''add-2 (:graph this), (MembarNode'new-1 MemoryBarriers'JMM_POST_VOLATILE_WRITE)))
+                (Graph''addBeforeFixed-3 (:graph this), memoryWrite, (Graph''add-2 (:graph this), (MembarNode'new-1 MemoryBarriers'JMM_PRE_VOLATILE_WRITE)))
+                (Graph''addAfterFixed-3 (:graph this), memoryWrite, (Graph''add-2 (:graph this), (MembarNode'new-1 MemoryBarriers'JMM_POST_VOLATILE_WRITE)))
             )
             this
         )
@@ -36817,7 +36532,7 @@ ZeroExtendNode'new-4
             (let [
                 this (Node''replaceAtUsages-2 this, (Lowerer'createReadArrayLength-3 (:array this), this, lowerer))
             ]
-                (Graph''removeFixed-2 (:graph this), this)
+                (Graph''removeFixed-2 (:graph this), this)
                 this
             )
         )
@@ -36881,13 +36596,13 @@ ZeroExtendNode'new-4
 
     (defm ComputeObjectAddressNode Lowerable
         (#_"this" Lowerable'''lower-2 [#_"ComputeObjectAddressNode" this, #_"LoweringTool" lowerer]
-            (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this))) => this
+            (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this))) => this
                 ;; Lower this node into a ComputeObjectAddress and an Add, but ensure
                 ;; that it's below any potential safepoints and above it's uses.
                 (doseq [#_"Node" use (:nodeUsages this)]
                     (when (satisfies? FixedNode use) => (throw! (str "unexpected floating use of ComputeObjectAddressNode " this))
                         (let [
-                            #_"Graph" graph (:graph this)
+                            #_"Graph" graph (:graph this)
                             #_"GetObjectAddressNode" address (Graph''add-2 graph, (GetObjectAddressNode'new-1 (:object this)))
                         ]
                             (Graph''addBeforeFixed-3 graph, use, address)
@@ -36978,17 +36693,17 @@ ZeroExtendNode'new-4
         (let [
             #_"FixedNode" currentNext (:next this)
             _ (§ ass! this (FixedWithNextNode''setNext-2 this, nil))
-            #_"DeoptimizeNode" deopt (Graph''add-2 (:graph this), (DeoptimizeNode'new-2 (:action this), (:reason this)))
+            #_"DeoptimizeNode" deopt (Graph''add-2 (:graph this), (DeoptimizeNode'new-2 (:action this), (:reason this)))
             deopt (DeoptBefore'''setStateBefore-2 deopt, (:stateBefore this))
             [#_"IfNode" ifNode #_"AbstractBeginNode" noDeoptSuccessor]
                 (if (:negated? this)
                     (let [
-                        ifNode (Graph''add-2 (:graph this), (IfNode'new-4f (:logic this), deopt, currentNext, 0))
+                        ifNode (Graph''add-2 (:graph this), (IfNode'new-4f (:logic this), deopt, currentNext, 0))
                     ]
                         [ifNode (:falseSuccessor ifNode)]
                     )
                     (let [
-                        ifNode (Graph''add-2 (:graph this), (IfNode'new-4f (:logic this), currentNext, deopt, 1))
+                        ifNode (Graph''add-2 (:graph this), (IfNode'new-4f (:logic this), currentNext, deopt, 1))
                     ]
                         [ifNode (:trueSuccessor ifNode)]
                     )
@@ -37003,13 +36718,13 @@ ZeroExtendNode'new-4
 
     (defm FixedGuardNode Lowerable
         (#_"this" Lowerable'''lower-2 [#_"FixedGuardNode" this, #_"LoweringTool" lowerer]
-            (if (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph this)))
+            (if (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph this)))
                 (when-not (= (:action this) :DeoptimizationAction'None) => this
                     (let [
                         #_"ValueNode" guard (LoweringTool''createGuard-6 lowerer, this, (:logic this), (:reason this), (:action this), (:negated? this))
                         this (Node''replaceAtUsages-2 this, guard)
                     ]
-                        (Graph''removeFixed-2 (:graph this), this)
+                        (Graph''removeFixed-2 (:graph this), this)
                         this
                     )
                 )
@@ -37061,7 +36776,7 @@ ZeroExtendNode'new-4
 
     (defm NewArrayNode Lowerable
         (#_"this" Lowerable'''lower-2 [#_"NewArrayNode" this, #_"LoweringTool" lowerer]
-            (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
+            (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
                 (NewObjectTemplates''lower-3a Lowerer'newObjectSnippets, this, lowerer)
             )
             this
@@ -37076,7 +36791,7 @@ ZeroExtendNode'new-4
 
     ;; Factored out in a separate method so that subclasses can override it.
     (defn #_"ConstantNode" NewArrayNode''defaultElementValue-1 [#_"NewArrayNode" this]
-        (ConstantNode'defaultForKind-2 (JavaType'''getJavaKind-1 (:elementType this)), (:graph this))
+        (ConstantNode'defaultForKind-2 (JavaType'''getJavaKind-1 (:elementType this)), (:graph this))
     )
 )
 
@@ -37097,7 +36812,7 @@ ZeroExtendNode'new-4
 
     (defm NewInstanceNode Lowerable
         (#_"this" Lowerable'''lower-2 [#_"NewInstanceNode" this, #_"LoweringTool" lowerer]
-            (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
+            (when (GuardsStage'areFrameStatesAtDeopts-1 (:guardsStage (:graph this)))
                 (NewObjectTemplates''lower-3i Lowerer'newObjectSnippets, this, lowerer)
             )
             this
@@ -37106,7 +36821,7 @@ ZeroExtendNode'new-4
 
     ;; Factored out in a separate method so that subclasses can override it.
     (defn #_"ConstantNode" NewInstanceNode''defaultFieldValue-2 [#_"NewInstanceNode" this, #_"ResolvedJavaField" field]
-        (ConstantNode'defaultForKind-2 (JavaType'''getJavaKind-1 (JavaField'''getType-1 field)), (:graph this))
+        (ConstantNode'defaultForKind-2 (JavaType'''getJavaKind-1 (JavaField'''getType-1 field)), (:graph this))
     )
 )
 
@@ -37306,10 +37021,10 @@ ZeroExtendNode'new-4
     (defm JavaWriteNode Lowerable
         (#_"this" Lowerable'''lower-2 [#_"JavaWriteNode" this, #_"LoweringTool" lowerer]
             (let [
-                #_"ValueNode" value (Lowerer'implicitStoreConvert-4 (:graph this), (:writeKind this), (:value this), (:compressible? this))
-                #_"WriteNode" memoryWrite (Graph''add-2 (:graph this), (WriteNode'new-4 (Access'''getAddress-1 this), (Access'''getLocationIdentity-1 this), value, (:barrierType this)))
+                #_"ValueNode" value (Lowerer'implicitStoreConvert-4 (:graph this), (:writeKind this), (:value this), (:compressible? this))
+                #_"WriteNode" memoryWrite (Graph''add-2 (:graph this), (WriteNode'new-4 (Access'''getAddress-1 this), (Access'''getLocationIdentity-1 this), value, (:barrierType this)))
                 memoryWrite (StateSplit'''setStateAfter-2 memoryWrite, (:stateAfter this))
-                this (update this :graph Graph''replaceFixedWithFixed-3 this, memoryWrite)
+                this (update this :graph Graph''replaceFixedWithFixed-3 this, memoryWrite)
                 memoryWrite (GuardedNode'''setGuard-2 memoryWrite, (GuardedNode'''getGuard-1 this))
             ]
                 this
@@ -37398,7 +37113,7 @@ ZeroExtendNode'new-4
 
     (defm ReadNode FloatableAccessNode
         (#_"FloatingAccessNode" FloatableAccessNode'''asFloatingNode-2 [#_"ReadNode" this, #_"MemoryNode" lastLocationAccess]
-            (Graph''add-2 (:graph this), (FloatingReadNode'new-6 (Access'''getAddress-1 this), (Access'''getLocationIdentity-1 this), lastLocationAccess, (:stamp this), (GuardedNode'''getGuard-1 this), (:barrierType this)))
+            (Graph''add-2 (:graph this), (FloatingReadNode'new-6 (Access'''getAddress-1 this), (Access'''getLocationIdentity-1 this), lastLocationAccess, (:stamp this), (GuardedNode'''getGuard-1 this), (:barrierType this)))
         )
     )
 
@@ -37433,8 +37148,8 @@ ZeroExtendNode'new-4
         (#_"this" Lowerable'''lower-2 [#_"JavaReadNode" this, #_"LoweringTool" lowerer]
             (let [
                 #_"Stamp" loadStamp (Lowerer'loadStamp-3 (:stamp this), (:readKind this), (:compressible? this))
-                #_"ReadNode" memoryRead (Graph''add-2 (:graph this), (ReadNode'new-4 (Access'''getAddress-1 this), (Access'''getLocationIdentity-1 this), loadStamp, (:barrierType this)))
-                #_"ValueNode" readValue (Lowerer'implicitLoadConvert-4 (:graph this), (:readKind this), memoryRead, (:compressible? this))
+                #_"ReadNode" memoryRead (Graph''add-2 (:graph this), (ReadNode'new-4 (Access'''getAddress-1 this), (Access'''getLocationIdentity-1 this), loadStamp, (:barrierType this)))
+                #_"ValueNode" readValue (Lowerer'implicitLoadConvert-4 (:graph this), (:readKind this), memoryRead, (:compressible? this))
                 #_"GuardingNode" guard (GuardedNode'''getGuard-1 this)
                 memoryRead
                     (if (some? guard)
@@ -37444,7 +37159,7 @@ ZeroExtendNode'new-4
                     )
                 this (Node''replaceAtUsages-2 this, readValue)
             ]
-                (update this :graph Graph''replaceFixed-3 this, memoryRead)
+                (update this :graph Graph''replaceFixed-3 this, memoryRead)
             )
         )
     )
@@ -37881,7 +37596,7 @@ ZeroExtendNode'new-4
 
     (defm FinalFieldBarrierNode Lowerable
         (#_"this" Lowerable'''lower-2 [#_"FinalFieldBarrierNode" this, #_"LoweringTool" lowerer]
-            (update this :graph Graph''replaceFixedWithFixed-3 this, (Graph''add-2 (:graph this), (MembarNode'new-1 (| MemoryBarriers'LOAD_STORE MemoryBarriers'STORE_STORE))))
+            (update this :graph Graph''replaceFixedWithFixed-3 this, (Graph''add-2 (:graph this), (MembarNode'new-1 (| MemoryBarriers'LOAD_STORE MemoryBarriers'STORE_STORE))))
         )
     )
 )
@@ -38153,7 +37868,7 @@ ZeroExtendNode'new-4
 
     (defm StoreHubNode Lowerable
         (#_"this" Lowerable'''lower-2 [#_"StoreHubNode" this, #_"LoweringTool" lowerer]
-            (update this :graph Graph''replaceFixed-3 this, (StoreHubNode'createWriteHub-3 (:graph this), (:object this), (:value this)))
+            (update this :graph Graph''replaceFixed-3 this, (StoreHubNode'createWriteHub-3 (:graph this), (:object this), (:value this)))
         )
     )
 )
@@ -38279,7 +37994,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"boolean" RawLoadNode''addReadBarrier-1 [#_"RawLoadNode" this]
         (and HotSpot'useG1GC
-            (= (:guardsStage (:graph this)) :GuardsStage'FIXED_DEOPTS)
+            (= (:guardsStage (:graph this)) :GuardsStage'FIXED_DEOPTS)
             (= (ValueNode''getStackKind-1 (:object this)) :JavaKind'Object)
             (= (:accessKind this) :JavaKind'Object)
             (not (StampTool'isPointerAlwaysNull-1 (:stamp (:object this))))
@@ -38294,7 +38009,7 @@ ZeroExtendNode'new-4
     (defn- #_"ValueNode" RawLoadNode'performBooleanCoercionIfNecessary-2 [#_"ValueNode" readValue, #_"JavaKind" readKind]
         (when (= readKind :JavaKind'Boolean) => readValue
             (let [
-                #_"Graph" graph (:graph readValue)
+                #_"Graph" graph (:graph readValue)
                 #_"IntegerEqualsNode" eq (Graph''add-2 graph, (IntegerEqualsNode'new-2 readValue, (ConstantNode'forInt-2 0, graph)))
             ]
                 (Graph''add-2 graph, (ConditionalNode'new-3 eq, (ConstantNode'forBoolean-2 false, graph), (ConstantNode'forBoolean-2 true, graph)))
@@ -38307,13 +38022,13 @@ ZeroExtendNode'new-4
             #_"boolean" compressible? (= (:accessKind this) :JavaKind'Object)
             #_"JavaKind" readKind (:accessKind this)
             #_"Stamp" loadStamp (Lowerer'loadStamp-3 (:stamp this), readKind, compressible?)
-            #_"AddressNode" address (Lowerer'createUnsafeAddress-3 (:graph this), (:object this), (:offset this))
-            #_"ReadNode" memoryRead (Graph''add-2 (:graph this), (ReadNode'new-4 address, (:locationIdentity this), loadStamp, :BarrierType'NONE))
+            #_"AddressNode" address (Lowerer'createUnsafeAddress-3 (:graph this), (:object this), (:offset this))
+            #_"ReadNode" memoryRead (Graph''add-2 (:graph this), (ReadNode'new-4 address, (:locationIdentity this), loadStamp, :BarrierType'NONE))
             memoryRead ;; => An unsafe read must not float, otherwise it may float above a test guaranteeing the read is safe.
                 (when (some? guard) => (FloatableAccessNode''setForceFixed-2 memoryRead, true)
                     (GuardedNode'''setGuard-2 memoryRead, guard)
                 )
-            #_"ValueNode" readValue (RawLoadNode'performBooleanCoercionIfNecessary-2 (Lowerer'implicitLoadConvert-4 (:graph this), readKind, memoryRead, compressible?), readKind)
+            #_"ValueNode" readValue (RawLoadNode'performBooleanCoercionIfNecessary-2 (Lowerer'implicitLoadConvert-4 (:graph this), readKind, memoryRead, compressible?), readKind)
             _ (§ ass! this (Node''replaceAtUsages-2 this, readValue))
         ]
             memoryRead
@@ -38322,13 +38037,13 @@ ZeroExtendNode'new-4
 
     (defm RawLoadNode Lowerable
         (#_"this" Lowerable'''lower-2 [#_"RawLoadNode" this, #_"LoweringTool" lowerer]
-            (if (and (not (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph this)))) (RawLoadNode''addReadBarrier-1 this))
+            (if (and (not (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph this)))) (RawLoadNode''addReadBarrier-1 this))
                 (do
                     (UnsafeLoadTemplates''lower-3 Lowerer'unsafeLoadSnippets, this, lowerer)
                     this
                 )
                 ;; never had a guarding condition, so it must be fixed, creation of the read will force it to be fixed
-                (update this :graph Graph''replaceFixedWithFixed-3 this, (RawLoadNode''createUnsafeRead-2 this, nil))
+                (update this :graph Graph''replaceFixedWithFixed-3 this, (RawLoadNode''createUnsafeRead-2 this, nil))
             )
         )
     )
@@ -38381,12 +38096,12 @@ ZeroExtendNode'new-4
         (#_"this" Lowerable'''lower-2 [#_"RawStoreNode" this, #_"LoweringTool" lowerer]
             (let [
                 #_"boolean" compressible? (= (ValueNode''getStackKind-1 (:value this)) :JavaKind'Object)
-                #_"ValueNode" value (Lowerer'implicitStoreConvert-4 (:graph this), (:accessKind this), (:value this), compressible?)
-                #_"AddressNode" address (Lowerer'createUnsafeAddress-3 (:graph this), (:object this), (:offset this))
-                #_"WriteNode" write (Graph''add-2 (:graph this), (WriteNode'new-4 address, (:locationIdentity this), value, (RawStoreNode''unsafeStoreBarrierType-1 this)))
+                #_"ValueNode" value (Lowerer'implicitStoreConvert-4 (:graph this), (:accessKind this), (:value this), compressible?)
+                #_"AddressNode" address (Lowerer'createUnsafeAddress-3 (:graph this), (:object this), (:offset this))
+                #_"WriteNode" write (Graph''add-2 (:graph this), (WriteNode'new-4 address, (:locationIdentity this), value, (RawStoreNode''unsafeStoreBarrierType-1 this)))
                 write (StateSplit'''setStateAfter-2 write, (:stateAfter this))
             ]
-                (update this :graph Graph''replaceFixedWithFixed-3 this, write)
+                (update this :graph Graph''replaceFixedWithFixed-3 this, write)
             )
         )
     )
@@ -39084,7 +38799,7 @@ ZeroExtendNode'new-4
 
     (defm IntegerAddExactNode IntegerExactArithmeticNode
         (#_"IntegerExactArithmeticSplitNode" IntegerExactArithmeticNode'''createSplit-3 [#_"IntegerAddExactNode" this, #_"AbstractBeginNode" _next, #_"AbstractBeginNode" deopt]
-            (Graph''add-2 (:graph this), (IntegerAddExactSplitNode'new-5 (:stamp this), (:x this), (:y this), _next, deopt))
+            (Graph''add-2 (:graph this), (IntegerAddExactSplitNode'new-5 (:stamp this), (:x this), (:y this), _next, deopt))
         )
     )
 
@@ -39299,7 +39014,7 @@ ZeroExtendNode'new-4
 
     (defm IntegerMulExactNode IntegerExactArithmeticNode
         (#_"IntegerExactArithmeticSplitNode" IntegerExactArithmeticNode'''createSplit-3 [#_"IntegerMulExactNode" this, #_"AbstractBeginNode" _next, #_"AbstractBeginNode" deopt]
-            (Graph''add-2 (:graph this), (IntegerMulExactSplitNode'new-5 (:stamp this), (:x this), (:y this), _next, deopt))
+            (Graph''add-2 (:graph this), (IntegerMulExactSplitNode'new-5 (:stamp this), (:x this), (:y this), _next, deopt))
         )
     )
 
@@ -39548,7 +39263,7 @@ ZeroExtendNode'new-4
 
     (defm IntegerSubExactNode IntegerExactArithmeticNode
         (#_"IntegerExactArithmeticSplitNode" IntegerExactArithmeticNode'''createSplit-3 [#_"IntegerSubExactNode" this, #_"AbstractBeginNode" _next, #_"AbstractBeginNode" deopt]
-            (Graph''add-2 (:graph this), (IntegerSubExactSplitNode'new-5 (:stamp this), (:x this), (:y this), _next, deopt))
+            (Graph''add-2 (:graph this), (IntegerSubExactSplitNode'new-5 (:stamp this), (:x this), (:y this), _next, deopt))
         )
     )
 
@@ -39942,7 +39657,7 @@ ZeroExtendNode'new-4
         (#_"this" Lowerable'''lower-2 [#_"ClassGetHubNode" this, #_"LoweringTool" lowerer]
             (when-not (= (:loweringStage lowerer) :LoweringStage'HIGH_TIER) => this
                 (let [
-                    #_"Graph" graph (:graph this)
+                    #_"Graph" graph (:graph this)
                     #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, (ConvertNode'''getValue-1 this), HotSpot'klassOffset)
                     #_"FloatingReadNode" read (Graph''add-2 graph, (FloatingReadNode'new-6 address, NamedLocationIdentity'CLASS_KLASS, nil, (:stamp this), nil, :BarrierType'NONE))
                 ]
@@ -40020,7 +39735,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"ConditionalNode" ConditionalNode'new-1 [#_"LogicNode" logic]
-        (ConditionalNode'new-3 logic, (ConstantNode'forInt-2 1, (:graph logic)), (ConstantNode'forInt-2 0, (:graph logic)))
+        (ConditionalNode'new-3 logic, (ConstantNode'forInt-2 1, (:graph logic)), (ConstantNode'forInt-2 0, (:graph logic)))
     )
 
     #_unused
@@ -40134,7 +39849,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"ValueNode" ConditionalNode'create-1 [#_"LogicNode" logic]
-        (ConditionalNode'create-3 logic, (ConstantNode'forInt-2 1, (:graph logic)), (ConstantNode'forInt-2 0, (:graph logic)))
+        (ConditionalNode'create-3 logic, (ConstantNode'forInt-2 1, (:graph logic)), (ConstantNode'forInt-2 0, (:graph logic)))
     )
 
     (defm ConditionalNode ValueNode
@@ -40631,7 +40346,7 @@ ZeroExtendNode'new-4
     (defm FloatingReadNode FloatingAccessNode
         (#_"FixedAccessNode" FloatingAccessNode'''asFixedNode-1 [#_"FloatingReadNode" this]
             (let [
-                #_"ReadNode" result (Graph''add-2 (:graph this), (ReadNode'new-4 (Access'''getAddress-1 this), (Access'''getLocationIdentity-1 this), (:stamp this), (:barrierType this)))
+                #_"ReadNode" result (Graph''add-2 (:graph this), (ReadNode'new-4 (Access'''getAddress-1 this), (Access'''getLocationIdentity-1 this), (:stamp this), (:barrierType this)))
             ]
                 (GuardedNode'''setGuard-2 result, (GuardedNode'''getGuard-1 this))
             )
@@ -40791,7 +40506,7 @@ ZeroExtendNode'new-4
 
     (defm Placeholder Placeholder
         (#_"this" Placeholder'''makeReplacement-2 [#_"Placeholder" this, #_"Stamp" snippetReplaceeStamp]
-            (Node''replaceAndDelete-2 this, (Graph''maybeAddOrUnique-2 (:graph this), (PiNode'create-3 (:object this), snippetReplaceeStamp, nil)))
+            (Node''replaceAndDelete-2 this, (Graph''maybeAddOrUnique-2 (:graph this), (PiNode'create-3 (:object this), snippetReplaceeStamp, nil)))
         )
     )
 )
@@ -40818,7 +40533,7 @@ ZeroExtendNode'new-4
 
     (defm ArrayPlaceholder Placeholder
         (#_"this" Placeholder'''makeReplacement-2 [#_"ArrayPlaceholder" this, #_"Stamp" snippetReplaceeStamp]
-            (Node''replaceAndDelete-2 this, (Graph''add-2 (:graph this), (PiArrayNode'new-3 (:object this), (:length this), snippetReplaceeStamp)))
+            (Node''replaceAndDelete-2 this, (Graph''add-2 (:graph this), (PiArrayNode'new-3 (:object this), (:length this), snippetReplaceeStamp)))
         )
     )
 )
@@ -40840,8 +40555,8 @@ ZeroExtendNode'new-4
     (defm GetClassNode Lowerable
         (#_"this" Lowerable'''lower-2 [#_"GetClassNode" this, #_"LoweringTool" lowerer]
             (let [
-                #_"LoadHubNode" hub (Graph''add-2 (:graph this), (LoadHubNode'new-1 (:object this)))
-                #_"HubGetClassNode" hubGetClass (Graph''add-2 (:graph this), (HubGetClassNode'new-1 hub))
+                #_"LoadHubNode" hub (Graph''add-2 (:graph this), (LoadHubNode'new-1 (:object this)))
+                #_"HubGetClassNode" hubGetClass (Graph''add-2 (:graph this), (HubGetClassNode'new-1 hub))
                 this (Node''replaceAtUsagesAndDelete-2 this, hubGetClass)
                 _ (§ ass! hub (Lowerable'''lower-2 hub, lowerer))
                 _ (§ ass! hubGetClass (Lowerable'''lower-2 hubGetClass, lowerer))
@@ -40886,7 +40601,7 @@ ZeroExtendNode'new-4
         (#_"this" Lowerable'''lower-2 [#_"HubGetClassNode" this, #_"LoweringTool" lowerer]
             (when-not (= (:loweringStage lowerer) :LoweringStage'HIGH_TIER) => this
                 (let [
-                    #_"Graph" graph (:graph this)
+                    #_"Graph" graph (:graph this)
                     #_"AddressNode" address (Lowerer'createOffsetAddress-3 graph, (:hub this), HotSpot'classMirrorOffset)
                     #_"FloatingReadNode" read (Graph''add-2 graph, (FloatingReadNode'new-6 address, NamedLocationIdentity'CLASS_MIRROR, nil, (StampFactory'forKind-1 :JavaKind'Long), nil, :BarrierType'NONE))
                     address (Lowerer'createOffsetAddress-3 graph, read, 0)
@@ -40979,8 +40694,8 @@ ZeroExtendNode'new-4
 
     (defm LoadHubNode Lowerable
         (#_"this" Lowerable'''lower-2 [#_"LoadHubNode" this, #_"LoweringTool" lowerer]
-            (when (and (= (:loweringStage lowerer) :LoweringStage'LOW_TIER) (not (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph this))))) => this
-                (Node''replaceAtUsagesAndDelete-2 this, (Lowerer'createReadHub-3 (:graph this), (:value this), lowerer))
+            (when (and (= (:loweringStage lowerer) :LoweringStage'LOW_TIER) (not (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph this))))) => this
+                (Node''replaceAtUsagesAndDelete-2 this, (Lowerer'createReadHub-3 (:graph this), (:value this), lowerer))
             )
         )
     )
@@ -41008,7 +40723,7 @@ ZeroExtendNode'new-4
 
     (defn #_"LogicNode" LogicNode'and-5 [#_"LogicNode" a, #_"boolean" negateA, #_"LogicNode" b, #_"boolean" negateB, #_"double" shortCircuitProbability]
         (let [
-            #_"Graph" graph (:graph a)
+            #_"Graph" graph (:graph a)
             #_"ShortCircuitOrNode" notAorNotB (Graph''add-2 graph, (ShortCircuitOrNode'new-5 a, (not negateA), b, (not negateB), shortCircuitProbability))
         ]
             (Graph''add-2 graph, (LogicNegationNode'new-1 notAorNotB))
@@ -41020,7 +40735,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"LogicNode" LogicNode'or-5 [#_"LogicNode" a, #_"boolean" negateA, #_"LogicNode" b, #_"boolean" negateB, #_"double" shortCircuitProbability]
-        (Graph''add-2 (:graph a), (ShortCircuitOrNode'new-5 a, negateA, b, negateB, shortCircuitProbability))
+        (Graph''add-2 (:graph a), (ShortCircuitOrNode'new-5 a, negateA, b, negateB, shortCircuitProbability))
     )
 
     (defn #_"boolean" LogicNode''isTautology-1 [#_"LogicNode" this]
@@ -41114,7 +40829,7 @@ ZeroExtendNode'new-4
         (let [
             #_"LogicNode" result (CompareNode'createCompareNode-3 condition, x, y)
         ]
-            (if (nil? (:graph result)) (Graph''addOrUniqueWithInputs-2 graph, result) result)
+            (if (nil? (:graph result)) (Graph''addOrUniqueWithInputs-2 graph, result) result)
         )
     )
 
@@ -41136,7 +40851,7 @@ ZeroExtendNode'new-4
         (let [
             #_"LogicNode" result (CompareNode'createCompareNode-4i smallestCompareWidth, condition, x, y)
         ]
-            (if (nil? (:graph result)) (Graph''addOrUniqueWithInputs-2 graph, result) result)
+            (if (nil? (:graph result)) (Graph''addOrUniqueWithInputs-2 graph, result) result)
         )
     )
 
@@ -41468,7 +41183,7 @@ ZeroExtendNode'new-4
 
     (defm InstanceOfDynamicNode Lowerable
         (#_"this" Lowerable'''lower-2 [#_"InstanceOfDynamicNode" this, #_"LoweringTool" lowerer]
-            (if (GuardsStage'areDeoptsFixed-1 (:guardsStage (:graph this)))
+            (if (GuardsStage'areDeoptsFixed-1 (:guardsStage (:graph this)))
                 (do
                     (InstanceOfSnippetsTemplates''lower-3 Lowerer'instanceofSnippets, this, lowerer)
                     this
@@ -41476,13 +41191,13 @@ ZeroExtendNode'new-4
                 (let [
                     this
                         (when (= (Stamp'''getStackKind-1 (:stamp (:x this))) :JavaKind'Object) => this
-                            (InstanceOfDynamicNode''setMirror-2 this, (Graph''add-2 (:graph this), (ClassGetHubNode'new-1 (:x this))))
+                            (InstanceOfDynamicNode''setMirror-2 this, (Graph''add-2 (:graph this), (ClassGetHubNode'new-1 (:x this))))
                         )
                 ]
                     (when (:allow-nil? this) => this
                         (let [
-                            #_"LogicNode" newTypeCheck (Graph''addOrUniqueWithInputs-2 (:graph this), (InstanceOfDynamicNode'create-3 (:x this), (:y this), false))
-                            #_"LogicNode" newNode (LogicNode'or-3 (Graph''add-2 (:graph this), (IsNullNode'create-1 (:y this))), newTypeCheck, GraalDirectives'UNLIKELY_PROBABILITY)
+                            #_"LogicNode" newTypeCheck (Graph''addOrUniqueWithInputs-2 (:graph this), (InstanceOfDynamicNode'create-3 (:x this), (:y this), false))
+                            #_"LogicNode" newNode (LogicNode'or-3 (Graph''add-2 (:graph this), (IsNullNode'create-1 (:y this))), newTypeCheck, GraalDirectives'UNLIKELY_PROBABILITY)
                         ]
                             (Node''replaceAndDelete-2 this, newNode)
                         )
@@ -41745,7 +41460,7 @@ ZeroExtendNode'new-4
 
     (defm InstanceOfNode Lowerable
         (#_"this" Lowerable'''lower-2 [#_"InstanceOfNode" this, #_"LoweringTool" lowerer]
-            (if (GuardsStage'areDeoptsFixed-1 (:guardsStage (:graph this)))
+            (if (GuardsStage'areDeoptsFixed-1 (:guardsStage (:graph this)))
                 (do
                     (InstanceOfSnippetsTemplates''lower-3 Lowerer'instanceofSnippets, this, lowerer)
                     this
@@ -41753,8 +41468,8 @@ ZeroExtendNode'new-4
                 (when (InstanceOfNode''allowsNull-1 this) => this
                     (let [
                         #_"ValueNode" object (Unary'''getValue-1 this)
-                        #_"LogicNode" newTypeCheck (Graph''addOrUniqueWithInputs-2 (:graph this), (InstanceOfNode'create-3 (InstanceOfNode''type-1 this), object, (:anchor this)))
-                        #_"LogicNode" newNode (LogicNode'or-3 (Graph''add-2 (:graph this), (IsNullNode'create-1 object)), newTypeCheck, GraalDirectives'UNLIKELY_PROBABILITY)
+                        #_"LogicNode" newTypeCheck (Graph''addOrUniqueWithInputs-2 (:graph this), (InstanceOfNode'create-3 (InstanceOfNode''type-1 this), object, (:anchor this)))
+                        #_"LogicNode" newNode (LogicNode'or-3 (Graph''add-2 (:graph this), (IsNullNode'create-1 object)), newTypeCheck, GraalDirectives'UNLIKELY_PROBABILITY)
                     ]
                         (Node''replaceAndDelete-2 this, newNode)
                     )
@@ -42171,11 +41886,11 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"CompressionNode" CompressionNode'compress-2 [#_"ValueNode" input, #_"CompressEncoding" encoding]
-        (Graph''add-2 (:graph input), (CompressionNode'new-3 :CompressionOp'Compress, input, encoding))
+        (Graph''add-2 (:graph input), (CompressionNode'new-3 :CompressionOp'Compress, input, encoding))
     )
 
     (defn #_"CompressionNode" CompressionNode'uncompress-2 [#_"ValueNode" input, #_"CompressEncoding" encoding]
-        (Graph''add-2 (:graph input), (CompressionNode'new-3 :CompressionOp'Uncompress, input, encoding))
+        (Graph''add-2 (:graph input), (CompressionNode'new-3 :CompressionOp'Uncompress, input, encoding))
     )
 
     (defn- #_"Constant" CompressionNode''compress-2 [#_"CompressionNode" this, #_"Constant" constant]
@@ -42754,10 +42469,10 @@ ZeroExtendNode'new-4
             (let [
                 #_"ValueNode" result
                     (when (= (= AMD64'byteOrder ByteOrder/BIG_ENDIAN) (:firstHalf this)) => (:value this)
-                        (Graph''add-2 (:graph this), (UnsignedRightShiftNode'new-2 (:value this), (ConstantNode'forInt-2 32, (:graph this))))
+                        (Graph''add-2 (:graph this), (UnsignedRightShiftNode'new-2 (:value this), (ConstantNode'forInt-2 32, (:graph this))))
                     )
             ]
-                (Node''replaceAtUsagesAndDelete-2 this, (IntegerConvertNode'convert-3g result, (StampFactory'forKind-1 :JavaKind'Int), (:graph this)))
+                (Node''replaceAtUsagesAndDelete-2 this, (IntegerConvertNode'convert-3g result, (StampFactory'forKind-1 :JavaKind'Int), (:graph this)))
             )
         )
     )
@@ -42965,12 +42680,12 @@ ZeroExtendNode'new-4
      ; Creates a copy of this frame state with one stack element of type {@code popKind} popped from the stack.
      ;;
     (defn #_"FrameState" FrameState''duplicateModifiedDuringCall-3 [#_"FrameState" this, #_"int" newBci, #_"JavaKind" popKind]
-        (FrameState''duplicateModified-6 this, (:graph this), newBci, popKind, nil, nil)
+        (FrameState''duplicateModified-6 this, (:graph this), newBci, popKind, nil, nil)
     )
 
     #_unused
     (defn #_"FrameState" FrameState''duplicateModifiedBeforeCall-5 [#_"FrameState" this, #_"int" newBci, #_"JavaKind" popKind, #_"JavaKind*" pushedSlotKinds, #_"ValueNode*" pushedValues]
-        (FrameState''duplicateModified-6 this, (:graph this), newBci, popKind, pushedSlotKinds, pushedValues)
+        (FrameState''duplicateModified-6 this, (:graph this), newBci, popKind, pushedSlotKinds, pushedValues)
     )
 
     ;;;
@@ -42979,7 +42694,7 @@ ZeroExtendNode'new-4
      ;;
     #_unused
     (defn #_"FrameState" FrameState''duplicateModified-4 [#_"FrameState" this, #_"JavaKind" popKind, #_"JavaKind" pushedSlotKind, #_"ValueNode" pushedValue]
-        (FrameState''duplicateModified-6 this, (:graph this), (:bci this), popKind, [ pushedSlotKind ], [ pushedValue ])
+        (FrameState''duplicateModified-6 this, (:graph this), (:bci this), popKind, [ pushedSlotKind ], [ pushedValue ])
     )
 
     ;;;
@@ -44526,7 +44241,7 @@ ZeroExtendNode'new-4
                                         #_"Block" prior block
                                         block (:dominator block)
                                         ;; Only assign new latest block if frequency is actually lower or if loop proxies would be required otherwise.
-                                        ? (and (Block''isLoopHeader-1 prior) (or (< (:probability block) (:probability latest)) (:hasValueProxies (:graph node))))
+                                        ? (and (Block''isLoopHeader-1 prior) (or (< (:probability block) (:probability latest)) (:hasValueProxies (:graph node))))
                                     ]
                                         (recur (if ? block latest) block)
                                     )
@@ -44916,7 +44631,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"void" LowerGuards''insertLoopExits-2 [#_"LowerGuards" this, #_"DeoptimizeNode" deopt]
         (let [
-            #_"Graph" graph (:graph deopt)
+            #_"Graph" graph (:graph deopt)
         ]
             (loop-when-recur [#_"Loop" _loop (:loop (:block this))] (some? _loop) [(:parent _loop)]
                 (Graph''addBeforeFixed-3 graph, deopt, (Graph''add-2 graph, (LoopExitNode'new-1 (:beginNode (:header _loop)))))
@@ -44927,7 +44642,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" LowerGuards''lowerToIf-2 [#_"LowerGuards" this, #_"GuardNode" guard]
         (let [
-            #_"Graph" graph (:graph guard)
+            #_"Graph" graph (:graph guard)
             #_"AbstractBeginNode" fastPath (Graph''add-2 graph, (BeginNode'new-0))
             #_"DeoptimizeNode" deopt (Graph''add-2 graph, (DeoptimizeNode'new-2 (:action guard), (:reason guard)))
             #_"AbstractBeginNode" deoptBranch (BeginNode'begin-1 deopt)
@@ -44981,7 +44696,7 @@ ZeroExtendNode'new-4
                                     (or (nil? merged) (= merged last)) [last isPhi] ;; nothing to do
                                     :else
                                         (let [
-                                            #_"MemoryPhiNode" phi (Graph''add-2 (:graph merge), (MemoryPhiNode'new-2 merge, key))
+                                            #_"MemoryPhiNode" phi (Graph''add-2 (:graph merge), (MemoryPhiNode'new-2 merge, key))
                                             phi (reduce PhiNode''addInput-2 phi (repeat n merged))
                                         ]
                                             [(PhiNode''addInput-2 phi, last) true]
@@ -45286,8 +45001,8 @@ ZeroExtendNode'new-4
         (let [
             #_"StartNode" start (:start (:snippet this))
             #_"FixedNode" firstCFGNode (:next start)
-            #_"{Node Node}" replacements (assoc (SnippetTemplate''bind-3 this, (:graph replacee), args) start (AbstractBeginNode'prevBegin-1 replacee))
-            #_"{Node Node}" duplicates (SnippetTemplate''inlineSnippet-4 this, replacee, (:graph replacee), replacements)
+            #_"{Node Node}" replacements (assoc (SnippetTemplate''bind-3 this, (:graph replacee), args) start (AbstractBeginNode'prevBegin-1 replacee))
+            #_"{Node Node}" duplicates (SnippetTemplate''inlineSnippet-4 this, replacee, (:graph replacee), replacements)
         ]
             ;; re-wire the control flow graph around the replacee
             (Node''replaceAtPredecessor-2 replacee, (get duplicates firstCFGNode))
@@ -45380,13 +45095,13 @@ ZeroExtendNode'new-4
         (let [
             #_"StartNode" start (:start (:snippet this))
             #_"FixedNode" firstCFGNode (:next start)
-            #_"{Node Node}" replacements (assoc (SnippetTemplate''bind-3 this, (:graph replacee), args) start (:guardAnchor lowerer))
-            #_"{Node Node}" duplicates (SnippetTemplate''inlineSnippet-4 this, replacee, (:graph replacee), replacements)
+            #_"{Node Node}" replacements (assoc (SnippetTemplate''bind-3 this, (:graph replacee), args) start (:guardAnchor lowerer))
+            #_"{Node Node}" duplicates (SnippetTemplate''inlineSnippet-4 this, replacee, (:graph replacee), replacements)
             #_"FixedWithNextNode" lastFixedNode (:lastFixedNode lowerer)
             #_"FixedNode" _next (:next lastFixedNode)
             _ (§ ass! lastFixedNode (FixedWithNextNode''setNext-2 lastFixedNode, nil))
         ]
-            (Graph''addAfterFixed-3 (:graph replacee), lastFixedNode, (get duplicates firstCFGNode))
+            (Graph''addAfterFixed-3 (:graph replacee), lastFixedNode, (get duplicates firstCFGNode))
 
             (SnippetTemplate''rewireFrameStates-3 this, replacee, duplicates)
             (SnippetTemplate''updateStamps-3 this, replacee, duplicates)
@@ -48399,7 +48114,7 @@ ZeroExtendNode'new-4
                                 _ (§ ass! nextNonTrapping (DeoptBefore'''setStateBefore-2 nextNonTrapping, (:stateBefore deopt)))
                                 _ (§ ass! nextNonTrapping (FixedAccessNode''setNullCheck-2 nextNonTrapping, true))
                             ]
-                                (Graph''removeSplit-3 (:graph deopt), ifNode, nonTrappingContinuation)
+                                (Graph''removeSplit-3 (:graph deopt), ifNode, nonTrappingContinuation)
                                 nextNonTrapping
                             )
                         )
@@ -48409,9 +48124,9 @@ ZeroExtendNode'new-4
                 (or trappingNullCheck
                     ;; Need to add a nil-check node.
                     (let [
-                        trappingNullCheck (Graph''add-2 (:graph deopt), (NullCheckNode'new-1 value))
+                        trappingNullCheck (Graph''add-2 (:graph deopt), (NullCheckNode'new-1 value))
                     ]
-                        (Graph''replaceSplit-4 (:graph deopt), ifNode, trappingNullCheck, nonTrappingContinuation)
+                        (Graph''replaceSplit-4 (:graph deopt), ifNode, trappingNullCheck, nonTrappingContinuation)
                         trappingNullCheck
                     )
                 )
