@@ -884,16 +884,12 @@ CLOptimization'apply-2
 CRuntimeCallEpilogueOp'new-4
 CRuntimeCallPrologueOp'new-2
 CallOp'new-3
-CallTargetNode''setInvokeKind-2
-CallTargetNode''setTargetMethod-2
 CallTargetNode'new-4
 CallingConvention'new-3*
 CallingConventionType'SET
 CanonicalCondition'BT
 CanonicalCondition'EQ
 CanonicalCondition'LT
-CanonicalizableLocation'foldIndirection-3
-CanonicalizableLocation'new-1
 ChainedNodeEventListener'new-2
 ClassGetHubNode'canonical-4
 ClassGetHubNode'create-2
@@ -1108,10 +1104,8 @@ ControlFlowOptimizer'new-0
 ControlSinkNode'new-1
 ControlSplitNode'new-1
 CountLeadingZerosNode'new-1
-CountLeadingZerosNode'tryFold-1
 CountTrailingZerosNode'computeStamp-2
 CountTrailingZerosNode'new-1
-CountTrailingZerosNode'tryFold-1
 CurrentLockNode'new-1
 Data''updateAlignment-2
 Data'new-2
@@ -1259,7 +1253,6 @@ FrameMapBuilder''callsMethod-2
 FrameMapBuilder''freeRBPSpillSlot-1
 FrameMapBuilder'new-0
 FrameState''addVirtualObjectMapping-2
-FrameState''duplicate-1
 FrameState''duplicateModified-4
 FrameState''duplicateModifiedBeforeCall-5
 FrameState''duplicateModifiedDuringCall-3
@@ -1299,7 +1292,6 @@ G1PreWriteBarrier'new-4
 G1ReferentFieldReadBarrier''getExpectedObject-1
 G1ReferentFieldReadBarrier'new-3
 GetClassNode'new-2
-GetClassNode'tryFold-1
 GetObjectAddressNode'new-1
 GraalOptions'canOmitFrame
 GraalOptions'lirOptLSRAEliminateSpillMoves
@@ -1336,14 +1328,12 @@ Graph''reduceTrivialMerge-2
 Graph''register-2
 Graph''removeFixed-2
 Graph''removeSplit-3
-Graph''removeSplitPropagate-3
 Graph''replaceFixed-3
 Graph''replaceFixedWithFixed-3
 Graph''replaceFixedWithFloating-3
 Graph''replaceSplit-4
 Graph''replaceSplitWithFixed-4
 Graph''replaceSplitWithFloating-4
-Graph''setAfterExpandLogic-1
 Graph''setAfterFixReadPhase-2
 Graph''setGuardsStage-2
 Graph''setHasValueProxies-2
@@ -1509,10 +1499,6 @@ HotSpotDirectCallTargetNode'new-6
 HotSpotPlugin'new-0
 HotSpotSwitchClosure'new-3
 HubGetClassNode'new-1
-IfNode''eliminateNegation-1
-IfNode''setCondition-2
-IfNode''setFalseSuccessor-2
-IfNode''setTrueSuccessor-2
 IfNode''setTrueSuccessorProbability-2
 IfNode'new-4b
 IfNode'new-4f
@@ -1604,7 +1590,6 @@ IntegerStamp'subtractionCanOverflow-2
 IntegerStamp'subtractionOverflows-3
 IntegerSubExactNode'new-2
 IntegerSubExactSplitNode'new-5
-IntegerSwitchNode''tryRemoveUnreachableKeys-3
 IntegerSwitchNode'new-5a
 IntegerSwitchNode'new-5i
 IntegerTestNode'new-2
@@ -1725,7 +1710,6 @@ JumpOp''clearOutgoingValues-1
 JumpOp''getOutgoingValue-2
 JumpOp''setPhiValues-2
 JumpOp'new-1
-KeyData'new-3
 KlassPointerStamp''compressed-2
 KlassPointerStamp''isCompressed-1
 KlassPointerStamp''uncompressed-1
@@ -2034,7 +2018,6 @@ Loop''canKill-2
 Loop''getKillLocations-1
 Loop''numBackedges-1
 Loop'new-3
-LoopBeginNode''canonicalizePhis-2
 LoopBeginNode''forwardEnd-1
 LoopBeginNode''loopEnds-1
 LoopBeginNode''loopExits-1
@@ -2080,7 +2063,6 @@ Lowerer'instanceofSnippets
 Lowerer'loadStamp-3
 Lowerer'monitorSnippets
 Lowerer'newObjectSnippets
-Lowerer'smallestCompareWidth-0
 Lowerer'storeBarrierType-2
 Lowerer'unsafeLoadSnippets
 Lowerer'writeBarrierSnippets
@@ -2349,8 +2331,6 @@ OrNode'create-2
 OrNode'new-2
 ParameterNode'new-2
 PhiNode''addInput-2
-PhiNode''firstValue-1
-PhiNode''isLoopPhi-1
 PhiNode''removeInput-2
 PhiNode''setValueAt-3n
 PhiNode''singleValueOrThis-1
@@ -2426,7 +2406,6 @@ RawLoadNode'new-5
 RawMonitorEnterNode'new-3
 RawPointerStamp'new-0
 RawStoreNode'new-8
-ReadNode'canonicalizeRead-4
 ReadNode'new-4
 ReadRegisterNode'new-4i
 ReadRegisterNode'new-4r
@@ -2527,7 +2506,6 @@ ShiftNode'canonical-4
 ShiftNode'new-3
 ShiftOp'new-1
 Shl'new-0
-ShortCircuitOrNode''canonicalizeNegation-3
 ShortCircuitOrNode'new-5
 Shr'new-0
 Signature''toMethodDescriptor-1
@@ -2544,10 +2522,6 @@ SignedDivNode'new-2
 SignedRemNode'create-2
 SignedRemNode'new-2
 Signedness'SET
-Simplifier''add-2
-Simplifier''addAll-2
-Simplifier'run-1
-Simplifier'run-2
 SlotSize'SET
 SnippetAnchorNode'new-0
 SnippetInfo'new-2
@@ -2631,7 +2605,6 @@ SwitchNode''defaultSuccessorIndex-1
 SwitchNode''keyProbability-2
 SwitchNode''keySuccessor-2
 SwitchNode''keySuccessorIndex-2
-SwitchNode''killOtherSuccessors-3
 SwitchNode''setBlockSuccessor-3
 SwitchNode'new-4
 SwitchStrategy''registerDefaultEffort-2
@@ -2654,7 +2627,6 @@ UnaryArithmeticNode'findSynonym-2
 UnaryArithmeticNode'new-2
 UnaryNode'new-2
 UnaryOp'new-1
-UnaryOpLogicNode''getSucceedingStampForValue-3
 UnaryOpLogicNode'new-1
 UncompressPointerOp'new-5
 UnpackEndianHalfNode'create-2
@@ -3200,17 +3172,12 @@ ZeroExtendNode'new-4
 (defp BelowOp)
 
 ;;;
- ; This sub-interface of Canonicalizable is intended for nodes that have exactly two inputs.
- ; It has an additional #canonical(Canonicalizer, Node, Node) method that looks at the given
+ ; This sub-interface of Canonicalizable is intended for nodes that have exactly two inputs.
+ ; It has an additional #canonical(Canonicalizer, Node, Node) method that looks at the given
  ; inputs instead of the current inputs of the node - which can be used to ask "what if this
  ; input is changed to this node" - questions.
  ;;
 (defp Binary
-    ;;;
-     ; Similar to Canonicalizable#canonical(Canonicalizer), except that implementations should act as if the
-     ; current input of the node was the given one, i.e. they should never look at the inputs via the this pointer.
-     ;;
-    (#_"Node" Binary'''canonical-4 [#_"Binary" this, #_"Canonicalizer" tool, #_"Node" forX, #_"Node" forY])
     ;;;
      ; Ensure a canonical ordering of inputs for commutative nodes to improve GVN results.
      ; Order the inputs by increasing Node#id and call Graph#findDuplicate(Node) on the node
@@ -3353,66 +3320,7 @@ ZeroExtendNode'new-4
 (defp CallOp)
 (defp CallTargetNode)
 (defp CanonicalCondition)
-
-;;;
- ; Nodes can implement Canonicalizable or one of the two sub-interfaces Unary and
- ; Binary to provide local optimizations like constant folding and strength reduction.
- ; Implementations should return a replacement that is always semantically correct for
- ; the given inputs, or "this" if they do not see an opportunity for improvement.
- ;
- ; <b>Implementations of Canonicalizable#canonical(Canonicalizer) or the equivalent
- ; methods of the two sub-interfaces must not have any side effects.</b>
- ; They are not allowed to change inputs, successors or properties of any node (including
- ; the current one) and they also cannot add new nodes to the graph.
- ;
- ; In addition to pre-existing nodes they can return newly created nodes, which will be added
- ; to the graph automatically if (and only if) the effects of the canonicalization are committed.
- ; Non-cyclic graphs (DAGs) of newly created nodes (i.e. one newly created node with an input
- ; to another newly created node) will be handled correctly.
- ;;
-(defp Canonicalizable
-    ;;;
-     ; Implementations of this method can provide local optimizations like constant folding and
-     ; strength reduction. Implementations should look at the properties and inputs of the current
-     ; node and determine if there is a more optimal and always semantically correct replacement.
-     ;
-     ; The return value determines the effect that the canonicalization will have:
-     ;
-     ; (1) Returning an pre-existing node will replace the current node with the given one.
-     ; (2) Returning a newly created node (that was not yet added to the graph) will replace the
-     ; current node with the given one, after adding it to the graph. If both the replacement and
-     ; the replacee are anchored in control flow (fixed nodes), the replacement will be added to the
-     ; control flow. It is invalid to replace a non-fixed node with a newly created fixed node
-     ; (because its placement in the control flow cannot be determined without scheduling).
-     ; (3) Returning nil will delete the current node and replace it with nil at all usages.
-     ; Note that it is not necessary to delete floating nodes that have no more usages
-     ; this way - they will be deleted automatically.
-     ;
-     ; @param tool provides access to runtime interfaces like MetaAccessProvider
-     ;;
-    (#_"Node" Canonicalizable'''canonical-2 [#_"Canonicalizable" this, #_"Canonicalizer" tool])
-)
-
-(defp CanonicalizableLocation
-    (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-4 [#_"CanonicalizableLocation" this, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object])
-)
-
 (defp CanonicalizedCondition)
-
-(defp Canonicalizer
-    (#_"boolean" Canonicalizer'''canonicalizeReads-1 [#_"Canonicalizer" this])
-    ;;;
-     ; If this method returns false, not all {@link Node#usages() usages of a node} are yet available.
-     ; So a node must not be canonicalized base on, e.g. information returned from Node#hasNoUsages().
-     ;;
-    (#_"boolean" Canonicalizer'''allUsagesAvailable-1 [#_"Canonicalizer" this])
-    ;;;
-     ; Indicates the smallest width for comparing an integer value on the target platform.
-     ; If this method returns nil, then there is no known smallest compare width.
-     ;;
-    (#_"Integer" Canonicalizer'''smallestCompareWidth-1 [#_"Canonicalizer" this])
-)
-
 (defp ChainedNodeEventListener)
 (defp ClassGetHubNode)
 (defp ClassRef)
@@ -3610,13 +3518,6 @@ ZeroExtendNode'new-4
 (defp DeoptimizingFixedWithNextNode)
 
 ;;;
- ; Shared interface to capture core methods of FixedGuardNode and GuardNode.
- ;;
-(defp DeoptimizingGuard
-    (#_"this" DeoptimizingGuard'''setCondition-3 [#_"DeoptimizingGuard" this, #_"LogicNode" x, #_"boolean" negated?])
-)
-
-;;;
  ; Interface implemented by nodes which may need deoptimization information.
  ;;
 (defp DeoptimizingNode
@@ -3768,12 +3669,6 @@ ZeroExtendNode'new-4
 (defp ImplicitNullCheck
     (#_"boolean" ImplicitNullCheck'''makeNullCheckFor-3 [#_"ImplicitNullCheck" this, #_"Value" value, #_"int" implicitNullCheckLimit])
 )
-
-;;;
- ; Marker interface for nodes that contains other nodes. When the inputs to this node changes,
- ; users of this node should also be placed on the work list for canonicalization.
- ;;
-(defp IndirectCanonicalization)
 
 (defp InplaceUpdateClosure
     (#_"Node" InplaceUpdateClosure'''replacement-3 [#_"InplaceUpdateClosure" this, #_"Node" node, #_"EdgesType" type])
@@ -4179,7 +4074,6 @@ ZeroExtendNode'new-4
 (defp JavaWriteNode)
 (defp JsrScope)
 (defp JumpOp)
-(defp KeyData)
 (defp KlassPointerStamp)
 (defp LIR)
 (defp LIRBuilder)
@@ -4433,25 +4327,7 @@ ZeroExtendNode'new-4
 (defp NewInstanceNode)
 (defp NewObjectTemplates)
 (defp NoOp)
-
-;;;
- ; This class is the base class for all nodes. It represents a node that can be inserted in a Graph.
- ;
- ; Once a node has been added to a graph, it has a graph-unique #id(). Edges in the subclasses are
- ; represented with annotated fields. There are two kind of edges: Input and Successor.
- ; If a field, of a type compatible with Node, annotated with either Input and Successor is not nil,
- ; then there is an edge from this node to the node this field points to.
- ;;
-(defp Node
-    (#_"Node*" Node'''cfgPredecessors-1 [#_"Node" this])
-    ;;;
-     ; Returns an iterator that will provide all control-flow successors of this node. Normally this
-     ; will be the contents of all fields annotated with Successor, but some node classes (like EndNode)
-     ; may return different nodes.
-     ;;
-    (#_"Node*" Node'''cfgSuccessors-1 [#_"Node" this])
-)
-
+(defp Node)
 (defp NodeClass)
 (defp NodeCost)
 (defp NodeEntry)
@@ -5017,19 +4893,6 @@ ZeroExtendNode'new-4
 (defp SignedDivNode)
 (defp SignedRemNode)
 
-;;;
- ; This interface allows nodes to perform more complicated simplifications,
- ; in contrast to Canonicalizable, which supports only replacing the current node.
- ;
- ; Implementors of this interface need to call Simplifier#add(Node) for each node that might be
- ; influenced (in terms of simplification and canonicalization) by the actions performed in simplify.
- ;;
-(defp Simplifiable
-    (#_"this" Simplifiable'''simplify-2 [#_"Simplifiable" this, #_"Simplifier" tool])
-)
-
-(defp Simplifier)
-
 (defp Single
     ;;;
      ; This method is used to determine which memory location is killed by this node. Returning
@@ -5277,19 +5140,14 @@ ZeroExtendNode'new-4
 (defp UShr)
 
 ;;;
- ; This sub-interface of Canonicalizable is intended for nodes that have exactly one input. It has an
- ; additional #canonical(Canonicalizer, Node) method that looks at the given input instead of the current
+ ; This sub-interface of Canonicalizable is intended for nodes that have exactly one input. It has an
+ ; additional #canonical(Canonicalizer, Node) method that looks at the given input instead of the current
  ; input of the node - which can be used to ask "what if this input is changed to this node" - questions.
  ;;
 (defp Unary
     ;;;
-     ; Similar to Canonicalizable#canonical(Canonicalizer), except that implementations should act as if the
-     ; current input of the node was the given one, i.e. they should never look at the inputs via the this pointer.
-     ;;
-    (#_"Node" Unary'''canonical-3 [#_"Unary" this, #_"Canonicalizer" tool, #_"Node" forValue])
-    ;;;
-     ; Gets the current value of the input, so that calling #canonical(Canonicalizer, Node) with the value
-     ; returned from this method should behave exactly like Canonicalizable#canonical(Canonicalizer).
+     ; Gets the current value of the input, so that calling #canonical(Canonicalizer, Node) with the value
+     ; returned from this method should behave exactly like Canonicalizable#canonical(Canonicalizer).
      ;;
     (#_"Node" Unary'''getValue-1 [#_"Unary" this])
 )
@@ -5322,16 +5180,14 @@ ZeroExtendNode'new-4
     (#_"Stamp" UnaryOp'''foldStamp-2 [#_"UnaryOp" this, #_"Stamp" stamp])
 )
 
-(defp UnaryOpLogicNode
-    (#_"Stamp" UnaryOpLogicNode'''getSucceedingStampForValue-2 [#_"UnaryOpLogicNode" this, #_"boolean" negated?])
-    (#_"Boolean" UnaryOpLogicNode'''tryFold-2 [#_"UnaryOpLogicNode" this, #_"Stamp" valueStamp])
-)
-
+(defp UnaryOpLogicNode)
 (defp UncompressPointerOp)
 (defp UnpackEndianHalfNode)
 
 (defp UnsafeAccessNode
+    #_unused
     (#_"ValueNode" UnsafeAccessNode'''cloneAsFieldAccess-2 [#_"UnsafeAccessNode" this, #_"ResolvedJavaField" field])
+    #_unused
     (#_"ValueNode" UnsafeAccessNode'''cloneAsArrayAccess-3 [#_"UnsafeAccessNode" this, #_"ValueNode" offset, #_"LocationIdentity" location])
 )
 
@@ -10833,13 +10689,6 @@ ZeroExtendNode'new-4
     (§ def #_"MonitorTemplates"      Lowerer'monitorSnippets      (MonitorTemplates'new-1 HotSpot'useFastLocking))
     (§ def #_"WriteBarrierTemplates" Lowerer'writeBarrierSnippets (WriteBarrierTemplates'new-1 (when HotSpot'useCompressedOops HotSpot'oopEncoding)))
     (§ def #_"UnsafeLoadTemplates"   Lowerer'unsafeLoadSnippets   (UnsafeLoadTemplates'new-0))
-
-    ;;;
-     ; Indicates the smallest width for comparing an integer value on the target platform.
-     ;;
-    (defn #_"Integer" Lowerer'smallestCompareWidth-0 []
-        8
-    )
 
     (defn #_"AddressNode" Lowerer'createOffsetAddress-3 [#_"Graph" graph, #_"ValueNode" object, #_"long" offset]
         (Graph''add-2 graph, (OffsetAddressNode'new-2 object, (ConstantNode'forIntegerKind-3 :JavaKind'Long, offset, graph)))
@@ -18385,226 +18234,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns Simplifier [Canonicalizer]
-    (defn- #_"Simplifier" Simplifier'new-0 []
-        (merge (Simplifier'class.)
-            (hash-map
-                #_"ordered {Node}" :workset (ordered-set)
-            )
-        )
-    )
-
-    (defn- #_"ordered {Node}" Simplifier'add-2 [#_"ordered {Node}" workset, #_"Node" node]
-        (if (some? node) (conj workset node) workset)
-    )
-
-    (defn- #_"ordered {Node}" Simplifier'addAll-2 [#_"ordered {Node}" workset, #_"Node*" nodes]
-        (reduce Simplifier'add-2 workset (filter Node''isAlive-1 nodes))
-    )
-
-    (defn #_"this" Simplifier''add-2 [#_"Simplifier" this, #_"Node" node]
-        (update this :workset Simplifier'add-2 node)
-    )
-
-    (defn #_"this" Simplifier''addAll-2 [#_"Simplifier" this, #_"Node*" nodes]
-        (update this :workset Simplifier'addAll-2 nodes)
-    )
-
-    (defm Simplifier Canonicalizer
-        (#_"boolean" Canonicalizer'''canonicalizeReads-1 [#_"Simplifier" this]
-            true
-        )
-
-        (#_"boolean" Canonicalizer'''allUsagesAvailable-1 [#_"Simplifier" this]
-            true
-        )
-
-        (#_"Integer" Canonicalizer'''smallestCompareWidth-1 [#_"Simplifier" this]
-            (Lowerer'smallestCompareWidth-0)
-        )
-    )
-
-    ;; cases:                                           original node:
-    ;;                                     |Floating|Fixed-unconnected|Fixed-connected|
-    ;;                                     --------------------------------------------
-    ;;                                  nil|   1    |        X        |       3       |
-    ;;                                     --------------------------------------------
-    ;;                             Floating|   2    |        X        |       4       |
-    ;;   canonical node:                   --------------------------------------------
-    ;;                    Fixed-unconnected|   X    |        X        |       5       |
-    ;;                                     --------------------------------------------
-    ;;                      Fixed-connected|   2    |        X        |       6       |
-    ;;                                     --------------------------------------------
-    ;;                          ControlSink|   X    |        X        |       7       |
-    ;;                                     --------------------------------------------
-    ;;   X: must not happen
-
-    (defn- #_"boolean" Simplifier''performReplacement-3 [#_"Simplifier" this, #_"Node" node, #_"Node" newCanonical]
-        (and (not= newCanonical node)
-            (let [
-                #_"Graph" graph (:graph node)
-                #_"Node" canonical
-                    (when (and (some? newCanonical) (not (Node''isAlive-1 newCanonical))) => newCanonical
-                        (Graph''addOrUniqueWithInputs-2 graph, newCanonical)
-                    )
-            ]
-                (cond
-                    (satisfies? FloatingNode node)
-                    (do
-                        (§ ass! node (Node''replaceAtUsages-2 node, canonical))
-                        (GraphUtil'killWithUnusedFloatingInputs-2 node, true)
-                    )
-                    (satisfies? ControlSinkNode canonical)
-                    (do
-                        (Node''replaceAtPredecessor-2 node, canonical)
-                        (GraphUtil'killCFG-1 node)
-                    )
-                    :else
-                    (let [
-                        ;; when removing a fixed node, new canonicalization opportunities for its successor may arise
-                        _ (§ ass! this (Simplifier''add-2 this, (:next node)))
-                    ]
-                        (cond
-                            (nil? canonical)
-                            (do
-                                (§ ass! node (Node''replaceAtUsages-2 node, nil))
-                                (GraphUtil'removeFixedWithUnusedInputs-1 node)
-                            )
-                            (satisfies? FloatingNode canonical)
-                            (do
-                                (§ ass! graph (Graph''replaceFixedWithFloating-3 graph, node, canonical))
-                            )
-                            (nil? (:predecessor canonical))
-                            (do
-                                (§ ass! graph (Graph''replaceFixedWithFixed-3 graph, node, canonical))
-                            )
-                            :else
-                            (do
-                                (§ ass! node (Node''replaceAtUsages-2 node, canonical))
-                                (GraphUtil'removeFixedWithUnusedInputs-1 node)
-                            )
-                        )
-                    )
-                )
-                true
-            )
-        )
-    )
-
-    (defn- #_"boolean" Simplifier''tryCanonicalize-3 [#_"Simplifier" this, #_"Node" node, #_"NodeClass" nodeClass]
-        (or
-            (and (:canonicalizable? nodeClass)
-                (let [
-                    #_"Node" canonical
-                        (let [
-                            canonical (Canonicalizable'''canonical-2 node, this)
-                        ]
-                            (when (and (= canonical node) (:commutative? nodeClass)) => canonical
-                                (Binary'''maybeCommuteInputs-1 node)
-                            )
-                        )
-                ]
-                    (Simplifier''performReplacement-3 this, node, canonical)
-                )
-            )
-            (and (:simplifiable? nodeClass)
-                (let [
-                    _ (§ ass! node (Simplifiable'''simplify-2 node, this))
-                ]
-                    (Node''isDeleted-1 node)
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Calls ValueNode#inferStamp() on the node and if it returns true (which means that the stamp has changed),
-     ; re-queues the node's usages. If the stamp has changed, then this method also checks
-     ; if the stamp now describes a constant integer value, in which case the node is replaced with a constant.
-     ;;
-    (defn- #_"boolean" Simplifier''tryInferStamp-2 [#_"Simplifier" this, #_"ValueNode" node]
-        (and (Node''isAlive-1 node) (ValueNode'''inferStamp-1 node)
-            (let [
-                _
-                    (doseq [#_"Node" usage (:nodeUsages node)]
-                        (§ ass! this (update this :workset Simplifier'add-2 usage))
-                    )
-            ]
-                true
-            )
-        )
-    )
-
-    (defn- #_"void" Simplifier''processNode-2 [#_"Simplifier" this, #_"Node" node]
-        (when (Node''isAlive-1 node)
-            (when-not (or (GraphUtil'tryKillUnused-1 node) (Simplifier''tryCanonicalize-3 this, node, (:nodeClass node)))
-                (when (satisfies? ValueNode node)
-                    (let [
-                        #_"boolean" improved? (Simplifier''tryInferStamp-2 this, node)
-                        #_"Constant" constant (Stamp'''asConstant-1 (:stamp node))
-                    ]
-                        (if (and (some? constant) (not (satisfies? ConstantNode node)))
-                            (do
-                                (Node''replaceAtUsages-3 node, :InputType'Value, (ConstantNode'forConstant-3s (:stamp node), constant, (:graph node)))
-                                (GraphUtil'tryKillUnused-1 node)
-                            )
-                            (when improved?
-                                ;; the improved stamp may enable additional canonicalization
-                                (when-not (Simplifier''tryCanonicalize-3 this, node, (:nodeClass node))
-                                    (doseq [#_"Node" usage (:nodeUsages node)]
-                                        (§ ass! this (update this :workset Simplifier'add-2 usage))
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (defn #_"Graph" Simplifier'run-1 [#_"Graph" graph]
-        (Simplifier'run-2 graph, nil)
-    )
-
-    (defn #_"Graph" Simplifier'run-2 [#_"Graph" graph, #_"Node*" workset]
-        (let [
-            #_"Simplifier" this (Simplifier'new-0)
-            this (update this :workset Simplifier'addAll-2 (or workset (Graph''getNodes-1 graph)))
-            #_"NodeEventListener" listener
-                (§ proxy #_"NodeEventListener" (NodeEventListener'new-0)
-                    (#_"void" NodeEventListener'''nodeAdded-2 [#_"NodeEventListener" _, #_"Node" node]
-                        (§ ass! this (update this :workset Simplifier'add-2 node))
-                        nil
-                    )
-
-                    (#_"void" NodeEventListener'''inputChanged-2 [#_"NodeEventListener" _, #_"Node" node]
-                        (§ ass! this (update this :workset Simplifier'add-2 node))
-                        (when (satisfies? IndirectCanonicalization node)
-                            (doseq [#_"Node" usage (:nodeUsages node)]
-                                (§ ass! this (update this :workset Simplifier'add-2 usage))
-                            )
-                        )
-                        nil
-                    )
-
-                    (#_"void" NodeEventListener'''usagesDroppedToZero-2 [#_"NodeEventListener" _, #_"Node" node]
-                        (§ ass! this (update this :workset Simplifier'add-2 node))
-                        nil
-                    )
-                )
-        ]
-            (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 graph, listener)])
-                (doseq [#_"Node" node (remove Node''isDeleted-1 (:workset this))]
-                    (Simplifier''processNode-2 this, node)
-                )
-            )
-            graph
-        )
-    )
-)
-
 ;;;
  ; Container for objects representing the Code attributes parsed from a class file.
  ;;
@@ -22125,7 +21754,7 @@ ZeroExtendNode'new-4
         (doseq [#_"NormalizeCompareNode" logic (Graph''getNodes-2 graph, NormalizeCompareNode)]
             (ExpandLogicPhase'processNormalizeCompareNode-1 logic)
         )
-        (Graph''setAfterExpandLogic-1 graph)
+        graph
     )
 )
 
@@ -22415,9 +22044,6 @@ ZeroExtendNode'new-4
                     #_"NodeClass" :superNodeClass superNodeClass
                     #_"long" :inputsIteration (NodeClass'computeIterationMask-2 (:directCount inputs), (:offsets inputs))
                     #_"long" :successorIteration (NodeClass'computeIterationMask-2 (:directCount successors), (:offsets successors))
-                    #_"boolean" :canonicalizable? (#_"Class" .isAssignableFrom Canonicalizable'iface, clazz)
-                    #_"boolean" :commutative? (#_"Class" .isAssignableFrom BinaryCommutative'iface, clazz)
-                    #_"boolean" :simplifiable? (#_"Class" .isAssignableFrom Simplifiable'iface, clazz)
                     ;;;
                      ; Determines if the node has no inputs, nor successors.
                      ;;
@@ -24561,7 +24187,6 @@ ZeroExtendNode'new-4
                         #_"GuardsStage" :guardsStage :GuardsStage'FLOATING_GUARDS
                         #_"boolean" :isAfterFixedReadPhase false
                         #_"boolean" :hasValueProxies true
-                        #_"boolean" :isAfterExpandLogic false
                         #_"Schedule" :lastSchedule nil
                     )
                 )
@@ -24775,22 +24400,6 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn #_"void" Graph''removeSplitPropagate-3 [#_"Graph" this, #_"ControlSplitNode" node, #_"AbstractBeginNode" survivingSuccessor]
-        (let [
-            #_"Node*" snapshot (§ snap (Node''successors-1 node))
-            _ (Node''clearSuccessors-1 node)
-            _ (Node''replaceAtPredecessor-2 node, survivingSuccessor)
-            _ (§ ass! node (Node''safeDelete-1 node))
-        ]
-            (doseq [#_"Node" successor snapshot]
-                (when (and (some? successor) (Node''isAlive-1 successor) (not (= successor survivingSuccessor)))
-                    (GraphUtil'killCFG-1 successor)
-                )
-            )
-        )
-        nil
-    )
-
     (defn #_"void" Graph''replaceSplit-4 [#_"Graph" this, #_"ControlSplitNode" node, #_"Node" replacement, #_"AbstractBeginNode" survivingSuccessor]
         (if (satisfies? FixedWithNextNode replacement)
             (Graph''replaceSplitWithFixed-4 this, node, replacement, survivingSuccessor)
@@ -24913,10 +24522,6 @@ ZeroExtendNode'new-4
 
     (defn #_"this" Graph''setHasValueProxies-2 [#_"Graph" this, #_"boolean" state]
         (assoc this :hasValueProxies state)
-    )
-
-    (defn #_"this" Graph''setAfterExpandLogic-1 [#_"Graph" this]
-        (assoc this :isAfterExpandLogic true)
     )
 )
 
@@ -26946,18 +26551,6 @@ ZeroExtendNode'new-4
 
     (defn #_"JsrScope" JsrScope''pop-1 [#_"JsrScope" this]
         (JsrScope'new-1 (>>> (:scope this) 16))
-    )
-)
-
-(class-ns KeyData []
-    (defn #_"KeyData" KeyData'new-3 [#_"int" key, #_"double" probability, #_"int" keySuccessor]
-        (merge (KeyData'class.)
-            (hash-map
-                #_"int" :key key
-                #_"double" :probability probability
-                #_"int" :keySuccessor keySuccessor
-            )
-        )
     )
 )
 
@@ -33383,33 +32976,8 @@ ZeroExtendNode'new-4
     (def #_"LocationIdentity" NamedLocationIdentity'MARK_WORD (NamedLocationIdentity'mutable-1 "MarkWord"))
     (def #_"LocationIdentity" NamedLocationIdentity'HUB_WRITE (NamedLocationIdentity'mutable-1 "Hub:write"))
 
-    (def #_"LocationIdentity" NamedLocationIdentity'HUB
-        (§ proxy #_"CanonicalizableLocation" (CanonicalizableLocation'new-1 "Hub")
-            (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-4 [#_"CanonicalizableLocation" _, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object]
-                (let [
-                    #_"TypeReference" constantType (StampTool'typeReferenceOrNull-1 (:stamp object))
-                ]
-                    (when (and (some? constantType) (:exactReference constantType)) => read
-                        (ConstantNode'forConstant-2s (:stamp read), (ConstantReflection'asObjectHub-1 (:type constantType)))
-                    )
-                )
-            )
-        )
-    )
-
-    (def #_"LocationIdentity" NamedLocationIdentity'COMPRESSED_HUB
-        (§ proxy #_"CanonicalizableLocation" (CanonicalizableLocation'new-1 "CompressedHub")
-            (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-4 [#_"CanonicalizableLocation" _, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object]
-                (let [
-                    #_"TypeReference" constantType (StampTool'typeReferenceOrNull-1 (:stamp object))
-                ]
-                    (when (and (some? constantType) (:exactReference constantType)) => read
-                        (ConstantNode'forConstant-2s (:stamp read), (HotSpotConstant'''compress-1 (ConstantReflection'asObjectHub-1 (:type constantType))))
-                    )
-                )
-            )
-        )
-    )
+    (def #_"LocationIdentity" NamedLocationIdentity'HUB            (NamedLocationIdentity'immutable-1 "Hub"))
+    (def #_"LocationIdentity" NamedLocationIdentity'COMPRESSED_HUB (NamedLocationIdentity'immutable-1 "CompressedHub"))
 
     (def #_"LocationIdentity" NamedLocationIdentity'KLASS_SUPER_CHECK_OFFSET (NamedLocationIdentity'immutable-1 "Klass::_super_check_offset"))
     (def #_"LocationIdentity" NamedLocationIdentity'SECONDARY_SUPER_CACHE    (NamedLocationIdentity'mutable-1   "SecondarySuperCache"))
@@ -33421,24 +32989,12 @@ ZeroExtendNode'new-4
     (def #_"LocationIdentity" NamedLocationIdentity'OBJECT_MONITOR_CXQ        (NamedLocationIdentity'mutable-1 "ObjectMonitor::_cxq"))
     (def #_"LocationIdentity" NamedLocationIdentity'OBJECT_MONITOR_ENTRY_LIST (NamedLocationIdentity'mutable-1 "ObjectMonitor::_EntryList"))
 
-    (def #_"LocationIdentity" NamedLocationIdentity'CLASS_KLASS
-        (§ proxy #_"CanonicalizableLocation" (CanonicalizableLocation'new-1 "Class._klass")
-            (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-4 [#_"CanonicalizableLocation" _, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object]
-                (CanonicalizableLocation'foldIndirection-3 read, object, NamedLocationIdentity'CLASS_MIRROR)
-            )
-        )
-    )
+    (def #_"LocationIdentity" NamedLocationIdentity'CLASS_KLASS (NamedLocationIdentity'immutable-1 "Class._klass"))
 
     (def #_"LocationIdentity" NamedLocationIdentity'CLASS_MIRROR        (NamedLocationIdentity'immutable-1 "Klass::_java_mirror"))
     (def #_"LocationIdentity" NamedLocationIdentity'CLASS_MIRROR_HANDLE (NamedLocationIdentity'immutable-1 "Klass::_java_mirror handle"))
 
-    (def #_"LocationIdentity" NamedLocationIdentity'OBJ_ARRAY_KLASS_ELEMENT_KLASS
-        (§ proxy #_"CanonicalizableLocation" (CanonicalizableLocation'new-1 "ObjArrayKlass::_element_klass")
-            (#_"ValueNode" CanonicalizableLocation'''canonicalizeRead-4 [#_"CanonicalizableLocation" _, #_"ValueNode" read, #_"AddressNode" location, #_"ValueNode" object]
-                read
-            )
-        )
-    )
+    (def #_"LocationIdentity" NamedLocationIdentity'OBJ_ARRAY_KLASS_ELEMENT_KLASS (NamedLocationIdentity'immutable-1 "ObjArrayKlass::_element_klass"))
 
     (def #_"LocationIdentity" NamedLocationIdentity'PRIMARY_SUPERS           (NamedLocationIdentity'immutable-1 "PrimarySupers"))
     (def #_"LocationIdentity" NamedLocationIdentity'METASPACE_ARRAY_LENGTH   (NamedLocationIdentity'immutable-1 "MetaspaceArrayLength"))
@@ -33447,29 +33003,6 @@ ZeroExtendNode'new-4
     (def #_"LocationIdentity" NamedLocationIdentity'GC_CARD (NamedLocationIdentity'mutable-1 "GC-Card"))
     (def #_"LocationIdentity" NamedLocationIdentity'GC_LOG (NamedLocationIdentity'mutable-1 "GC-Log"))
     (def #_"LocationIdentity" NamedLocationIdentity'GC_INDEX (NamedLocationIdentity'mutable-1 "GC-Index"))
-)
-
-(class-ns CanonicalizableLocation [NamedLocationIdentity, LocationIdentity]
-    (defn #_"CanonicalizableLocation" CanonicalizableLocation'new-1 [#_"String" name]
-        (merge (CanonicalizableLocation'class.) (NamedLocationIdentity'new-2 name, true))
-    )
-
-    ;;;
-     ; Fold reads that convert from Class -> Hub -> Class or vice versa.
-     ;
-     ; @return an earlier read or the original {@code read}
-     ;;
-    (defn #_"ValueNode" CanonicalizableLocation'foldIndirection-3 [#_"ValueNode" read, #_"ValueNode" object, #_"LocationIdentity" otherLocation]
-        (when (and (satisfies? Access object) (= (Access'''getLocationIdentity-1 object) otherLocation)) => read
-            (let [
-                #_"AddressNode" address (Access'''getAddress-1 object)
-            ]
-                (when (satisfies? OffsetAddressNode address) => read
-                    (AddressNode'''getBase-1 address)
-                )
-            )
-        )
-    )
 )
 
 (class-ns LocationSet []
@@ -33642,17 +33175,7 @@ ZeroExtendNode'new-4
  ;;
 (value-ns LoweringPhase
     (defn #_"Graph" LoweringPhase'run-2 [#_"Graph" graph, #_"LoweringStage" loweringStage]
-        (let [
-            #_"HashSetNodeEventListener" listener (HashSetNodeEventListener'new-0)
-            graph
-                (try (§ with [#_"NodeEventScope" _ (NodeEventScope'new-2 graph, listener)])
-                    (LoweringRound'run-2 graph, loweringStage)
-                )
-        ]
-            (when (seq (:changedNodes listener)) => graph
-                (Simplifier'run-2 graph, (:changedNodes listener))
-            )
-        )
+        (LoweringRound'run-2 graph, loweringStage)
     )
 
     ;;;
@@ -34692,15 +34215,7 @@ ZeroExtendNode'new-4
     (defm HashSetNodeEventListener NodeEventListener
         (#_"void" NodeEventListener'''changed-3 [#_"HashSetNodeEventListener" this, #_"NodeEvent" e, #_"Node" node]
             (when (contains? (:filter this) e)
-                (let [
-                    _ (§ ass! this (update this :changedNodes conj node))
-                ]
-                    (when (satisfies? IndirectCanonicalization node)
-                        (doseq [#_"Node" usage (:nodeUsages node)]
-                            (§ ass! this (update this :changedNodes conj usage))
-                        )
-                    )
-                )
+                (§ ass! this (update this :changedNodes conj node))
             )
             nil
         )
@@ -34738,6 +34253,14 @@ ZeroExtendNode'new-4
     )
 )
 
+;;;
+ ; This class is the base class for all nodes. It represents a node that can be inserted in a Graph.
+ ;
+ ; Once a node has been added to a graph, it has a graph-unique #id(). Edges in the subclasses are
+ ; represented with annotated fields. There are two kind of edges: Input and Successor.
+ ; If a field, of a type compatible with Node, annotated with either Input and Successor is not nil,
+ ; then there is an edge from this node to the node this field points to.
+ ;;
 (class-ns Node []
     (def #_"int" Node'DELETED_ID_START -1000000000)
     (def #_"int" Node'INITIAL_ID -1)
@@ -35054,16 +34577,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm Node Node
-        (#_"Node*" Node'''cfgPredecessors-1 [#_"Node" this]
-            (when (some? (:predecessor this)) (list (:predecessor this)))
-        )
-
-        (#_"Node*" Node'''cfgSuccessors-1 [#_"Node" this]
-            (Node''successors-1 this)
-        )
-    )
-
     ;;;
      ; Nodes using their #id as the hash code. This works very well when nodes of the same graph are
      ; stored in sets. It can give bad behavior when storing nodes of different graphs in the same set.
@@ -35216,14 +34729,6 @@ ZeroExtendNode'new-4
             builder
         )
     )
-
-    (defn #_"this" CallTargetNode''setTargetMethod-2 [#_"CallTargetNode" this, #_"ResolvedJavaMethod" method]
-        (assoc this :targetMethod method)
-    )
-
-    (defn #_"this" CallTargetNode''setInvokeKind-2 [#_"CallTargetNode" this, #_"InvokeKind" kind]
-        (assoc this :invokeKind kind)
-    )
 )
 
 (class-ns LoweredCallTargetNode [CallTargetNode, ValueNode, Node, LIRLowerable]
@@ -35249,7 +34754,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns MethodCallTargetNode [CallTargetNode, ValueNode, Node, LIRLowerable, Simplifiable]
+(class-ns MethodCallTargetNode [CallTargetNode, ValueNode, Node, LIRLowerable]
     (defn #_"MethodCallTargetNode" MethodCallTargetNode'new-4 [#_"InvokeKind" invokeKind, #_"ResolvedJavaMethod" targetMethod, #_"ValueNode*" arguments, #_"Stamp" returnStamp]
         (merge (MethodCallTargetNode'class.) (CallTargetNode'new-4 arguments, targetMethod, invokeKind, returnStamp))
     )
@@ -35310,25 +34815,6 @@ ZeroExtendNode'new-4
             )
         )
     )
-
-    (defm MethodCallTargetNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"MethodCallTargetNode" this, #_"Simplifier" tool]
-            ;; attempt to devirtualize the call
-            (when (some? (InvokeNode''getContextMethod-1 (MethodCallTargetNode''invoke-1 this))) => this ;; avoid invokes with placeholder bcis: they do not have a valid contextType
-                (let [
-                    #_"ResolvedJavaType" contextType (when-not (and (nil? (:stateAfter (MethodCallTargetNode''invoke-1 this))) (nil? (:stateDuring (MethodCallTargetNode''invoke-1 this)))) (InvokeNode''getContextType-1 (MethodCallTargetNode''invoke-1 this)))
-                    #_"ResolvedJavaMethod" specialCallTarget (MethodCallTargetNode'findSpecialCallTarget-4 (:invokeKind this), (MethodCallTargetNode''receiver-1 this), (:targetMethod this), contextType)
-                ]
-                    (when (some? specialCallTarget) => this
-                        (-> this
-                            (CallTargetNode''setTargetMethod-2 specialCallTarget)
-                            (CallTargetNode''setInvokeKind-2 :InvokeKind'Special)
-                        )
-                    )
-                )
-            )
-        )
-    )
 )
 
 (class-ns DummyGuardHandle [ValueNode, Node, GuardedNode]
@@ -35373,16 +34859,6 @@ ZeroExtendNode'new-4
     (defm AbstractEndNode AbstractEndNode
         (#_"AbstractMergeNode" AbstractEndNode'''merge-1 [#_"AbstractEndNode" this]
             (first (:nodeUsages this))
-        )
-    )
-
-    (defm AbstractEndNode Node
-        (#_"Node*" Node'''cfgSuccessors-1 [#_"AbstractEndNode" this]
-            (let [
-                #_"AbstractMergeNode" _merge (AbstractEndNode'''merge-1 this)
-            ]
-                (when (some? _merge) (list _merge))
-            )
         )
     )
 )
@@ -35443,12 +34919,6 @@ ZeroExtendNode'new-4
 
     (defn #_"this" LoopEndNode''setEndIndex-2 [#_"LoopEndNode" this, #_"int" idx]
         (assoc this :endIndex idx)
-    )
-
-    (defm LoopEndNode Node
-        (#_"Node*" Node'''cfgSuccessors-1 [#_"LoopEndNode" this]
-            nil
-        )
     )
 )
 
@@ -35565,12 +35035,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The IfNode represents a branch that can go one of two directions depending on the outcome of a comparison.
  ;;
-(class-ns IfNode [ControlSplitNode, FixedNode, ValueNode, Node, Simplifiable, LIRLowerable]
-    (defn #_"this" IfNode''setCondition-2 [#_"IfNode" this, #_"LogicNode" logic]
-        (Node''updateUsages-3 this, (:logic this), logic)
-        (assoc this :logic logic)
-    )
-
+(class-ns IfNode [ControlSplitNode, FixedNode, ValueNode, Node, LIRLowerable]
     (defn #_"IfNode" IfNode'new-4f [#_"LogicNode" logic, #_"FixedNode" trueSuccessor, #_"FixedNode" falseSuccessor, #_"double" trueSuccessorProbability]
         (IfNode'new-4b logic, (BeginNode'begin-1 trueSuccessor), (BeginNode'begin-1 falseSuccessor), trueSuccessorProbability)
     )
@@ -35595,14 +35060,10 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"this" IfNode''setTrueSuccessor-2 [#_"IfNode" this, #_"AbstractBeginNode" node]
-        (Node''updatePredecessor-3 this, (:trueSuccessor this), node)
-        (assoc this :trueSuccessor node)
-    )
-
-    (defn #_"this" IfNode''setFalseSuccessor-2 [#_"IfNode" this, #_"AbstractBeginNode" node]
-        (Node''updatePredecessor-3 this, (:falseSuccessor this), node)
-        (assoc this :falseSuccessor node)
+    (defm IfNode LIRLowerable
+        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"IfNode" this, #_"LIRBuilder" builder]
+            (LIRBuilder''emitIf-2 builder, this)
+        )
     )
 
     (defn #_"this" IfNode''setTrueSuccessorProbability-2 [#_"IfNode" this, #_"double" prob]
@@ -35613,1055 +35074,11 @@ ZeroExtendNode'new-4
         (#_"double" ControlSplitNode'''probability-2 [#_"IfNode" this, #_"AbstractBeginNode" successor]
             (if (= successor (:trueSuccessor this)) (:trueSuccessorProbability this) (- 1.0 (:trueSuccessorProbability this)))
         )
-    )
 
-    (defm IfNode LIRLowerable
-        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"IfNode" this, #_"LIRBuilder" builder]
-            (LIRBuilder''emitIf-2 builder, this)
-        )
-    )
-
-    (defn #_"this" IfNode''eliminateNegation-1 [#_"IfNode" this]
-        (let [
-            this (assoc this :trueSuccessor (:falseSuccessor this) :falseSuccessor (:trueSuccessor this))
-            this (assoc this :trueSuccessorProbability (- 1.0 (:trueSuccessorProbability this)))
-            this (IfNode''setCondition-2 this, (Unary'''getValue-1 (§ cast #_"LogicNegationNode" (:logic this))))
-        ]
-            this
-        )
-    )
-
-    (defn- #_"void" IfNode''pushNodesThroughIf-2 [#_"IfNode" this, #_"Simplifier" tool]
-        ;; push similar nodes upwards through the if, thereby deduplicating them
-        (loop []
-            (let [
-                #_"AbstractBeginNode" trueSucc (:trueSuccessor this)
-                #_"AbstractBeginNode" falseSucc (:falseSuccessor this)
-            ]
-                (when (and (satisfies? BeginNode trueSucc) (satisfies? BeginNode falseSucc) (satisfies? FixedWithNextNode (:next trueSucc)) (satisfies? FixedWithNextNode (:next falseSucc)))
-                    (let [
-                        #_"FixedWithNextNode" trueNext (:next trueSucc)
-                        #_"FixedWithNextNode" falseNext (:next falseSucc)
-                        #_"NodeClass" nodeClass (:nodeClass trueNext)
-                    ]
-                        (when (= (#_"Object" .getClass trueNext) (#_"Object" .getClass falseNext))
-                            (cond
-                                (satisfies? AbstractBeginNode trueNext)
-                                (do
-                                    ;; Cannot do this optimization for begin nodes, because it could
-                                    ;; move guards above the if that need to stay below a branch.
-                                )
-                                (and (NodeClass''equalInputs-3 nodeClass, trueNext, falseNext) (Node''valueEquals-2 trueNext, falseNext))
-                                (let [
-                                    _ (§ ass! falseNext (Node''replaceAtUsages-2 falseNext, trueNext))
-                                ]
-                                    (Graph''removeFixed-2 (:graph this), falseNext)
-                                    (GraphUtil'unlinkFixedNode-1 trueNext)
-                                    (Graph''addBeforeFixed-3 (:graph this), this, trueNext)
-                                    (doseq [#_"Node" usage (:nodeUsages trueNext)]
-                                        (when (Node''isAlive-1 usage)
-                                            (§ ass! tool (Simplifier''add-2 tool, usage))
-                                        )
-                                    )
-                                    (recur)
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    ;;;
-     ; Check it these two blocks end up at the same place. Meeting at the same merge, or deoptimizing in the same way.
-     ;;
-    (defn- #_"boolean" IfNode'sameDestination-2 [#_"AbstractBeginNode" succ1, #_"AbstractBeginNode" succ2]
-        (let [
-            #_"Node" next1 (:next succ1)
-            #_"Node" next2 (:next succ2)
-        ]
-            (cond
-                ;; go to the same MergeNode and merge the same values
-                (and (satisfies? EndNode next1) (satisfies? EndNode next2))
-                    (and (= (AbstractEndNode'''merge-1 next1) (AbstractEndNode'''merge-1 next2))
-                        (loop-when [#_"seq" s (seq (AbstractMergeNode''phis-1 (AbstractEndNode'''merge-1 next1)))] (some? s) => true
-                            (let [
-                                #_"PhiNode" phi (first s)
-                            ]
-                                (and (= (PhiNode''valueAt-2n phi, next1) (PhiNode''valueAt-2n phi, next2))
-                                    (recur (next s))
-                                )
-                            )
-                        )
-                    )
-                ;; same deoptimization reason and action
-                (and (satisfies? DeoptimizeNode next1) (satisfies? DeoptimizeNode next2))
-                    (and (= (:reason next1) (:reason next2)) (= (:action next1) (:action next2)))
-                ;; exit the same loop and end up at the same place
-                (and (satisfies? LoopExitNode next1) (satisfies? LoopExitNode next2))
-                    (and (= (:loopBegin next1) (:loopBegin next2))
-                         (= (:stateAfter next1) (:stateAfter next2))
-                         (nil? (:stateAfter next1))
-                         (IfNode'sameDestination-2 next1, next2)
-                    )
-                ;; exit the same loop and end up at the same place
-                (and (satisfies? ReturnNode next1) (satisfies? ReturnNode next2))
-                    (= (:result next1) (:result next2))
-                :else
-                    false
-            )
-        )
-    )
-
-    ;;;
-     ; Recognize a couple patterns that can be merged into an unsigned compare.
-     ;
-     ; @return true if a replacement was done
-     ;;
-    (defn- #_"boolean" IfNode''checkForUnsignedCompare-2 [#_"IfNode" this, #_"Simplifier" tool]
-        (and (satisfies? IntegerLessThanNode (:logic this))
-            (let [
-                #_"IntegerLessThanNode" lessThan (:logic this)
-                #_"Constant" y (Stamp'''asConstant-1 (:stamp (:y lessThan)))
-            ]
-                (and (satisfies? PrimitiveConstant y) (zero? (UnsignedLong''asLong-1 y)) (satisfies? IfNode (:next (:falseSuccessor this)))
-                    (let [
-                        #_"IfNode" ifNode2 (:next (:falseSuccessor this))
-                    ]
-                        (and (satisfies? IntegerLessThanNode (:logic ifNode2))
-                            (let [
-                                #_"IntegerLessThanNode" lessThan2 (:logic ifNode2)
-                                #_"AbstractBeginNode" trueSucc (:trueSuccessor ifNode2)
-                                #_"AbstractBeginNode" falseSucc (:falseSuccessor ifNode2)
-                                [trueSucc falseSucc #_"IntegerBelowNode" below]
-                                    ;; Convert x >= 0 && x < positive, which is represented as !(x < 0) && x < <positive>, into an unsigned compare.
-                                    (cond
-                                        (and (= (:x lessThan2) (:x lessThan)) (satisfies? IntegerStamp (:stamp (:y lessThan2))) (IntegerStamp''isPositive-1 (:stamp (:y lessThan2))) (IfNode'sameDestination-2 (:trueSuccessor this), (:falseSuccessor ifNode2)))
-                                            ;; swap direction
-                                            [falseSucc trueSucc (Graph''add-2 (:graph this), (IntegerBelowNode'new-2 (:x lessThan2), (:y lessThan2)))]
-                                        (and (= (:y lessThan2) (:x lessThan)) (IfNode'sameDestination-2 (:trueSuccessor this), (:trueSuccessor ifNode2)))
-                                            ;; Convert x >= 0 && x <= positive, which is represented as !(x < 0) && !(<positive> > x), into x <| positive + 1.
-                                            ;; Only for constants, since there isn't an IntegerBelowEqualThanNode, but that doesn't appear to be interesting.
-                                            (let [
-                                                #_"JavaConstant" positive (ValueNode''asJavaConstant-1 (:x lessThan2))
-                                                below
-                                                    (when (and (some? positive) (pos? (UnsignedLong''asLong-1 positive)) (< (UnsignedLong''asLong-1 positive) (JavaKind'getMaxValue-1 (JavaConstant'''getJavaKind-1 positive))))
-                                                        (Graph''add-2 (:graph this), (IntegerBelowNode'new-2 (:x lessThan), (ConstantNode'forIntegerStamp-3 (:stamp (:x lessThan2)), (inc (UnsignedLong''asLong-1 positive)), (:graph this))))
-                                                    )
-                                            ]
-                                                [trueSucc falseSucc below]
-                                            )
-                                        :else
-                                            [trueSucc falseSucc nil]
-                                    )
-                            ]
-                                (and (some? below)
-                                    (let [
-                                        _ (§ ass! ifNode2 (IfNode''setTrueSuccessor-2 ifNode2, nil))
-                                        _ (§ ass! ifNode2 (IfNode''setFalseSuccessor-2 ifNode2, nil))
-                                        #_"IfNode" newIfNode (Graph''add-2 (:graph this), (IfNode'new-4b below, falseSucc, trueSucc, (- 1.0 (:trueSuccessorProbability this))))
-                                    ]
-                                        ;; Remove the < 0 test.
-                                        (Node''replaceFirstSuccessor-3 (:predecessor (:trueSuccessor this)), (:trueSuccessor this), nil)
-                                        (GraphUtil'killCFG-1 (:trueSuccessor this))
-                                        (Graph''removeSplit-3 (:graph this), this, (:falseSuccessor this))
-
-                                        ;; Replace the second test with the new one.
-                                        (Node''replaceFirstSuccessor-3 (:predecessor ifNode2), ifNode2, newIfNode)
-                                        (§ ass! ifNode2 (Node''safeDelete-1 ifNode2))
-                                        true
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defn- #_"void" IfNode''removeThroughFalseBranch-3 [#_"IfNode" this, #_"Simplifier" tool, #_"AbstractMergeNode" merge]
-        (let [
-            #_"AbstractBeginNode" trueBegin (:trueSuccessor this)
-            _ (Graph''removeSplitPropagate-3 (:graph this), this, trueBegin)
-            _ (§ ass! tool (Simplifier''add-2 tool, trueBegin))
-        ]
-            (when (some? (:logic this))
-                (GraphUtil'tryKillUnused-1 (:logic this))
-            )
-            (when (and (Node''isAlive-1 merge) (< 1 (count (:ends merge))))
-                (doseq [#_"FixedNode" end (:ends merge)]
-                    (let [
-                        #_"Node" n (loop-when-recur [n end] (and (some? n) (satisfies? BeginNode (:predecessor n))) [(:predecessor n)] => n)
-                    ]
-                        (when (and (some? n) (satisfies? IfNode (:predecessor n)))
-                            (§ ass! tool (Simplifier''add-2 tool, (:predecessor n)))
-                        )
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (defn- #_"ValueNode" IfNode''canonicalizeConditionalCascade-4 [#_"IfNode" this, #_"Simplifier" tool, #_"ValueNode" trueValue, #_"ValueNode" falseValue]
-        (cond
-            (not (= (ValueNode''getStackKind-1 trueValue) (ValueNode''getStackKind-1 falseValue)))
-                nil
-            (not (any = (ValueNode''getStackKind-1 trueValue) :JavaKind'Int :JavaKind'Long))
-                nil
-            (and (satisfies? ConstantNode trueValue) (satisfies? ConstantNode falseValue))
-                (Graph''add-2 (:graph this), (ConditionalNode'new-3 (:logic this), trueValue, falseValue))
-            (not (:isAfterExpandLogic (:graph this)))
-                (let [
-                    [#_"ConditionalNode" conditional #_"ValueNode" constant #_"boolean" negateCondition]
-                        (cond
-                            (and (satisfies? ConditionalNode trueValue)  (satisfies? ConstantNode falseValue)) [trueValue falseValue true ]
-                            (and (satisfies? ConditionalNode falseValue) (satisfies? ConstantNode trueValue) ) [falseValue trueValue false]
-                            :else
-                                (§ return nil)
-                        )
-                ]
-                    (let [
-                        [#_"ValueNode" otherValue #_"boolean" negateConditionalCondition]
-                            (condp = constant
-                                (:trueValue conditional)  [(:falseValue conditional) false]
-                                (:falseValue conditional) [(:trueValue conditional)  true ]
-                                                          [nil                       false]
-                            )
-                    ]
-                        (cond
-                            (and (some? otherValue) (satisfies? ConstantNode otherValue))
-                                (let [
-                                    #_"double" shortCutProbability (ControlSplitNode'''probability-2 this, (:trueSuccessor this))
-                                    #_"LogicNode" newCondition (LogicNode'or-5 (:logic this), negateCondition, (:logic conditional), negateConditionalCondition, shortCutProbability)
-                                ]
-                                    (Graph''add-2 (:graph this), (ConditionalNode'new-3 newCondition, constant, otherValue))
-                                )
-                            (and (not negateCondition) (ValueNode''isJavaConstant-1 constant) (ValueNode''isJavaConstant-1 (:trueValue conditional)) (ValueNode''isJavaConstant-1 (:falseValue conditional)))
-                                (let [
-                                    [#_"IntegerLessThanNode" lessThan #_"IntegerEqualsNode" equals]
-                                        (cond
-                                            (and (satisfies? IntegerLessThanNode (:logic this)) (satisfies? IntegerEqualsNode (:logic conditional)) (= (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 constant)) -1) (zero? (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:trueValue conditional)))) (= (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:falseValue conditional))) 1))
-                                                [
-                                                    (:logic this)
-                                                    (:logic conditional)
-                                                ]
-                                            (and (satisfies? IntegerEqualsNode (:logic this)) (satisfies? IntegerLessThanNode (:logic conditional)) (zero? (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 constant))) (= (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:trueValue conditional))) -1) (= (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:falseValue conditional))) 1))
-                                                [
-                                                    (:logic conditional)
-                                                    (:logic this)
-                                                ]
-                                        )
-                                ]
-                                    (when (some? lessThan)
-                                        (when (or (and (= (:x lessThan) (:x equals)) (= (:y lessThan) (:y equals))) (and (= (:x lessThan) (:y equals)) (= (:y lessThan) (:x equals))))
-                                            (Graph''add-2 (:graph this), (NormalizeCompareNode'new-3 (:x lessThan), (:y lessThan), (Stamp'''getStackKind-1 (:stamp (:trueValue conditional)))))
-                                        )
-                                    )
-                                )
-                        )
-                    )
-                )
-        )
-    )
-
-    (defn- #_"ValueNode" IfNode''proxyReplacement-2 [#_"IfNode" this, #_"ValueNode" replacement]
-        ;; Special case: Every empty diamond we collapse to a conditional node can potentially
-        ;; contain loop exit nodes on both branches. See the graph below: The two loop exits
-        ;; (instanceof begin node) exit the same loop. The resulting phi is defined outside the
-        ;; loop, but the resulting conditional node will be inside the loop, so we need to proxy the
-        ;; resulting conditional node. Callers of this method ensure that true and false successor
-        ;; have no usages, therefore a and b in the graph below can never be proxies themselves.
-        ;;
-        ;;              +--+
-        ;;              |If|
-        ;;              +--+      +-----+ +-----+
-        ;;         +----+  +----+ |  a  | |  b  |
-        ;;         |Lex |  |Lex | +----^+ +^----+
-        ;;         +----+  +----+      |   |
-        ;;           +-------+         +---+
-        ;;           | Merge +---------+Phi|
-        ;;           +-------+         +---+
-        (if (and (:hasValueProxies (:graph this)) (satisfies? LoopExitNode (:trueSuccessor this)) (satisfies? LoopExitNode (:falseSuccessor this)))
-            (Graph''add-2 (:graph this), (ValueProxyNode'new-2 replacement, (:trueSuccessor this)))
-            replacement
-        )
-    )
-
-    ;;;
-     ; Tries to remove an empty if construct or replace an if construct with a materialization.
-     ;
-     ; @return true if a transformation was made, false otherwise
-     ;;
-    (defn- #_"boolean" IfNode''removeOrMaterializeIf-2 [#_"IfNode" this, #_"Simplifier" tool]
-        (let [
-            #_"FixedNode" trueEnd (:next (:trueSuccessor this))
-            #_"FixedNode" falseEnd (:next (:falseSuccessor this))
-        ]
-            (when (and (satisfies? AbstractEndNode trueEnd) (satisfies? AbstractEndNode falseEnd))
-                (let [
-                    #_"AbstractMergeNode" merge (AbstractEndNode'''merge-1 trueEnd)
-                ]
-                    (when (and (= merge (AbstractEndNode'''merge-1 falseEnd)) (empty? (AbstractBeginNode'''anchored-1 (:trueSuccessor this))) (empty? (AbstractBeginNode'''anchored-1 (:falseSuccessor this))))
-                        (let [
-                            [#_"PhiNode" singlePhi #_"int" distinct]
-                                (loop-when [singlePhi nil distinct 0 #_"seq" s (seq (AbstractMergeNode''phis-1 merge))] (some? s) => [singlePhi distinct]
-                                    (let [
-                                        #_"PhiNode" phi (first s)
-                                    ]
-                                        (if (= (PhiNode''valueAt-2n phi, trueEnd) (PhiNode''valueAt-2n phi, falseEnd))
-                                            (recur singlePhi distinct (next s))
-                                            (recur phi (inc distinct) (next s))
-                                        )
-                                    )
-                                )
-                        ]
-                            (case distinct
-                                0
-                                    (do
-                                        ;; multiple phis, but merging same values for true and false, so simply delete the path
-                                        (IfNode''removeThroughFalseBranch-3 this, tool, merge)
-                                        (§ return true)
-                                    )
-                                1
-                                    (let [
-                                        #_"ValueNode" trueValue (PhiNode''valueAt-2n singlePhi, trueEnd)
-                                        #_"ValueNode" falseValue (PhiNode''valueAt-2n singlePhi, falseEnd)
-                                        #_"ValueNode" conditional (IfNode''canonicalizeConditionalCascade-4 this, tool, trueValue, falseValue)
-                                    ]
-                                        (when (some? conditional)
-                                            (let [
-                                                _ (§ ass! singlePhi (PhiNode''setValueAt-3n singlePhi, trueEnd, (IfNode''proxyReplacement-2 this, conditional)))
-                                            ]
-                                                (IfNode''removeThroughFalseBranch-3 this, tool, merge)
-                                                (§ return true)
-                                            )
-                                        )
-                                    )
-                                nil
-                            )
-                        )
-                    )
-                )
-            )
-            (and (satisfies? ReturnNode trueEnd) (satisfies? ReturnNode falseEnd)
-                (let [
-                    #_"ValueNode" trueValue (:result trueEnd)
-                    #_"ValueNode" falseValue (:result falseEnd)
-                    #_"ValueNode" value nil
-                ]
-                    (when (some? trueValue)
-                        (if (= trueValue falseValue)
-                            (§ ass value trueValue)
-                            (do
-                                (§ ass value (IfNode''canonicalizeConditionalCascade-4 this, tool, trueValue, falseValue))
-                                (when (nil? value)
-                                    (§ return false)
-                                )
-                            )
-                        )
-                    )
-                    (Node''replaceAtPredecessor-2 this, (Graph''add-2 (:graph this), (ReturnNode'new-1 value)))
-                    (GraphUtil'killCFG-1 this)
-                    true
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Gets an array of constants derived from a node that is either a ConstantNode or a
-     ; PhiNode whose input values are all constants. The length of the returned array is
-     ; equal to the number of ends terminating in a given merge node.
-     ;
-     ; @return nil if {@code node} is neither a ConstantNode nor a PhiNode whose
-     ;         input values are all constants
-     ;;
-    (defn- #_"[Constant]" IfNode'constantValues-3 [#_"ValueNode" node, #_"AbstractMergeNode" merge, #_"boolean" allow-nil?]
-        (cond
-            (satisfies? ConstantNode node)
-                (vec (repeat (count (:ends merge)) (:value node)))
-            (and (satisfies? PhiNode node) (= (:merge node) merge) (satisfies? ValuePhiNode node) (= (count (:phiValues node)) (count (:ends merge))))
-                (loop-when [#_"[Constant]" constants [] #_"seq" s (seq (:phiValues node))] (some? s) => constants
-                    (let [
-                        #_"ValueNode" n (first s)
-                    ]
-                        (when (or allow-nil? (satisfies? ConstantNode n))
-                            (recur (conj' constants (ValueNode''asConstant-1 n)) (next s))
-                        )
-                    )
-                )
-        )
-    )
-
-    (defn- #_"boolean" IfNode'checkFrameState-1 [#_"FixedNode" node]
-        (loop [node node]
-            (condp satisfies? node
-                AbstractMergeNode
-                    (§ return (some? (:stateAfter node)))
-                StateSplit
-                    (when (some? (:stateAfter node))
-                        (§ return true)
-                    )
-                nil
-            )
-
-            (condp satisfies? node
-                ControlSplitNode
-                    (loop-when [#_"seq" s (seq (Node'''cfgSuccessors-1 node))] (some? s) => false
-                        (or (IfNode'checkFrameState-1 (first s))
-                            (recur (next s))
-                        )
-                    )
-                FixedWithNextNode (recur (:next node))
-                AbstractEndNode   (recur (AbstractEndNode'''merge-1 node))
-                ControlSinkNode   true
-                                  false
-            )
-        )
-    )
-
-    ;;;
-     ; Connects a set of ends to a given successor, inserting a merge node if there is more than
-     ; one end. If {@code ends} is not empty, then {@code successor} is added to {@code tool}'s
-     ; {@linkplain Simplifier#add(Node) work list}.
-     ;
-     ; @param oldMerge the merge being removed
-     ; @param phiValues the values of the phi at the merge, keyed by the merge ends
-     ;;
-    (defn- #_"void" IfNode''connectEnds-6 [#_"IfNode" this, #_"EndNode*" ends, #_"{AbstractEndNode ValueNode}" phiValues, #_"AbstractBeginNode" successor, #_"AbstractMergeNode" oldMerge, #_"Simplifier" tool]
-        (when (seq ends)
-            (let [
-                _
-                    (if (= (count ends) 1)
-                        (let [
-                            #_"AbstractEndNode" end (nth ends 0)
-                            _ (§ ass! end (update end :predecessor FixedWithNextNode''setNext-2 successor))
-                            _ (§ ass! oldMerge (AbstractMergeNode''removeEnd-2 oldMerge, end))
-                        ]
-                            (GraphUtil'killCFG-1 end)
-                        )
-                        ;; need a new phi in case the frame state is used by more than the merge being removed
-                        (let [
-                            #_"AbstractMergeNode" newMerge (Graph''add-2 (:graph this), (MergeNode'new-0))
-                            #_"PhiNode" oldPhi (first (:nodeUsages oldMerge))
-                            #_"PhiNode" newPhi (Graph''add-2 (:graph this), (ValuePhiNode'new-2 (:stamp oldPhi), newMerge))
-                            _
-                                (doseq [#_"EndNode" end ends]
-                                    (§ ass! newPhi (PhiNode''addInput-2 newPhi, (get phiValues end)))
-                                    (§ ass! newMerge (AbstractMergeNode''addForwardEnd-2 newMerge, end))
-                                )
-                            #_"FrameState" stateAfter (:stateAfter oldMerge)
-                            _
-                                (when (some? stateAfter)
-                                    (let [
-                                        stateAfter (FrameState''duplicate-1 stateAfter)
-                                    ]
-                                        (Node''replaceFirstInput-3 stateAfter, oldPhi, newPhi)
-                                        (§ ass! newMerge (StateSplit'''setStateAfter-2 newMerge, stateAfter))
-                                    )
-                                )
-                        ]
-                            (§ ass! newMerge (FixedWithNextNode''setNext-2 newMerge, successor))
-                        )
-                    )
-            ]
-                (§ ass! tool (Simplifier''add-2 tool, successor))
-            )
-        )
-        nil
-    )
-
-    (defn- #_"void" IfNode'propagateZeroProbability-1 [#_"FixedNode" start]
-        (loop-when [#_"FixedNode" prev nil #_"FixedNode" node start] (some? node)
-            (and
-                (cond
-                    (satisfies? IfNode node)
-                        (condp = prev
-                            (:trueSuccessor node)
-                                (case (:trueSuccessorProbability node)
-                                    0.0 nil
-                                    1.0 :continue
-                                    (do
-                                        (§ ass! node (IfNode''setTrueSuccessorProbability-2 node, 0.0))
-                                        nil
-                                    )
-                                )
-                            (:falseSuccessor node)
-                                (case (:trueSuccessorProbability node)
-                                    1.0 nil
-                                    0.0 :continue
-                                    (do
-                                        (§ ass! node (IfNode''setTrueSuccessorProbability-2 node, 1.0))
-                                        nil
-                                    )
-                                )
-                        )
-                    (and (satisfies? AbstractMergeNode node) (not (satisfies? LoopBeginNode node)))
-                        (do
-                            (doseq [#_"AbstractEndNode" endNode (Node'''cfgPredecessors-1 node)]
-                                (IfNode'propagateZeroProbability-1 endNode)
-                            )
-                            nil
-                        )
-                    :else
-                        :continue
-                )
-                (recur node (:predecessor node))
-            )
-        )
-        nil
-    )
-
-    ;;;
-     ; Tries to connect code that initializes a variable directly with the successors of an if
-     ; construct that switches on the variable. For example, the pseudo code below:
-     ;
-     ; contains(list, e, yes, no) {
-     ;     if (list == null || e == null) {
-     ;         condition = false;
-     ;     } else {
-     ;         condition = false;
-     ;         for (i in list) {
-     ;             if (i.equals(e)) {
-     ;                 condition = true;
-     ;                 break;
-     ;             }
-     ;         }
-     ;     }
-     ;     if (condition) {
-     ;         return yes;
-     ;     } else {
-     ;         return no;
-     ;     }
-     ; }
-     ;
-     ; will be transformed into:
-     ;
-     ; contains(list, e, yes, no) {
-     ;     if (list == null || e == null) {
-     ;         return no;
-     ;     } else {
-     ;         condition = false;
-     ;         for (i in list) {
-     ;             if (i.equals(e)) {
-     ;                 return yes;
-     ;             }
-     ;         }
-     ;         return no;
-     ;     }
-     ; }
-     ;
-     ; @return true if a transformation was made, false otherwise
-     ;;
-    (defn- #_"boolean" IfNode''removeIntermediateMaterialization-2 [#_"IfNode" this, #_"Simplifier" tool]
-        (and (satisfies? AbstractMergeNode (:predecessor this)) (not (satisfies? LoopBeginNode (:predecessor this))) (satisfies? CompareNode (:logic this))
-            (let [
-                #_"CompareNode" compare (:logic this)
-            ]
-                ;; consider merges only with a single usage that is both a phi and an operand of the comparison
-                (and (Node''hasExactlyOneUsage-1 compare)
-                    (let [
-                        #_"AbstractMergeNode" merge (:predecessor this)
-                        #_"Node*" mergeUsages (:nodeUsages merge)
-                    ]
-                        (and (= (count mergeUsages) 1)
-                            (let [
-                                #_"Node" singleUsage (first mergeUsages)
-                            ]
-                                ;; ensure phi is used by at most the comparison and the merge's frame state (if any)
-                                (and (satisfies? ValuePhiNode singleUsage) (any = singleUsage (:x compare) (:y compare))
-                                    (let [
-                                        #_"ValuePhiNode" phi singleUsage
-                                        #_"Node*" phiUsages (:nodeUsages phi)
-                                    ]
-                                        (and
-                                            (<= (count phiUsages) 2)
-                                            (loop-when [#_"seq" s (seq phiUsages)] (some? s) => true
-                                                (and (any = (first s) compare (:stateAfter merge))
-                                                    (recur (next s))
-                                                )
-                                            )
-                                            (let [
-                                                #_"EndNode*" mergePredecessors (§ snap (Node'''cfgPredecessors-1 merge))
-                                                #_"[Constant]" xs (IfNode'constantValues-3 (:x compare), merge, false)
-                                                #_"[Constant]" ys (IfNode'constantValues-3 (:y compare), merge, false)
-                                            ]
-                                                (and (some? xs) (some? ys)
-                                                    ;; Sanity check that both ends are not followed by a merge without frame state.
-                                                    (or (IfNode'checkFrameState-1 (:trueSuccessor this)) (IfNode'checkFrameState-1 (:falseSuccessor this)))
-                                                    (let [
-                                                        #_"AbstractBeginNode" o'falseSuccessor (:falseSuccessor this)
-                                                        #_"AbstractBeginNode" o'trueSuccessor (:trueSuccessor this)
-                                                        _ (§ ass! this (IfNode''setFalseSuccessor-2 this, nil))
-                                                        _ (§ ass! this (IfNode''setTrueSuccessor-2 this, nil))
-                                                        #_"{AbstractEndNode ValueNode}" phiValues {}
-                                                        #_"[EndNode]" falseEnds []
-                                                        #_"[EndNode]" trueEnds []
-                                                        _
-                                                            (loop-when-recur [#_"seq" s (seq mergePredecessors) #_"int" i 0] (< i (count xs)) [(next s) (inc i)]
-                                                                (let [
-                                                                    #_"EndNode" end (first s)
-                                                                    _ (§ ass! phiValues (assoc phiValues end (PhiNode''valueAt-2n phi, end)))
-                                                                ]
-                                                                    (if (Condition''foldCondition-3c (:condition compare), (nth xs i), (nth ys i))
-                                                                        (§ ass! trueEnds (conj' trueEnds end))
-                                                                        (§ ass! falseEnds (conj' falseEnds end))
-                                                                    )
-                                                                )
-                                                            )
-                                                    ]
-                                                        (IfNode''connectEnds-6 this, falseEnds, phiValues, o'falseSuccessor, merge, tool)
-                                                        (IfNode''connectEnds-6 this, trueEnds, phiValues, o'trueSuccessor, merge, tool)
-
-                                                        (when (= (:trueSuccessorProbability this) 0.0)
-                                                            (doseq [#_"AbstractEndNode" endNode trueEnds]
-                                                                (IfNode'propagateZeroProbability-1 endNode)
-                                                            )
-                                                        )
-
-                                                        (when (= (:trueSuccessorProbability this) 1.0)
-                                                            (doseq [#_"AbstractEndNode" endNode falseEnds]
-                                                                (IfNode'propagateZeroProbability-1 endNode)
-                                                            )
-                                                        )
-
-                                                        ;; Remove obsolete ends only after processing all ends, otherwise o'trueSuccessor or
-                                                        ;; o'falseSuccessor might have been removed if it is a LoopExitNode.
-                                                        (when (empty? falseEnds)
-                                                            (GraphUtil'killCFG-1 o'falseSuccessor)
-                                                        )
-                                                        (when (empty? trueEnds)
-                                                            (GraphUtil'killCFG-1 o'trueSuccessor)
-                                                        )
-                                                        (GraphUtil'killCFG-1 merge)
-
-                                                        true
-                                                    )
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Return true if the passed in {@code logic} uses {@code phi} and the condition is only used once.
-     ; Since the phi will go dead, the logic using it will also have to be dead after the optimization.
-     ;;
-    (defn- #_"boolean" IfNode'conditionUses-2 [#_"LogicNode" logic, #_"PhiNode" phi]
-        (and (Node''hasExactlyOneUsage-1 logic)
-            (condp satisfies? logic
-                ShortCircuitOrNode
-                    (and (GuardsStage'areDeoptsFixed-1 (:guardsStage (:graph logic)))
-                        ;; It can be unsafe to simplify a ShortCircuitOr before deopts are fixed because
-                        ;; conversion to guards assumes that all the required conditions are being tested.
-                        ;; Simplifying the condition based on context before this happens may lose a condition.
-                        (or (IfNode'conditionUses-2 (:x logic), phi) (IfNode'conditionUses-2 (:y logic), phi))
-                    )
-                Unary  (= (Unary'''getValue-1 logic) phi)
-                Binary (or (= (:x logic) phi) (= (:y logic) phi))
-                       false
-            )
-        )
-    )
-
-    ;;;
-     ; Canonicalize {@code logic} using {@code value} in place of {@code phi}.
-     ;;
-    (defn- #_"LogicNode" IfNode'computeCondition-4 [#_"Simplifier" tool, #_"LogicNode" logic, #_"PhiNode" phi, #_"Node" value]
-        (condp satisfies? logic
-            ShortCircuitOrNode
-                (when (and (GuardsStage'areDeoptsFixed-1 (:guardsStage (:graph logic))) (not (:isAfterExpandLogic (:graph logic))))
-                    (let [
-                        #_"LogicNode" resultX (IfNode'computeCondition-4 tool, (:x logic), phi, value)
-                        #_"LogicNode" resultY (IfNode'computeCondition-4 tool, (:y logic), phi, value)
-                    ]
-                        (when-not (and (= resultX (:x logic)) (= resultY (:y logic)))
-                            (let [
-                                #_"LogicNode" canon (Binary'''canonical-4 logic, tool, resultX, resultY)
-                            ]
-                                (if-not (= canon logic)
-                                    (§ return canon)
-                                    ;; Create a new node to carry the optimized inputs.
-                                    (§ return (Canonicalizable'''canonical-2 (ShortCircuitOrNode'new-5 resultX, (:xNegated logic), resultY, (:yNegated logic), (:shortCircuitProbability logic)), tool))
-                                )
-                            )
-                        )
-                        (§ return logic)
-                    )
-                )
-            Binary
-                (cond
-                    (= (:x logic) phi)
-                        (§ return (Binary'''canonical-4 logic, tool, value, (:y logic)))
-                    (= (:y logic) phi)
-                        (§ return (Binary'''canonical-4 logic, tool, (:x logic), value))
-                )
-            Unary
-                (when (= (Unary'''getValue-1 logic) phi)
-                    (§ return (Unary'''canonical-3 logic, tool, value))
-                )
-            nil
-        )
-        (if (satisfies? Canonicalizable logic) (Canonicalizable'''canonical-2 logic, tool) logic)
-    )
-
-    (defn- #_"MergeNode" IfNode''insertMerge-2 [#_"IfNode" this, #_"AbstractBeginNode" begin]
-        (let [
-            #_"MergeNode" merge (Graph''add-2 (:graph this), (MergeNode'new-0))
-            _
-                (when (seq (AbstractBeginNode'''anchored-1 begin))
-                    (Node''replaceAtUsages-3 begin, :InputType'Guard, merge)
-                    (Node''replaceAtUsages-3 begin, :InputType'Anchor, merge)
-                )
-            #_"AbstractBeginNode" theBegin
-                (when (satisfies? LoopExitNode begin) => begin
-                    ;; Insert an extra begin to make it easier.
-                    (let [
-                        theBegin (Graph''add-2 (:graph this), (BeginNode'new-0))
-                    ]
-                        (Node''replaceAtPredecessor-2 begin, theBegin)
-                        (FixedWithNextNode''setNext-2 theBegin, begin)
-                    )
-                )
-            #_"FixedNode" _next (:next theBegin)
-            _ (Node''replaceAtPredecessor-2 _next, merge)
-            _ (§ ass! theBegin (FixedWithNextNode''setNext-2 theBegin, (Graph''add-2 (:graph this), (EndNode'new-0))))
-            _ (§ ass! merge (AbstractMergeNode''addForwardEnd-2 merge, (:next theBegin)))
-        ]
-            (FixedWithNextNode''setNext-2 merge, _next)
-        )
-    )
-
-    (defn- #_"void" IfNode'transferProxies-2 [#_"AbstractBeginNode" successor, #_"MergeNode" falseMerge]
-        (when (and (satisfies? LoopExitNode successor) (some? falseMerge))
-            (doseq [#_"ValueProxyNode" proxy (§ snap (LoopExitNode''proxies-1 successor))]
-                (Node''replaceFirstInput-3 proxy, successor, falseMerge)
-            )
-        )
-        nil
-    )
-
-    (defn- #_"void" IfNode''cleanupMerge-2 [#_"IfNode" this, #_"MergeNode" merge]
-        (when (and (some? merge) (Node''isAlive-1 merge))
-            (case (count (:ends merge))
-                0 (GraphUtil'killCFG-1 merge)
-                1 (Graph''reduceTrivialMerge-2 (:graph this), merge)
-                nil
-            )
-        )
-        nil
-    )
-
-    ;;;
-     ; Take an if that is immediately dominated by a merge with a single phi and split off any paths
-     ; where the test would be statically decidable creating a new merge below the approriate side
-     ; of the IfNode. Any undecidable tests will continue to use the original IfNode.
-     ;;
-    (defn- #_"boolean" IfNode''splitIfAtPhi-2 [#_"IfNode" this, #_"Simplifier" tool]
-        ;; disabled until we make sure we have no FrameState-less merges at this stage
-        (and (not (GuardsStage'areFrameStatesAtSideEffects-1 (:guardsStage (:graph this))))
-            (satisfies? MergeNode (:predecessor this))
-            (let [
-                #_"MergeNode" merge (:predecessor this)
-            ]
-                (and (not (= (count (:ends merge)) 1)) ;; don't bother
-                    (Node''hasExactlyOneUsage-1 merge) (= (count (AbstractMergeNode''phis-1 merge)) 1)
-                    (nil? (:stateAfter merge)) ;; we'll get the chance to simplify this after frame state assignment
-                    (let [
-                        #_"PhiNode" phi (first (AbstractMergeNode''phis-1 merge))
-                    ]
-                        (and
-                            ;; for simplicity, the code below assumes that phi goes dead at the end, so skip this case
-                            (Node''hasExactlyOneUsage-1 phi)
-                            ;; check that the condition uses the phi and that there is only one user of the condition expression
-                            (IfNode'conditionUses-2 (:logic this), phi)
-                            ;; We could additionally filter for the case that at least some of the Phi inputs or one of
-                            ;; the condition inputs are constants but there are cases where a non-constant is simplifiable,
-                            ;; usually where the stamp allows the question to be answered.
-
-                            ;; each successor of the if gets a new merge if needed
-                            (let [
-                                [#_"MergeNode" trueMerge #_"MergeNode" falseMerge]
-                                    (loop-when [trueMerge nil falseMerge nil #_"seq" s (seq (§ snap (:ends merge)))] (some? s) => [trueMerge falseMerge]
-                                        (let [
-                                            #_"EndNode" end (first s)
-                                            #_"Node" value (PhiNode''valueAt-2n phi, end)
-                                            #_"LogicNode" result (IfNode'computeCondition-4 tool, (:logic this), phi, value)
-                                            [trueMerge falseMerge]
-                                                (cond
-                                                    (satisfies? LogicConstantNode result)
-                                                        (let [
-                                                            _ (§ ass! merge (AbstractMergeNode''removeEnd-2 merge, end))
-                                                        ]
-                                                            (if (:value result)
-                                                                (let [
-                                                                    trueMerge (or trueMerge (IfNode''insertMerge-2 this, (:trueSuccessor this)))
-                                                                    _ (§ ass! trueMerge (AbstractMergeNode''addForwardEnd-2 trueMerge, end))
-                                                                ]
-                                                                    [trueMerge falseMerge]
-                                                                )
-                                                                (let [
-                                                                    falseMerge (or falseMerge (IfNode''insertMerge-2 this, (:falseSuccessor this)))
-                                                                    _ (§ ass! falseMerge (AbstractMergeNode''addForwardEnd-2 falseMerge, end))
-                                                                ]
-                                                                    [trueMerge falseMerge]
-                                                                )
-                                                            )
-                                                        )
-                                                    (= result (:logic this))
-                                                        [trueMerge falseMerge]
-                                                    :else
-                                                        ;; build a new IfNode using the new condition
-                                                        (let [
-                                                            #_"BeginNode" trueBegin (Graph''add-2 (:graph this), (BeginNode'new-0))
-                                                            #_"BeginNode" falseBegin (Graph''add-2 (:graph this), (BeginNode'new-0))
-                                                            result (if (some? (:graph result)) result (Graph''addOrUniqueWithInputs-2 (:graph this), result))
-                                                            #_"IfNode" newIfNode (Graph''add-2 (:graph this), (IfNode'new-4b result, trueBegin, falseBegin, (:trueSuccessorProbability this)))
-                                                            _ (§ ass! merge (AbstractMergeNode''removeEnd-2 merge, end))
-                                                            _ (§ ass! end (update end :predecessor FixedWithNextNode''setNext-2 newIfNode))
-                                                            trueMerge (or trueMerge (IfNode''insertMerge-2 this, (:trueSuccessor this)))
-                                                            _ (§ ass! trueBegin (FixedWithNextNode''setNext-2 trueBegin, (Graph''add-2 (:graph this), (EndNode'new-0))))
-                                                            _ (§ ass! trueMerge (AbstractMergeNode''addForwardEnd-2 trueMerge, (:next trueBegin)))
-                                                            falseMerge (or falseMerge (IfNode''insertMerge-2 this, (:falseSuccessor this)))
-                                                            _ (§ ass! falseBegin (FixedWithNextNode''setNext-2 falseBegin, (Graph''add-2 (:graph this), (EndNode'new-0))))
-                                                            _ (§ ass! falseMerge (AbstractMergeNode''addForwardEnd-2 falseMerge, (:next falseBegin)))
-                                                            _ (§ ass! end (Node''safeDelete-1 end))
-                                                        ]
-                                                            [trueMerge falseMerge]
-                                                        )
-                                                )
-                                        ]
-                                            (recur trueMerge falseMerge (next s))
-                                        )
-                                    )
-                            ]
-                                (IfNode'transferProxies-2 (:trueSuccessor this), trueMerge)
-                                (IfNode'transferProxies-2 (:falseSuccessor this), falseMerge)
-
-                                (IfNode''cleanupMerge-2 this, merge)
-                                (IfNode''cleanupMerge-2 this, trueMerge)
-                                (IfNode''cleanupMerge-2 this, falseMerge)
-
-                                true
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Try to optimize this as if it were a ConditionalNode.
-     ;;
-    (defn- #_"boolean" IfNode''conditionalNodeOptimization-2 [#_"IfNode" this, #_"Simplifier" tool]
-        (and (satisfies? AbstractEndNode (:next (:trueSuccessor this)))
-             (satisfies? AbstractEndNode (:next (:falseSuccessor this)))
-            (let [
-                #_"AbstractEndNode" trueEnd (:next (:trueSuccessor this))
-                #_"AbstractEndNode" falseEnd (:next (:falseSuccessor this))
-            ]
-                (and (= (AbstractEndNode'''merge-1 trueEnd) (AbstractEndNode'''merge-1 falseEnd)) (satisfies? MergeNode (AbstractEndNode'''merge-1 trueEnd))
-                    (let [
-                        #_"MergeNode" merge (AbstractEndNode'''merge-1 trueEnd)
-                    ]
-                        (and (Node''hasExactlyOneUsage-1 merge)
-                             (= (count (AbstractMergeNode''phis-1 merge)) 1)
-                             (empty? (AbstractBeginNode'''anchored-1 (:trueSuccessor this)))
-                             (empty? (AbstractBeginNode'''anchored-1 (:falseSuccessor this)))
-                            (let [
-                                #_"PhiNode" phi (first (AbstractMergeNode''phis-1 merge))
-                                #_"ValueNode" result (ConditionalNode'canonicalizeConditional-4 (:logic this), (PhiNode''valueAt-2n phi, trueEnd), (PhiNode''valueAt-2n phi, falseEnd), (:stamp phi))
-                            ]
-                                (and (some? result)
-                                    ;; canonicalizeConditional returns possibly new nodes so add them to the graph
-                                    (let [
-                                        result
-                                            (when (nil? (:graph result)) => result
-                                                (Graph''addOrUniqueWithInputs-2 (:graph this), result)
-                                            )
-                                        result (IfNode''proxyReplacement-2 this, result)
-                                        ;; This optimization can be performed even if multiple values merge at this phi
-                                        ;; since the two inputs get simplified into one.
-                                        _ (§ ass! phi (PhiNode''setValueAt-3n phi, trueEnd, result))
-                                    ]
-                                        (IfNode''removeThroughFalseBranch-3 this, tool, merge)
-                                        true
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defn- #_"boolean" IfNode'valuesDistinct-3 [#_"Simplifier" tool, #_"ValueNode" a, #_"ValueNode" b]
-        (when (and (satisfies? ConstantNode a) (satisfies? ConstantNode b))
-            (let [
-                #_"Boolean" equal (ConstantReflection'constantEquals-2 (:value a), (:value b))
-            ]
-                (when (some? equal)
-                    (§ return (not (#_"Boolean" .booleanValue equal)))
-                )
-            )
-        )
-
-        (Stamp'''alwaysDistinct-2 (:stamp a), (:stamp b))
-    )
-
-    (defn- #_"boolean" IfNode'prepareForSwap-3 [#_"Simplifier" tool, #_"LogicNode" a, #_"LogicNode" b]
-        (condp satisfies? a
-            InstanceOfNode
-                (condp satisfies? b
-                    IsNullNode
-                        (= (Unary'''getValue-1 b) (Unary'''getValue-1 a))
-                    InstanceOfNode
-                        ;; Two instanceof on the same value with mutually exclusive types.
-                        (and (= (Unary'''getValue-1 a) (Unary'''getValue-1 b))
-                             (not (ResolvedJavaType''isInterface-1 (:type (InstanceOfNode''type-1 a))))
-                             (not (ResolvedJavaType''isInterface-1 (:type (InstanceOfNode''type-1 b))))
-                             (not (ResolvedJavaType'''isAssignableFrom-2 (:type (InstanceOfNode''type-1 a)), (:type (InstanceOfNode''type-1 b))))
-                             (not (ResolvedJavaType'''isAssignableFrom-2 (:type (InstanceOfNode''type-1 b)), (:type (InstanceOfNode''type-1 a))))
-                        )
-                    false
-                )
-            CompareNode
-                (let [
-                    #_"Condition" conditionA (:canonical (:condition a))
-                ]
-                    (and (satisfies? CompareNode b) (not= a b)
-                        (let [
-                            #_"Condition" conditionB (:canonical (:condition b))
-                            #_"Condition" comparableCondition
-                                (cond
-                                    (and (= (:x b) (:x a)) (= (:y b) (:y a)))                      conditionB
-                                    (and (= (:x b) (:y a)) (= (:y b) (:x a))) (Condition''mirror-1 conditionB)
-                                )
-                        ]
-                            (if (nil? comparableCondition)
-                                (and (= conditionA conditionB Condition'EQ)
-                                    (or (and (= (:x a) (:x b)) (IfNode'valuesDistinct-3 tool, (:y a), (:y b)))
-                                        (and (= (:x a) (:y b)) (IfNode'valuesDistinct-3 tool, (:y a), (:x b)))
-                                        (and (= (:y a) (:x b)) (IfNode'valuesDistinct-3 tool, (:x a), (:y b)))
-                                        (and (= (:y a) (:y b)) (IfNode'valuesDistinct-3 tool, (:x a), (:x b)))
-                                    )
-                                )
-                                ;; The two conditions are disjoint => can reorder.
-                                (nil? (Condition''join-2 conditionA, comparableCondition))
-                            )
-                        )
-                    )
-                )
-            false
-        )
-    )
-
-    (defm IfNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"IfNode" this, #_"Simplifier" tool]
-            (let [
-                this
-                    (cond
-                        (satisfies? DeoptimizeNode (:next (:trueSuccessor this)))
-                            (when-not (= (:trueSuccessorProbability this) 0) => this
-                                (assoc this :trueSuccessorProbability 0)
-                            )
-                        (satisfies? DeoptimizeNode (:next (:falseSuccessor this)))
-                            (when-not (= (:trueSuccessorProbability this) 1) => this
-                                (assoc this :trueSuccessorProbability 1)
-                            )
-                        :else
-                            this
-                    )
-                this
-                    (when (satisfies? LogicNegationNode (:logic this)) => this
-                        (IfNode''eliminateNegation-1 this)
-                    )
-            ]
-                (or
-                    (when (satisfies? LogicConstantNode (:logic this))
-                        (if (:value (:logic this))
-                            (do
-                                (Node''replaceFirstSuccessor-3 (:predecessor (:falseSuccessor this)), (:falseSuccessor this), nil)
-                                (GraphUtil'killCFG-1 (:falseSuccessor this))
-                                (§ ass! tool (Simplifier''add-2 tool, (:trueSuccessor this)))
-                                (Graph''removeSplit-3 (:graph this), this, (:trueSuccessor this))
-                            )
-                            (do
-                                (Node''replaceFirstSuccessor-3 (:predecessor (:trueSuccessor this)), (:trueSuccessor this), nil)
-                                (GraphUtil'killCFG-1 (:trueSuccessor this))
-                                (§ ass! tool (Simplifier''add-2 tool, (:falseSuccessor this)))
-                                (Graph''removeSplit-3 (:graph this), this, (:falseSuccessor this))
-                            )
-                        )
-                        :done
-                    )
-                    (when (and (Canonicalizer'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 (:trueSuccessor this)) (Node''hasNoUsages-1 (:falseSuccessor this)))
-                        (IfNode''pushNodesThroughIf-2 this, tool)
-                        (when (or (IfNode''checkForUnsignedCompare-2 this, tool) (IfNode''removeOrMaterializeIf-2 this, tool))
-                            :done
-                        )
-                    )
-                    (when (IfNode''removeIntermediateMaterialization-2 this, tool)
-                        :done
-                    )
-                    (when (IfNode''splitIfAtPhi-2 this, tool)
-                        :done
-                    )
-                    (when (IfNode''conditionalNodeOptimization-2 this, tool)
-                        :done
-                    )
-                    (when (and (Node''hasNoUsages-1 (:falseSuccessor this)) (not (satisfies? LoopExitNode (:falseSuccessor this))) (satisfies? IfNode (:next (:falseSuccessor this))))
-                        (let [
-                            #_"AbstractBeginNode" intermediateBegin (:falseSuccessor this)
-                            #_"IfNode" nextIf (:next intermediateBegin)
-                            #_"double" probabilityB (* (- 1.0 (:trueSuccessorProbability this)) (:trueSuccessorProbability nextIf))
-                        ]
-                            ;; Reordering of those two if statements is beneficial from the point of view of their probabilities.
-                            ;; Reordering is allowed from (if1 => begin => if2) to (if2 => begin => if1).
-                            (when (and (< (:trueSuccessorProbability this) probabilityB) (IfNode'prepareForSwap-3 tool, (:logic this), (:logic nextIf)))
-                                (let [
-                                    #_"AbstractBeginNode" bothFalseBegin (:falseSuccessor nextIf)
-                                    _ (§ ass! nextIf (IfNode''setFalseSuccessor-2 nextIf, nil))
-                                    _ (§ ass! intermediateBegin (FixedWithNextNode''setNext-2 intermediateBegin, nil))
-                                    _ (§ ass! this (IfNode''setFalseSuccessor-2 this, nil))
-                                    _ (Node''replaceAtPredecessor-2 this, nextIf)
-                                    _ (§ ass! nextIf (IfNode''setFalseSuccessor-2 nextIf, intermediateBegin))
-                                    _ (§ ass! intermediateBegin (FixedWithNextNode''setNext-2 intermediateBegin, this))
-                                    _ (§ ass! this (IfNode''setFalseSuccessor-2 this, bothFalseBegin))
-                                    _ (§ ass! nextIf (IfNode''setTrueSuccessorProbability-2 nextIf, probabilityB))
-                                    _ (§ ass! this (IfNode''setTrueSuccessorProbability-2 this, (if (= probabilityB 1.0) 0.0 (min 1.0 (/ (:trueSuccessorProbability this) (- 1.0 probabilityB))))))
-                                ]
-                                    :done
-                                )
-                            )
-                        )
-                    )
-                )
-                this
-            )
-        )
-    )
-
-    (defm IfNode ControlSplitNode
         (#_"AbstractBeginNode" ControlSplitNode'''getPrimarySuccessor-1 [#_"IfNode" this]
             nil
         )
-    )
 
-    (defm IfNode ControlSplitNode
         (#_"boolean" ControlSplitNode'''setProbability-3 [#_"IfNode" this, #_"AbstractBeginNode" successor, #_"double" value]
             (condp = successor
                 (:trueSuccessor this)
@@ -36686,7 +35103,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IntegerExactArithmeticSplitNode [ControlSplitNode, FixedNode, ValueNode, Node, Simplifiable, LIRLowerable]
+(class-ns IntegerExactArithmeticSplitNode [ControlSplitNode, FixedNode, ValueNode, Node, LIRLowerable]
     (defn #_"IntegerExactArithmeticSplitNode" IntegerExactArithmeticSplitNode'new-5 [#_"Stamp" stamp, #_"ValueNode" x, #_"ValueNode" y, #_"AbstractBeginNode" _next, #_"AbstractBeginNode" overflowSuccessor]
         (merge (IntegerExactArithmeticSplitNode'class.) (ControlSplitNode'new-1 stamp)
             (hash-map
@@ -36756,7 +35173,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IntegerAddExactSplitNode [IntegerExactArithmeticSplitNode, ControlSplitNode, FixedNode, ValueNode, Node, Simplifiable, LIRLowerable]
+(class-ns IntegerAddExactSplitNode [IntegerExactArithmeticSplitNode, ControlSplitNode, FixedNode, ValueNode, Node, LIRLowerable]
     (defn #_"IntegerAddExactSplitNode" IntegerAddExactSplitNode'new-5 [#_"Stamp" stamp, #_"ValueNode" x, #_"ValueNode" y, #_"AbstractBeginNode" _next, #_"AbstractBeginNode" overflowSuccessor]
         (merge (IntegerAddExactSplitNode'class.) (IntegerExactArithmeticSplitNode'new-5 stamp, x, y, _next, overflowSuccessor))
     )
@@ -36766,26 +35183,9 @@ ZeroExtendNode'new-4
             (LIRGenerator''emitAdd-4 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this)), true)
         )
     )
-
-    (defm IntegerAddExactSplitNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"IntegerAddExactSplitNode" this, #_"Simplifier" tool]
-            (when-not (IntegerStamp'addCanOverflow-2 (:stamp (:x this)), (:stamp (:y this))) => this
-                (let [
-                    _ (Node''replaceFirstSuccessor-3 (:predecessor (:overflowSuccessor this)), (:overflowSuccessor this), nil)
-                    _ (GraphUtil'killCFG-1 (:overflowSuccessor this))
-                    _ (§ ass! tool (Simplifier''add-2 tool, (:next this)))
-                    #_"AddNode" replacement (Graph''add-2 (:graph this), (AddNode'new-2 (:x this), (:y this)))
-                    _ (Graph''replaceSplitWithFloating-4 (:graph this), this, replacement, (:next this))
-                    _ (§ ass! tool (Simplifier''add-2 tool, replacement))
-                ]
-                    this
-                )
-            )
-        )
-    )
 )
 
-(class-ns IntegerMulExactSplitNode [IntegerExactArithmeticSplitNode, ControlSplitNode, FixedNode, ValueNode, Node, Simplifiable, LIRLowerable]
+(class-ns IntegerMulExactSplitNode [IntegerExactArithmeticSplitNode, ControlSplitNode, FixedNode, ValueNode, Node, LIRLowerable]
     (defn #_"IntegerMulExactSplitNode" IntegerMulExactSplitNode'new-5 [#_"Stamp" stamp, #_"ValueNode" x, #_"ValueNode" y, #_"AbstractBeginNode" _next, #_"AbstractBeginNode" overflowSuccessor]
         (merge (IntegerMulExactSplitNode'class.) (IntegerExactArithmeticSplitNode'new-5 stamp, x, y, _next, overflowSuccessor))
     )
@@ -36795,26 +35195,9 @@ ZeroExtendNode'new-4
             (LIRGenerator''emitMul-4 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this)), true)
         )
     )
-
-    (defm IntegerMulExactSplitNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"IntegerMulExactSplitNode" this, #_"Simplifier" tool]
-            (when-not (IntegerStamp'multiplicationCanOverflow-2 (:stamp (:x this)), (:stamp (:y this))) => this
-                (let [
-                    _ (Node''replaceFirstSuccessor-3 (:predecessor (:overflowSuccessor this)), (:overflowSuccessor this), nil)
-                    _ (GraphUtil'killCFG-1 (:overflowSuccessor this))
-                    _ (§ ass! tool (Simplifier''add-2 tool, (:next this)))
-                    #_"MulNode" replacement (Graph''add-2 (:graph this), (MulNode'new-2 (:x this), (:y this)))
-                    _ (Graph''replaceSplitWithFloating-4 (:graph this), this, replacement, (:next this))
-                    _ (§ ass! tool (Simplifier''add-2 tool, replacement))
-                ]
-                    this
-                )
-            )
-        )
-    )
 )
 
-(class-ns IntegerSubExactSplitNode [IntegerExactArithmeticSplitNode, ControlSplitNode, FixedNode, ValueNode, Node, Simplifiable, LIRLowerable]
+(class-ns IntegerSubExactSplitNode [IntegerExactArithmeticSplitNode, ControlSplitNode, FixedNode, ValueNode, Node, LIRLowerable]
     (defn #_"IntegerSubExactSplitNode" IntegerSubExactSplitNode'new-5 [#_"Stamp" stamp, #_"ValueNode" x, #_"ValueNode" y, #_"AbstractBeginNode" _next, #_"AbstractBeginNode" overflowSuccessor]
         (merge (IntegerSubExactSplitNode'class.) (IntegerExactArithmeticSplitNode'new-5 stamp, x, y, _next, overflowSuccessor))
     )
@@ -36822,23 +35205,6 @@ ZeroExtendNode'new-4
     (defm IntegerSubExactSplitNode IntegerExactArithmeticSplitNode
         (#_"Value" IntegerExactArithmeticSplitNode'''generateArithmetic-2 [#_"IntegerSubExactSplitNode" this, #_"LIRBuilder" builder]
             (LIRGenerator''emitSub-4 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this)), true)
-        )
-    )
-
-    (defm IntegerSubExactSplitNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"IntegerSubExactSplitNode" this, #_"Simplifier" tool]
-            (when-not (IntegerStamp'subtractionCanOverflow-2 (:stamp (:x this)), (:stamp (:y this))) => this
-                (let [
-                    _ (Node''replaceFirstSuccessor-3 (:predecessor (:overflowSuccessor this)), (:overflowSuccessor this), nil)
-                    _ (GraphUtil'killCFG-1 (:overflowSuccessor this))
-                    _ (§ ass! tool (Simplifier''add-2 tool, (:next this)))
-                    #_"SubNode" replacement (Graph''add-2 (:graph this), (SubNode'new-2 (:x this), (:y this)))
-                    _ (Graph''replaceSplitWithFloating-4 (:graph this), this, replacement, (:next this))
-                    _ (§ ass! tool (Simplifier''add-2 tool, replacement))
-                ]
-                    this
-                )
-            )
         )
     )
 )
@@ -36914,6 +35280,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Returns the index of the successor belonging to the key at the specified index.
      ;;
+    #_unused
     (defn #_"int" SwitchNode''keySuccessorIndex-2 [#_"SwitchNode" this, #_"int" index]
         (nth (:keySuccessors this) index)
     )
@@ -36961,31 +35328,13 @@ ZeroExtendNode'new-4
             nil
         )
     )
-
-    ;;;
-     ; Delete all other successors except for the one reached by {@code survivingEdge}.
-     ;
-     ; @param survivingEdge index of the edge in the SwitchNode#successors list
-     ;;
-    (defn #_"void" SwitchNode''killOtherSuccessors-3 [#_"SwitchNode" this, #_"Simplifier" tool, #_"int" survivingEdge]
-        (doseq [#_"Node" successor (Node''successors-1 this)]
-            ;; Deleting a branch change the successors, so reload the surviving successor each time.
-            (when-not (= successor (nth (:successorNodes this) survivingEdge))
-                (Node''replaceFirstSuccessor-3 (:predecessor successor), successor, nil)
-                (GraphUtil'killCFG-1 successor)
-            )
-        )
-        (§ ass! tool (Simplifier''add-2 tool, (nth (:successorNodes this) survivingEdge)))
-        (Graph''removeSplit-3 (:graph this), this, (nth (:successorNodes this) survivingEdge))
-        nil
-    )
 )
 
 ;;;
  ; The IntegerSwitchNode represents a switch on integer keys, with a sorted array of key values.
  ; The actual implementation of the switch will be decided by the backend.
  ;;
-(class-ns IntegerSwitchNode [SwitchNode, ControlSplitNode, FixedNode, ValueNode, Node, LIRLowerable, Simplifiable]
+(class-ns IntegerSwitchNode [SwitchNode, ControlSplitNode, FixedNode, ValueNode, Node, LIRLowerable]
     (defn #_"IntegerSwitchNode" IntegerSwitchNode'new-5a [#_"ValueNode" value, #_"AbstractBeginNode*" successors, #_"[int]" keys, #_"[double]" probabilities, #_"[int]" keySuccessors]
         (merge (IntegerSwitchNode'class.) (SwitchNode'new-4 value, successors, keySuccessors, probabilities)
             (hash-map
@@ -37002,12 +35351,7 @@ ZeroExtendNode'new-4
         (#_"boolean" SwitchNode'''isSorted-1 [#_"IntegerSwitchNode" this]
             true
         )
-    )
 
-    ;;;
-     ; Gets the key at the specified index.
-     ;;
-    (defm IntegerSwitchNode SwitchNode
         (#_"JavaConstant" SwitchNode'''keyAt-2 [#_"IntegerSwitchNode" this, #_"int" i]
             (JavaConstant'forInt-1 (nth (:keys this) i))
         )
@@ -37016,243 +35360,6 @@ ZeroExtendNode'new-4
     (defm IntegerSwitchNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"IntegerSwitchNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''emitSwitch-2 builder, this)
-        )
-    )
-
-    (defn- #_"int" IntegerSwitchNode''successorIndexAtKey-2 [#_"IntegerSwitchNode" this, #_"int" key]
-        (let [
-            #_"int" n (count (:keys this))
-        ]
-            (loop-when [#_"int" i 0] (< i n) => (SwitchNode''keySuccessorIndex-2 this, n)
-                (if (= (nth (:keys this) i) key)
-                    (SwitchNode''keySuccessorIndex-2 this, i)
-                    (recur (inc i))
-                )
-            )
-        )
-    )
-
-    (defn- #_"int" IntegerSwitchNode'addNewSuccessor-2 [#_"AbstractBeginNode" newSuccessor, #_"[AbstractBeginNode]" newSuccessors]
-        (let [
-            #_"int" index (index-of newSuccessors newSuccessor)
-        ]
-            (when (= index -1) => index
-                (let [
-                    index (count newSuccessors)
-                    _ (§ ass! newSuccessors (conj' newSuccessors newSuccessor))
-                ]
-                    index
-                )
-            )
-        )
-    )
-
-    (defn- #_"this" IntegerSwitchNode''doReplace-6 [#_"IntegerSwitchNode" this, #_"ValueNode" value, #_"KeyData*" keyDatas, #_"AbstractBeginNode*" successorNodes, #_"int" defaultSuccessor, #_"double" defaultProbability]
-        (let [
-            ;; Sort the new keys (invariant of the IntegerSwitchNode).
-            keyDatas (sort-by :key keyDatas)
-            ;; Create the final data arrays.
-            #_"[int]" keys (mapv :key keyDatas)
-            #_"[double]" probabilities (conj' (mapv :probability keyDatas) defaultProbability)
-            #_"[int]" successors (conj' (mapv :keySuccessor keyDatas) defaultSuccessor)
-            ;; Normalize new probabilities so that they sum up to 1.
-            #_"double" total (reduce + 0.0 probabilities)
-            _
-                (if (pos? total)
-                    (dotimes [#_"int" i (count probabilities)]
-                        (§ ass! probabilities (update' probabilities i / total))
-                    )
-                    (dotimes [#_"int" i (count probabilities)]
-                        (§ ass! probabilities (assoc' probabilities i (/ 1.0 (count probabilities))))
-                    )
-                )
-            ;; Collect dead successors. Successors have to be cleaned before adding the new node to the graph.
-            #_"AbstractBeginNode*" deadSuccessors (§ snap (let [_ (apply hash-set successorNodes)] (remove #(contains? _ %) (:successorNodes this))))
-            _
-                (doseq [#_"Node" node (:successorNodes this)]
-                    (Node''updatePredecessor-3 this, node, nil)
-                )
-            this (assoc this :successorNodes [])
-            ;; Create the new switch node. This is done before removing dead successors as 'killCFG' could edit
-            ;; some of the inputs (e.g. if 'newValue' is a loop-phi of the loop that dies while removing successors).
-            #_"SwitchNode" switch (Graph''add-2 (:graph this), (IntegerSwitchNode'new-5a value, successorNodes, keys, probabilities, successors))
-            ;; Remove dead successors.
-            _
-                (doseq [#_"AbstractBeginNode" successor deadSuccessors]
-                    (GraphUtil'killCFG-1 successor)
-                )
-            ;; Replace ourselves with the new switch.
-            this (update this :predecessor FixedWithNextNode''setNext-2 switch)
-        ]
-            (GraphUtil'killWithUnusedFloatingInputs-1 this)
-            this
-        )
-    )
-
-    ;;;
-     ; For switch statements on enum values, the Java compiler has to generate complicated code:
-     ; because Enum#ordinal() can change when recompiling an enum, it cannot be used directly
-     ; as the value that is switched on. An intermediate int[] array, which is initialized once
-     ; at run time based on the actual Enum#ordinal() values, is used.
-     ;
-     ; The ConstantFields of Graal already detects the int[] arrays and marks them as
-     ; {@link ConstantNode#isDefaultStable() stable}, i.e. the array elements are constant.
-     ; The code in this method detects array loads from such a stable array and re-wires the
-     ; switch to use the keys from the array elements, so that the array load is unnecessary.
-     ;;
-    (defn- #_"boolean" IntegerSwitchNode''tryOptimizeEnumSwitch-2 [#_"IntegerSwitchNode" this, #_"Simplifier" tool]
-        (and (satisfies? LoadIndexedNode (:value this))
-            ;; Not the switch pattern we are looking for.
-            (let [
-                #_"LoadIndexedNode" loadIndexed (:value this)
-            ]
-                ;; The array load is necessary for other reasons too, so there is no benefit optimizing the switch.
-                (and (not (< 1 (count (:nodeUsages loadIndexed))))
-                    (let [
-                        #_"ValueNode" newValue (AccessIndexedNode''index-1 loadIndexed)
-                        #_"JavaConstant" arrayConstant (ValueNode''asJavaConstant-1 (:array loadIndexed))
-                    ]
-                        ;; The array is a constant that we can optimize. We require the array elements to be
-                        ;; constant too, since we put them as literal constants into the switch keys.
-                        (and (some? arrayConstant)
-                            (= (:stableDimension (:array loadIndexed)) 1)
-                            (:isDefaultStable (:array loadIndexed))
-                            (let [
-                                #_"Integer" optionalArrayLength (ConstantReflection'readArrayLength-1 arrayConstant)
-                            ]
-                                ;; => Loading a constant value can be denied by the VM.
-                                (and (some? optionalArrayLength)
-                                    (let [
-                                        #_"int" arrayLength optionalArrayLength
-                                        #_"{Integer [Integer]}" reverseArrayMapping {}
-                                    ]
-                                        (and
-                                            (loop-when [#_"int" i 0] (< i arrayLength) => true
-                                                (let [
-                                                    #_"JavaConstant" elementConstant (ConstantReflection'readArrayElement-2 arrayConstant, i)
-                                                ]
-                                                    ;; => Loading a constant value can be denied by the VM.
-                                                    (and (some? elementConstant) (= (JavaConstant'''getJavaKind-1 elementConstant) :JavaKind'Int)
-                                                        (let [
-                                                            ;; The value loaded from the array is the old switch key, the index into the array is
-                                                            ;; the new switch key. We build a mapping from the old switch key to new keys.
-                                                            _ (§ ass! reverseArrayMapping (update reverseArrayMapping (JavaConstant'''asInt-1 elementConstant) conj' i))
-                                                        ]
-                                                            (recur (inc i))
-                                                        )
-                                                    )
-                                                )
-                                            )
-                                            ;; Build high-level representation of new switch keys.
-                                            (let [
-                                                #_"[KeyData]" newKeyDatas []
-                                                #_"[AbstractBeginNode]" newSuccessors []
-                                                _
-                                                    (dotimes [#_"int" i (count (:keys this))]
-                                                        (let [
-                                                            #_"[Integer]" newKeys (get reverseArrayMapping (nth (:keys this) i))
-                                                        ]
-                                                            ;; => The switch case is unreachable, we can ignore it.
-                                                            (when (seq newKeys)
-                                                                ;; We do not have detailed profiling information about the individual new keys,
-                                                                ;; so we have to assume they split the probability of the old key.
-                                                                (let [
-                                                                    #_"double" newKeyProbability (/ (nth (:probabilities this) i) (count newKeys))
-                                                                    #_"int" newKeySuccessor (IntegerSwitchNode'addNewSuccessor-2 (SwitchNode''keySuccessor-2 this, i), newSuccessors)
-                                                                ]
-                                                                    (doseq [#_"int" newKey newKeys]
-                                                                        (§ ass! newKeyDatas (conj' newKeyDatas (KeyData'new-3 newKey, newKeyProbability, newKeySuccessor)))
-                                                                    )
-                                                                )
-                                                            )
-                                                        )
-                                                    )
-                                                #_"int" newDefaultSuccessor (IntegerSwitchNode'addNewSuccessor-2 (SwitchNode''defaultSuccessor-1 this), newSuccessors)
-                                                #_"double" newDefaultProbability (nth (:probabilities this) (dec (count (:probabilities this))))
-                                                ;; We remove the array load, but we still need to preserve exception semantics by keeping
-                                                ;; the bounds check. Fortunately the array length is a constant.
-                                                #_"LogicNode" boundsCheck (Graph''add-2 (:graph this), (IntegerBelowNode'new-2 newValue, (ConstantNode'forInt-2 arrayLength, (:graph this))))
-                                                _ (Graph''addBeforeFixed-3 (:graph this), this, (Graph''add-2 (:graph this), (FixedGuardNode'new-3 boundsCheck, :DeoptimizationReason'BoundsCheckException, :DeoptimizationAction'InvalidateReprofile)))
-                                                ;; Build the low-level representation of the new switch keys and replace ourself with a new node.
-                                                _ (§ ass! this (IntegerSwitchNode''doReplace-6 this, newValue, newKeyDatas, newSuccessors, newDefaultSuccessor, newDefaultProbability))
-                                                ;; The array load is now unnecessary.
-                                                _ (GraphUtil'removeFixedWithUnusedInputs-1 loadIndexed)
-                                            ]
-                                                true
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defm IntegerSwitchNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"IntegerSwitchNode" this, #_"Simplifier" tool]
-            (cond
-                (= (count (:successorNodes this)) 1)
-                (let [
-                    _ (§ ass! tool (Simplifier''add-2 tool, (SwitchNode''defaultSuccessor-1 this)))
-                ]
-                    (Graph''removeSplitPropagate-3 (:graph this), this, (SwitchNode''defaultSuccessor-1 this))
-                )
-                (satisfies? ConstantNode (:value this))
-                    (SwitchNode''killOtherSuccessors-3 this, tool, (IntegerSwitchNode''successorIndexAtKey-2 this, (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 (:value this)))))
-                (IntegerSwitchNode''tryOptimizeEnumSwitch-2 this, tool)
-                    nil
-                (IntegerSwitchNode''tryRemoveUnreachableKeys-3 this, tool, (:stamp (:value this)))
-                    nil
-            )
-            this
-        )
-    )
-
-    ;;;
-     ; Remove unreachable keys from the switch based on the stamp of the value,
-     ; i.e. based on the known range of the switch value.
-     ;;
-    (defn #_"boolean" IntegerSwitchNode''tryRemoveUnreachableKeys-3 [#_"IntegerSwitchNode" this, #_"Simplifier" tool, #_"Stamp" stamp]
-        (and (satisfies? IntegerStamp stamp) (not (Stamp'''isUnrestricted-1 stamp))
-            (let [
-                #_"[KeyData]" newKeys []
-                #_"[AbstractBeginNode]" newSuccessors []
-                _
-                    (dotimes [#_"int" i (count (:keys this))]
-                        (when (and (IntegerStamp''contains-2 stamp, (nth (:keys this) i)) (not= (SwitchNode''keySuccessor-2 this, i) (SwitchNode''defaultSuccessor-1 this)))
-                            (let [
-                                #_"int" newKeySuccessor (IntegerSwitchNode'addNewSuccessor-2 (SwitchNode''keySuccessor-2 this, i), newSuccessors)
-                            ]
-                                (§ ass! newKeys (conj' newKeys (KeyData'new-3 (nth (:keys this) i), (nth (:probabilities this) i), newKeySuccessor)))
-                            )
-                        )
-                    )
-            ]
-                (cond
-                    (= (count newKeys) (count (:keys this)))
-                        false ;; all keys are reachable
-                    (empty? newKeys)
-                        (let [
-                            _
-                                (when (some? tool)
-                                    (§ ass! tool (Simplifier''add-2 tool, (SwitchNode''defaultSuccessor-1 this)))
-                                )
-                        ]
-                            (Graph''removeSplitPropagate-3 (:graph this), this, (SwitchNode''defaultSuccessor-1 this))
-                            true
-                        )
-                    :else
-                        (let [
-                            #_"int" newDefaultSuccessor (IntegerSwitchNode'addNewSuccessor-2 (SwitchNode''defaultSuccessor-1 this), newSuccessors)
-                            _ (§ ass! this (IntegerSwitchNode''doReplace-6 this, (:value this), newKeys, newSuccessors, newDefaultSuccessor, (nth (:probabilities this) (dec (count (:probabilities this))))))
-                        ]
-                            true
-                        )
-                )
-            )
         )
     )
 )
@@ -37338,37 +35445,13 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BeginNode [AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, Simplifiable]
+(class-ns BeginNode [AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode]
     (defn #_"BeginNode" BeginNode'new-1 [#_"Stamp" stamp]
         (merge (BeginNode'class.) (AbstractBeginNode'new-1 stamp))
     )
 
     (defn #_"BeginNode" BeginNode'new-0 []
         (BeginNode'new-1 VoidStamp'instance)
-    )
-
-    (defm BeginNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"BeginNode" this, #_"Simplifier" tool]
-            (let [
-                #_"FixedNode" prev (:predecessor this)
-            ]
-                (cond
-                    (nil? prev)
-                        nil ;; This is the start node.
-                    (satisfies? ControlSplitNode prev)
-                        nil ;; This begin node is necessary.
-                    :else
-                        (let [
-                            ;; This begin node can be removed and all guards moved up to the preceding begin node.
-                            _ (AbstractBeginNode''prepareDelete-1 this)
-                            _ (§ ass! tool (Simplifier''add-2 tool, (:next this)))
-                        ]
-                            (Graph''removeFixed-2 (:graph this), this)
-                        )
-                )
-                this
-            )
-        )
     )
 
     (defn #_"AbstractBeginNode" BeginNode'begin-1 [#_"FixedNode" with]
@@ -37419,7 +35502,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AbstractMergeNode [BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, StateSplit, Simplifiable]
+(class-ns AbstractMergeNode [BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, StateSplit]
     (defn #_"AbstractMergeNode" AbstractMergeNode'new-0 []
         (merge (AbstractMergeNode'class.) (BeginStateSplitNode'new-0)
             (hash-map
@@ -37441,12 +35524,6 @@ ZeroExtendNode'new-4
         ]
             (Node''updateUsages-3 this, nil, end)
             this
-        )
-    )
-
-    (defm AbstractMergeNode Node
-        (#_"EndNode*" Node'''cfgPredecessors-1 [#_"AbstractMergeNode" this]
-            (:ends this)
         )
     )
 
@@ -37530,159 +35607,9 @@ ZeroExtendNode'new-4
             (remove #(AbstractMergeNode''isPhiAtMerge-2 this, %) (AbstractBeginNode'''anchored-1 (§ super #_"BeginStateSplitNode")))
         )
     )
-
-    ;;;
-     ; This simplify method can deal with a nil value for tool, so that it can be used outside of canonicalization.
-     ;;
-    (defm AbstractMergeNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"AbstractMergeNode" this, #_"Simplifier" tool]
-            (let [
-                #_"FixedNode" node (:next this)
-            ]
-                (condp satisfies? node
-                    AbstractEndNode
-                        (let [
-                            #_"AbstractMergeNode" merge (AbstractEndNode'''merge-1 node)
-                        ]
-                            (or
-                                (when (and (satisfies? LoopBeginNode merge) (not (satisfies? LoopEndNode node)))
-                                    :done
-                                )
-                                ;; In order to move anchored values to the other merge we would need to check
-                                ;; if the anchors are used by phis of the other merge.
-                                (when (seq (AbstractBeginNode'''anchored-1 this))
-                                    :done
-                                )
-                                ;; We hold a state, but the succeeding merge does not => do not combine.
-                                (when (and (nil? (:stateAfter merge)) (some? (:stateAfter this)))
-                                    :done
-                                )
-                                (loop-when [#_"seq" s (seq (AbstractMergeNode''phis-1 this))] (some? s)
-                                    (let [
-                                        #_"PhiNode" phi (first s)
-                                    ]
-                                        (or
-                                            (loop-when [#_"seq" s (seq (:nodeUsages phi))] (some? s)
-                                                (let [
-                                                    #_"Node" usage (first s)
-                                                ]
-                                                    (if (and (not (satisfies? FrameState usage)) (not (AbstractMergeNode''isPhiAtMerge-2 merge, usage)))
-                                                        :done
-                                                        (recur (next s))
-                                                    )
-                                                )
-                                            )
-                                            (recur (next s))
-                                        )
-                                    )
-                                )
-                                (let [
-                                    #_"int" n (dec (count (:ends this)))
-                                    _
-                                        (dotimes [#_"int" i n]
-                                            (let [
-                                                #_"AbstractEndNode" end (nth (:ends this) (- n i))
-                                                _
-                                                    (when (some? tool)
-                                                        (§ ass! tool (Simplifier''add-2 tool, end))
-                                                    )
-                                                #_"AbstractEndNode" newEnd
-                                                    (if (satisfies? LoopBeginNode merge)
-                                                        (Graph''add-2 (:graph this), (LoopEndNode'new-1 merge))
-                                                        (let [
-                                                            newEnd (Graph''add-2 (:graph this), (EndNode'new-0))
-                                                        ]
-                                                            (§ ass! merge (AbstractMergeNode''addForwardEnd-2 merge, newEnd))
-                                                            newEnd
-                                                        )
-                                                    )
-                                                _
-                                                    (doseq [#_"PhiNode" phi (AbstractMergeNode''phis-1 merge)]
-                                                        (let [
-                                                            #_"ValueNode" v (PhiNode''valueAt-2n phi, node)
-                                                        ]
-                                                            (§ ass! phi (PhiNode''addInput-2 phi, (if (AbstractMergeNode''isPhiAtMerge-2 this, v) (PhiNode''valueAt-2n v, end) v)))
-                                                        )
-                                                    )
-                                                _ (§ ass! this (AbstractMergeNode''removeEnd-2 this, end))
-                                                _ (Node''replaceAtPredecessor-2 end, newEnd)
-                                                _ (§ ass! end (Node''safeDelete-1 end))
-                                                _
-                                                    (when (some? tool)
-                                                        (§ ass! tool (Simplifier''add-2 tool, (:predecessor newEnd)))
-                                                    )
-                                            ]
-                                            )
-                                        )
-                                ]
-                                    (Graph''reduceTrivialMerge-2 (:graph this), this)
-                                )
-                            )
-                        )
-                    ReturnNode
-                        (when (and (empty? (AbstractBeginNode'''anchored-1 this)) (nil? (:memoryMap node)))
-                            (let [
-                                #_"PhiNode*" phis (§ snap (AbstractMergeNode''phis-1 this))
-                            ]
-                                (or
-                                    (loop-when [#_"seq" s (seq phis)] (some? s)
-                                        (let [
-                                            #_"PhiNode" phi (first s)
-                                        ]
-                                            (or
-                                                (loop-when [#_"seq" s (seq (:nodeUsages phi))] (some? s)
-                                                    (let [
-                                                        #_"Node" usage (first s)
-                                                    ]
-                                                        (if (and (not (= usage node)) (not (satisfies? FrameState usage)))
-                                                            :done
-                                                            (recur (next s))
-                                                        )
-                                                    )
-                                                )
-                                                (recur (next s))
-                                            )
-                                        )
-                                    )
-                                    (let [
-                                        #_"ValuePhiNode" returnValuePhi (when-not (or (nil? (:result node)) (not (AbstractMergeNode''isPhiAtMerge-2 this, (:result node)))) (:result node))
-                                        #_"EndNode*" endNodes (§ snap (:ends this))
-                                        _
-                                            (doseq [#_"EndNode" end endNodes]
-                                                (let [
-                                                    #_"ReturnNode" newReturn (Graph''add-2 (:graph this), (ReturnNode'new-1 (if (nil? returnValuePhi) (:result node) (PhiNode''valueAt-2n returnValuePhi, end))))
-                                                    _
-                                                        (when (some? tool)
-                                                            (§ ass! tool (Simplifier''add-2 tool, (:predecessor end)))
-                                                        )
-                                                ]
-                                                    (Node''replaceAtPredecessor-2 end, newReturn)
-                                                )
-                                            )
-                                        _ (GraphUtil'killCFG-1 this)
-                                        _
-                                            (doseq [#_"EndNode" end endNodes]
-                                                (§ ass! end (Node''safeDelete-1 end))
-                                            )
-                                    ]
-                                        (doseq [#_"PhiNode" phi phis]
-                                            (when (and (Canonicalizer'''allUsagesAvailable-1 tool) (Node''isAlive-1 phi) (Node''hasNoUsages-1 phi))
-                                                (GraphUtil'killWithUnusedFloatingInputs-1 phi)
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    nil
-                )
-                this
-            )
-        )
-    )
 )
 
-(class-ns LoopBeginNode [AbstractMergeNode, BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, StateSplit, Simplifiable]
+(class-ns LoopBeginNode [AbstractMergeNode, BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, StateSplit]
     (defn #_"LoopBeginNode" LoopBeginNode'new-0 []
         (merge (LoopBeginNode'class.) (AbstractMergeNode'new-0)
             (hash-map
@@ -37786,13 +35713,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm LoopBeginNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"LoopBeginNode" this, #_"Simplifier" tool]
-            (LoopBeginNode''canonicalizePhis-2 this, tool)
-            this
-        )
-    )
-
     (defn #_"this" LoopBeginNode''removeExits-1 [#_"LoopBeginNode" this]
         (loop-when [this this #_"seq" s (seq (§ snap (LoopBeginNode''loopExits-1 this)))] (some? s) => this
             (let [
@@ -37808,123 +35728,18 @@ ZeroExtendNode'new-4
             )
         )
     )
-
-    (def- #_"int" LoopBeginNode'NO_INCREMENT Integer/MIN_VALUE)
-
-    ;;;
-     ; Returns an array with one entry for each input of the phi, which is either #NO_INCREMENT
-     ; or the increment, i.e. the value by which the phi is incremented in the corresponding branch.
-     ;;
-    (defn- #_"[int]" LoopBeginNode'getSelfIncrements-1 [#_"PhiNode" phi]
-        (loop-when [#_"[int]" selfIncrement [] #_"seq" s (seq (:phiValues phi))] (some? s) => selfIncrement
-            (let [
-                #_"ValueNode" input (first s)
-                #_"long" increment
-                    (cond
-                        (and (some? input) (satisfies? AddNode input) (satisfies? IntegerStamp (:stamp input)))
-                            (cond
-                                (and (= (:x input) phi) (satisfies? ConstantNode (:y input)))
-                                    (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:y input)))
-                                (and (= (:y input) phi) (satisfies? ConstantNode (:x input)))
-                                    (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:x input)))
-                                :else
-                                    LoopBeginNode'NO_INCREMENT
-                            )
-                        (= input phi)
-                            0
-                        :else
-                            LoopBeginNode'NO_INCREMENT
-                    )
-                increment
-                    (when-not (<= Integer/MIN_VALUE increment Integer/MAX_VALUE) => increment
-                        LoopBeginNode'NO_INCREMENT
-                    )
-            ]
-                (recur (conj' selfIncrement (int increment)) (next s))
-            )
-        )
-    )
-
-    ;;;
-     ; Coalesces loop phis that represent the same value.
-     ;;
-    (defn #_"void" LoopBeginNode''canonicalizePhis-2 [#_"LoopBeginNode" this, #_"Simplifier" tool]
-        (let [
-            #_"int" n (count (AbstractMergeNode''phis-1 this))
-        ]
-            (when (< 1 n)
-                (let [
-                    #_"int" m (AbstractMergeNode'''phiPredecessorCount-1 this)
-                    #_"PhiNode*" phis (AbstractMergeNode''phis-1 this)
-                ]
-                    (loop-when [#_"[[int]]" selfi nil #_"int" i 0] (< i n)
-                        (let [
-                            #_"PhiNode" phi (nth phis i)
-                            selfi
-                                (when (some? phi) => selfi
-                                    (§ label nextPhi)
-                                    (loop-when [selfi selfi #_"int" j (inc i)] (< j n) => selfi
-                                        (let [
-                                            #_"PhiNode" otherPhi (nth phis j)
-                                            selfi
-                                                (when (and (some? otherPhi) (= (:nodeClass phi) (:nodeClass otherPhi)) (Node''valueEquals-2 phi, otherPhi)) => selfi
-                                                    (let [
-                                                        selfi
-                                                            (when (nil? (nth selfi i)) => selfi
-                                                                (assoc' selfi i (LoopBeginNode'getSelfIncrements-1 phi))
-                                                            )
-                                                        selfi
-                                                            (when (nil? (nth selfi j)) => selfi
-                                                                (assoc' selfi j (LoopBeginNode'getSelfIncrements-1 otherPhi))
-                                                            )
-                                                        #_"[int]" selfi'i (nth selfi i)
-                                                        #_"[int]" selfi'j (nth selfi j)
-                                                    ]
-                                                        (loop-when-recur [#_"int" k 0] (< k m) [(inc k)]
-                                                            (when (= (nth selfi'i k) LoopBeginNode'NO_INCREMENT)
-                                                                (when-not (= (nth (:phiValues phi) k) (nth (:phiValues otherPhi) k))
-                                                                    (§ continue nextPhi)
-                                                                )
-                                                            )
-                                                            (when-not (= (nth selfi'i k) (nth selfi'j k))
-                                                                (§ continue nextPhi)
-                                                            )
-                                                        )
-                                                        (when (some? tool)
-                                                            (§ ass! tool (Simplifier''addAll-2 tool, (:nodeUsages otherPhi)))
-                                                        )
-                                                        (§ ass! otherPhi (Node''replaceAtUsages-2 otherPhi, phi))
-                                                        (GraphUtil'killWithUnusedFloatingInputs-1 otherPhi)
-                                                        (§ ass! phis (assoc' phis j nil))
-                                                        selfi
-                                                    )
-                                                )
-                                        ]
-                                            (recur selfi (inc j))
-                                        )
-                                    )
-                                )
-                        ]
-                            (recur selfi (inc i))
-                        )
-                    )
-                )
-            )
-        )
-        nil
-    )
 )
 
 ;;;
  ; Denotes the merging of multiple control-flow paths.
  ;;
-(class-ns MergeNode [AbstractMergeNode, BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, StateSplit, Simplifiable]
+(class-ns MergeNode [AbstractMergeNode, BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, StateSplit]
     (defn #_"MergeNode" MergeNode'new-0 []
         (merge (MergeNode'class.) (AbstractMergeNode'new-0))
     )
 )
 
-(class-ns LoopExitNode [BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, StateSplit, Simplifiable]
+(class-ns LoopExitNode [BeginStateSplitNode, AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode, StateSplit]
     (defn #_"LoopExitNode" LoopExitNode'new-1 [#_"LoopBeginNode" _loop]
         (merge (LoopExitNode'class.) (BeginStateSplitNode'new-0)
             (hash-map
@@ -37969,21 +35784,6 @@ ZeroExtendNode'new-4
 
     (defn #_"ValueProxyNode*" LoopExitNode''proxies-1 [#_"LoopExitNode" this]
         (filter #(and (satisfies? ValueProxyNode %) (= (:loopExit %) this)) (:nodeUsages this))
-    )
-
-    (defm LoopExitNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"LoopExitNode" this, #_"Simplifier" tool]
-            (loop-when [#_"Node" pred (:predecessor this)] (and (Canonicalizer'''allUsagesAvailable-1 tool) (satisfies? BeginNode pred) (Node''hasNoUsages-1 pred))
-                (let [
-                    #_"AbstractBeginNode" begin pred
-                    pred (:predecessor pred)
-                ]
-                    (Graph''removeFixed-2 (:graph this), begin)
-                    (recur pred)
-                )
-            )
-            this
-        )
     )
 )
 
@@ -38613,7 +36413,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The LoadIndexedNode represents a read from an element of an array.
  ;;
-(class-ns LoadIndexedNode [AccessIndexedNode, AccessArrayNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, Canonicalizable]
+(class-ns LoadIndexedNode [AccessIndexedNode, AccessArrayNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable]
     (defn #_"LoadIndexedNode" LoadIndexedNode'new-4 [#_"Stamp" stamp, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind]
         (merge (LoadIndexedNode'class.) (AccessIndexedNode'new-4 stamp, array, index, elementKind))
     )
@@ -38681,17 +36481,9 @@ ZeroExtendNode'new-4
             (ValueNode''updateStamp-2 this, (Stamp'''improveWith-2 (:stamp this), (LoadIndexedNode'createStamp-2 (:array this), (:elementKind this))))
         )
     )
-
-    (defm LoadIndexedNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"LoadIndexedNode" this, #_"Canonicalizer" tool]
-            (or (LoadIndexedNode'tryConstantFold-2 (:array this), (AccessIndexedNode''index-1 this))
-                this
-            )
-        )
-    )
 )
 
-(class-ns LoadIndexedPointerNode [LoadIndexedNode, AccessIndexedNode, AccessArrayNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, Canonicalizable]
+(class-ns LoadIndexedPointerNode [LoadIndexedNode, AccessIndexedNode, AccessArrayNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable]
     (defn #_"LoadIndexedPointerNode" LoadIndexedPointerNode'new-3 [#_"Stamp" stamp, #_"ValueNode" array, #_"ValueNode" index]
         (merge (LoadIndexedPointerNode'class.) (LoadIndexedNode'new-4 stamp, array, index, :JavaKind'Illegal))
     )
@@ -38810,7 +36602,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The LoadFieldNode represents a read of a static or instance field.
  ;;
-(class-ns LoadFieldNode [AccessFieldNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, Unary #_"<ValueNode>", Canonicalizable]
+(class-ns LoadFieldNode [AccessFieldNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable, Unary #_"<ValueNode>"]
     (defn #_"LoadFieldNode" LoadFieldNode'new-3 [#_"Stamp" stamp, #_"ValueNode" object, #_"ResolvedJavaField" field]
         (merge (LoadFieldNode'class.) (AccessFieldNode'new-3 stamp, object, field))
     )
@@ -38875,18 +36667,6 @@ ZeroExtendNode'new-4
         (#_"ValueNode" Unary'''getValue-1 [#_"LoadFieldNode" this]
             (:object this)
         )
-
-        (#_"ValueNode" Unary'''canonical-3 [#_"LoadFieldNode" this, #_"Canonicalizer" tool, #_"ValueNode" forObject]
-            (when-not (and (Canonicalizer'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this) (not (AccessFieldNode''isVolatile-1 this)) (or (AccessFieldNode''isStatic-1 this) (StampTool'isPointerNeverNull-1 (:stamp forObject))))
-                (LoadFieldNode'canonical-6 this, (:stamp this), forObject, (:field this), (Canonicalizer'''canonicalizeReads-1 tool), (Canonicalizer'''allUsagesAvailable-1 tool))
-            )
-        )
-    )
-
-    (defm LoadFieldNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"LoadFieldNode" this, #_"Canonicalizer" tool]
-            (Unary'''canonical-3 this, tool, (Unary'''getValue-1 this))
-        )
     )
 )
 
@@ -38949,7 +36729,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The ArrayLength instruction gets the length of an array.
  ;;
-(class-ns ArrayLengthNode [FixedWithNextNode, FixedNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, Lowerable]
+(class-ns ArrayLengthNode [FixedWithNextNode, FixedNode, ValueNode, Node, Unary #_"<ValueNode>", Lowerable]
     (defn #_"ArrayLengthNode" ArrayLengthNode'new-1 [#_"ValueNode" array]
         (merge (ArrayLengthNode'class.) (FixedWithNextNode'new-1 StampFactory'nonNegativeInt)
             (hash-map
@@ -38992,18 +36772,6 @@ ZeroExtendNode'new-4
     (defm ArrayLengthNode Unary
         (#_"ValueNode" Unary'''getValue-1 [#_"ArrayLengthNode" this]
             (:array this)
-        )
-
-        (#_"ValueNode" Unary'''canonical-3 [#_"ArrayLengthNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
-            (or (ArrayLengthNode'readArrayLength-1 value)
-                this
-            )
-        )
-    )
-
-    (defm ArrayLengthNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"ArrayLengthNode" this, #_"Canonicalizer" tool]
-            (Unary'''canonical-3 this, tool, (Unary'''getValue-1 this))
         )
     )
 
@@ -39189,7 +36957,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FixedGuardNode [DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, Simplifiable, GuardingNode, DeoptimizingGuard, Lowerable]
+(class-ns FixedGuardNode [DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, GuardingNode, Lowerable]
     (defn #_"FixedGuardNode" FixedGuardNode'new-3 [#_"LogicNode" logic, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action]
         (FixedGuardNode'new-4 logic, reason, action, false)
     )
@@ -39202,58 +36970,6 @@ ZeroExtendNode'new-4
                 #_"DeoptimizationReason" :reason reason
                 #_"DeoptimizationAction" :action action
                 #_"boolean" :negated? negated?
-            )
-        )
-    )
-
-    (defm FixedGuardNode DeoptimizingGuard
-        (#_"this" DeoptimizingGuard'''setCondition-3 [#_"FixedGuardNode" this, #_"LogicNode" logic, #_"boolean" negated?]
-            (Node''updateUsages-3 this, (:logic this), logic)
-            (assoc this :logic logic, :negated? negated?)
-        )
-    )
-
-    (defm FixedGuardNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"FixedGuardNode" this, #_"Simplifier" tool]
-            (let [
-                this
-                    (loop-when-recur this
-                                     (satisfies? LogicNegationNode (:logic this))
-                                     (DeoptimizingGuard'''setCondition-3 this, (Unary'''getValue-1 (:logic this)), (not (:negated? this)))
-                                  => this
-                    )
-                #_"LogicNode" logic (:logic this)
-            ]
-                (condp satisfies? logic
-                    LogicConstantNode
-                        (let [
-                            this
-                                (when (= (:value logic) (:negated? this)) => this
-                                    (let [
-                                        #_"FixedNode" currentNext (:next this)
-                                        _
-                                            (when (some? currentNext)
-                                                (Node''replaceFirstSuccessor-3 (:predecessor currentNext), currentNext, nil)
-                                                (GraphUtil'killCFG-1 currentNext)
-                                            )
-                                        #_"DeoptimizeNode" deopt (Graph''add-2 (:graph this), (DeoptimizeNode'new-2 (:action this), (:reason this)))
-                                        deopt (DeoptBefore'''setStateBefore-2 deopt, (:stateBefore this))
-                                    ]
-                                        (FixedWithNextNode''setNext-2 this, deopt)
-                                    )
-                                )
-                            this (Node''replaceAtUsages-2 this, nil)
-                        ]
-                            (Graph''removeFixed-2 (:graph this), this)
-                            this
-                        )
-                    ShortCircuitOrNode
-                        (when (and (:negated? this) (Node''hasNoUsages-1 this)) => this
-                            (Graph''addAfterFixed-3 (:graph this), this, (Graph''add-2 (:graph this), (FixedGuardNode'new-4 (:y logic), (:reason this), (:action this), (not (:yNegated logic)))))
-                            (update this :graph Graph''replaceFixedWithFixed-3 this, (Graph''add-2 (:graph this), (FixedGuardNode'new-4 (:x logic), (:reason this), (:action this), (not (:xNegated logic)))))
-                        )
-                    this
-                )
             )
         )
     )
@@ -39332,7 +37048,7 @@ ZeroExtendNode'new-4
 ;;;
  ; NewArrayNode represents the allocation of an array.
  ;;
-(class-ns NewArrayNode [AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, Lowerable, ArrayLengthProvider, Simplifiable]
+(class-ns NewArrayNode [AbstractNewObjectNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, Lowerable, ArrayLengthProvider]
     (defn #_"NewArrayNode" NewArrayNode'new-2 [#_"ResolvedJavaType" elementType, #_"ValueNode" length]
         (merge (NewArrayNode'class.) (AbstractNewObjectNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'createExactTrusted-1 (JavaType'''getArrayClass-1 elementType))))
             (hash-map
@@ -39361,33 +37077,6 @@ ZeroExtendNode'new-4
     ;; Factored out in a separate method so that subclasses can override it.
     (defn #_"ConstantNode" NewArrayNode''defaultElementValue-1 [#_"NewArrayNode" this]
         (ConstantNode'defaultForKind-2 (JavaType'''getJavaKind-1 (:elementType this)), (:graph this))
-    )
-
-    (defm NewArrayNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"NewArrayNode" this, #_"Simplifier" tool]
-            (when (Node''hasNoUsages-1 this) => this
-                (let [
-                    #_"Stamp" stamp (:stamp (ArrayLengthProvider'''length-1 this))
-                ]
-                    (if (and (satisfies? IntegerStamp stamp) (IntegerStamp''isPositive-1 stamp))
-                        (do
-                            (GraphUtil'removeFixedWithUnusedInputs-1 this)
-                            this
-                        )
-                        ;; should be areFrameStatesAtSideEffects, but currently SVM will complain about RuntimeConstraint
-                        (when (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph this))) => this
-                            (let [
-                                #_"LogicNode" logic (CompareNode'createCompareNode-4g (:graph this), CanonicalCondition'LT, (ArrayLengthProvider'''length-1 this), (ConstantNode'forInt-2 0, (:graph this)))
-                                ;; we do not have a non-deopting path for that at the moment so action is None.
-                                #_"FixedGuardNode" guard (Graph''add-2 (:graph this), (FixedGuardNode'new-4 logic, :DeoptimizationReason'RuntimeConstraint, :DeoptimizationAction'None, true))
-                            ]
-                                (update this :graph Graph''replaceFixedWithFixed-3 this, guard)
-                            )
-                        )
-                    )
-                )
-            )
-        )
     )
 )
 
@@ -39638,7 +37327,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Writes a given {@linkplain #value() value} a memory location.
  ;;
-(class-ns WriteNode [AbstractWriteNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, Access, GuardedNode, HeapAccess, StateSplit, Single, MemoryNode, MemoryAccess, GuardingNode, LIRLowerableAccess, LIRLowerable, Canonicalizable]
+(class-ns WriteNode [AbstractWriteNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, Access, GuardedNode, HeapAccess, StateSplit, Single, MemoryNode, MemoryAccess, GuardingNode, LIRLowerableAccess, LIRLowerable]
     (defn #_"WriteNode" WriteNode'new-4 [#_"AddressNode" address, #_"LocationIdentity" location, #_"ValueNode" value, #_"BarrierType" barrierType]
         (merge (WriteNode'class.) (AbstractWriteNode'new-4 address, location, value, barrierType))
     )
@@ -39662,20 +37351,6 @@ ZeroExtendNode'new-4
     (defm WriteNode LIRLowerableAccess
         (#_"Stamp" LIRLowerableAccess'''getAccessStamp-1 [#_"WriteNode" this]
             (:stamp (:value this))
-        )
-    )
-
-    (defm WriteNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"WriteNode" this, #_"Canonicalizer" tool]
-            (when (and (Canonicalizer'''canonicalizeReads-1 tool) (Node''hasExactlyOneUsage-1 this) (satisfies? WriteNode (:next this))) => this
-                (let [
-                    #_"WriteNode" write (:next this)
-                ]
-                    (when (and (= (:lastLocationAccess write) this) (= (Access'''getAddress-1 write) (Access'''getAddress-1 this)) (Stamp'''isCompatible-2s (LIRLowerableAccess'''getAccessStamp-1 this), (LIRLowerableAccess'''getAccessStamp-1 write))) => this
-                        (MemoryAccess'''setLastLocationAccess-2 write, (:lastLocationAccess this))
-                    )
-                )
-            )
         )
     )
 )
@@ -39706,7 +37381,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Reads an accessed value.
  ;;
-(class-ns ReadNode [FloatableAccessNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, Access, GuardedNode, HeapAccess, LIRLowerableAccess, LIRLowerable, Canonicalizable, GuardingNode]
+(class-ns ReadNode [FloatableAccessNode, FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, Access, GuardedNode, HeapAccess, LIRLowerableAccess, LIRLowerable, GuardingNode]
     (defn #_"ReadNode" ReadNode'new-4 [#_"AddressNode" address, #_"LocationIdentity" location, #_"Stamp" stamp, #_"BarrierType" barrierType]
         (merge (ReadNode'class.) (FloatableAccessNode'new-4 address, location, stamp, barrierType))
     )
@@ -39721,60 +37396,9 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm ReadNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"ReadNode" this, #_"Canonicalizer" tool]
-            (cond
-                (and (Canonicalizer'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
-                    nil ;; read without usages or guard can be safely removed
-                (:nullCheck this)
-                    this ;; if this read is a nil-check, then replacing it with the value is incorrect for guard-type usages
-                :else
-                    (ReadNode'canonicalizeRead-4 this, (Access'''getAddress-1 this), (Access'''getLocationIdentity-1 this), tool)
-            )
-        )
-    )
-
     (defm ReadNode FloatableAccessNode
         (#_"FloatingAccessNode" FloatableAccessNode'''asFloatingNode-2 [#_"ReadNode" this, #_"MemoryNode" lastLocationAccess]
             (Graph''add-2 (:graph this), (FloatingReadNode'new-6 (Access'''getAddress-1 this), (Access'''getLocationIdentity-1 this), lastLocationAccess, (:stamp this), (GuardedNode'''getGuard-1 this), (:barrierType this)))
-        )
-    )
-
-    (defn #_"ValueNode" ReadNode'canonicalizeRead-4 [#_"ValueNode" read, #_"AddressNode" address, #_"LocationIdentity" location, #_"Canonicalizer" tool]
-        (when (and (Canonicalizer'''canonicalizeReads-1 tool) (satisfies? OffsetAddressNode address)) => read
-            (let [
-                #_"ValueNode" object (AddressNode'''getBase-1 address)
-            ]
-                (when (and (satisfies? ConstantNode object) (not (ValueNode''isNullConstant-1 object)) (satisfies? ConstantNode (:offset address)))
-                    (let [
-                        #_"long" displacement (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:offset address)))
-                        #_"int" stableDimension (:stableDimension object)
-                    ]
-                        (when (or (:immutable location) (pos? stableDimension))
-                            (let [
-                                #_"Constant" constant (Stamp'''readConstant-3 (:stamp read), (:value object), displacement)
-                                #_"boolean" isDefaultStable (or (:immutable location) (:isDefaultStable object))
-                            ]
-                                (when (and (some? constant) (or isDefaultStable (not (Constant'''isDefaultForKind-1 constant))))
-                                    (§ return (ConstantNode'forConstant-4 (:stamp read), constant, (max (dec stableDimension) 0), isDefaultStable))
-                                )
-                            )
-                        )
-                    )
-                )
-                (when (= location NamedLocationIdentity'ARRAY_LENGTH)
-                    (let [
-                        #_"ValueNode" length (GraphUtil'arrayLength-1 object)
-                    ]
-                        (when (some? length)
-                            (§ return length)
-                        )
-                    )
-                )
-                (when (satisfies? CanonicalizableLocation location) => read
-                    (CanonicalizableLocation'''canonicalizeRead-4 location, read, address, object)
-                )
-            )
         )
     )
 
@@ -39795,7 +37419,7 @@ ZeroExtendNode'new-4
  ; Read a raw memory location according to Java field or array read semantics. It will perform read
  ; barriers, implicit conversions and optionally oop uncompression.
  ;;
-(class-ns JavaReadNode [FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, Access, GuardedNode, HeapAccess, Lowerable, GuardingNode, Canonicalizable]
+(class-ns JavaReadNode [FixedAccessNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, Access, GuardedNode, HeapAccess, Lowerable, GuardingNode]
     (defn #_"JavaReadNode" JavaReadNode'new-5 [#_"JavaKind" readKind, #_"AddressNode" address, #_"LocationIdentity" location, #_"BarrierType" barrierType, #_"boolean" compressible?]
         (merge (JavaReadNode'class.) (FixedAccessNode'new-4 address, location, (StampFactory'forKind-1 readKind), barrierType)
             (hash-map
@@ -39828,12 +37452,6 @@ ZeroExtendNode'new-4
     (defm JavaReadNode Access
         (#_"boolean" Access'''canNullCheck-1 [#_"JavaReadNode" this]
             true
-        )
-    )
-
-    (defm JavaReadNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"JavaReadNode" this, #_"Canonicalizer" tool]
-            (ReadNode'canonicalizeRead-4 this, (Access'''getAddress-1 this), (Access'''getLocationIdentity-1 this), tool)
         )
     )
 )
@@ -39883,7 +37501,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns FixedBinaryNode [DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, Binary #_"<ValueNode>", Canonicalizable]
+(class-ns FixedBinaryNode [DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, Binary #_"<ValueNode>"]
     (defn #_"FixedBinaryNode" FixedBinaryNode'new-3 [#_"Stamp" stamp, #_"ValueNode" x, #_"ValueNode" y]
         (merge (FixedBinaryNode'class.) (DeoptimizingFixedWithNextNode'new-1 stamp)
             (hash-map
@@ -39894,15 +37512,9 @@ ZeroExtendNode'new-4
             )
         )
     )
-
-    (defm FixedBinaryNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"FixedBinaryNode" this, #_"Canonicalizer" tool]
-            (Binary'''canonical-4 this, tool, (:x this), (:y this))
-        )
-    )
 )
 
-(class-ns IntegerDivRemNode [FixedBinaryNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, Binary #_"<ValueNode>", Canonicalizable, Lowerable]
+(class-ns IntegerDivRemNode [FixedBinaryNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, Binary #_"<ValueNode>", Lowerable]
     (defn #_"IntegerDivRemNode" IntegerDivRemNode'new-5 [#_"Stamp" stamp, #_"DivRemOp" op, #_"Signedness" type, #_"ValueNode" x, #_"ValueNode" y]
         (let [
             #_"IntegerDivRemNode" this
@@ -39938,7 +37550,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SignedDivNode [IntegerDivRemNode, FixedBinaryNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, Binary #_"<ValueNode>", Canonicalizable, Lowerable, LIRLowerable]
+(class-ns SignedDivNode [IntegerDivRemNode, FixedBinaryNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, Binary #_"<ValueNode>", Lowerable, LIRLowerable]
     (defn #_"SignedDivNode" SignedDivNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (SignedDivNode'class.) (IntegerDivRemNode'new-5 (BinaryOp'''foldStamp-3 (:div IntegerStamp'OPS), (:stamp x), (:stamp y)), :DivRemOp'DIV, :Signedness'SIGNED, x, y))
     )
@@ -39950,12 +37562,6 @@ ZeroExtendNode'new-4
     (defm SignedDivNode ValueNode
         (#_"boolean" ValueNode'''inferStamp-1 [#_"SignedDivNode" this]
             (ValueNode''updateStamp-2 this, (BinaryOp'''foldStamp-3 (:div IntegerStamp'OPS), (:stamp (:x this)), (:stamp (:y this))))
-        )
-    )
-
-    (defm SignedDivNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"SignedDivNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (SignedDivNode'canonical-3 this, forX, forY)
         )
     )
 
@@ -40025,7 +37631,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SignedRemNode [IntegerDivRemNode, FixedBinaryNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, Binary #_"<ValueNode>", Canonicalizable, Lowerable, LIRLowerable]
+(class-ns SignedRemNode [IntegerDivRemNode, FixedBinaryNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, Binary #_"<ValueNode>", Lowerable, LIRLowerable]
     (defn #_"SignedRemNode" SignedRemNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (SignedRemNode'class.) (IntegerDivRemNode'new-5 (BinaryOp'''foldStamp-3 (:rem IntegerStamp'OPS), (:stamp x), (:stamp y)), :DivRemOp'REM, :Signedness'SIGNED, x, y))
     )
@@ -40084,12 +37690,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm SignedRemNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"SignedRemNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (SignedRemNode'canonical-4 this, forX, forY, (:stamp this))
-        )
-    )
-
     (defm SignedRemNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"SignedRemNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitRem-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
@@ -40097,7 +37697,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns UnsignedDivNode [IntegerDivRemNode, FixedBinaryNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, Binary #_"<ValueNode>", Canonicalizable, Lowerable, LIRLowerable]
+(class-ns UnsignedDivNode [IntegerDivRemNode, FixedBinaryNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, Binary #_"<ValueNode>", Lowerable, LIRLowerable]
     (defn #_"UnsignedDivNode" UnsignedDivNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (UnsignedDivNode'class.) (IntegerDivRemNode'new-5 (Stamp'''unrestricted-1 (:stamp x)), :DivRemOp'DIV, :Signedness'UNSIGNED, x, y))
     )
@@ -40136,12 +37736,6 @@ ZeroExtendNode'new-4
         (UnsignedDivNode'canonical-4 nil, x, y, (Stamp'''unrestricted-1 (:stamp x)))
     )
 
-    (defm UnsignedDivNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"UnsignedDivNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (UnsignedDivNode'canonical-4 this, forX, forY, (:stamp this))
-        )
-    )
-
     (defm UnsignedDivNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"UnsignedDivNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitUDiv-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
@@ -40149,7 +37743,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns UnsignedRemNode [IntegerDivRemNode, FixedBinaryNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, Binary #_"<ValueNode>", Canonicalizable, Lowerable, LIRLowerable]
+(class-ns UnsignedRemNode [IntegerDivRemNode, FixedBinaryNode, DeoptimizingFixedWithNextNode, FixedWithNextNode, FixedNode, ValueNode, Node, DeoptBefore, DeoptimizingNode, Binary #_"<ValueNode>", Lowerable, LIRLowerable]
     (defn #_"UnsignedRemNode" UnsignedRemNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (UnsignedRemNode'class.) (IntegerDivRemNode'new-5 (Stamp'''unrestricted-1 (:stamp x)), :DivRemOp'REM, :Signedness'UNSIGNED, x, y))
     )
@@ -40157,12 +37751,6 @@ ZeroExtendNode'new-4
     #_unused
     (defn #_"ValueNode" UnsignedRemNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
         (UnsignedRemNode'canonical-4 nil, x, y, (Stamp'''unrestricted-1 (:stamp x)))
-    )
-
-    (defm UnsignedRemNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"UnsignedRemNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (UnsignedRemNode'canonical-4 this, forX, forY, (:stamp this))
-        )
     )
 
     (defn #_"ValueNode" UnsignedRemNode'canonical-4 [#_"UnsignedRemNode" self, #_"ValueNode" forX, #_"ValueNode" forY, #_"Stamp" stamp]
@@ -40336,7 +37924,7 @@ ZeroExtendNode'new-4
  ; easily represented. The anchored value is usually part of the FrameState since this forces uses
  ; of the value below this node so they will consume this frame state instead of an earlier one.
  ;;
-(class-ns StateSplitProxyNode [FixedValueAnchorNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, ValueProxy, LimitedValueProxy, Proxy, GuardingNode, Canonicalizable, StateSplit]
+(class-ns StateSplitProxyNode [FixedValueAnchorNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, ValueProxy, LimitedValueProxy, Proxy, GuardingNode, StateSplit]
     (defn #_"StateSplitProxyNode" StateSplitProxyNode'new-1 [#_"ValueNode" object]
         (StateSplitProxyNode'new-2 object, false)
     )
@@ -40362,14 +37950,6 @@ ZeroExtendNode'new-4
 
         (#_"boolean" StateSplit'''hasSideEffect-1 [#_"StateSplitProxyNode" this]
             true
-        )
-    )
-
-    (defm StateSplitProxyNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"StateSplitProxyNode" this, #_"Canonicalizer" tool]
-            (when (or (and (satisfies? ConstantNode (:object this)) (not (:delayElimination this))) (nil? (:stateAfter this))) => this
-                (:object this)
-            )
         )
     )
 )
@@ -40438,7 +38018,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns MemoryAnchorNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, MemoryNode, Canonicalizable]
+(class-ns MemoryAnchorNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, MemoryNode]
     (defn #_"MemoryAnchorNode" MemoryAnchorNode'new-0 []
         (merge (MemoryAnchorNode'class.) (FixedWithNextNode'new-1 VoidStamp'instance))
     )
@@ -40447,14 +38027,6 @@ ZeroExtendNode'new-4
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"MemoryAnchorNode" this, #_"LIRBuilder" builder]
             ;; Nothing to emit, since this node is used for structural purposes only.
             builder
-        )
-    )
-
-    (defm MemoryAnchorNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"MemoryAnchorNode" this, #_"Canonicalizer" tool]
-            (when-not (and (Canonicalizer'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
-                this
-            )
         )
     )
 )
@@ -40533,27 +38105,12 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SnippetAnchorNode [FixedWithNextNode, FixedNode, ValueNode, Node, Simplifiable, GuardingNode]
+(class-ns SnippetAnchorNode [FixedWithNextNode, FixedNode, ValueNode, Node, GuardingNode]
     (§ intrinsic! #_"GuardingNode" SnippetAnchorNode'anchor-0 [])
 
     #_intrinsifier
     (defn #_"SnippetAnchorNode" SnippetAnchorNode'new-0 []
         (merge (SnippetAnchorNode'class.) (FixedWithNextNode'new-1 StampFactory'objectStamp))
-    )
-
-    (defm SnippetAnchorNode Simplifiable
-        (#_"this" Simplifiable'''simplify-2 [#_"SnippetAnchorNode" this, #_"Simplifier" tool]
-            (let [
-                #_"AbstractBeginNode" prevBegin (AbstractBeginNode'prevBegin-1 this)
-            ]
-                (Node''replaceAtUsages-3 this, :InputType'Anchor, prevBegin)
-                (Node''replaceAtUsages-3 this, :InputType'Guard, prevBegin)
-                (when (and (Canonicalizer'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
-                    (Graph''removeFixed-2 (:graph this), this)
-                )
-                this
-            )
-        )
     )
 )
 
@@ -40686,7 +38243,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns UnsafeAccessNode [FixedWithNextNode, FixedNode, ValueNode, Node, Canonicalizable]
+(class-ns UnsafeAccessNode [FixedWithNextNode, FixedNode, ValueNode, Node]
     (defn #_"UnsafeAccessNode" UnsafeAccessNode'new-6 [#_"Stamp" stamp, #_"ValueNode" object, #_"ValueNode" offset, #_"JavaKind" accessKind, #_"LocationIdentity" locationIdentity, #_"boolean" forceAnyLocation]
         (merge (UnsafeAccessNode'class.) (FixedWithNextNode'new-1 stamp)
             (hash-map
@@ -40700,47 +38257,12 @@ ZeroExtendNode'new-4
             )
         )
     )
-
-    (defm UnsafeAccessNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"UnsafeAccessNode" this, #_"Canonicalizer" tool]
-            (when (and (not (:forceAnyLocation this)) (LocationIdentity''isAny-1 (:locationIdentity this))) => this
-                (when (satisfies? ConstantNode (:offset this))
-                    (let [
-                        #_"long" constantOffset (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:offset this)))
-                        ;; Try to canonicalize to a field access.
-                        #_"ResolvedJavaType" receiverType (StampTool'typeOrNull-1 (:stamp (:object this)))
-                    ]
-                        (when (some? receiverType)
-                            (let [
-                                #_"ResolvedJavaField" field (ResolvedJavaType'''findInstanceFieldWithOffset-3 receiverType, constantOffset, (:accessKind this))
-                            ]
-                                ;; No need for checking that the receiver is non-nil. The field access includes
-                                ;; the nil-check and if a field is found, the offset is so small that this is
-                                ;; never a valid access of an arbitrary address.
-                                (when (and (some? field) (= (JavaType'''getJavaKind-1 field) (:accessKind this)))
-                                    (§ return (UnsafeAccessNode'''cloneAsFieldAccess-2 this, field))
-                                )
-                            )
-                        )
-                    )
-                )
-                (let [
-                    #_"ResolvedJavaType" receiverType (StampTool'typeOrNull-1 (:stamp (:object this)))
-                ]
-                    ;; Try to build a better location identity.
-                    (when (and (some? receiverType) (JavaType''isArray-1 receiverType)) => this
-                        (UnsafeAccessNode'''cloneAsArrayAccess-3 this, (:offset this), (NamedLocationIdentity'getArrayLocation-1 (JavaType'''getJavaKind-1 (JavaType'''getComponentType-1 receiverType))))
-                    )
-                )
-            )
-        )
-    )
 )
 
 ;;;
  ; Load of a value from a location specified as an offset relative to an object. No nil-check is performed before the load.
  ;;
-(class-ns RawLoadNode [UnsafeAccessNode, FixedWithNextNode, FixedNode, ValueNode, Node, Canonicalizable, Lowerable]
+(class-ns RawLoadNode [UnsafeAccessNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable]
     (§ intrinsic! #_"Word" RawLoadNode'loadWordFromObjectIntrinsic-4 [#_"Object" object, #_"long" offset, #_"LocationIdentity" location, #_"JavaKind" wordKind])
 
     #_unused
@@ -40811,49 +38333,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm RawLoadNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"RawLoadNode" this, #_"Canonicalizer" tool]
-            (or
-                (when (and (not (:forceAnyLocation this)) (LocationIdentity''isAny-1 (:locationIdentity this)))
-                    (let [
-                        #_"ValueNode" object (:object this)
-                    ]
-                        (when (and (satisfies? ConstantNode (:offset this)) (satisfies? ConstantNode object) (not (ValueNode''isNullConstant-1 object)))
-                            (let [
-                                #_"ResolvedJavaType" type (StampTool'typeOrNull-1 (:stamp object))
-                            ]
-                                (when (and (some? type) (JavaType''isArray-1 type))
-                                    (let [
-                                        #_"JavaConstant" array (ValueNode''asJavaConstant-1 object)
-                                    ]
-                                        (when (some? array)
-                                            (let [
-                                                #_"int" stableDimension (:stableDimension object)
-                                            ]
-                                                (when (pos? stableDimension)
-                                                    (let [
-                                                        #_"long" offset (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:offset this)))
-                                                        #_"Constant" constant (Stamp'''readConstant-3 (:stamp this), array, offset)
-                                                        #_"boolean" isDefaultStable (:isDefaultStable object)
-                                                    ]
-                                                        (when (and (some? constant) (or isDefaultStable (not (Constant'''isDefaultForKind-1 constant))))
-                                                            (ConstantNode'forConstant-4 (:stamp this), constant, (dec stableDimension), isDefaultStable)
-                                                        )
-                                                    )
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-                (Canonicalizable'''canonical-2 (§ super UnsafeAccessNode'iface), tool)
-            )
-        )
-    )
-
     (defm RawLoadNode UnsafeAccessNode
         (#_"ValueNode" UnsafeAccessNode'''cloneAsFieldAccess-2 [#_"RawLoadNode" this, #_"ResolvedJavaField" field]
             (LoadFieldNode'create-2 (:object this), field)
@@ -40868,7 +38347,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Store of a value at a location specified as an offset relative to an object. No nil-check is performed before the store.
  ;;
-(class-ns RawStoreNode [UnsafeAccessNode, FixedWithNextNode, FixedNode, ValueNode, Node, Canonicalizable, StateSplit, Lowerable, Single, MemoryNode]
+(class-ns RawStoreNode [UnsafeAccessNode, FixedWithNextNode, FixedNode, ValueNode, Node, StateSplit, Lowerable, Single, MemoryNode]
     (defn #_"RawStoreNode" RawStoreNode'new-8 [#_"ValueNode" object, #_"ValueNode" offset, #_"ValueNode" value, #_"JavaKind" accessKind, #_"LocationIdentity" location, #_"boolean" needsBarrier, #_"FrameState" stateAfter, #_"boolean" forceAnyLocation]
         (merge (RawStoreNode'class.) (UnsafeAccessNode'new-6 VoidStamp'instance, object, offset, accessKind, location, forceAnyLocation)
             (hash-map
@@ -40928,7 +38407,7 @@ ZeroExtendNode'new-4
  ; Word#objectToUntrackedPointer and Word#toObject() operations. It has an impact on the pointer
  ; maps for the GC, so it must not be scheduled or optimized away.
  ;;
-(class-ns WordCastNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, Canonicalizable]
+(class-ns WordCastNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable]
     (defn #_"WordCastNode" WordCastNode'new-2 [#_"Stamp" stamp, #_"ValueNode" input]
         (merge (WordCastNode'class.) (FixedWithNextNode'new-1 stamp)
             (hash-map
@@ -40952,30 +38431,6 @@ ZeroExtendNode'new-4
 
     (defn #_"WordCastNode" WordCastNode'addressToWord-2 [#_"ValueNode" input, #_"JavaKind" wordKind]
         (WordCastNode'new-2 (StampFactory'forKind-1 wordKind), input)
-    )
-
-    (defm WordCastNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"WordCastNode" this, #_"Canonicalizer" tool]
-            (cond
-                (and (Canonicalizer'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
-                    ;; if the cast is unused, it can be eliminated
-                    (:input this)
-                (satisfies? ConstantNode (:input this))
-                    ;; null pointers are uncritical for GC, so they can be constant folded
-                    (cond
-                        (JavaConstant'''isNull-1 (ValueNode''asJavaConstant-1 (:input this)))
-                            (ConstantNode'forIntegerStamp-2 (:stamp this), 0)
-                        (and (JavaKind'isNumericInteger-1 (JavaConstant'''getJavaKind-1 (ValueNode''asJavaConstant-1 (:input this))))
-                            (zero? (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 (:input this))))
-                        )
-                            (ConstantNode'forConstant-2s (:stamp this), JavaConstant'NULL_POINTER)
-                        :else
-                            this
-                    )
-                :else
-                    this
-            )
-        )
     )
 
     (defm WordCastNode LIRLowerable
@@ -41126,7 +38581,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AddressNode [FloatingNode, ValueNode, Node, IndirectCanonicalization]
+(class-ns AddressNode [FloatingNode, ValueNode, Node]
     (defn #_"AddressNode" AddressNode'new-0 []
         (merge (AddressNode'class.) (FloatingNode'new-1 StampFactory'rawPointer))
     )
@@ -41135,7 +38590,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Represents an address of the form [base + index*scale + displacement]. Both base and index are optional.
  ;;
-(class-ns AMD64AddressNode [AddressNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable]
+(class-ns AMD64AddressNode [AddressNode, FloatingNode, ValueNode, Node, LIRLowerable]
     (defn #_"AMD64AddressNode" AMD64AddressNode'new-2 [#_"ValueNode" base, #_"ValueNode" index]
         (merge (AMD64AddressNode'class.) (AddressNode'new-0)
             (hash-map
@@ -41216,7 +38671,7 @@ ZeroExtendNode'new-4
  ; Represents an address that is composed of a base and an offset. The base can be either a
  ; JavaKind#Object, a word-sized integer or another pointer. The offset must be a word-sized integer.
  ;;
-(class-ns OffsetAddressNode [AddressNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, Canonicalizable]
+(class-ns OffsetAddressNode [AddressNode, FloatingNode, ValueNode, Node]
     (§ intrinsic! #_"Address" OffsetAddressNode'address-2 [#_"Object" base, #_"long" offset])
 
     #_intrinsifier
@@ -41241,22 +38696,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm OffsetAddressNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"OffsetAddressNode" this, #_"Canonicalizer" tool]
-            (condp satisfies? (:base this)
-                OffsetAddressNode
-                    ;; Rewrite (&base[offset1])[offset2] to base[offset1 + offset2].
-                    (OffsetAddressNode'new-2 (AddressNode'''getBase-1 (:base this)), (BinaryArithmeticNode'add-2 (:offset (:base this)), (:offset this)))
-                AddNode
-                    (if (satisfies? ConstantNode (:y (:base this)))
-                        (OffsetAddressNode'new-2 (:x (:base this)), (AddNode'new-2 (:y (:base this)), (:offset this)))
-                        this
-                    )
-                this
-            )
-        )
-    )
-
     (defm OffsetAddressNode AddressNode
         (#_"long" AddressNode'''getMaxConstantDisplacement-1 [#_"OffsetAddressNode" this]
             (let [
@@ -41272,7 +38711,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BinaryNode [FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable]
+(class-ns BinaryNode [FloatingNode, ValueNode, Node, Binary #_"<ValueNode>"]
     ;;;
      ; Creates a new BinaryNode instance.
      ;
@@ -41291,12 +38730,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm BinaryNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"BinaryNode" this, #_"Canonicalizer" tool]
-            (Binary'''canonical-4 this, tool, (:x this), (:y this))
-        )
-    )
-
     (defm BinaryNode ValueNode
         (#_"boolean" ValueNode'''inferStamp-1 [#_"BinaryNode" this]
             (ValueNode''updateStamp-2 this, (BinaryNode'''foldStamp-3 this, (:stamp (:x this)), (:stamp (:y this))))
@@ -41304,7 +38737,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BinaryArithmeticNode [BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable]
+(class-ns BinaryArithmeticNode [BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", ArithmeticOperation, LIRLowerable]
     (defn #_"BinaryArithmeticNode" BinaryArithmeticNode'new-3 [#_"fn BinaryOp [ArithmeticOpTable]" f'getOp-1, #_"ValueNode" x, #_"ValueNode" y]
         (merge (BinaryArithmeticNode'class.) (BinaryNode'new-3 (BinaryOp'''foldStamp-3 (f'getOp-1 (ArithmeticOpTable'forStamp-1 (:stamp x))), (:stamp x), (:stamp y)), x, y)
             (hash-map
@@ -41326,14 +38759,6 @@ ZeroExtendNode'new-4
     (defm BinaryArithmeticNode BinaryArithmeticNode
         (#_"boolean" BinaryArithmeticNode'''isAssociative-1 [#_"BinaryArithmeticNode" this]
             (:associative? (ArithmeticOperation'''getArithmeticOp-1 this))
-        )
-    )
-
-    (defm BinaryArithmeticNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"BinaryArithmeticNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (or (BinaryArithmeticNode'tryConstantFold-4 (BinaryArithmeticNode''getOp-3 this, forX, forY), forX, forY, (:stamp this))
-                this
-            )
         )
     )
 
@@ -41530,7 +38955,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AddNode [BinaryArithmeticNode #_"<Add>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, BinaryCommutative]
+(class-ns AddNode [BinaryArithmeticNode #_"<Add>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", ArithmeticOperation, LIRLowerable, BinaryCommutative]
     (defn #_"AddNode" AddNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (AddNode'class.) (BinaryArithmeticNode'new-3 :add, x, y))
     )
@@ -41583,29 +39008,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm AddNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"AddNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (let [
-                #_"ValueNode" ret (Binary'''canonical-4 (§ super BinaryArithmeticNode'iface), tool, forX, forY)
-            ]
-                (when (= ret this) => ret
-                    (if (and (satisfies? ConstantNode forX) (not (satisfies? ConstantNode forY)))
-                        ;; we try to swap and canonicalize
-                        (let [
-                            #_"ValueNode" improvement (Binary'''canonical-4 this, tool, forY, forX)
-                        ]
-                            (when (= improvement this) => improvement
-                                ;; if this fails we only swap
-                                (AddNode'new-2 forY, forX)
-                            )
-                        )
-                        (AddNode'canonical-4 this, (BinaryArithmeticNode''getOp-3 this, forX, forY), forX, forY)
-                    )
-                )
-            )
-        )
-    )
-
     (defm AddNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"AddNode" this, #_"LIRBuilder" builder]
             (let [
@@ -41623,10 +39025,10 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Node representing an exact integer addition that will throw an ArithmeticException in
- ; case the addition would overflow the 32 bit range.
+ ; Node representing an exact integer addition that will throw an ArithmeticException
+ ; in case the addition would overflow the 32 bit range.
  ;;
-(class-ns IntegerAddExactNode [AddNode, BinaryArithmeticNode #_"<Add>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, BinaryCommutative, IntegerExactArithmeticNode, Lowerable]
+(class-ns IntegerAddExactNode [AddNode, BinaryArithmeticNode #_"<Add>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", ArithmeticOperation, LIRLowerable, BinaryCommutative, IntegerExactArithmeticNode, Lowerable]
     (defn #_"IntegerAddExactNode" IntegerAddExactNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (let [
             #_"IntegerAddExactNode" this (merge (IntegerAddExactNode'class.) (AddNode'new-2 x, y))
@@ -41680,52 +39082,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"ConstantNode" IntegerAddExactNode'canonicalXconstant-2 [#_"ValueNode" forX, #_"ValueNode" forY]
-        (let [
-            #_"JavaConstant" xConst (ValueNode''asJavaConstant-1 forX)
-            #_"JavaConstant" yConst (ValueNode''asJavaConstant-1 forY)
-        ]
-            (when (and (some? xConst) (some? yConst))
-                (try
-                    (if (= (JavaConstant'''getJavaKind-1 xConst) :JavaKind'Int)
-                        (ConstantNode'forInt-1 (Math/addExact (JavaConstant'''asInt-1 xConst), (JavaConstant'''asInt-1 yConst)))
-                        (ConstantNode'forLong-1 (Math/addExact (JavaConstant'''asLong-1 xConst), (JavaConstant'''asLong-1 yConst)))
-                    )
-                    (catch ArithmeticException _
-                        nil ;; the operation will result in an overflow exception, so do not canonicalize
-                    )
-                )
-            )
-        )
-    )
-
-    (defm IntegerAddExactNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"IntegerAddExactNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (if (and (satisfies? ConstantNode forX) (not (satisfies? ConstantNode forY)))
-                (Canonicalizable'''canonical-2 (IntegerAddExactNode'new-2 forY, forX), tool)
-                (do
-                    (cond
-                        (satisfies? ConstantNode forX)
-                            (let [
-                                #_"ConstantNode" constantNode (IntegerAddExactNode'canonicalXconstant-2 forX, forY)
-                            ]
-                                (when (some? constantNode)
-                                    (§ return constantNode)
-                                )
-                            )
-                        (satisfies? ConstantNode forY)
-                            (when (zero? (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forY)))
-                                (§ return forX)
-                            )
-                    )
-                    (when-not (IntegerStamp'addCanOverflow-2 (:stamp forX), (:stamp forY)) => this
-                        (Canonicalizable'''canonical-2 (AddNode'new-2 forX, forY), tool)
-                    )
-                )
-            )
-        )
-    )
-
     (defm IntegerAddExactNode IntegerExactArithmeticNode
         (#_"IntegerExactArithmeticSplitNode" IntegerExactArithmeticNode'''createSplit-3 [#_"IntegerAddExactNode" this, #_"AbstractBeginNode" _next, #_"AbstractBeginNode" deopt]
             (Graph''add-2 (:graph this), (IntegerAddExactSplitNode'new-5 (:stamp this), (:x this), (:y this), _next, deopt))
@@ -41740,7 +39096,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns AndNode [BinaryArithmeticNode #_"<And>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, BinaryCommutative]
+(class-ns AndNode [BinaryArithmeticNode #_"<And>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", ArithmeticOperation, LIRLowerable, BinaryCommutative]
     (defn #_"AndNode" AndNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (AndNode'class.) (BinaryArithmeticNode'new-3 :and, x, y))
     )
@@ -41793,18 +39149,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm AndNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"AndNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (let [
-                #_"ValueNode" ret (Binary'''canonical-4 (§ super BinaryArithmeticNode'iface), tool, forX, forY)
-            ]
-                (when (= ret this) => ret
-                    (AndNode'canonical-5 this, (BinaryArithmeticNode''getOp-3 this, forX, forY), (:stamp this), forX, forY)
-                )
-            )
-        )
-    )
-
     (defm AndNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"AndNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitAnd-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
@@ -41812,7 +39156,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IntegerMulHighNode [BinaryArithmeticNode #_"<MulHigh>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, BinaryCommutative]
+(class-ns IntegerMulHighNode [BinaryArithmeticNode #_"<MulHigh>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", ArithmeticOperation, LIRLowerable, BinaryCommutative]
     (defn #_"IntegerMulHighNode" IntegerMulHighNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (IntegerMulHighNode'class.) (BinaryArithmeticNode'new-3 :mulHigh, x, y))
     )
@@ -41827,43 +39171,9 @@ ZeroExtendNode'new-4
             )
         )
     )
-
-    (defn- #_"ValueNode" IntegerMulHighNode'canonical-2 [#_"IntegerMulHighNode" self, #_"ValueNode" forY]
-        (when (satisfies? ConstantNode forY) => self
-            (let [
-                #_"Constant" constant (:value forY)
-            ]
-                (when (and (satisfies? PrimitiveConstant constant) (JavaKind'isNumericInteger-1 (JavaConstant'''getJavaKind-1 constant)) (any = (JavaConstant'''asLong-1 constant) 0 1)) => self
-                    (ConstantNode'forIntegerStamp-2 (:stamp self), 0)
-                )
-            )
-        )
-    )
-
-    (defm IntegerMulHighNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"IntegerMulHighNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (let [
-                #_"ValueNode" ret (Binary'''canonical-4 (§ super BinaryArithmeticNode'iface), tool, forX, forY)
-            ]
-                (when (= ret this) => ret
-                    (when (and (satisfies? ConstantNode forX) (not (satisfies? ConstantNode forY))) => (IntegerMulHighNode'canonical-2 this, forY)
-                        ;; we try to swap and canonicalize
-                        (let [
-                            #_"ValueNode" improvement (Binary'''canonical-4 this, tool, forY, forX)
-                        ]
-                            (when (= improvement this) => improvement
-                                ;; if this fails we only swap
-                                (IntegerMulHighNode'new-2 forY, forX)
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
 )
 
-(class-ns MulNode [BinaryArithmeticNode #_"<Mul>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, BinaryCommutative]
+(class-ns MulNode [BinaryArithmeticNode #_"<Mul>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", ArithmeticOperation, LIRLowerable, BinaryCommutative]
     (defn #_"MulNode" MulNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (MulNode'class.) (BinaryArithmeticNode'new-3 :mul, x, y))
     )
@@ -41902,29 +39212,6 @@ ZeroExtendNode'new-4
             #_"Stamp" stamp (BinaryOp'''foldStamp-3 op, (:stamp x), (:stamp y))
         ]
             (or (BinaryArithmeticNode'tryConstantFold-4 op, x, y, stamp) (MulNode'canonical-5 nil, op, stamp, x, y))
-        )
-    )
-
-    (defm MulNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"MulNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (let [
-                #_"ValueNode" ret (Binary'''canonical-4 (§ super BinaryArithmeticNode'iface), tool, forX, forY)
-            ]
-                (when (= ret this) => ret
-                    (if (and (satisfies? ConstantNode forX) (not (satisfies? ConstantNode forY)))
-                        ;; we try to swap and canonicalize
-                        (let [
-                            #_"ValueNode" improvement (Binary'''canonical-4 this, tool, forY, forX)
-                        ]
-                            (when (= improvement this) => improvement
-                                ;; if this fails we only swap
-                                (MulNode'new-2 forY, forX)
-                            )
-                        )
-                        (MulNode'canonical-5 this, (BinaryArithmeticNode''getOp-3 this, forX, forY), (:stamp this), forX, forY)
-                    )
-                )
-            )
         )
     )
 
@@ -41992,7 +39279,7 @@ ZeroExtendNode'new-4
  ; Node representing an exact integer multiplication that will throw an ArithmeticException
  ; in case the addition would overflow the 32 bit range.
  ;;
-(class-ns IntegerMulExactNode [MulNode, BinaryArithmeticNode #_"<Mul>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, BinaryCommutative, IntegerExactArithmeticNode, Lowerable]
+(class-ns IntegerMulExactNode [MulNode, BinaryArithmeticNode #_"<Mul>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", ArithmeticOperation, LIRLowerable, BinaryCommutative, IntegerExactArithmeticNode, Lowerable]
     (defn #_"IntegerMulExactNode" IntegerMulExactNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (let [
             #_"IntegerMulExactNode" this (merge (IntegerMulExactNode'class.) (MulNode'new-2 x, y))
@@ -42010,48 +39297,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"ValueNode" IntegerMulExactNode''canonicalXconstant-3 [#_"IntegerMulExactNode" this, #_"ValueNode" forX, #_"ValueNode" forY]
-        (let [
-            #_"JavaConstant" xConst (ValueNode''asJavaConstant-1 forX)
-            #_"JavaConstant" yConst (ValueNode''asJavaConstant-1 forY)
-        ]
-            (try
-                (if (= (JavaConstant'''getJavaKind-1 xConst) :JavaKind'Int)
-                    (ConstantNode'forInt-1 (Math/multiplyExact (JavaConstant'''asInt-1 xConst), (JavaConstant'''asInt-1 yConst)))
-                    (ConstantNode'forLong-1 (Math/multiplyExact (JavaConstant'''asLong-1 xConst), (JavaConstant'''asLong-1 yConst)))
-                )
-                (catch ArithmeticException _
-                    this ;; the operation will result in an overflow exception, so do not canonicalize
-                )
-            )
-        )
-    )
-
-    (defm IntegerMulExactNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"IntegerMulExactNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (cond
-                (and (satisfies? ConstantNode forX) (not (satisfies? ConstantNode forY)))
-                    (§ return (Canonicalizable'''canonical-2 (IntegerMulExactNode'new-2 forY, forX), tool))
-                (satisfies? ConstantNode forX)
-                    (§ return (IntegerMulExactNode''canonicalXconstant-3 this, forX, forY))
-                (satisfies? ConstantNode forY)
-                    (let [
-                        #_"long" c (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forY))
-                    ]
-                        (cond
-                            (= c 1)
-                                (§ return forX)
-                            (= c 0)
-                                (§ return (ConstantNode'forIntegerStamp-2 (:stamp this), 0))
-                        )
-                    )
-            )
-            (when-not (IntegerStamp'multiplicationCanOverflow-2 (:stamp (:x this)), (:stamp (:y this))) => this
-                (Canonicalizable'''canonical-2 (MulNode'new-2 (:x this), (:y this)), tool)
-            )
-        )
-    )
-
     (defm IntegerMulExactNode IntegerExactArithmeticNode
         (#_"IntegerExactArithmeticSplitNode" IntegerExactArithmeticNode'''createSplit-3 [#_"IntegerMulExactNode" this, #_"AbstractBeginNode" _next, #_"AbstractBeginNode" deopt]
             (Graph''add-2 (:graph this), (IntegerMulExactSplitNode'new-5 (:stamp this), (:x this), (:y this), _next, deopt))
@@ -42066,7 +39311,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns OrNode [BinaryArithmeticNode #_"<Or>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, BinaryCommutative]
+(class-ns OrNode [BinaryArithmeticNode #_"<Or>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", ArithmeticOperation, LIRLowerable, BinaryCommutative]
     (defn #_"OrNode" OrNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (OrNode'class.) (BinaryArithmeticNode'new-3 :or, x, y))
     )
@@ -42116,18 +39361,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm OrNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"OrNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (let [
-                #_"ValueNode" ret (Binary'''canonical-4 (§ super BinaryArithmeticNode'iface), tool, forX, forY)
-            ]
-                (when (= ret this) => ret
-                    (OrNode'canonical-5 this, (BinaryArithmeticNode''getOp-3 this, forX, forY), (:stamp this), forX, forY)
-                )
-            )
-        )
-    )
-
     (defm OrNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"OrNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitOr-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
@@ -42135,7 +39368,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns RemNode [BinaryArithmeticNode #_"<Rem>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, Lowerable]
+(class-ns RemNode [BinaryArithmeticNode #_"<Rem>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", ArithmeticOperation, LIRLowerable, Lowerable]
     (defn #_"RemNode" RemNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (RemNode'class.) (BinaryArithmeticNode'new-3 :rem, x, y))
     )
@@ -42164,7 +39397,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns SubNode [BinaryArithmeticNode #_"<Sub>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable]
+(class-ns SubNode [BinaryArithmeticNode #_"<Sub>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", ArithmeticOperation, LIRLowerable]
     (defn #_"SubNode" SubNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (SubNode'class.) (BinaryArithmeticNode'new-3 :sub, x, y))
     )
@@ -42282,18 +39515,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm SubNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"SubNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (let [
-                #_"ValueNode" ret (Binary'''canonical-4 (§ super BinaryArithmeticNode'iface), tool, forX, forY)
-            ]
-                (when (= ret this) => ret
-                    (SubNode'canonical-5 this, (BinaryArithmeticNode''getOp-3 this, forX, forY), (:stamp this), forX, forY)
-                )
-            )
-        )
-    )
-
     (defm SubNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"SubNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitSub-4 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this)), false))
@@ -42302,10 +39523,10 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Node representing an exact integer substraction that will throw an ArithmeticException in
- ; case the addition would overflow the 32 bit range.
+ ; Node representing an exact integer substraction that will throw an ArithmeticException
+ ; in case the addition would overflow the 32 bit range.
  ;;
-(class-ns IntegerSubExactNode [SubNode, BinaryArithmeticNode #_"<Sub>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, IntegerExactArithmeticNode, Lowerable]
+(class-ns IntegerSubExactNode [SubNode, BinaryArithmeticNode #_"<Sub>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", ArithmeticOperation, LIRLowerable, IntegerExactArithmeticNode, Lowerable]
     #_unused
     (defn #_"IntegerSubExactNode" IntegerSubExactNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (let [
@@ -42325,35 +39546,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"ValueNode" IntegerSubExactNode''canonicalXYconstant-3 [#_"IntegerSubExactNode" this, #_"ValueNode" forX, #_"ValueNode" forY]
-        (let [
-            #_"JavaConstant" xConst (ValueNode''asJavaConstant-1 forX)
-            #_"JavaConstant" yConst (ValueNode''asJavaConstant-1 forY)
-        ]
-            (try
-                (if (= (JavaConstant'''getJavaKind-1 xConst) :JavaKind'Int)
-                    (ConstantNode'forInt-1 (Math/subtractExact (JavaConstant'''asInt-1 xConst), (JavaConstant'''asInt-1 yConst)))
-                    (ConstantNode'forLong-1 (Math/subtractExact (JavaConstant'''asLong-1 xConst), (JavaConstant'''asLong-1 yConst)))
-                )
-                (catch ArithmeticException _
-                    this ;; the operation will result in an overflow exception, so do not canonicalize
-                )
-            )
-        )
-    )
-
-    (defm IntegerSubExactNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"IntegerSubExactNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (cond
-                (= (GraphUtil'unproxify-1n forX) (GraphUtil'unproxify-1n forY))                                           (ConstantNode'forIntegerStamp-2 (:stamp this), 0)
-                (and (satisfies? ConstantNode forX) (satisfies? ConstantNode forY))                                       (IntegerSubExactNode''canonicalXYconstant-3 this, forX, forY)
-                (and (satisfies? ConstantNode forY) (zero? (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forY)))) forX
-                (IntegerStamp'subtractionCanOverflow-2 (:stamp (:x this)), (:stamp (:y this)))                            this
-                :else                                                                                                     (Canonicalizable'''canonical-2 (SubNode'new-2 (:x this), (:y this)), tool)
-            )
-        )
-    )
-
     (defm IntegerSubExactNode IntegerExactArithmeticNode
         (#_"IntegerExactArithmeticSplitNode" IntegerExactArithmeticNode'''createSplit-3 [#_"IntegerSubExactNode" this, #_"AbstractBeginNode" _next, #_"AbstractBeginNode" deopt]
             (Graph''add-2 (:graph this), (IntegerSubExactSplitNode'new-5 (:stamp this), (:x this), (:y this), _next, deopt))
@@ -42368,7 +39560,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns UnsignedMulHighNode [BinaryArithmeticNode #_"<UMulHigh>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, BinaryCommutative]
+(class-ns UnsignedMulHighNode [BinaryArithmeticNode #_"<UMulHigh>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", ArithmeticOperation, LIRLowerable, BinaryCommutative]
     (defn #_"UnsignedMulHighNode" UnsignedMulHighNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (UnsignedMulHighNode'class.) (BinaryArithmeticNode'new-3 :umulHigh, x, y))
     )
@@ -42383,43 +39575,9 @@ ZeroExtendNode'new-4
             )
         )
     )
-
-    (defn- #_"ValueNode" UnsignedMulHighNode'canonical-2 [#_"UnsignedMulHighNode" self, #_"ValueNode" forY]
-        (when (satisfies? ConstantNode forY) => self
-            (let [
-                #_"Constant" constant (:value forY)
-            ]
-                (when (and (satisfies? PrimitiveConstant constant) (JavaKind'isNumericInteger-1 (JavaConstant'''getJavaKind-1 constant)) (any = (JavaConstant'''asLong-1 constant) 0 1)) => self
-                    (ConstantNode'forIntegerStamp-2 (:stamp self), 0)
-                )
-            )
-        )
-    )
-
-    (defm UnsignedMulHighNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"UnsignedMulHighNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (let [
-                #_"ValueNode" ret (Binary'''canonical-4 (§ super BinaryArithmeticNode'iface), tool, forX, forY)
-            ]
-                (when (= ret this) => ret
-                    (when (and (satisfies? ConstantNode forX) (not (satisfies? ConstantNode forY))) => (UnsignedMulHighNode'canonical-2 this, forY)
-                        ;; we try to swap and canonicalize
-                        (let [
-                            #_"ValueNode" improvement (Binary'''canonical-4 this, tool, forY, forX)
-                        ]
-                            (when (= improvement this) => improvement
-                                ;; if this fails we only swap
-                                (UnsignedMulHighNode'new-2 forY, forX)
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
 )
 
-(class-ns XorNode [BinaryArithmeticNode #_"<Xor>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, BinaryCommutative]
+(class-ns XorNode [BinaryArithmeticNode #_"<Xor>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", ArithmeticOperation, LIRLowerable, BinaryCommutative]
     (defn #_"XorNode" XorNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (XorNode'class.) (BinaryArithmeticNode'new-3 :xor, x, y))
     )
@@ -42464,18 +39622,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm XorNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"XorNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (let [
-                #_"ValueNode" ret (Binary'''canonical-4 (§ super BinaryArithmeticNode'iface), tool, forX, forY)
-            ]
-                (when (= ret this) => ret
-                    (XorNode'canonical-5 this, (BinaryArithmeticNode''getOp-3 this, forX, forY), (:stamp this), forX, forY)
-                )
-            )
-        )
-    )
-
     (defm XorNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"XorNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitXor-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
@@ -42486,7 +39632,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Returns -1, 0, or 1 if either x < y, x == y, or x > y.
  ;;
-(class-ns NormalizeCompareNode [BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable]
+(class-ns NormalizeCompareNode [BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>"]
     (defn #_"NormalizeCompareNode" NormalizeCompareNode'new-3 [#_"ValueNode" x, #_"ValueNode" y, #_"JavaKind" kind]
         (merge (NormalizeCompareNode'class.) (BinaryNode'new-3 (StampFactory'forInteger-3k kind, -1, 1), x, y))
     )
@@ -42517,14 +39663,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm NormalizeCompareNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"NormalizeCompareNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (or (NormalizeCompareNode'tryConstantFold-3 (:x this), (:y this), (Stamp'''getStackKind-1 (:stamp this)))
-                this
-            )
-        )
-    )
-
     (defm NormalizeCompareNode ValueNode
         (#_"boolean" ValueNode'''inferStamp-1 [#_"NormalizeCompareNode" this]
             false
@@ -42541,7 +39679,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The ShiftOp class represents shift operations.
  ;;
-(class-ns ShiftNode [BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable]
+(class-ns ShiftNode [BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", ArithmeticOperation, LIRLowerable]
     ;;;
      ; Creates a new shift operation.
      ;
@@ -42572,14 +39710,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm ShiftNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"ShiftNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (or (ShiftNode'canonical-4 (ShiftNode''getOp-2 this, forX), (:stamp this), forX, forY)
-                this
-            )
-        )
-    )
-
     (defn #_"ValueNode" ShiftNode'canonical-4 [#_"ShiftOp" op, #_"Stamp" stamp, #_"ValueNode" forX, #_"ValueNode" forY]
         (when (and (satisfies? ConstantNode forX) (satisfies? ConstantNode forY))
             (ConstantNode'forPrimitive-2s stamp, (ShiftOp'''foldConstant-3 op, (:value forX), (JavaConstant'''asInt-1 (ValueNode''asJavaConstant-1 forY))))
@@ -42591,7 +39721,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LeftShiftNode [ShiftNode #_"<Shl>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable]
+(class-ns LeftShiftNode [ShiftNode #_"<Shl>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", ArithmeticOperation, LIRLowerable]
     (defn #_"LeftShiftNode" LeftShiftNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (LeftShiftNode'class.) (ShiftNode'new-3 :shl, x, y))
     )
@@ -42646,18 +39776,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm LeftShiftNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"LeftShiftNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (let [
-                #_"ValueNode" ret (Binary'''canonical-4 (§ super #_"ShiftNode"), tool, forX, forY)
-            ]
-                (when (= ret this) => ret
-                    (LeftShiftNode'canonical-5 this, (ArithmeticOperation'''getArithmeticOp-1 this), (:stamp this), forX, forY)
-                )
-            )
-        )
-    )
-
     (defm LeftShiftNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"LeftShiftNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitShl-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
@@ -42665,7 +39783,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns RightShiftNode [ShiftNode #_"<Shr>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable]
+(class-ns RightShiftNode [ShiftNode #_"<Shr>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", ArithmeticOperation, LIRLowerable]
     (defn #_"RightShiftNode" RightShiftNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (RightShiftNode'class.) (ShiftNode'new-3 :shr, x, y))
     )
@@ -42713,18 +39831,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm RightShiftNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"RightShiftNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (let [
-                #_"ValueNode" ret (Binary'''canonical-4 (§ super #_"ShiftNode"), tool, forX, forY)
-            ]
-                (when (= ret this) => ret
-                    (RightShiftNode'canonical-5 this, (ArithmeticOperation'''getArithmeticOp-1 this), (:stamp this), forX, forY)
-                )
-            )
-        )
-    )
-
     (defm RightShiftNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"RightShiftNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitShr-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
@@ -42732,7 +39838,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns UnsignedRightShiftNode [ShiftNode #_"<UShr>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable]
+(class-ns UnsignedRightShiftNode [ShiftNode #_"<UShr>", BinaryNode, FloatingNode, ValueNode, Node, Binary #_"<ValueNode>", ArithmeticOperation, LIRLowerable]
     (defn #_"UnsignedRightShiftNode" UnsignedRightShiftNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (UnsignedRightShiftNode'class.) (ShiftNode'new-3 :ushr, x, y))
     )
@@ -42788,18 +39894,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm UnsignedRightShiftNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"UnsignedRightShiftNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (let [
-                #_"ValueNode" ret (Binary'''canonical-4 (§ super #_"ShiftNode"), tool, forX, forY)
-            ]
-                (when (= ret this) => ret
-                    (UnsignedRightShiftNode'canonical-5 this, (ArithmeticOperation'''getArithmeticOp-1 this), (:stamp this), forX, forY)
-                )
-            )
-        )
-    )
-
     (defm UnsignedRightShiftNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"UnsignedRightShiftNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitUShr-3 (:gen builder), (LIRBuilder''operand-2 builder, (:x this)), (LIRBuilder''operand-2 builder, (:y this))))
@@ -42810,9 +39904,9 @@ ZeroExtendNode'new-4
 ;;;
  ; Read {@code Class::_klass} to get the hub for a {@link java.lang.Class}. This node mostly exists
  ; to replace {@code _klass._java_mirror._klass} with {@code _klass}. The constant folding could be
- ; handled by ReadNode#canonicalizeRead(ValueNode, AddressNode, LocationIdentity, Canonicalizer).
+ ; handled by ReadNode#canonicalizeRead(ValueNode, AddressNode, LocationIdentity, Canonicalizer).
  ;;
-(class-ns ClassGetHubNode [FloatingNode, ValueNode, Node, Lowerable, Canonicalizable, ConvertNode]
+(class-ns ClassGetHubNode [FloatingNode, ValueNode, Node, Lowerable, ConvertNode]
     (defn #_"ClassGetHubNode" ClassGetHubNode'new-1 [#_"ValueNode" clazz]
         (merge (ClassGetHubNode'class.) (FloatingNode'new-1 KlassPointerStamp'KLASS)
             (hash-map
@@ -42841,12 +39935,6 @@ ZeroExtendNode'new-4
                     (:hub clazz) ;; replace: _klass._java_mirror._klass -> _klass
                 (or node (ClassGetHubNode'new-1 clazz))
             )
-        )
-    )
-
-    (defm ClassGetHubNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"ClassGetHubNode" this, #_"Canonicalizer" tool]
-            (ClassGetHubNode'canonical-4 this, (Canonicalizer'''allUsagesAvailable-1 tool), (:stamp this), (:class this))
         )
     )
 
@@ -42917,7 +40005,7 @@ ZeroExtendNode'new-4
  ; The ConditionalNode class represents a comparison that yields one of two (eagerly
  ; evaluated) values.
  ;;
-(class-ns ConditionalNode [FloatingNode, ValueNode, Node, Canonicalizable, LIRLowerable]
+(class-ns ConditionalNode [FloatingNode, ValueNode, Node, LIRLowerable]
     (defn #_"ConditionalNode" ConditionalNode'new-3 [#_"LogicNode" logic, #_"ValueNode" trueValue, #_"ValueNode" falseValue]
         (merge (ConditionalNode'class.) (FloatingNode'new-1 (Stamp'''meet-2 (:stamp trueValue), (:stamp falseValue)))
             (hash-map
@@ -43095,15 +40183,6 @@ ZeroExtendNode'new-4
                     )
                 )
                 (ValueNode''updateStamp-2 this, valueStamp)
-            )
-        )
-    )
-
-    (defm ConditionalNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"ConditionalNode" this, #_"Canonicalizer" tool]
-            (or (ConditionalNode'findSynonym-3 (:logic this), (:trueValue this), (:falseValue this))
-                (ConditionalNode'canonicalizeConditional-4 (:logic this), (:trueValue this), (:falseValue this), (:stamp this))
-                this
             )
         )
     )
@@ -43442,7 +40521,7 @@ ZeroExtendNode'new-4
  ; maximum flexibility for the guard node and guarantees that deoptimization occurs only if the
  ; control flow would have reached the guarded node (without taking exceptions into account).
  ;;
-(class-ns GuardNode [FloatingAnchoredNode, FloatingNode, ValueNode, Node, Canonicalizable, GuardingNode, DeoptimizingGuard]
+(class-ns GuardNode [FloatingAnchoredNode, FloatingNode, ValueNode, Node, GuardingNode]
     (defn #_"GuardNode" GuardNode'new-5 [#_"LogicNode" logic, #_"AnchoringNode" anchor, #_"DeoptimizationReason" reason, #_"DeoptimizationAction" action, #_"boolean" negated?]
         (merge (GuardNode'class.) (FloatingAnchoredNode'new-2 VoidStamp'instance, anchor)
             (hash-map
@@ -43451,31 +40530,6 @@ ZeroExtendNode'new-4
                 #_"DeoptimizationReason" :reason reason
                 #_"DeoptimizationAction" :action action
                 #_"boolean" :negated? negated?
-            )
-        )
-    )
-
-    ;;;
-     ; The instruction that produces the tested boolean value.
-     ;;
-    (defm GuardNode DeoptimizingGuard
-        (#_"this" DeoptimizingGuard'''setCondition-3 [#_"GuardNode" this, #_"LogicNode" logic, #_"boolean" negated?]
-            (Node''updateUsages-3 this, (:logic this), logic)
-            (assoc this :logic logic, :negated? negated?)
-        )
-    )
-
-    (defm GuardNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"GuardNode" this, #_"Canonicalizer" tool]
-            (let [
-                #_"LogicNode" logic (:logic this)
-            ]
-                (cond
-                    (satisfies? LogicNegationNode logic)
-                        (GuardNode'new-5 (Unary'''getValue-1 logic), (:anchor this), (:reason this), (:action this), (not (:negated? this)))
-                    (or (not (satisfies? LogicConstantNode logic)) (= (:value logic) (:negated? this)))
-                        this
-                )
             )
         )
     )
@@ -43537,7 +40591,7 @@ ZeroExtendNode'new-4
  ; A floating read of a value from memory specified in terms of an object base and an object
  ; relative location. This node does not nil-check the object.
  ;;
-(class-ns FloatingReadNode [FloatingAccessNode, FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, Access, HeapAccess, MemoryAccess, LIRLowerableAccess, LIRLowerable, Canonicalizable]
+(class-ns FloatingReadNode [FloatingAccessNode, FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, Access, HeapAccess, MemoryAccess, LIRLowerableAccess, LIRLowerable]
     #_unused
     (defn #_"FloatingReadNode" FloatingReadNode'new-4 [#_"AddressNode" address, #_"LocationIdentity" location, #_"MemoryNode" lastLocationAccess, #_"Stamp" stamp]
         (FloatingReadNode'new-6 address, location, lastLocationAccess, stamp, nil, :BarrierType'NONE)
@@ -43574,27 +40628,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm FloatingReadNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"FloatingReadNode" this, #_"Canonicalizer" tool]
-            (let [
-                #_"Node" result (ReadNode'canonicalizeRead-4 this, (Access'''getAddress-1 this), (Access'''getLocationIdentity-1 this), tool)
-            ]
-                (when (= result this) => result
-                    (when (and (Canonicalizer'''canonicalizeReads-1 tool) (Node''hasMoreThanOneUsage-1 (Access'''getAddress-1 this)) (satisfies? WriteNode (:lastLocationAccess this))) => this
-                        (let [
-                            #_"WriteNode" write (:lastLocationAccess this)
-                        ]
-                            (when (and (= (Access'''getAddress-1 write) (Access'''getAddress-1 this)) (Stamp'''isCompatible-2s (LIRLowerableAccess'''getAccessStamp-1 write), (LIRLowerableAccess'''getAccessStamp-1 this))) => this
-                                ;; same memory location with no intervening write
-                                (:value write)
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
     (defm FloatingReadNode FloatingAccessNode
         (#_"FixedAccessNode" FloatingAccessNode'''asFixedNode-1 [#_"FloatingReadNode" this]
             (let [
@@ -43620,7 +40653,7 @@ ZeroExtendNode'new-4
  ; input is as narrow or narrower than the PiNode's type. The PiNode, and therefore
  ; also the scheduling restriction enforced by the guard, will go away.
  ;;
-(class-ns PiNode [FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, LIRLowerable, Canonicalizable, ValueProxy, LimitedValueProxy, Proxy]
+(class-ns PiNode [FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, LIRLowerable, ValueProxy, LimitedValueProxy, Proxy]
     #_unused
     (defn #_"PiNode" PiNode'new-2 [#_"ValueNode" object, #_"Stamp" stamp]
         (PiNode'new-3 object, stamp, nil)
@@ -43711,14 +40744,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm PiNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"PiNode" this, #_"Canonicalizer" tool]
-            (or (PiNode'canonical-3 (:object this), (:stamp this), (GuardedNode'''getGuard-1 this))
-                this
-            )
-        )
-    )
-
     (defm PiNode Proxy
         (#_"ValueNode" Proxy'''getOriginalNode-1 [#_"PiNode" this]
             (:object this)
@@ -43731,7 +40756,7 @@ ZeroExtendNode'new-4
  ; that reads the array length, such as an ArrayLengthNode, can be canonicalized based on
  ; this information.
  ;;
-(class-ns PiArrayNode [PiNode, FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, LIRLowerable, Canonicalizable, ValueProxy, LimitedValueProxy, Proxy, ArrayLengthProvider]
+(class-ns PiArrayNode [PiNode, FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, LIRLowerable, ValueProxy, LimitedValueProxy, Proxy, ArrayLengthProvider]
     (defm PiArrayNode ArrayLengthProvider
         (#_"ValueNode" ArrayLengthProvider'''length-1 [#_"PiArrayNode" this]
             (:length this)
@@ -43743,14 +40768,6 @@ ZeroExtendNode'new-4
             (hash-map
                 ; @Input
                 #_"ValueNode" :length length
-            )
-        )
-    )
-
-    (defm PiArrayNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"PiArrayNode" this, #_"Canonicalizer" tool]
-            (when (= (GraphUtil'arrayLength-1 (:object this)) (ArrayLengthProvider'''length-1 this)) => this
-                (Canonicalizable'''canonical-2 (§ super #_"PiNode"), tool)
             )
         )
     )
@@ -43809,7 +40826,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Loads an object's class (i.e. this node can be created for {@code object.getClass()}).
  ;;
-(class-ns GetClassNode [FloatingNode, ValueNode, Node, Lowerable, Canonicalizable]
+(class-ns GetClassNode [FloatingNode, ValueNode, Node, Lowerable]
     #_unused
     (defn #_"GetClassNode" GetClassNode'new-2 [#_"Stamp" stamp, #_"ValueNode" object]
         (merge (GetClassNode'class.) (FloatingNode'new-1 stamp)
@@ -43829,20 +40846,6 @@ ZeroExtendNode'new-4
                 _ (§ ass! hub (Lowerable'''lower-2 hub, lowerer))
                 _ (§ ass! hubGetClass (Lowerable'''lower-2 hubGetClass, lowerer))
             ]
-                this
-            )
-        )
-    )
-
-    (defn #_"ValueNode" GetClassNode'tryFold-1 [#_"ValueNode" object]
-        (when (and (some? object) (satisfies? ObjectStamp (:stamp object)) (AbstractObjectStamp''isExactType-1 (:stamp object)))
-            (ConstantNode'forConstant-1 (ConstantReflection'asJavaClass-1 (:type (:stamp object))))
-        )
-    )
-
-    (defm GetClassNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"GetClassNode" this, #_"Canonicalizer" tool]
-            (or (GetClassNode'tryFold-1 (:object this))
                 this
             )
         )
@@ -43869,28 +40872,12 @@ ZeroExtendNode'new-4
  ; Read {@code Klass::_java_mirror} and incorporate non-nil type information into stamp. This is
  ; also used by ClassGetHubNode to eliminate chains of {@code klass._java_mirror._klass}.
  ;;
-(class-ns HubGetClassNode [FloatingNode, ValueNode, Node, Lowerable, Canonicalizable, ConvertNode]
+(class-ns HubGetClassNode [FloatingNode, ValueNode, Node, Lowerable, ConvertNode]
     (defn #_"HubGetClassNode" HubGetClassNode'new-1 [#_"ValueNode" hub]
         (merge (HubGetClassNode'class.) (FloatingNode'new-1 (StampFactory'objectNonNull-1 (TypeReference'create-1 (MetaReflection'lookupJavaType-1c Class))))
             (hash-map
                 ; @Input
                 #_"ValueNode" :hub hub
-            )
-        )
-    )
-
-    (defm HubGetClassNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"HubGetClassNode" this, #_"Canonicalizer" tool]
-            (when-not (and (Canonicalizer'''allUsagesAvailable-1 tool) (Node''hasNoUsages-1 this))
-                (when (satisfies? ConstantNode (:hub this)) => this
-                    (let [
-                        #_"ResolvedJavaType" exact (ConstantReflection'asJavaType-1 (:value (:hub this)))
-                    ]
-                        (when (some? exact) => this
-                            (ConstantNode'forConstant-1 (ConstantReflection'asJavaClass-1 exact))
-                        )
-                    )
-                )
             )
         )
     )
@@ -43963,7 +40950,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Loads an object's hub. The object is not nil-checked by this operation.
  ;;
-(class-ns LoadHubNode [FloatingNode, ValueNode, Node, Lowerable, Canonicalizable]
+(class-ns LoadHubNode [FloatingNode, ValueNode, Node, Lowerable]
     (defn #_"ValueNode" LoadHubNode'create-1 [#_"ValueNode" value]
         (let [
             #_"Stamp" stamp KlassPointerStamp'KLASS_NON_NULL
@@ -43998,14 +40985,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm LoadHubNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"LoadHubNode" this, #_"Canonicalizer" tool]
-            (or (LoadHubNode'findSynonym-2 (:value this), (:stamp this))
-                this
-            )
-        )
-    )
-
     (defn #_"ValueNode" LoadHubNode'findSynonym-2 [#_"ValueNode" curValue, #_"Stamp" stamp]
         (let [
             #_"TypeReference" type (StampTool'typeReferenceOrNull-1 (:stamp curValue))
@@ -44017,7 +40996,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns LogicNode [FloatingNode, ValueNode, Node, IndirectCanonicalization]
+(class-ns LogicNode [FloatingNode, ValueNode, Node]
     (defn #_"LogicNode" LogicNode'new-0 []
         (merge (LogicNode'class.) (FloatingNode'new-1 VoidStamp'instance))
     )
@@ -44058,7 +41037,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BinaryOpLogicNode [LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable]
+(class-ns BinaryOpLogicNode [LogicNode, FloatingNode, ValueNode, Node, LIRLowerable, Binary #_"<ValueNode>"]
     (defn #_"BinaryOpLogicNode" BinaryOpLogicNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (BinaryOpLogicNode'class.) (LogicNode'new-0)
             (hash-map
@@ -44067,12 +41046,6 @@ ZeroExtendNode'new-4
                 ; @Input
                 #_"ValueNode" :y y
             )
-        )
-    )
-
-    (defm BinaryOpLogicNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"BinaryOpLogicNode" this, #_"Canonicalizer" tool]
-            (Binary'''canonical-4 this, tool, (:x this), (:y this))
         )
     )
 
@@ -44097,7 +41070,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns CompareNode [BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable]
+(class-ns CompareNode [BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, LIRLowerable, Binary #_"<ValueNode>"]
     ;;;
      ; Constructs a new Compare instruction.
      ;
@@ -44181,7 +41154,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IntegerEqualsNode [CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable, BinaryCommutative]
+(class-ns IntegerEqualsNode [CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, LIRLowerable, Binary #_"<ValueNode>", BinaryCommutative]
     (def- #_"IntegerEqualsOp" IntegerEqualsNode'OP (§ soon IntegerEqualsOp'new-0))
 
     (defn #_"IntegerEqualsNode" IntegerEqualsNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
@@ -44220,14 +41193,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm IntegerEqualsNode Binary
-        (#_"Node" Binary'''canonical-4 [#_"IntegerEqualsNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (or (CompareOp'''canonical-5 IntegerEqualsNode'OP, (Canonicalizer'''smallestCompareWidth-1 tool), CanonicalCondition'EQ, forX, forY)
-                this
-            )
-        )
-    )
-
     (defm IntegerEqualsNode BinaryOpLogicNode
         (#_"Stamp" BinaryOpLogicNode'''getSucceedingStampForX-4 [#_"IntegerEqualsNode" this, #_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" yStamp]
             (when-not negated? (Stamp'''join-2 xStamp, yStamp))
@@ -44251,7 +41216,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Common super-class for "a < b" comparisons both signed and unsigned.
  ;;
-(class-ns IntegerLowerThanNode [CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable]
+(class-ns IntegerLowerThanNode [CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, LIRLowerable, Binary #_"<ValueNode>"]
     (defn #_"IntegerLowerThanNode" IntegerLowerThanNode'new-3 [#_"ValueNode" x, #_"ValueNode" y, #_"LowerOp" op]
         (merge (IntegerLowerThanNode'class.) (CompareNode'new-3 (LowerOp'''getCondition-1 op), x, y)
             (hash-map
@@ -44310,7 +41275,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns IntegerBelowNode [IntegerLowerThanNode, CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable]
+(class-ns IntegerBelowNode [IntegerLowerThanNode, CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, LIRLowerable, Binary #_"<ValueNode>"]
     (def- #_"BelowOp" IntegerBelowNode'OP (§ soon BelowOp'new-0))
 
     (defn #_"IntegerBelowNode" IntegerBelowNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
@@ -44326,17 +41291,9 @@ ZeroExtendNode'new-4
             (IntegerBelowNode'create-2 x, y)
         )
     )
-
-    (defm IntegerBelowNode Binary
-        (#_"Node" Binary'''canonical-4 [#_"IntegerBelowNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (or (CompareOp'''canonical-5 IntegerBelowNode'OP, (Canonicalizer'''smallestCompareWidth-1 tool), (LowerOp'''getCondition-1 IntegerBelowNode'OP), forX, forY)
-                this
-            )
-        )
-    )
 )
 
-(class-ns IntegerLessThanNode [IntegerLowerThanNode, CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable]
+(class-ns IntegerLessThanNode [IntegerLowerThanNode, CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, LIRLowerable, Binary #_"<ValueNode>"]
     (def #_"LessThanOp" IntegerLessThanNode'OP (§ soon LessThanOp'new-0))
 
     (defn #_"IntegerLessThanNode" IntegerLessThanNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
@@ -44350,14 +41307,6 @@ ZeroExtendNode'new-4
     (defn #_"LogicNode" IntegerLessThanNode'create-3 [#_"Integer" smallestCompareWidth, #_"ValueNode" x, #_"ValueNode" y]
         (or (CompareOp'''canonical-5 IntegerLessThanNode'OP, smallestCompareWidth, (LowerOp'''getCondition-1 IntegerLessThanNode'OP), x, y)
             (IntegerLessThanNode'create-2 x, y)
-        )
-    )
-
-    (defm IntegerLessThanNode Binary
-        (#_"Node" Binary'''canonical-4 [#_"IntegerLessThanNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (or (CompareOp'''canonical-5 IntegerLessThanNode'OP, (Canonicalizer'''smallestCompareWidth-1 tool), (LowerOp'''getCondition-1 IntegerLessThanNode'OP), forX, forY)
-                this
-            )
         )
     )
 
@@ -44382,7 +41331,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns PointerEqualsNode [CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable, BinaryCommutative]
+(class-ns PointerEqualsNode [CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, LIRLowerable, Binary #_"<ValueNode>", BinaryCommutative]
     (def- #_"PointerEqualsOp" PointerEqualsNode'OP (§ soon PointerEqualsOp'new-0))
 
     (defn #_"PointerEqualsNode" PointerEqualsNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
@@ -44391,14 +41340,6 @@ ZeroExtendNode'new-4
 
     (defn #_"LogicNode" PointerEqualsNode'create-2 [#_"ValueNode" x, #_"ValueNode" y]
         (or (PointerEqualsNode'findSynonym-2 x, y) (PointerEqualsNode'new-2 x, y))
-    )
-
-    (defm PointerEqualsNode Binary
-        (#_"Node" Binary'''canonical-4 [#_"PointerEqualsNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (or (CompareOp'''canonical-5 PointerEqualsNode'OP, (Canonicalizer'''smallestCompareWidth-1 tool), CanonicalCondition'EQ, forX, forY)
-                this
-            )
-        )
     )
 
     (defn #_"LogicNode" PointerEqualsNode'findSynonym-2 [#_"ValueNode" forX, #_"ValueNode" forY]
@@ -44446,7 +41387,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ObjectEqualsNode [PointerEqualsNode, CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable, BinaryCommutative]
+(class-ns ObjectEqualsNode [PointerEqualsNode, CompareNode, BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, LIRLowerable, Binary #_"<ValueNode>", BinaryCommutative]
     (def- #_"ObjectEqualsOp" ObjectEqualsNode'OP (§ soon ObjectEqualsOp'new-0))
 
     (defn #_"ObjectEqualsNode" ObjectEqualsNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
@@ -44465,21 +41406,13 @@ ZeroExtendNode'new-4
             (ObjectEqualsNode'create-2 x, y)
         )
     )
-
-    (defm ObjectEqualsNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"ObjectEqualsNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (or (CompareOp'''canonical-5 ObjectEqualsNode'OP, (Canonicalizer'''smallestCompareWidth-1 tool), CanonicalCondition'EQ, forX, forY)
-                this
-            )
-        )
-    )
 )
 
 ;;;
  ; The InstanceOfDynamicNode represents a type check where the type being checked is not
  ; known at compile time. This is used, for instance, to intrinsify Class#isInstance(Object).
  ;;
-(class-ns InstanceOfDynamicNode [BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable, Lowerable]
+(class-ns InstanceOfDynamicNode [BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, LIRLowerable, Binary #_"<ValueNode>", Lowerable]
     (defn #_"InstanceOfDynamicNode" InstanceOfDynamicNode'new-4 [#_"ValueNode" mirror, #_"ValueNode" object, #_"boolean" allow-nil?, #_"boolean" exact?]
         (merge (InstanceOfDynamicNode'class.) (BinaryOpLogicNode'new-2 mirror, object)
             (hash-map
@@ -44559,14 +41492,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm InstanceOfDynamicNode Binary
-        (#_"LogicNode" Binary'''canonical-4 [#_"InstanceOfDynamicNode" this, #_"Canonicalizer" tool, #_"ValueNode" forMirror, #_"ValueNode" forObject]
-            (or (InstanceOfDynamicNode'findSynonym-4 forMirror, forObject, (:allow-nil? this), (:exact? this))
-                this
-            )
-        )
-    )
-
     (defn #_"this" InstanceOfDynamicNode''setMirror-2 [#_"InstanceOfDynamicNode" this, #_"ValueNode" newObject]
         (Node''updateUsages-3 this, (:x this), newObject)
         (assoc this :x newObject)
@@ -44591,31 +41516,9 @@ ZeroExtendNode'new-4
  ; This node will perform a "test" operation on its arguments. Its result is equivalent to the expression
  ; "(x & y) == 0", meaning that it will return true if (and only if) no bit is set in both x and y.
  ;;
-(class-ns IntegerTestNode [BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Binary #_"<ValueNode>", Canonicalizable, BinaryCommutative]
+(class-ns IntegerTestNode [BinaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, LIRLowerable, Binary #_"<ValueNode>", BinaryCommutative]
     (defn #_"IntegerTestNode" IntegerTestNode'new-2 [#_"ValueNode" x, #_"ValueNode" y]
         (merge (IntegerTestNode'class.) (BinaryOpLogicNode'new-2 x, y))
-    )
-
-    (defm IntegerTestNode Binary
-        (#_"ValueNode" Binary'''canonical-4 [#_"IntegerTestNode" this, #_"Canonicalizer" tool, #_"ValueNode" forX, #_"ValueNode" forY]
-            (cond
-                (and (satisfies? ConstantNode forX) (satisfies? ConstantNode forY))
-                    (LogicConstantNode'forBoolean-1 (zero? (& (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forX)) (JavaConstant'''asLong-1 (ValueNode''asJavaConstant-1 forY)))))
-                (and (satisfies? IntegerStamp (:stamp forX)) (satisfies? IntegerStamp (:stamp forY)))
-                    (let [
-                        #_"IntegerStamp" xStamp (:stamp forX)
-                        #_"IntegerStamp" yStamp (:stamp forY)
-                    ]
-                        (cond
-                            (zero? (& (:upMask xStamp) (:upMask yStamp)))           (LogicConstantNode'tautology-0)
-                            (not (zero? (& (:downMask xStamp) (:downMask yStamp)))) (LogicConstantNode'contradiction-0)
-                            :else                                                   this
-                        )
-                    )
-                :else
-                    this
-            )
-        )
     )
 
     (defn- #_"Stamp" IntegerTestNode'getSucceedingStamp-3 [#_"boolean" negated?, #_"Stamp" xStamp, #_"Stamp" otherStamp]
@@ -44664,7 +41567,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The LogicConstantNode represents a boolean constant.
  ;;
-(class-ns LogicConstantNode [LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable]
+(class-ns LogicConstantNode [LogicNode, FloatingNode, ValueNode, Node, LIRLowerable]
     (defn #_"LogicConstantNode" LogicConstantNode'new-1 [#_"boolean" value]
         (merge (LogicConstantNode'class.) (LogicNode'new-0)
             (hash-map
@@ -44733,7 +41636,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Logic node that negates its argument.
  ;;
-(class-ns LogicNegationNode [LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, Unary #_"<LogicNode>", Canonicalizable]
+(class-ns LogicNegationNode [LogicNode, FloatingNode, ValueNode, Node, Unary #_"<LogicNode>"]
     (defn #_"LogicNegationNode" LogicNegationNode'new-1 [#_"LogicNode" value]
         (merge (LogicNegationNode'class.) (LogicNode'new-0)
             (hash-map
@@ -44761,22 +41664,10 @@ ZeroExtendNode'new-4
         (#_"LogicNode" Unary'''getValue-1 [#_"LogicNegationNode" this]
             (:value this)
         )
-
-        (#_"LogicNode" Unary'''canonical-3 [#_"LogicNegationNode" this, #_"Canonicalizer" tool, #_"LogicNode" value]
-            (or (LogicNegationNode'findSynonym-1 value)
-                this
-            )
-        )
-    )
-
-    (defm LogicNegationNode Canonicalizable
-        (#_"LogicNode" Canonicalizable'''canonical-2 [#_"LogicNegationNode" this, #_"Canonicalizer" tool]
-            (Unary'''canonical-3 this, tool, (Unary'''getValue-1 this))
-        )
     )
 )
 
-(class-ns ShortCircuitOrNode [LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, Binary #_"<LogicNode>", Canonicalizable]
+(class-ns ShortCircuitOrNode [LogicNode, FloatingNode, ValueNode, Node, Binary #_"<LogicNode>"]
     (defn #_"ShortCircuitOrNode" ShortCircuitOrNode'new-5 [#_"LogicNode" x, #_"boolean" xNegated, #_"LogicNode" y, #_"boolean" yNegated, #_"double" shortCircuitProbability]
         (merge (ShortCircuitOrNode'class.) (LogicNode'new-0)
             (hash-map
@@ -44794,170 +41685,9 @@ ZeroExtendNode'new-4
             )
         )
     )
-
-    (defn #_"this" ShortCircuitOrNode''canonicalizeNegation-3 [#_"ShortCircuitOrNode" this, #_"LogicNode" forX, #_"LogicNode" forY]
-        (let [
-            [#_"LogicNode" xCond #_"boolean" xNeg]
-                (loop-when-recur [xCond forX xNeg (:xNegated this)]
-                                 (satisfies? LogicNegationNode xCond)
-                                 [(Unary'''getValue-1 xCond) (not xNeg)]
-                              => [xCond xNeg]
-                )
-            [#_"LogicNode" yCond #_"boolean" yNeg]
-                (loop-when-recur [yCond forY yNeg (:yNegated this)]
-                                 (satisfies? LogicNegationNode yCond)
-                                 [(Unary'''getValue-1 yCond) (not yNeg)]
-                              => [yCond yNeg]
-                )
-        ]
-            (when-not (and (= xCond forX) (= yCond forY)) => this
-                (ShortCircuitOrNode'new-5 xCond, xNeg, yCond, yNeg, (:shortCircuitProbability this))
-            )
-        )
-    )
-
-    (defn- #_"LogicNode" ShortCircuitOrNode'optimizeShortCircuit-4 [#_"ShortCircuitOrNode" inner, #_"boolean" innerNegated, #_"boolean" matchNegated, #_"boolean" matchIsInnerX]
-        (let [
-            #_"boolean" innerMatchNegated (if matchIsInnerX (:xNegated inner) (:yNegated inner))
-        ]
-            (if (not innerNegated)
-                ;; The four digit results of the expression used in the 16 subsequent formula
-                ;; comments correspond to results when using the following truth table for
-                ;; inputs a and b and testing all 4 possible input combinations:
-                ;; _ 1234
-                ;; a 1100
-                ;; b 1010
-                (if (= innerMatchNegated matchNegated)
-                    ;; ( (!a ||!b) ||!a) => 0111 (!a ||!b)
-                    ;; ( (!a || b) ||!a) => 1011 (!a || b)
-                    ;; ( ( a ||!b) || a) => 1101 ( a ||!b)
-                    ;; ( ( a || b) || a) => 1110 ( a || b)
-                    ;; Only the inner or is relevant, the outer or never adds information.
-                    inner
-                    ;; ( ( a || b) ||!a) => 1111 (true)
-                    ;; ( (!a ||!b) || a) => 1111 (true)
-                    ;; ( (!a || b) || a) => 1111 (true)
-                    ;; ( ( a ||!b) ||!a) => 1111 (true)
-                    ;; The result of the expression is always true.
-                    (LogicConstantNode'tautology-0)
-                )
-                (if (= innerMatchNegated matchNegated)
-                    ;; (!(!a ||!b) ||!a) => 1011 (!a || b)
-                    ;; (!(!a || b) ||!a) => 0111 (!a ||!b)
-                    ;; (!( a ||!b) || a) => 1110 ( a || b)
-                    ;; (!( a || b) || a) => 1101 ( a ||!b)
-                    (let [
-                        #_"boolean" newInnerXNegated (:xNegated inner)
-                        #_"boolean" newInnerYNegated (:yNegated inner)
-                        #_"double" newProbability (:shortCircuitProbability inner)
-                        [newInnerXNegated newInnerYNegated newProbability]
-                            (if matchIsInnerX
-                                [newInnerXNegated (not newInnerYNegated) newProbability]
-                                [(not newInnerXNegated) newInnerYNegated (- 1.0 newProbability)]
-                            )
-                    ]
-                        ;; The expression can be transformed into a single or.
-                        (ShortCircuitOrNode'new-5 (:x inner), newInnerXNegated, (:y inner), newInnerYNegated, newProbability)
-                    )
-                    ;; (!(!a ||!b) || a) => 1100 (a)
-                    ;; (!(!a || b) || a) => 1100 (a)
-                    ;; (!( a ||!b) ||!a) => 0011 (!a)
-                    ;; (!( a || b) ||!a) => 0011 (!a)
-                    (let [
-                        #_"LogicNode" result (if matchIsInnerX (:x inner) (:y inner))
-                    ]
-                        ;; Only the second part of the outer or is relevant.
-                        (if matchNegated (LogicNegationNode'create-1 result) result)
-                    )
-                )
-            )
-        )
-    )
-
-    (defn- #_"ValueNode" ShortCircuitOrNode'skipThroughPisAndProxies-1 [#_"ValueNode" node]
-        (loop [node node]
-            (condp satisfies? node
-                PiNode     (recur (Proxy'''getOriginalNode-1 node))
-                ValueProxy (recur (Proxy'''getOriginalNode-1 node))
-                node
-            )
-        )
-    )
-
-    (defm ShortCircuitOrNode Binary
-        (#_"LogicNode" Binary'''canonical-4 [#_"ShortCircuitOrNode" this, #_"Canonicalizer" tool, #_"LogicNode" forX, #_"LogicNode" forY]
-            (let [
-                #_"ShortCircuitOrNode" canon (ShortCircuitOrNode''canonicalizeNegation-3 this, forX, forY)
-            ]
-                (when (= canon this) => canon
-                    (cond
-                        (= forX forY)
-                            ;;  a ||  a = a
-                            ;;  a || !a = true
-                            ;; !a ||  a = true
-                            ;; !a || !a = !a
-                            (if (:xNegated this)
-                                (if (:yNegated this) (LogicNegationNode'create-1 forX) (LogicConstantNode'tautology-0))
-                                (if (:yNegated this) (LogicConstantNode'tautology-0) forX)
-                            )
-                        (satisfies? LogicConstantNode forX)
-                            (if (bit-xor (:value forX) (:xNegated this))
-                                (LogicConstantNode'tautology-0)
-                                (if (:yNegated this) (LogicNegationNode'new-1 forY) forY)
-                            )
-                        (satisfies? LogicConstantNode forY)
-                            (if (bit-xor (:value forY) (:yNegated this))
-                                (LogicConstantNode'tautology-0)
-                                (if (:xNegated this) (LogicNegationNode'new-1 forX) forX)
-                            )
-                        :else
-                        (do
-                            (cond
-                                (satisfies? ShortCircuitOrNode forX)
-                                    (cond
-                                        (= forY (:x forX))
-                                            (§ return (ShortCircuitOrNode'optimizeShortCircuit-4 forX, (:xNegated this), (:yNegated this), true))
-                                        (= forY (:y forX))
-                                            (§ return (ShortCircuitOrNode'optimizeShortCircuit-4 forX, (:xNegated this), (:yNegated this), false))
-                                    )
-                                (satisfies? ShortCircuitOrNode forY)
-                                    (cond
-                                        (= (:x forY) forX)
-                                            (§ return (ShortCircuitOrNode'optimizeShortCircuit-4 forY, (:yNegated this), (:xNegated this), true))
-                                        (= (:y forY) forX)
-                                            (§ return (ShortCircuitOrNode'optimizeShortCircuit-4 forY, (:yNegated this), (:xNegated this), false))
-                                    )
-                            )
-
-                            ;; check whether !X => Y constant
-                            (when (and (satisfies? UnaryOpLogicNode forX) (satisfies? UnaryOpLogicNode forY) (= (ShortCircuitOrNode'skipThroughPisAndProxies-1 (Unary'''getValue-1 forX)) (ShortCircuitOrNode'skipThroughPisAndProxies-1 (Unary'''getValue-1 forY)))) => this
-                                (let [
-                                    #_"Boolean" fold (UnaryOpLogicNode'''tryFold-2 forY, (UnaryOpLogicNode'''getSucceedingStampForValue-2 forX, (not (:xNegated this))))
-                                ]
-                                    (when (some? fold) => this
-                                        (cond
-                                            (ß xor fold (:yNegated this)) (LogicConstantNode'tautology-0)
-                                            (:xNegated this)              (LogicNegationNode'create-1 forX)
-                                            :else                                                     forX
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defm ShortCircuitOrNode Canonicalizable
-        (#_"LogicNode" Canonicalizable'''canonical-2 [#_"ShortCircuitOrNode" this, #_"Canonicalizer" tool]
-            (Binary'''canonical-4 this, tool, (:x this), (:y this))
-        )
-    )
 )
 
-(class-ns UnaryOpLogicNode [LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Unary #_"<ValueNode>", Canonicalizable]
+(class-ns UnaryOpLogicNode [LogicNode, FloatingNode, ValueNode, Node, LIRLowerable, Unary #_"<ValueNode>"]
     (defm UnaryOpLogicNode Unary
         (#_"ValueNode" Unary'''getValue-1 [#_"UnaryOpLogicNode" this]
             (:value this)
@@ -44978,29 +41708,12 @@ ZeroExtendNode'new-4
             builder
         )
     )
-
-    #_unused
-    (defn #_"Stamp" UnaryOpLogicNode''getSucceedingStampForValue-3 [#_"UnaryOpLogicNode" this, #_"boolean" negated?, #_"Stamp" valueStamp]
-        (let [
-            #_"Stamp" succStamp (UnaryOpLogicNode'''getSucceedingStampForValue-2 this, negated?)
-        ]
-            (when (some? succStamp)
-                (Stamp'''join-2 succStamp, valueStamp)
-            )
-        )
-    )
-
-    (defm UnaryOpLogicNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"UnaryOpLogicNode" this, #_"Canonicalizer" tool]
-            (Unary'''canonical-3 this, tool, (Unary'''getValue-1 this))
-        )
-    )
 )
 
 ;;;
  ; The InstanceOfNode represents an instanceof test.
  ;;
-(class-ns InstanceOfNode [UnaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Unary #_"<ValueNode>", Canonicalizable, Lowerable]
+(class-ns InstanceOfNode [UnaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, LIRLowerable, Unary #_"<ValueNode>", Lowerable]
     (defn #_"InstanceOfNode" InstanceOfNode'new-3 [#_"ObjectStamp" checkedStamp, #_"ValueNode" object, #_"AnchoringNode" anchor]
         (merge (InstanceOfNode'class.) (UnaryOpLogicNode'new-1 object)
             (hash-map
@@ -45050,14 +41763,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm InstanceOfNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"InstanceOfNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
-            (or (InstanceOfNode'findSynonym-2 (:checkedStamp this), value)
-                this
-            )
-        )
-    )
-
     (defn #_"LogicNode" InstanceOfNode'findSynonym-2 [#_"ObjectStamp" checkedStamp, #_"ValueNode" object]
         (let [
             #_"ObjectStamp" inputStamp (:stamp object)
@@ -45094,23 +41799,6 @@ ZeroExtendNode'new-4
         (StampTool'typeReferenceOrNull-1 (:checkedStamp this))
     )
 
-    (defm InstanceOfNode UnaryOpLogicNode
-        (#_"Stamp" UnaryOpLogicNode'''getSucceedingStampForValue-2 [#_"InstanceOfNode" this, #_"boolean" negated?]
-            (when-not negated? (:checkedStamp this))
-        )
-
-        (#_"Boolean" UnaryOpLogicNode'''tryFold-2 [#_"InstanceOfNode" this, #_"Stamp" stamp]
-            (when (satisfies? ObjectStamp stamp)
-                (cond
-                    ;; The check can never succeed, the intersection of the two stamps is empty.
-                    (Stamp''isEmpty-1 (Stamp'''join-2 (:checkedStamp this), stamp))       false
-                    ;; The check will always succeed, the union of the two stamps is equal to the checked stamp.
-                    (= (:checkedStamp this) (Stamp'''meet-2 (:checkedStamp this), stamp)) true
-                )
-            )
-        )
-    )
-
     (defn #_"boolean" InstanceOfNode''allowsNull-1 [#_"InstanceOfNode" this]
         (not (:never-nil? (:checkedStamp this)))
     )
@@ -45119,7 +41807,7 @@ ZeroExtendNode'new-4
 ;;;
  ; An IsNullNode will be true if the supplied value is nil, and false if it is non-nil.
  ;;
-(class-ns IsNullNode [UnaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, IndirectCanonicalization, LIRLowerable, Unary #_"<ValueNode>", Canonicalizable]
+(class-ns IsNullNode [UnaryOpLogicNode, LogicNode, FloatingNode, ValueNode, Node, LIRLowerable, Unary #_"<ValueNode>"]
     (defn #_"IsNullNode" IsNullNode'new-1 [#_"ValueNode" object]
         (merge (IsNullNode'class.) (UnaryOpLogicNode'new-1 object))
     )
@@ -45149,32 +41837,6 @@ ZeroExtendNode'new-4
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"IsNullNode" this, #_"LIRBuilder" builder]
             ;; Nothing to do.
             builder
-        )
-    )
-
-    (defm IsNullNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"IsNullNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
-            (IsNullNode'canonicalized-2 this, value)
-        )
-    )
-
-    (defm IsNullNode UnaryOpLogicNode
-        (#_"Stamp" UnaryOpLogicNode'''getSucceedingStampForValue-2 [#_"IsNullNode" this, #_"boolean" negated?]
-            ;; ignore any more precise input stamp, since canonicalization will skip through PiNodes
-            (let [
-                #_"AbstractPointerStamp" stamp (Stamp'''unrestricted-1 (:stamp (Unary'''getValue-1 this)))
-            ]
-                (if negated? (AbstractPointerStamp''asNonNull-1 stamp) (AbstractPointerStamp''asAlwaysNull-1 stamp))
-            )
-        )
-
-        (#_"Boolean" UnaryOpLogicNode'''tryFold-2 [#_"IsNullNode" this, #_"Stamp" stamp]
-            (when (satisfies? ObjectStamp stamp)
-                (cond
-                    (:always-nil? stamp) true
-                    (:never-nil? stamp)  false
-                )
-            )
         )
     )
 )
@@ -45236,7 +41898,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns PhiNode [FloatingNode, ValueNode, Node, Canonicalizable]
+(class-ns PhiNode [FloatingNode, ValueNode, Node]
     (defn #_"PhiNode" PhiNode'new-2 [#_"Stamp" stamp, #_"AbstractMergeNode" merge]
         (merge (PhiNode'class.) (FloatingNode'new-1 stamp)
             (hash-map
@@ -45251,6 +41913,7 @@ ZeroExtendNode'new-4
         (update this :phiValues assoc' index value)
     )
 
+    #_unused
     (defn #_"this" PhiNode''setValueAt-3n [#_"PhiNode" this, #_"AbstractEndNode" end, #_"ValueNode" value]
         (PhiNode''setValueAt-3i this, (AbstractMergeNode'''phiPredecessorIndex-2 (:merge this), end), value)
     )
@@ -45291,50 +41954,12 @@ ZeroExtendNode'new-4
             )
         )
     )
-
-    (defm PhiNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"PhiNode" this, #_"Canonicalizer" tool]
-            (when (PhiNode''isLoopPhi-1 this) => (PhiNode''singleValueOrThis-1 this)
-                (let [
-                    #_"int" n (count (:phiValues this))
-                    #_"int" i
-                        (loop-when [i 1] (< i n) => i
-                            (recur-if (= (nth (:phiValues this) i) this) [(inc i)] => i)
-                        )
-                ]
-                    ;; All back edges are self-references => return forward edge input value.
-                    (when-not (= i n) => (PhiNode''firstValue-1 this)
-                        (let [
-                            #_"boolean" onlySelfUsage
-                                (loop-when [#_"seq" s (seq (:nodeUsages this))] (some? s) => true
-                                    (and (= (first s) this)
-                                        (recur (next s))
-                                    )
-                                )
-                        ]
-                            (when-not onlySelfUsage
-                                (PhiNode''singleValueOrThis-1 this)
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-
-    (defn #_"ValueNode" PhiNode''firstValue-1 [#_"PhiNode" this]
-        (nth (:phiValues this) 0)
-    )
-
-    (defn #_"boolean" PhiNode''isLoopPhi-1 [#_"PhiNode" this]
-        (satisfies? LoopBeginNode (:merge this))
-    )
 )
 
 ;;;
  ; Memory PhiNodes merge memory dependencies at control flow merges.
  ;;
-(class-ns MemoryPhiNode [PhiNode, FloatingNode, ValueNode, Node, Canonicalizable, MemoryNode]
+(class-ns MemoryPhiNode [PhiNode, FloatingNode, ValueNode, Node, MemoryNode]
     (defn #_"MemoryPhiNode" MemoryPhiNode'new-2 [#_"AbstractMergeNode" merge, #_"LocationIdentity" locationIdentity]
         (merge (MemoryPhiNode'class.) (PhiNode'new-2 VoidStamp'instance, merge)
             (hash-map
@@ -45349,7 +41974,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Value PhiNodes merge data flow values at control flow merges.
  ;;
-(class-ns ValuePhiNode [PhiNode, FloatingNode, ValueNode, Node, Canonicalizable, ArrayLengthProvider]
+(class-ns ValuePhiNode [PhiNode, FloatingNode, ValueNode, Node, ArrayLengthProvider]
     (defn #_"ValuePhiNode" ValuePhiNode'new-2 [#_"Stamp" stamp, #_"AbstractMergeNode" merge]
         (merge (ValuePhiNode'class.) (PhiNode'new-2 stamp, merge)
             (hash-map
@@ -45431,7 +42056,7 @@ ZeroExtendNode'new-4
  ; A proxy is inserted at loop exits for any value that is created inside the loop (i.e. was not
  ; live on entry to the loop) and is (potentially) used after the loop.
  ;;
-(class-ns ValueProxyNode [FloatingNode, ValueNode, Node, Canonicalizable, ValueProxy, LimitedValueProxy, Proxy]
+(class-ns ValueProxyNode [FloatingNode, ValueNode, Node, ValueProxy, LimitedValueProxy, Proxy]
     (defn #_"ValueProxyNode" ValueProxyNode'new-2 [#_"ValueNode" value, #_"LoopExitNode" loopExit]
         (merge (ValueProxyNode'class.) (FloatingNode'new-1 (:stamp value))
             (hash-map
@@ -45447,17 +42072,6 @@ ZeroExtendNode'new-4
     (defm ValueProxyNode ValueNode
         (#_"boolean" ValueNode'''inferStamp-1 [#_"ValueProxyNode" this]
             (ValueNode''updateStamp-2 this, (:stamp (:value this)))
-        )
-    )
-
-    (defm ValueProxyNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"ValueProxyNode" this, #_"Canonicalizer" tool]
-            (if (or (satisfies? ConstantNode (:value this))
-                    (and (:loopPhiProxy this) (not (AbstractMergeNode''isPhiAtMerge-2 (:loopBegin (:loopExit this)), (:value this))))
-                )
-                (:value this)
-                this
-            )
         )
     )
 
@@ -45481,7 +42095,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns UnaryNode [FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable]
+(class-ns UnaryNode [FloatingNode, ValueNode, Node, Unary #_"<ValueNode>"]
     (defm UnaryNode Unary
         (#_"ValueNode" Unary'''getValue-1 [#_"UnaryNode" this]
             (:value this)
@@ -45503,12 +42117,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm UnaryNode Canonicalizable
-        (#_"ValueNode" Canonicalizable'''canonical-2 [#_"UnaryNode" this, #_"Canonicalizer" tool]
-            (Unary'''canonical-3 this, tool, (Unary'''getValue-1 this))
-        )
-    )
-
     (defm UnaryNode ValueNode
         (#_"boolean" ValueNode'''inferStamp-1 [#_"UnaryNode" this]
             (ValueNode''updateStamp-2 this, (UnaryNode'''foldStamp-2 this, (:stamp (:value this))))
@@ -45522,7 +42130,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns BitCountNode [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, LIRLowerable]
+(class-ns BitCountNode [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", LIRLowerable]
     #_unused
     (defn #_"BitCountNode" BitCountNode'new-1 [#_"ValueNode" value]
         (merge (BitCountNode'class.) (UnaryNode'new-2 (BitCountNode'computeStamp-2 (:stamp value), value), value))
@@ -45538,18 +42146,6 @@ ZeroExtendNode'new-4
         (StampFactory'forInteger-3k :JavaKind'Int, (Long/bitCount (:downMask stamp)), (Long/bitCount (:upMask stamp)))
     )
 
-    (defm BitCountNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"BitCountNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
-            (when (satisfies? ConstantNode value) => this
-                (let [
-                    #_"JavaConstant" constant (ValueNode''asJavaConstant-1 value)
-                ]
-                    (ConstantNode'forInt-1 (if (= (ValueNode''getStackKind-1 value) :JavaKind'Int) (Integer/bitCount (JavaConstant'''asInt-1 constant)) (Long/bitCount (JavaConstant'''asLong-1 constant))))
-                )
-            )
-        )
-    )
-
     (defm BitCountNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"BitCountNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitBitCount-2 (:gen builder), (LIRBuilder''operand-2 builder, (Unary'''getValue-1 this))))
@@ -45560,7 +42156,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Compress or uncompress an oop or metaspace pointer.
  ;;
-(class-ns CompressionNode [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ConvertNode, LIRLowerable]
+(class-ns CompressionNode [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", ConvertNode, LIRLowerable]
     (defn- #_"CompressionNode" CompressionNode'new-4 [#_"CompressionOp" op, #_"ValueNode" input, #_"Stamp" stamp, #_"CompressEncoding" encoding]
         (merge (CompressionNode'class.) (UnaryNode'new-2 stamp, input)
             (hash-map
@@ -45627,21 +42223,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm CompressionNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"CompressionNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
-            (cond
-                (satisfies? ConstantNode value)
-                    (ConstantNode'forConstant-4 (:stamp this), (ConvertNode'''convert-2 this, (:value value)), (:stableDimension value), (:isDefaultStable value))
-                (satisfies? CompressionNode value)
-                    (when (and (not= (:op this) (:op value)) (= (:encoding this) (:encoding value))) => this
-                        (Unary'''getValue-1 value)
-                    )
-                :else
-                    this
-            )
-        )
-    )
-
     (defm CompressionNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"CompressionNode" this, #_"LIRBuilder" builder]
             (let [
@@ -45681,7 +42262,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Count the number of leading zeros using the {@code lzcntq} or {@code lzcntl} instructions.
  ;;
-(class-ns CountLeadingZerosNode [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, LIRLowerable]
+(class-ns CountLeadingZerosNode [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", LIRLowerable]
     #_unused
     (defn #_"CountLeadingZerosNode" CountLeadingZerosNode'new-1 [#_"ValueNode" value]
         (merge (CountLeadingZerosNode'class.) (UnaryNode'new-2 (StampTool'stampForLeadingZeros-1 (:stamp value)), value))
@@ -45690,27 +42271,6 @@ ZeroExtendNode'new-4
     (defm CountLeadingZerosNode UnaryNode
         (#_"Stamp" UnaryNode'''foldStamp-2 [#_"CountLeadingZerosNode" this, #_"Stamp" stamp]
             (StampTool'stampForLeadingZeros-1 stamp)
-        )
-    )
-
-    (defn #_"ValueNode" CountLeadingZerosNode'tryFold-1 [#_"ValueNode" value]
-        (when (satisfies? ConstantNode value)
-            (let [
-                #_"JavaConstant" constant (ValueNode''asJavaConstant-1 value)
-            ]
-                (if (= (ValueNode''getStackKind-1 value) :JavaKind'Int)
-                    (ConstantNode'forInt-1 (Integer/numberOfLeadingZeros (JavaConstant'''asInt-1 constant)))
-                    (ConstantNode'forInt-1 (Long/numberOfLeadingZeros (JavaConstant'''asLong-1 constant)))
-                )
-            )
-        )
-    )
-
-    (defm CountLeadingZerosNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"CountLeadingZerosNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
-            (or (CountLeadingZerosNode'tryFold-1 value)
-                this
-            )
         )
     )
 
@@ -45724,7 +42284,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Count the number of trailing zeros using the {@code tzcntq} or {@code tzcntl} instructions.
  ;;
-(class-ns CountTrailingZerosNode [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, LIRLowerable]
+(class-ns CountTrailingZerosNode [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", LIRLowerable]
     #_unused
     (defn #_"CountTrailingZerosNode" CountTrailingZerosNode'new-1 [#_"ValueNode" value]
         (merge (CountTrailingZerosNode'class.) (UnaryNode'new-2 (CountTrailingZerosNode'computeStamp-2 (:stamp value), value), value))
@@ -45740,27 +42300,6 @@ ZeroExtendNode'new-4
         (StampTool'stampForTrailingZeros-1 stamp)
     )
 
-    (defn #_"ValueNode" CountTrailingZerosNode'tryFold-1 [#_"ValueNode" value]
-        (when (satisfies? ConstantNode value)
-            (let [
-                #_"JavaConstant" constant (ValueNode''asJavaConstant-1 value)
-            ]
-                (if (= (ValueNode''getStackKind-1 value) :JavaKind'Int)
-                    (ConstantNode'forInt-1 (Integer/numberOfTrailingZeros (JavaConstant'''asInt-1 constant)))
-                    (ConstantNode'forInt-1 (Long/numberOfTrailingZeros (JavaConstant'''asLong-1 constant)))
-                )
-            )
-        )
-    )
-
-    (defm CountTrailingZerosNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"CountTrailingZerosNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
-            (or (CountTrailingZerosNode'tryFold-1 value)
-                this
-            )
-        )
-    )
-
     (defm CountTrailingZerosNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"CountTrailingZerosNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitCountTrailingZeros-2 (:gen builder), (LIRBuilder''operand-2 builder, (Unary'''getValue-1 this))))
@@ -45771,7 +42310,7 @@ ZeroExtendNode'new-4
 ;;;
  ; An IntegerConvert converts an integer to an integer of different width.
  ;;
-(class-ns IntegerConvertNode [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, ConvertNode, LIRLowerable, StampInverter]
+(class-ns IntegerConvertNode [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", ArithmeticOperation, ConvertNode, LIRLowerable, StampInverter]
     (defn #_"IntegerConvertNode" IntegerConvertNode'new-5 [#_"fn IntegerConvertOp [ArithmeticOpTable]" f'getOp-1, #_"fn IntegerConvertOp [ArithmeticOpTable]" f'getReverseOp-1, #_"int" inputBits, #_"int" resultBits, #_"ValueNode" input]
         (merge (IntegerConvertNode'class.) (UnaryNode'new-2 (IntegerConvertOp'''foldStamp-4 (f'getOp-1 (ArithmeticOpTable'forStamp-1 (:stamp input))), inputBits, resultBits, (:stamp input)), input)
             (hash-map
@@ -45820,14 +42359,6 @@ ZeroExtendNode'new-4
     (defm IntegerConvertNode UnaryNode
         (#_"Stamp" UnaryNode'''foldStamp-2 [#_"IntegerConvertNode" this, #_"Stamp" stamp]
             (IntegerConvertOp'''foldStamp-4 (ArithmeticOperation'''getArithmeticOp-1 this), (:inputBits this), (:resultBits this), stamp)
-        )
-    )
-
-    (defm IntegerConvertNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"IntegerConvertNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
-            (or (IntegerConvertNode'findSynonym-5 (IntegerConvertNode''getOp-2 this, value), value, (:inputBits this), (:resultBits this), (:stamp this))
-                this
-            )
         )
     )
 
@@ -45902,7 +42433,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The NarrowNode converts an integer to a narrower integer.
  ;;
-(class-ns NarrowNode [IntegerConvertNode #_"<Narrow, SignExtend>", UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, ConvertNode, LIRLowerable, StampInverter]
+(class-ns NarrowNode [IntegerConvertNode #_"<Narrow, SignExtend>", UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", ArithmeticOperation, ConvertNode, LIRLowerable, StampInverter]
     (defn #_"NarrowNode" NarrowNode'new-2 [#_"ValueNode" input, #_"int" resultBits]
         (NarrowNode'new-3 input, (PrimitiveStamp'getBits-1 (:stamp input)), resultBits)
     )
@@ -45931,63 +42462,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm NarrowNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"NarrowNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
-            (let [
-                #_"ValueNode" canon (Unary'''canonical-3 (§ super #_"IntegerConvertNode"), tool, value)
-            ]
-                (when (= canon this) => canon
-                    (condp satisfies? value
-                        NarrowNode
-                            ;; zzzzzzzz yyyyxxxx -(narrow)-> yyyyxxxx -(narrow)-> xxxx
-                            ;; ==> zzzzzzzz yyyyxxxx -(narrow)-> xxxx
-                            (NarrowNode'new-3 (Unary'''getValue-1 value), (IntegerConvertNode''getInputBits-1 value), (IntegerConvertNode''getResultBits-1 this))
-                        IntegerConvertNode
-                            ;; SignExtendNode or ZeroExtendNode
-                            (cond
-                                (and (Node''hasExactlyOneUsage-1 (Unary'''getValue-1 value)) (Node''hasMoreThanOneUsage-1 value))
-                                    ;; Do not perform if this will introduce a new live value.
-                                    ;; If the original value's usage count is > 1, there is already another user.
-                                    ;; If the convert's usage count is <=1, it will be dead code eliminated.
-                                    this
-                                (= (IntegerConvertNode''getResultBits-1 this) (IntegerConvertNode''getInputBits-1 value))
-                                    ;; xxxx -(extend)-> yyyy xxxx -(narrow)-> xxxx
-                                    ;; ==> no-op
-                                    (Unary'''getValue-1 value)
-                                (< (IntegerConvertNode''getResultBits-1 this) (IntegerConvertNode''getInputBits-1 value))
-                                    ;; yyyyxxxx -(extend)-> zzzzzzzz yyyyxxxx -(narrow)-> xxxx
-                                    ;; ==> yyyyxxxx -(narrow)-> xxxx
-                                    (NarrowNode'new-3 (Unary'''getValue-1 value), (IntegerConvertNode''getInputBits-1 value), (IntegerConvertNode''getResultBits-1 this))
-                                :else
-                                    (condp satisfies? value
-                                        SignExtendNode
-                                            ;; sxxx -(sign-extend)-> ssssssss sssssxxx -(narrow)-> sssssxxx
-                                            ;; ==> sxxx -(sign-extend)-> sssssxxx
-                                            (SignExtendNode'create-3 (Unary'''getValue-1 value), (IntegerConvertNode''getInputBits-1 value), (IntegerConvertNode''getResultBits-1 this))
-                                        ZeroExtendNode
-                                            ;; xxxx -(zero-extend)-> 00000000 0000xxxx -(narrow)-> 0000xxxx
-                                            ;; ==> xxxx -(zero-extend)-> 0000xxxx
-                                            (ZeroExtendNode'new-4 (Unary'''getValue-1 value), (IntegerConvertNode''getInputBits-1 value), (IntegerConvertNode''getResultBits-1 this), (:inputAlwaysPositive value))
-                                        this
-                                    )
-                            )
-                        AndNode
-                            (let [
-                                #_"long" relevantMask (NumUtil'mask-1 (IntegerConvertNode''getResultBits-1 this))
-                            ]
-                                (condp = relevantMask
-                                    (& relevantMask (:downMask (:stamp (:y value)))) (NarrowNode'create-2 (:x value), (IntegerConvertNode''getResultBits-1 this))
-                                    (& relevantMask (:downMask (:stamp (:x value)))) (NarrowNode'create-2 (:y value), (IntegerConvertNode''getResultBits-1 this))
-                                    this
-                                )
-                            )
-                        this
-                    )
-                )
-            )
-        )
-    )
-
     (defm NarrowNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"NarrowNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitNarrow-3 (:gen builder), (LIRBuilder''operand-2 builder, (Unary'''getValue-1 this)), (IntegerConvertNode''getResultBits-1 this)))
@@ -46004,7 +42478,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The SignExtendNode converts an integer to a wider integer using sign extension.
  ;;
-(class-ns SignExtendNode [IntegerConvertNode #_"<SignExtend, Narrow>", UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, ConvertNode, LIRLowerable, StampInverter]
+(class-ns SignExtendNode [IntegerConvertNode #_"<SignExtend, Narrow>", UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", ArithmeticOperation, ConvertNode, LIRLowerable, StampInverter]
     (defn #_"SignExtendNode" SignExtendNode'new-2 [#_"ValueNode" input, #_"int" resultBits]
         (SignExtendNode'new-3 input, (PrimitiveStamp'getBits-1 (:stamp input)), resultBits)
     )
@@ -46059,18 +42533,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm SignExtendNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"SignExtendNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
-            (let [
-                #_"ValueNode" ret (Unary'''canonical-3 (§ super #_"IntegerConvertNode"), tool, value)
-            ]
-                (when (= ret this) => ret
-                    (SignExtendNode'canonical-4 this, value, (IntegerConvertNode''getInputBits-1 this), (IntegerConvertNode''getResultBits-1 this))
-                )
-            )
-        )
-    )
-
     (defm SignExtendNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"SignExtendNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitSignExtend-4 (:gen builder), (LIRBuilder''operand-2 builder, (Unary'''getValue-1 this)), (IntegerConvertNode''getInputBits-1 this), (IntegerConvertNode''getResultBits-1 this)))
@@ -46081,7 +42543,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The ZeroExtendNode converts an integer to a wider integer using zero extension.
  ;;
-(class-ns ZeroExtendNode [IntegerConvertNode #_"<ZeroExtend, Narrow>", UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, ConvertNode, LIRLowerable, StampInverter]
+(class-ns ZeroExtendNode [IntegerConvertNode #_"<ZeroExtend, Narrow>", UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", ArithmeticOperation, ConvertNode, LIRLowerable, StampInverter]
     (defn #_"ZeroExtendNode" ZeroExtendNode'new-2 [#_"ValueNode" input, #_"int" resultBits]
         (ZeroExtendNode'new-4 input, (PrimitiveStamp'getBits-1 (:stamp input)), resultBits, false)
     )
@@ -46151,18 +42613,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm ZeroExtendNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"ZeroExtendNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
-            (let [
-                #_"ValueNode" ret (Unary'''canonical-3 (§ super #_"IntegerConvertNode"), tool, value)
-            ]
-                (when (= ret this) => ret
-                    (ZeroExtendNode'canonical-5 this, value, (IntegerConvertNode''getInputBits-1 this), (IntegerConvertNode''getResultBits-1 this), (:inputAlwaysPositive this))
-                )
-            )
-        )
-    )
-
     (defm ZeroExtendNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"ZeroExtendNode" this, #_"LIRBuilder" builder]
             (LIRBuilder''setResult-3 builder, this, (LIRGenerator''emitZeroExtend-4 (:gen builder), (LIRBuilder''operand-2 builder, (Unary'''getValue-1 this)), (IntegerConvertNode''getInputBits-1 this), (IntegerConvertNode''getResultBits-1 this)))
@@ -46176,7 +42626,7 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns UnaryArithmeticNode [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable]
+(class-ns UnaryArithmeticNode [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", ArithmeticOperation, LIRLowerable]
     (defn #_"UnaryArithmeticNode" UnaryArithmeticNode'new-2 [#_"fn UnaryOp [ArithmeticOpTable]" f'getOp-1, #_"ValueNode" value]
         (merge (UnaryArithmeticNode'class.) (UnaryNode'new-2 (UnaryOp'''foldStamp-2 (f'getOp-1 (ArithmeticOpTable'forStamp-1 (:stamp value))), (:stamp value)), value)
             (hash-map
@@ -46201,14 +42651,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defm UnaryArithmeticNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"UnaryArithmeticNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
-            (or (UnaryArithmeticNode'findSynonym-2 value, (UnaryArithmeticNode''getOp-2 this, value))
-                this
-            )
-        )
-    )
-
     (defn #_"ValueNode" UnaryArithmeticNode'findSynonym-2 [#_"ValueNode" value, #_"UnaryOp" op]
         (when (satisfies? ConstantNode value)
             (ConstantNode'forPrimitive-2s (UnaryOp'''foldStamp-2 op, (:stamp value)), (UnaryOp'''foldConstant-2 op, (:value value)))
@@ -46219,7 +42661,7 @@ ZeroExtendNode'new-4
 ;;;
  ; The NegateNode node negates its operand.
  ;;
-(class-ns NegateNode [UnaryArithmeticNode #_"<Neg>", UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, StampInverter]
+(class-ns NegateNode [UnaryArithmeticNode #_"<Neg>", UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", ArithmeticOperation, LIRLowerable, StampInverter]
     (defn #_"NegateNode" NegateNode'new-1 [#_"ValueNode" value]
         (merge (NegateNode'class.) (UnaryArithmeticNode'new-2 :neg, value))
     )
@@ -46227,14 +42669,6 @@ ZeroExtendNode'new-4
     (defn #_"ValueNode" NegateNode'create-1 [#_"ValueNode" value]
         (or (NegateNode'findSynonym-1 value)
             (NegateNode'new-1 value)
-        )
-    )
-
-    (defm NegateNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"NegateNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
-            (or (UnaryArithmeticNode'findSynonym-2 value, (UnaryArithmeticNode''getOp-2 this, value))
-                this
-            )
         )
     )
 
@@ -46264,7 +42698,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Binary negation of long or integer values.
  ;;
-(class-ns NotNode [UnaryArithmeticNode #_"<Not>", UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, ArithmeticOperation, LIRLowerable, StampInverter]
+(class-ns NotNode [UnaryArithmeticNode #_"<Not>", UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", ArithmeticOperation, LIRLowerable, StampInverter]
     (defn #_"NotNode" NotNode'new-1 [#_"ValueNode" value]
         (merge (NotNode'class.) (UnaryArithmeticNode'new-2 :not, value))
     )
@@ -46280,18 +42714,6 @@ ZeroExtendNode'new-4
     #_unused
     (defn #_"ValueNode" NotNode'create-1 [#_"ValueNode" value]
         (NotNode'canonicalize-2 nil, value)
-    )
-
-    (defm NotNode Unary
-        (#_"ValueNode" Unary'''canonical-3 [#_"NotNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
-            (let [
-                #_"ValueNode" ret (Unary'''canonical-3 (§ super #_"UnaryArithmeticNode"), tool, value)
-            ]
-                (when (= ret this) => ret
-                    (NotNode'canonicalize-2 this, value)
-                )
-            )
-        )
     )
 
     (defm NotNode LIRLowerable
@@ -46310,7 +42732,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Produces the platform dependent first or second half of a long or double value as an int.
  ;;
-(class-ns UnpackEndianHalfNode [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Canonicalizable, Lowerable]
+(class-ns UnpackEndianHalfNode [UnaryNode, FloatingNode, ValueNode, Node, Unary #_"<ValueNode>", Lowerable]
     (defn- #_"UnpackEndianHalfNode" UnpackEndianHalfNode'new-2 [#_"ValueNode" value, #_"boolean" firstHalf]
         (merge (UnpackEndianHalfNode'class.) (UnaryNode'new-2 (StampFactory'forKind-1 :JavaKind'Int), value)
             (hash-map
@@ -46324,15 +42746,6 @@ ZeroExtendNode'new-4
         (if (and (satisfies? ConstantNode value) (Constant'''isDefaultForKind-1 (:value value)))
             (ConstantNode'defaultForKind-1 :JavaKind'Int)
             (UnpackEndianHalfNode'new-2 value, firstHalf)
-        )
-    )
-
-    (defm UnpackEndianHalfNode Unary
-        (#_"Node" Unary'''canonical-3 [#_"UnpackEndianHalfNode" this, #_"Canonicalizer" tool, #_"ValueNode" value]
-            (if (and (satisfies? ConstantNode value) (Constant'''isDefaultForKind-1 (:value value)))
-                (ConstantNode'defaultForKind-1 (Stamp'''getStackKind-1 (:stamp this)))
-                this
-            )
         )
     )
 
@@ -46353,7 +42766,7 @@ ZeroExtendNode'new-4
 ;;;
  ; Represents HotSpot values that may change after compilation.
  ;;
-(class-ns VMConfigNode [FloatingNode, ValueNode, Node, LIRLowerable, Canonicalizable]
+(class-ns VMConfigNode [FloatingNode, ValueNode, Node, LIRLowerable]
     (§ intrinsic! #_"boolean" VMConfigNode'areConfigValuesConstant-0 [])
 
     #_intrinsifier
@@ -46386,17 +42799,6 @@ ZeroExtendNode'new-4
     (defn #_"boolean" VMConfigNode'isCardTableAddressConstant-0 [] (VMConfigNode'areConfigValuesConstant-0))
     (defn #_"long"    VMConfigNode'cardTableAddress-0 []           (VMConfigNode'loadLongConfigValue-1 HotSpot'cardTableAddressMark))
     (defn #_"int"     VMConfigNode'logOfHeapRegionGrainBytes-0 []  (VMConfigNode'loadIntConfigValue-1 HotSpot'logOfHeapRegionGrainBytesMark))
-
-    (defm VMConfigNode Canonicalizable
-        (#_"Node" Canonicalizable'''canonical-2 [#_"VMConfigNode" this, #_"Canonicalizer" tool]
-            (condp = (:markId this)
-                0                                     (ConstantNode'forBoolean-1 true)
-                HotSpot'cardTableAddressMark          (ConstantNode'forLong-1 HotSpot'cardTableAddress)
-                HotSpot'logOfHeapRegionGrainBytesMark (ConstantNode'forInt-1 HotSpot'logOfHeapRegionGrainBytes)
-                this
-            )
-        )
-    )
 )
 
 ;;;
@@ -46523,13 +42925,6 @@ ZeroExtendNode'new-4
             (Node''updateUsages-3 this, nil, virtualObject)
             this
         )
-    )
-
-    ;;;
-     ; Gets a copy of this frame state.
-     ;;
-    (defn #_"FrameState" FrameState''duplicate-1 [#_"FrameState" this]
-        (Graph''add-2 (:graph this), (FrameState'new-8 (:outerFrameState this), (:bytecode this), (:bci this), (:fsValues this), (:localsSize this), (:stackSize this), (:monitorNodes this), (:virtualMappings this)))
     )
 
     ;;;
@@ -48648,7 +45043,6 @@ ZeroExtendNode'new-4
             #_"ResolvedJavaMethod" method (:method (:info args))
             #_"Graph" graph (Graph'new-1 method)
             graph (GraphBuilderPhase'run-1 graph)
-            graph (Simplifier'run-1 graph)
             ;; copy snippet graph replacing constant parameters with given arguments
             #_"Graph" snippet (Graph'new-1 method)
             _ (Graph''addDuplicates-4m snippet, (Graph''getNodes-1 graph), graph, { (:start graph) (:start snippet) })
@@ -52060,7 +48454,7 @@ ZeroExtendNode'new-4
             (condp satisfies? predecessor
                 AbstractMergeNode
                     (when (empty? (AbstractMergeNode''phis-1 predecessor))
-                        (doseq [#_"AbstractEndNode" end (§ snap (Node'''cfgPredecessors-1 predecessor))]
+                        (doseq [#_"AbstractEndNode" end (§ snap (:ends predecessor))]
                             (UseTrappingNullChecksPhase'checkPredecessor-4 deopt, (:predecessor end), deoptimizationReason, implicitNullCheckLimit)
                         )
                     )
@@ -53963,7 +50357,6 @@ ZeroExtendNode'new-4
                     (GraphBuilderPhase'run-1 graph)
                 )
             ;;; HighTier
-            graph (Simplifier'run-1 graph)
             graph (RemoveValueProxyPhase'run-1 graph)
             graph (LoweringPhase'run-2 graph, :LoweringStage'HIGH_TIER)
             ;;; MidTier
@@ -53971,14 +50364,12 @@ ZeroExtendNode'new-4
             graph (GuardLoweringPhase'run-1 graph)
             graph (LoweringPhase'run-2 graph, :LoweringStage'MID_TIER)
             graph (FrameStateAssignmentPhase'run-1 graph)
-            graph (Simplifier'run-1 graph)
             graph (WriteBarrierAdditionPhase'run-1 graph)
             ;;; LowTier
             graph (LoweringPhase'run-2 graph, :LoweringStage'LOW_TIER)
             graph (ExpandLogicPhase'run-1 graph)
             graph (FixReadsPhase''run-1 graph)
             graph (AddressLoweringPhase'run-2 graph, (AddressLowering'new-1 HotSpot'heapBaseRegister))
-            graph (Simplifier'run-1 graph)
             graph (UseTrappingNullChecksPhase'run-1 graph)
             graph (PropagateDeoptimizeProbabilityPhase'run-1 graph)
             graph (SchedulePhase'run-2 graph, :SchedulingStrategy'FINAL_SCHEDULE)
