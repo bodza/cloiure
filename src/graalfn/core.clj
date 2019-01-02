@@ -147,7 +147,6 @@ MetaspaceOperation''opcode-1
 MonitorSnippets
 NewObjectSnippets
 OperandFlag
-OptionalInput
 RegisterPriority''ordinal-1
 Snippet
 SpillState''ordinal-1
@@ -396,9 +395,8 @@ AddressLowering''improveUncompression-4
 AddressLowering''lower-3
 AddressLowering'new-1
 AddressLowering'postProcess-1
-AddressLowering'preProcess-1
 AddressLowering'updateDisplacement-3
-AddressLoweringPhase'run-2
+AddressLoweringPhase'run-1
 AddressNode'new-0
 AllocatableRegisters'new-3
 AllocatableValue'new-1
@@ -626,7 +624,7 @@ BciBlock''setJsrScope-2
 BciBlock''setJsrSuccessor-2
 BciBlock''setRetSuccessor-2
 BciBlock'new-1
-BciBlockMapping'create-2
+BciBlockMapping'create-1
 BeginLockScopeNode'new-1
 BeginLockScopeNode'new-2
 BeginNode'begin-1
@@ -698,9 +696,8 @@ BytecodeLookupSwitch'new-2
 BytecodeParser''add-2
 BytecodeParser''addPush-3
 BytecodeParser''append-2
-BytecodeParser''parse-1
 BytecodeParser''push-3
-BytecodeParser'new-1
+BytecodeParser'parse-1
 BytecodeProvider'findField-4
 BytecodeProvider'findMethod-4
 BytecodeProvider'getBytecode-1
@@ -947,7 +944,6 @@ CompilationResult''recordDataPatch-3
 CompilationResult''recordMark-3
 CompilationResult''setTargetCode-3
 CompilationResult'new-1
-Compiler'compileGraph-1
 Compiler'compileMethod-1
 Compiler'createCompiledCode-1
 Compiler'createInstalledCode-1
@@ -1250,11 +1246,9 @@ FrameMapBuilder''buildFrameMap-2
 FrameMapBuilder''callsMethod-2
 FrameMapBuilder''freeRBPSpillSlot-1
 FrameMapBuilder'new-0
-FrameState''addVirtualObjectMapping-2
 FrameState''duplicateModified-4
 FrameState''duplicateModifiedBeforeCall-5
 FrameState''duplicateModifiedDuringCall-3
-FrameState''getMethod-1
 FrameState''localAt-2
 FrameState''lockAt-2
 FrameState''locksSize-1
@@ -1263,7 +1257,7 @@ FrameState''nestedLockDepth-1
 FrameState''stackAt-2
 FrameState'new-1
 FrameState'new-2
-FrameState'new-7a
+FrameState'new-6a
 FrameStateAssignmentClosure'new-0
 FrameStateAssignmentPhase'run-1
 FrameStateBuilder''clearNonLiveLocals-4
@@ -1284,7 +1278,7 @@ FrameStateBuilder''pushLock-3
 FrameStateBuilder''pushReturn-3
 FrameStateBuilder''stackOp-2
 FrameStateBuilder''storeLocal-4
-FrameStateBuilder'new-3
+FrameStateBuilder'new-1
 G1PostWriteBarrier'new-4
 G1PreWriteBarrier'new-4
 G1ReferentFieldReadBarrier''getExpectedObject-1
@@ -1332,12 +1326,10 @@ Graph''replaceFixedWithFloating-3
 Graph''replaceSplit-4
 Graph''replaceSplitWithFixed-4
 Graph''replaceSplitWithFloating-4
-Graph''setAfterFixReadPhase-2
 Graph''setGuardsStage-2
 Graph''setHasValueProxies-2
 Graph''unregister-2
 Graph'new-1
-GraphBuilderPhase'run-1
 GraphUtil'arrayLength-1
 GraphUtil'checkRedundantPhi-1
 GraphUtil'checkRedundantProxy-1
@@ -1502,7 +1494,7 @@ IfNode'new-4f
 IllegalStamp'instance
 InputEdges'new-2
 InputEdges'translateInto-2
-InputInfo'new-6
+InputInfo'new-5
 InputType'SET
 InstanceOfDynamicNode''isHub-1
 InstanceOfDynamicNode''isMirror-1
@@ -1643,8 +1635,6 @@ IntervalWalker''walkTo-2
 IntervalWalker'new-3
 InvokeKind'SET
 InvokeKind'isDirect-1
-InvokeNode''getContextMethod-1
-InvokeNode''getContextType-1
 InvokeNode''getInvokeKind-1
 InvokeNode''getReceiver-1
 InvokeNode''getReceiverType-1
@@ -1738,7 +1728,7 @@ LIRBuilder''visitSafepointNode-2
 LIRBuilder'new-1
 LIRFieldsScanner''scan-3
 LIRFieldsScanner'new-0
-LIRGenerationContext'new-4
+LIRGenerationContext'new-3
 LIRGenerationPhase'new-0
 LIRGenerationResult''buildFrameMap-1
 LIRGenerationResult'new-2
@@ -2228,9 +2218,8 @@ Node''hasNoUsages-1
 Node''hasUsages-1
 Node''inputPositions-1
 Node''inputs-1
-Node''isAlive-1
-Node''isDeleted-1
-Node''markDeleted-1
+Node''isAlive-1
+Node''delete-1
 Node''removeUsage-2
 Node''replaceAndDelete-2
 Node''replaceAtAllUsages-2
@@ -2245,10 +2234,6 @@ Node''successors-1
 Node''updatePredecessor-3
 Node''updateUsages-3
 Node''valueEquals-2
-Node'ALIVE_ID_START
-Node'DELETED_ID_START
-Node'INITIAL_ID
-Node'NODE_LIST
 Node'new-0
 NodeClass''applyInputs-3
 NodeClass''equalInputs-3
@@ -2922,21 +2907,7 @@ ZeroExtendNode'new-4
 (§ annotation Snippet
 )
 
-;;;
- ; Denotes a non-optional (non-nil) node input. This should be applied to exactly the fields of a node
- ; that are of type Node or NodeInputList. Nodes that update fields of type Node outside of their
- ; constructor should call Node#updateUsages(Node, Node) just prior to doing the update of the input.
- ;;
 (§ annotation Input
-    (§ value #_"InputType" value :InputType'Value)
-)
-
-;;;
- ; Denotes an optional (nullable) node input. This should be applied to exactly the fields of a node
- ; that are of type Node or NodeInputList. Nodes that update fields of type Node outside of their
- ; constructor should call Node#updateUsages(Node, Node) just prior to doing the update of the input.
- ;;
-(§ annotation OptionalInput
     (§ value #_"InputType" value :InputType'Value)
 )
 
@@ -10033,7 +10004,7 @@ ZeroExtendNode'new-4
                 )
             )
             ;; kill marked nodes
-            (run! (§ ass!  Node''markDeleted-1 ) (filter Node''isAlive-1 nodes))
+            (run! (§ ass!  Node''delete-1 ) (filter Node''isAlive-1 nodes))
         )
         nil
     )
@@ -10049,10 +10020,10 @@ ZeroExtendNode'new-4
 
     (defn #_"void" GraphUtil'killWithUnusedFloatingInputs-2 [#_"Node" node, #_"boolean" mayKillGuard]
         (let [
-            _ (§ ass! node (Node''markDeleted-1 node))
+            _ (§ ass! node (Node''delete-1 node))
         ]
             (doseq [#_"Node" in (Node''inputs-1 node)]
-                (when (Node''isAlive-1 in)
+                (when (Node''isAlive-1 in)
                     (let [
                         _ (§ ass! in (Node''removeUsage-2 in, node))
                     ]
@@ -10121,7 +10092,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"void" GraphUtil'checkRedundantPhi-1 [#_"PhiNode" phiNode]
-        (when-not (or (Node''isDeleted-1 phiNode) (= (count (:phiValues phiNode)) 1))
+        (when-not (= (count (:phiValues phiNode)) 1)
             (let [
                 #_"ValueNode" singleValue (PhiNode''singleValueOrThis-1 phiNode)
             ]
@@ -10143,33 +10114,31 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"void" GraphUtil'checkRedundantProxy-1 [#_"ValueProxyNode" vpn]
-        (when-not (Node''isDeleted-1 vpn)
-            (let [
-                #_"AbstractBeginNode" proxyPoint (:loopExit vpn)
-            ]
-                (when (satisfies? LoopExitNode proxyPoint)
-                    (let [
-                        #_"LoopBeginNode" loopBegin (:loopBegin proxyPoint)
-                        #_"Node" vpnValue (:value vpn)
-                    ]
-                        (loop-when [#_"seq" s (seq (:fsValues (:stateAfter loopBegin)))] (some? s)
-                            (let [
-                                #_"ValueNode" v (first s)
-                                v
-                                    (when (AbstractMergeNode''isPhiAtMerge-2 loopBegin, v) => v
-                                        (PhiNode''valueAt-2n v, (LoopBeginNode''forwardEnd-1 loopBegin))
+        (let [
+            #_"AbstractBeginNode" proxyPoint (:loopExit vpn)
+        ]
+            (when (satisfies? LoopExitNode proxyPoint)
+                (let [
+                    #_"LoopBeginNode" loopBegin (:loopBegin proxyPoint)
+                    #_"Node" vpnValue (:value vpn)
+                ]
+                    (loop-when [#_"seq" s (seq (:fsValues (:stateAfter loopBegin)))] (some? s)
+                        (let [
+                            #_"ValueNode" v (first s)
+                            v
+                                (when (AbstractMergeNode''isPhiAtMerge-2 loopBegin, v) => v
+                                    (PhiNode''valueAt-2n v, (LoopBeginNode''forwardEnd-1 loopBegin))
+                                )
+                        ]
+                            (when (= vpnValue v) => (recur (next s))
+                                (let [
+                                    _ (§ ass! vpn (Node''replaceAtUsagesAndDelete-2 vpn, vpnValue))
+                                ]
+                                    (doseq [#_"PhiNode" phi (§ snap (filter #(satisfies? PhiNode %) (:nodeUsages vpn)))]
+                                        (GraphUtil'checkRedundantPhi-1 phi)
                                     )
-                            ]
-                                (when (= vpnValue v) => (recur (next s))
-                                    (let [
-                                        _ (§ ass! vpn (Node''replaceAtUsagesAndDelete-2 vpn, vpnValue))
-                                    ]
-                                        (doseq [#_"PhiNode" phi (§ snap (filter #(satisfies? PhiNode %) (:nodeUsages vpn)))]
-                                            (GraphUtil'checkRedundantPhi-1 phi)
-                                        )
-                                        (doseq [#_"ValueProxyNode" proxy (§ snap (filter #(satisfies? ValueProxyNode %) (:nodeUsages vpn)))]
-                                            (GraphUtil'checkRedundantProxy-1 proxy)
-                                        )
+                                    (doseq [#_"ValueProxyNode" proxy (§ snap (filter #(satisfies? ValueProxyNode %) (:nodeUsages vpn)))]
+                                        (GraphUtil'checkRedundantProxy-1 proxy)
                                     )
                                 )
                             )
@@ -10378,7 +10347,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"boolean" GraphUtil'tryKillUnused-1 [#_"Node" node]
-        (and (Node''isAlive-1 node) (GraphUtil'isFloatingNode-1 node) (Node''hasNoUsages-1 node) (not (satisfies? GuardNode node))
+        (and (Node''isAlive-1 node) (GraphUtil'isFloatingNode-1 node) (Node''hasNoUsages-1 node) (not (satisfies? GuardNode node))
             (do
                 (GraphUtil'killWithUnusedFloatingInputs-1 node)
                 true
@@ -10713,7 +10682,7 @@ ZeroExtendNode'new-4
                     )
                 )
         ]
-            (when-not (Node''isAlive-1 ret) => ret
+            (when-not (Node''isAlive-1 ret) => ret
                 (Graph''add-2 graph, ret)
             )
         )
@@ -10734,7 +10703,7 @@ ZeroExtendNode'new-4
                     )
                 )
         ]
-            (when-not (Node''isAlive-1 ret) => ret
+            (when-not (Node''isAlive-1 ret) => ret
                 (Graph''add-2 graph, ret)
             )
         )
@@ -10774,7 +10743,7 @@ ZeroExtendNode'new-4
             #_"ValueNode" arrayLength (ArrayLengthNode'readArrayLength-1 array)
             arrayLength
                 (if (some? arrayLength)
-                    (if (Node''isAlive-1 arrayLength) arrayLength (Graph''addOrUniqueWithInputs-2 (:graph node), arrayLength))
+                    (if (Node''isAlive-1 arrayLength) arrayLength (Graph''addOrUniqueWithInputs-2 (:graph node), arrayLength))
                     (Lowerer'createReadArrayLength-3 array, node, lowerer)
                 )
             #_"LogicNode" boundsCheck (IntegerBelowNode'create-2 (AccessIndexedNode''index-1 node), arrayLength)
@@ -11405,9 +11374,7 @@ ZeroExtendNode'new-4
                     )
                 )
             )
-            (when-not (Node''isDeleted-1 instanceOf)
-                (GraphUtil'killWithUnusedFloatingInputs-1 instanceOf)
-            )
+            (GraphUtil'killWithUnusedFloatingInputs-1 instanceOf)
         )
         nil
     )
@@ -11564,7 +11531,7 @@ ZeroExtendNode'new-4
             #_"Arguments" args
                 (Arguments'new-4* (:allocateArray this), (:guardsStage (:graph node)), (:loweringStage lowerer),
                     (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (HotSpotResolvedObjectType'''klass-1 arrayType), (:graph node)),
-                    (if (Node''isAlive-1 length) length (Graph''addOrUniqueWithInputs-2 (:graph node), length)),
+                    (if (Node''isAlive-1 length) length (Graph''addOrUniqueWithInputs-2 (:graph node), length)),
                     (HotSpotResolvedObjectType'''prototypeMarkWord-1 arrayType),
                     (HotSpot'arrayBaseOffset-1 elementKind),
                     (NumUtil'log2-1 (HotSpot'arrayIndexScale-1 elementKind)),
@@ -11965,10 +11932,6 @@ ZeroExtendNode'new-4
         (and (:inputAlwaysPositive node) (= (IntegerConvertNode''getInputBits-1 node) AddressLowering'INT_BITS) (= (IntegerConvertNode''getResultBits-1 node) AddressLowering'ADDRESS_BITS))
     )
 
-    (defn #_"void" AddressLowering'preProcess-1 [#_"Graph" graph]
-        nil
-    )
-
     (defn- #_"ValueNode" AddressLowering'tryImplicitZeroExtend-1 [#_"ValueNode" input]
         (when (and (satisfies? ZeroExtendNode input) (AddressLowering'applicableToImplicitZeroExtend-1 input)) => input
             (Unary'''getValue-1 input)
@@ -11988,23 +11951,21 @@ ZeroExtendNode'new-4
 )
 
 (value-ns AddressLoweringPhase
-    (defn #_"Graph" AddressLoweringPhase'run-2 [#_"Graph" graph, #_"AddressLowering" lowering]
-        (AddressLowering'preProcess-1 graph)
-        (loop-when-recur [#_"seq" s (seq (Graph''getNodes-1 graph))] (some? s) [(next s)]
-            (let [
-                #_"Node" node (first s)
-            ]
-                (when (satisfies? OffsetAddressNode node)
-                    (let [
-                        #_"AddressNode" lowered (AddressLowering''lower-3 lowering, (AddressNode'''getBase-1 node), (:offset node))
-                        _ (§ ass! node (Node''replaceAtUsages-2 node, (AddressLowering'postProcess-1 lowered)))
-                    ]
-                        (GraphUtil'killWithUnusedFloatingInputs-1 node)
-                    )
+    (defn #_"Graph" AddressLoweringPhase'run-1 [#_"Graph" graph]
+        (let [
+            #_"AddressLowering" lowering (AddressLowering'new-1 HotSpot'heapBaseRegister)
+        ]
+            (loop-when [graph graph #_"seq" s (seq (Graph''getNodes-2 graph, OffsetAddressNode))] (some? s) => graph
+                (let [
+                    #_"OffsetAddressNode" address (first s)
+                    #_"AddressNode" lowered (AddressLowering''lower-3 lowering, (AddressNode'''getBase-1 address), (:offset address))
+                    _ (§ ass! address (Node''replaceAtUsages-2 address, (AddressLowering'postProcess-1 lowered)))
+                ]
+                    (GraphUtil'killWithUnusedFloatingInputs-1 address)
+                    (recur graph (next s))
                 )
             )
         )
-        graph
     )
 )
 
@@ -14786,10 +14747,9 @@ ZeroExtendNode'new-4
  ; profiling information.
  ;;
 (class-ns BciBlockMapping []
-    (defn- #_"BciBlockMapping" BciBlockMapping'new-1 [#_"Bytecode" bytecode]
+    (defn- #_"BciBlockMapping" BciBlockMapping'new-0 []
         (merge (BciBlockMapping'class.)
             (hash-map
-                #_"Bytecode" :bytecode bytecode
                 ;;;
                  ; The blocks found in this method, in reverse postorder.
                  ;;
@@ -14866,7 +14826,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"[this [BciBlock]]" BciBlockMapping''createMapping-2 [#_"BciBlockMapping" this, #_"BytecodeStream" stream]
         (let [
-            #_"[BciBlock]" mapping (vec (repeat (count (:code (:bytecode this))) nil))
+            #_"[BciBlock]" mapping (vec (repeat (count (:bytes stream)) nil))
         ]
             ;; iterate over the bytecodes top to bottom,
             ;; mark the entrypoints of basic blocks and build lists of successors for all bytecodes
@@ -15220,9 +15180,9 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"BciBlockMapping" BciBlockMapping'create-2 [#_"BytecodeStream" stream, #_"Bytecode" bytecode]
+    (defn #_"BciBlockMapping" BciBlockMapping'create-1 [#_"BytecodeStream" stream]
         (let [
-            #_"BciBlockMapping" this (BciBlockMapping'new-1 bytecode)
+            #_"BciBlockMapping" this (BciBlockMapping'new-0)
             [this #_"[BciBlock]" mapping] (BciBlockMapping''createMapping-2 this, stream)
             this
                 (when (:hasJsrBytecodes this) => this
@@ -15670,25 +15630,25 @@ ZeroExtendNode'new-4
 )
 
 (class-ns BytecodeParser []
-    (defn #_"BytecodeParser" BytecodeParser'new-1 [#_"Graph" graph]
+    (defn- #_"BytecodeParser" BytecodeParser'new-1 [#_"ResolvedJavaMethod" method]
         (let [
-            #_"Bytecode" code (BytecodeProvider'getBytecode-1 (:rootMethod graph))
+            #_"Bytecode" bytecode (BytecodeProvider'getBytecode-1 method)
         ]
             (merge (BytecodeParser'class.)
                 (hash-map
-                    #_"Graph" :graph graph
-                    #_"Bytecode" :bytecode code
-                    #_"ResolvedJavaMethod" :method (:method code)
-                    #_"ConstantPool" :constantPool (:constantPool code)
-                    #_"BytecodeStream" :stream (BytecodeStream'new-1 (:code code))
+                    #_"ResolvedJavaMethod" :method method
+                    #_"Graph" :graph (Graph'new-1 method)
+                    #_"int" :maxLocals (:maxLocals bytecode)
+                    #_"ConstantPool" :constantPool (:constantPool bytecode)
+                    #_"BytecodeStream" :stream (BytecodeStream'new-1 bytecode)
 
                     #_"BciBlockMapping" :blockMap nil
                     #_"LocalLiveness" :liveness nil
                     #_"ValueNode" :methodSynchronizedObject nil
                     #_"FixedWithNextNode" :lastInstr nil ;; the last instruction added
                     #_"boolean" :controlFlowSplit false
-                    #_"{int FixedWithNextNode}" :firstInstructions nil
-                    #_"{int FrameStateBuilder}" :entryStates nil
+                    #_"{int FixedWithNextNode}" :firstInstructions {}
+                    #_"{int FrameStateBuilder}" :entryStates {}
                     #_"boolean" :finalBarrierRequired false
                     #_"ValueNode" :originalReceiver nil
                     #_"FrameStateBuilder" :frameState nil
@@ -15875,7 +15835,7 @@ ZeroExtendNode'new-4
      ; @return a node equivalent to {@code value} in the graph
      ;;
     (defn #_"ValueNode" BytecodeParser''add-2 [#_"BytecodeParser" this, #_"ValueNode" value]
-        (when (nil? (:graph value)) => value
+        (when (nil? (:graph value)) => value
             (let [
                 value (BytecodeParser''append-2 this, value)
             ]
@@ -16078,8 +16038,8 @@ ZeroExtendNode'new-4
         (ConstantPool''lookupConstant-2 (:constantPool this), cpi)
     )
 
-    (defn- #_"LogicNode" BytecodeParser''genUnique-2 [#_"BytecodeParser" this, #_"LogicNode" x]
-        (Graph''addOrUniqueWithInputs-2 (:graph this), x)
+    (defn- #_"LogicNode" BytecodeParser''genUnique-2 [#_"BytecodeParser" this, #_"LogicNode" logic]
+        (Graph''addOrUniqueWithInputs-2 (:graph this), logic)
     )
 
     ;;;
@@ -16138,7 +16098,7 @@ ZeroExtendNode'new-4
             [#_"ResolvedJavaMethod" targetMethod #_"InvokeKind" invokeKind]
                 (when-not (InvokeKind'isDirect-1 initialInvokeKind) => [initialTargetMethod initialInvokeKind]
                     (let [
-                        #_"ResolvedJavaType" contextType (JavaMethod'''getDeclaringType-1 (:method (:bytecode (:frameState this))))
+                        #_"ResolvedJavaType" contextType (JavaMethod'''getDeclaringType-1 (:method this))
                         #_"ResolvedJavaMethod" specialCallTarget (MethodCallTargetNode'findSpecialCallTarget-4 initialInvokeKind, (nth args 0), initialTargetMethod, contextType)
                     ]
                         (when (some? specialCallTarget) => [initialTargetMethod initialInvokeKind]
@@ -17422,19 +17382,17 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"this" BytecodeParser''build-3 [#_"BytecodeParser" this, #_"FixedWithNextNode" startInstruction, #_"FrameStateBuilder" startFrameState]
-        ;; compute the block map, setup exception handlers and get the entrypoint(s)
+    (defn #_"Graph" BytecodeParser'parse-1 [#_"ResolvedJavaMethod" method]
         (let [
-            this (assoc this :blockMap (BciBlockMapping'create-2 (:stream this), (:bytecode this)))
-            this (assoc this :firstInstructions {})
-            this (assoc this :entryStates {})
+            #_"BytecodeParser" this (BytecodeParser'new-1 method)
+            this (assoc this :frameState (FrameStateBuilder'new-1 this))
+            this (assoc this :blockMap (BciBlockMapping'create-1 (:stream this)))
             this
                 (when-not (ResolvedJavaMethod''isStatic-1 (:method this)) => this
-                    (assoc this :originalReceiver (nth (:locals startFrameState) 0))
+                    (assoc this :originalReceiver (nth (:locals (:frameState this)) 0))
                 )
             this (assoc this :liveness (LocalLiveness'compute-4 (:stream this), (:blocks (:blockMap this)), (ResolvedJavaMethod'''getMaxLocals-1 (:method this)), (:nextLoop (:blockMap this))))
-            this (assoc this :lastInstr startInstruction)
-            this (assoc this :frameState startFrameState)
+            this (assoc this :lastInstr (:start (:graph this)))
             this (update this :stream BytecodeStream''setBCI-2 0)
             #_"BciBlock" startBlock (:startBlock (:blockMap this))
             this
@@ -17457,7 +17415,6 @@ ZeroExtendNode'new-4
                 )
             this
                 (when (ResolvedJavaMethod''isSynchronized-1 (:method this)) => this
-                    ;; add a monitor enter to the start block
                     (let [
                         this (assoc this :methodSynchronizedObject (BytecodeParser''synchronizedObject-3 this, (:frameState this), (:method this)))
                         this (update this :frameState FrameStateBuilder''clearNonLiveLocals-4 startBlock, (:liveness this), true)
@@ -17472,36 +17429,24 @@ ZeroExtendNode'new-4
                     (BytecodeParser''appendGoto-2 this, startBlock)
                     (assoc-in this [:firstInstructions (:id startBlock)] (:lastInstr this))
                 )
-        ]
-            (reduce BytecodeParser''processBlock-2 this (:blocks (:blockMap this)))
-        )
-    )
-
-    (defn- #_"this" BytecodeParser''cleanupFinalGraph-1 [#_"BytecodeParser" this]
-        (let [
+            this (reduce BytecodeParser''processBlock-2 this (:blocks (:blockMap this)))
             this (update this :graph GraphUtil'normalizeLoops-1)
-            ;; Remove dead parameters.
             _
                 (doseq [#_"ParameterNode" param (Graph''getNodes-2 (:graph this), ParameterNode)]
                     (when (Node''hasNoUsages-1 param)
                         (§ ass! param (Node''safeDelete-1 param))
                     )
                 )
-            ;; Remove redundant begin nodes.
             _
-                (doseq [#_"BeginNode" beginNode (Graph''getNodes-2 (:graph this), BeginNode)]
-                    (when (and (not (satisfies? ControlSplitNode (:predecessor beginNode))) (not (Node''hasUsages-1 beginNode)))
-                        (GraphUtil'unlinkFixedNode-1 beginNode)
-                        (§ ass! beginNode (Node''safeDelete-1 beginNode))
+                (doseq [#_"BeginNode" begin (Graph''getNodes-2 (:graph this), BeginNode)]
+                    (when (and (not (satisfies? ControlSplitNode (:predecessor begin))) (not (Node''hasUsages-1 begin)))
+                        (GraphUtil'unlinkFixedNode-1 begin)
+                        (§ ass! begin (Node''safeDelete-1 begin))
                     )
                 )
         ]
-            this
+            (:graph this)
         )
-    )
-
-    (defn #_"this" BytecodeParser''parse-1 [#_"BytecodeParser" this]
-        (BytecodeParser''cleanupFinalGraph-1 (BytecodeParser''build-3 this, (:start (:graph this)), (FrameStateBuilder'new-3 this, (:bytecode this), (:graph this))))
     )
 )
 
@@ -17513,12 +17458,12 @@ ZeroExtendNode'new-4
     ;;;
      ; Creates a new BytecodeStream for the specified bytecode.
      ;;
-    (defn #_"BytecodeStream" BytecodeStream'new-1 [#_"[byte]" code]
+    (defn #_"BytecodeStream" BytecodeStream'new-1 [#_"Bytecode" bytecode]
         (let [
             #_"BytecodeStream" this
                 (merge (BytecodeStream'class.)
                     (hash-map
-                        #_"[byte]" :code code
+                        #_"[byte]" :bytes (:bytes bytecode)
                         #_"int" :opcode 0
                         ;;;
                          ; Current bytecode index.
@@ -17530,9 +17475,8 @@ ZeroExtendNode'new-4
                         #_"int" :nextBCI 0
                     )
                 )
-            this (BytecodeStream''setBCI-2 this, 0)
         ]
-            this
+            (BytecodeStream''setBCI-2 this, 0)
         )
     )
 
@@ -17547,7 +17491,7 @@ ZeroExtendNode'new-4
      ; Gets the bytecode index of the end of the code.
      ;;
     (defn #_"int" BytecodeStream''endBCI-1 [#_"BytecodeStream" this]
-        (count (:code this))
+        (count (:bytes this))
     )
 
     ;;;
@@ -17558,7 +17502,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"int" BytecodeStream''currentBC-1 [#_"BytecodeStream" this]
         (when (= (:opcode this) Bytecodes'WIDE) => (:opcode this)
-            (Bytes'beU1-2 (:code this), (inc (:curBCI this)))
+            (Bytes'beU1-2 (:bytes this), (inc (:curBCI this)))
         )
     )
 
@@ -17571,8 +17515,8 @@ ZeroExtendNode'new-4
     (defn #_"int" BytecodeStream''readLocalIndex-1 [#_"BytecodeStream" this]
         ;; read local variable index for load/store
         (if (= (:opcode this) Bytecodes'WIDE)
-            (Bytes'beU2-2 (:code this), (+ (:curBCI this) 2))
-            (Bytes'beU1-2 (:code this), (+ (:curBCI this) 1))
+            (Bytes'beU2-2 (:bytes this), (+ (:curBCI this) 2))
+            (Bytes'beU1-2 (:bytes this), (+ (:curBCI this) 1))
         )
     )
 
@@ -17584,8 +17528,8 @@ ZeroExtendNode'new-4
     (defn #_"int" BytecodeStream''readIncrement-1 [#_"BytecodeStream" this]
         ;; read the delta for the iinc bytecode
         (if (= (:opcode this) Bytecodes'WIDE)
-            (Bytes'beS2-2 (:code this), (+ (:curBCI this) 4))
-            (Bytes'beS1-2 (:code this), (+ (:curBCI this) 2))
+            (Bytes'beS2-2 (:bytes this), (+ (:curBCI this) 4))
+            (Bytes'beS1-2 (:bytes this), (+ (:curBCI this) 2))
         )
     )
 
@@ -17597,8 +17541,8 @@ ZeroExtendNode'new-4
     (defn #_"int" BytecodeStream''readBranchDest-1 [#_"BytecodeStream" this]
         ;; reads the destination for a branch bytecode
         (if (any = (:opcode this) Bytecodes'GOTO_W Bytecodes'JSR_W)
-            (+ (:curBCI this) (Bytes'beS4-2 (:code this), (inc (:curBCI this))))
-            (+ (:curBCI this) (Bytes'beS2-2 (:code this), (inc (:curBCI this))))
+            (+ (:curBCI this) (Bytes'beS4-2 (:bytes this), (inc (:curBCI this))))
+            (+ (:curBCI this) (Bytes'beS2-2 (:bytes this), (inc (:curBCI this))))
         )
     )
 
@@ -17610,7 +17554,7 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"int" BytecodeStream''readInt-2 [#_"BytecodeStream" this, #_"int" bci]
         ;; reads a 4-byte signed value
-        (Bytes'beS4-2 (:code this), bci)
+        (Bytes'beS4-2 (:bytes this), bci)
     )
 
     ;;;
@@ -17620,7 +17564,7 @@ ZeroExtendNode'new-4
      ; @return the byte
      ;;
     (defn #_"int" BytecodeStream''readUByte-2 [#_"BytecodeStream" this, #_"int" bci]
-        (Bytes'beU1-2 (:code this), bci)
+        (Bytes'beU1-2 (:bytes this), bci)
     )
 
     ;;;
@@ -17630,8 +17574,8 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"char" BytecodeStream''readCPI-1 [#_"BytecodeStream" this]
         (if (= (:opcode this) Bytecodes'LDC)
-            (char (Bytes'beU1-2 (:code this), (inc (:curBCI this))))
-            (char (Bytes'beU2-2 (:code this), (inc (:curBCI this))))
+            (char (Bytes'beU1-2 (:bytes this), (inc (:curBCI this))))
+            (char (Bytes'beU2-2 (:bytes this), (inc (:curBCI this))))
         )
     )
 
@@ -17641,7 +17585,7 @@ ZeroExtendNode'new-4
      ; @return the constant pool index
      ;;
     (defn #_"int" BytecodeStream''readCPI4-1 [#_"BytecodeStream" this]
-        (Bytes'beS4-2 (:code this), (inc (:curBCI this)))
+        (Bytes'beS4-2 (:bytes this), (inc (:curBCI this)))
     )
 
     ;;;
@@ -17650,7 +17594,7 @@ ZeroExtendNode'new-4
      ; @return the byte
      ;;
     (defn #_"byte" BytecodeStream''readByte-1 [#_"BytecodeStream" this]
-        (nth (:code this) (inc (:curBCI this)))
+        (nth (:bytes this) (inc (:curBCI this)))
     )
 
     ;;;
@@ -17659,7 +17603,7 @@ ZeroExtendNode'new-4
      ; @return the short value
      ;;
     (defn #_"short" BytecodeStream''readShort-1 [#_"BytecodeStream" this]
-        (short (Bytes'beS2-2 (:code this), (inc (:curBCI this))))
+        (short (Bytes'beS2-2 (:bytes this), (inc (:curBCI this))))
     )
 
     ;;;
@@ -17676,7 +17620,7 @@ ZeroExtendNode'new-4
                     Bytecodes'LOOKUPSWITCH
                         (BytecodeSwitch'''size-1 (BytecodeLookupSwitch'new-2 this, (:curBCI this)))
                     Bytecodes'WIDE
-                        (condp = (Bytes'beU1-2 (:code this), (inc (:curBCI this)))
+                        (condp = (Bytes'beU1-2 (:bytes this), (inc (:curBCI this)))
                             Bytecodes'RET  4
                             Bytecodes'IINC 6
                                            4 ;; a load or store bytecode
@@ -17696,9 +17640,9 @@ ZeroExtendNode'new-4
         (let [
             this (assoc this :curBCI bci)
         ]
-            (if (< (:curBCI this) (count (:code this)))
+            (if (< (:curBCI this) (count (:bytes this)))
                 (let [
-                    this (assoc this :opcode (Bytes'beU1-2 (:code this), bci))
+                    this (assoc this :opcode (Bytes'beU1-2 (:bytes this), bci))
                     this (assoc this :nextBCI (+ bci (BytecodeStream''lengthOf-1 this)))
                 ]
                     this
@@ -18210,29 +18154,29 @@ ZeroExtendNode'new-4
         (let [
             #_"int" attributesCount (#_"DataInputStream" .readUnsignedShort stream)
         ]
-            (loop-when [#_"Bytecode" code nil #_"int" i 0] (< i attributesCount) => code
+            (loop-when [#_"Bytecode" bytecode nil #_"int" i 0] (< i attributesCount) => bytecode
                 (let [
                     #_"String" attributeName (:value (ConstantPool''get-3 cp, Utf8'iface, (#_"DataInputStream" .readUnsignedShort stream)))
                     #_"int" attributeLength (#_"DataInputStream" .readInt stream)
-                    code
-                        (if (and (nil? code) (= attributeName "Code"))
+                    bytecode
+                        (if (and (nil? bytecode) (= attributeName "Code"))
                             (let [
                                 #_"ResolvedJavaMethod" method (BytecodeProvider'findMethod-4 type, name, descriptor, static?)
                                 ;; Even if we will discard the Code attribute (see below), we still
                                 ;; need to parse it to reach the following class file content.
-                                code (Bytecode'new-3 method, stream, cp)
+                                bytecode (Bytecode'new-3 method, stream, cp)
                             ]
                                 (when (some? method) ;; => this is a method hidden from reflection (see sun.reflect.Reflection.filterMethods)
-                                    code
+                                    bytecode
                                 )
                             )
                             (do
                                 (Classfile'skipFully-2 stream, attributeLength)
-                                code
+                                bytecode
                             )
                         )
                 ]
-                    (recur code (inc i))
+                    (recur bytecode (inc i))
                 )
             )
         )
@@ -18249,10 +18193,10 @@ ZeroExtendNode'new-4
                         #_"boolean" static? (Modifier/isStatic accessFlags)
                         #_"String" name (:value (ConstantPool''get-3 cp, Utf8'iface, (#_"DataInputStream" .readUnsignedShort stream)))
                         #_"String" descriptor (:value (ConstantPool''get-3 cp, Utf8'iface, (#_"DataInputStream" .readUnsignedShort stream)))
-                        #_"Bytecode" code (Classfile'findCodeAttribute-6 stream, cp, type, name, descriptor, static?)
+                        #_"Bytecode" bytecode (Classfile'findCodeAttribute-6 stream, cp, type, name, descriptor, static?)
                     ]
-                        (when (some? code)
-                            (§ ass! methods (conj' methods code))
+                        (when (some? bytecode)
+                            (§ ass! methods (conj' methods bytecode))
                         )
                     )
                 )
@@ -18293,10 +18237,10 @@ ZeroExtendNode'new-4
     (defn #_"Bytecode" Classfile''getCode-3 [#_"Classfile" this, #_"String" name, #_"String" descriptor]
         (loop-when [#_"seq" s (seq (:codeAttributes this))] (some? s) => (throw! (str "NoSuchMethodError: " (JavaType''toJavaName-1 (:type this)) "." name descriptor))
             (let [
-                #_"Bytecode" code (first s)
+                #_"Bytecode" bytecode (first s)
             ]
-                (when (and (= (JavaMethod'''getName-1 (:method code)) name) (= (Signature''toMethodDescriptor-1 (JavaMethod'''getSignature-1 (:method code))) descriptor)) => (recur (next s))
-                    code
+                (when (and (= (JavaMethod'''getName-1 (:method bytecode)) name) (= (Signature''toMethodDescriptor-1 (JavaMethod'''getSignature-1 (:method bytecode))) descriptor)) => (recur (next s))
+                    bytecode
                 )
             )
         )
@@ -18337,7 +18281,7 @@ ZeroExtendNode'new-4
                 (hash-map
                     #_"ResolvedJavaMethod" :method method
                     #_"ConstantPool" :constantPool constantPool
-                    #_"[byte]" :code (vec code!)
+                    #_"[byte]" :bytes (vec code!)
                     #_"int" :maxLocals maxLocals
                 )
             )
@@ -21733,11 +21677,10 @@ ZeroExtendNode'new-4
  ; Describes a field representing an input edge in a node.
  ;;
 (class-ns InputInfo [EdgeInfo, FieldInfo, #_"Comparable" #_"<FieldInfo>"]
-    (defn #_"InputInfo" InputInfo'new-6 [#_"long" offset, #_"String" name, #_"Class" type, #_"Class" declaringClass, #_"InputType" inputType, #_"boolean" optional?]
+    (defn #_"InputInfo" InputInfo'new-5 [#_"long" offset, #_"String" name, #_"Class" type, #_"Class" declaringClass, #_"InputType" inputType]
         (merge (InputInfo'class.) (EdgeInfo'new-4 offset, name, type, declaringClass)
             (hash-map
                 #_"InputType" :inputType inputType
-                #_"boolean" :optional? optional?
             )
         )
     )
@@ -22657,14 +22600,13 @@ ZeroExtendNode'new-4
         (merge (InputEdges'class.) (Edges'new-3 :EdgesType'Inputs, directCount, edges)
             (hash-map
                 #_"InputType*" :inputTypes (map :inputType edges)
-                #_"boolean*" :isOptional (map :optional? edges)
             )
         )
     )
 
     (defn #_"[InputInfo]" InputEdges'translateInto-2 [#_"[InputInfo]" infos, #_"InputEdges" inputs]
         (into' infos
-            (map InputInfo'new-6 (:offsets inputs) (:names inputs) (:types inputs) (:declaringClasses inputs) (:inputTypes inputs) (:isOptional inputs))
+            (map InputInfo'new-5 (:offsets inputs) (:names inputs) (:types inputs) (:declaringClasses inputs) (:inputTypes inputs))
         )
     )
 
@@ -22815,22 +22757,20 @@ ZeroExtendNode'new-4
 
     (defn- #_"this" NodeFieldsScanner''scanField-3 [#_"NodeFieldsScanner" this, #_"Field" field, #_"long" offset]
         (let [
-            #_"Input" inputAnnotation (#_"Field" .getAnnotation field, Input)
-            #_"OptionalInput" optionalInputAnnotation (#_"Field" .getAnnotation field, OptionalInput)
             #_"String" name (#_"Field" .getName field)
             #_"Class" type (#_"Field" .getType field)
             #_"Class" declaringClass (#_"Field" .getDeclaringClass field)
+            #_"Input" inputAnnotation (#_"Field" .getAnnotation field, Input)
         ]
             (cond
-                (or (some? inputAnnotation) (some? optionalInputAnnotation))
+                (some? inputAnnotation)
                     (let [
                         this
                             (when-not (ß #_"Class" .isAssignableFrom NodeInputList'iface, type) => this
                                 (update this :directInputs inc)
                             )
-                        #_"InputType" inputType (if (some? inputAnnotation) (#_"Input" .value inputAnnotation) (#_"OptionalInput" .value optionalInputAnnotation))
                     ]
-                        (update this :nfsInputs conj' (InputInfo'new-6 offset, name, type, declaringClass, inputType, (#_"Field" .isAnnotationPresent field, OptionalInput)))
+                        (update this :nfsInputs conj' (InputInfo'new-5 offset, name, type, declaringClass, (#_"Input" .value inputAnnotation)))
                     )
                 (some? (#_"Field" .getAnnotation field, Successor))
                     (let [
@@ -23021,10 +22961,9 @@ ZeroExtendNode'new-4
         (let [
             graph (SchedulePhase'run-2 graph, :SchedulingStrategy'LATEST_OUT_OF_LOOPS)
             #_"Schedule" schedule (:lastSchedule graph)
-            #_"FixReadsClosure" closure (FixReadsClosure'new-0)
-            _ (§ ass! closure (reduce #(ScheduledNodeIterator''processNodes-3 %1, %2, schedule) closure (:reversePostOrder (:cfg schedule))))
+            _ (reduce #(ScheduledNodeIterator''processNodes-3 %1, %2, schedule) (FixReadsClosure'new-0) (:reversePostOrder (:cfg schedule)))
         ]
-            (Graph''setAfterFixReadPhase-2 graph, true)
+            graph
         )
     )
 )
@@ -23689,7 +23628,7 @@ ZeroExtendNode'new-4
 (class-ns FrameStateBuilder []
     (defn- #_"this" FrameStateBuilder''initializeForMethodStart-1 [#_"FrameStateBuilder" this]
         (let [
-            #_"ResolvedJavaMethod" method (:method (:bytecode this))
+            #_"ResolvedJavaMethod" method (:method (:parser this))
             #_"ResolvedJavaType" originalType (JavaMethod'''getDeclaringType-1 method)
             [this #_"int" i #_"int" j]
                 (when-not (ResolvedJavaMethod''isStatic-1 method) => [this 0 0]
@@ -23698,7 +23637,7 @@ ZeroExtendNode'new-4
                             (or (TypePlugin'''interceptType-4 HotSpot'plugin, (:parser this), originalType, true)
                                 (StampFactory'forDeclaredType-2 originalType, true)
                             )
-                        this (update this :locals assoc' 0 (Graph''addOrUniqueWithInputs-2 (:graph this), (ParameterNode'new-2 0, receiverStamp)))
+                        this (update this :locals assoc' 0 (Graph''addOrUniqueWithInputs-2 (:graph (:parser this)), (ParameterNode'new-2 0, receiverStamp)))
                     ]
                         [this 1 1]
                     )
@@ -23713,7 +23652,7 @@ ZeroExtendNode'new-4
                         (or (TypePlugin'''interceptType-4 HotSpot'plugin, (:parser this), type, false)
                             (StampFactory'forDeclaredType-2 type, false)
                         )
-                    this (update this :locals assoc' j (Graph''addOrUniqueWithInputs-2 (:graph this), (ParameterNode'new-2 i, stamp)))
+                    this (update this :locals assoc' j (Graph''addOrUniqueWithInputs-2 (:graph (:parser this)), (ParameterNode'new-2 i, stamp)))
                     j (inc j)
                     [this j]
                         (when (JavaKind'needsTwoSlots-1 kind) => [this j]
@@ -23726,24 +23665,16 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; Creates a new frame state builder for the given bytecode and the given target graph.
-     ;
-     ; @param bytecode the bytecode in which the frame exists
-     ; @param graph the target graph of nodes to be created by the builder
-     ;;
-    (defn #_"FrameStateBuilder" FrameStateBuilder'new-3 [#_"BytecodeParser" parser, #_"Bytecode" bytecode, #_"Graph" graph]
+    (defn #_"FrameStateBuilder" FrameStateBuilder'new-1 [#_"BytecodeParser" parser]
         (let [
             #_"FrameStateBuilder" this
                 (merge (FrameStateBuilder'class.)
                     (hash-map
                         #_"BytecodeParser" :parser parser
-                        #_"Bytecode" :bytecode bytecode
-                        #_"[ValueNode]" :locals (vec (repeat (:maxLocals bytecode) nil))
+                        #_"[ValueNode]" :locals (vec (repeat (:maxLocals parser) nil))
                         #_"(ValueNode)" :stack nil
                         #_"[ValueNode]" :lockedObjects []
                         #_"[MonitorIdNode]" :monitorIds []
-                        #_"Graph" :graph graph
                         #_"FrameState" :outerFrameState nil
                     )
                 )
@@ -23753,7 +23684,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"FrameState" FrameStateBuilder''create-2 [#_"FrameStateBuilder" this, #_"int" bci]
-        (Graph''add-2 (:graph this), (FrameState'new-7a (:outerFrameState this), (:bytecode this), bci, (:locals this), (:stack this), (:lockedObjects this), (:monitorIds this)))
+        (Graph''add-2 (:graph (:parser this)), (FrameState'new-6a (:outerFrameState this), bci, (:locals this), (:stack this), (:lockedObjects this), (:monitorIds this)))
     )
 
     (defn #_"boolean" FrameStateBuilder''isCompatibleWith-2 [#_"FrameStateBuilder" this, #_"FrameStateBuilder" other]
@@ -23764,7 +23695,7 @@ ZeroExtendNode'new-4
                         #_"ValueNode" x (nth (:stack this) i)
                         #_"ValueNode" y (nth (:stack other) i)
                     ]
-                        (if (and (not= x y) (or (= x :FrameState'TWO_SLOT_MARKER) (Node''isDeleted-1 x) (= y :FrameState'TWO_SLOT_MARKER) (Node''isDeleted-1 y) (not= (ValueNode''getStackKind-1 x) (ValueNode''getStackKind-1 y))))
+                        (if (and (not= x y) (or (= x :FrameState'TWO_SLOT_MARKER) (= y :FrameState'TWO_SLOT_MARKER) (not= (ValueNode''getStackKind-1 x) (ValueNode''getStackKind-1 y))))
                             false
                             (recur (inc i))
                         )
@@ -23783,7 +23714,7 @@ ZeroExtendNode'new-4
 
     (defn- #_"ValuePhiNode" FrameStateBuilder''createValuePhi-4 [#_"FrameStateBuilder" this, #_"ValueNode" value, #_"ValueNode" other, #_"AbstractMergeNode" block]
         (let [
-            #_"ValuePhiNode" phi (Graph''add-2 (:graph this), (ValuePhiNode'new-2 (Stamp'''unrestricted-1 (:stamp value)), block))
+            #_"ValuePhiNode" phi (Graph''add-2 (:graph (:parser this)), (ValuePhiNode'new-2 (Stamp'''unrestricted-1 (:stamp value)), block))
             phi (reduce PhiNode''addInput-2 phi (repeat (AbstractMergeNode'''phiPredecessorCount-1 block) value))
         ]
             (PhiNode''addInput-2 phi, other)
@@ -23791,19 +23722,19 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"ValueNode" FrameStateBuilder''merge-4 [#_"FrameStateBuilder" this, #_"ValueNode" value, #_"ValueNode" other, #_"AbstractMergeNode" block]
-        (when (and (some? value) (not (Node''isDeleted-1 value)))
+        (when (some? value)
             (cond
                 (AbstractMergeNode''isPhiAtMerge-2 block, value)
-                    (if (and (some? other) (not= other :FrameState'TWO_SLOT_MARKER) (not (Node''isDeleted-1 other)) (= (ValueNode''getStackKind-1 value) (ValueNode''getStackKind-1 other)))
+                    (if (and (some? other) (not= other :FrameState'TWO_SLOT_MARKER) (= (ValueNode''getStackKind-1 value) (ValueNode''getStackKind-1 other)))
                         (PhiNode''addInput-2 value, other)
                         ;; This phi must be dead anyway, add input of correct stack kind to keep the graph invariants.
-                        (PhiNode''addInput-2 value, (ConstantNode'defaultForKind-2 (ValueNode''getStackKind-1 value), (:graph this)))
+                        (PhiNode''addInput-2 value, (ConstantNode'defaultForKind-2 (ValueNode''getStackKind-1 value), (:graph (:parser this))))
                     )
                 (= value other)
                     value
                 (or (= value :FrameState'TWO_SLOT_MARKER) (= other :FrameState'TWO_SLOT_MARKER))
                     nil
-                (and (some? other) (not (Node''isDeleted-1 other)) (= (ValueNode''getStackKind-1 value) (ValueNode''getStackKind-1 other)))
+                (and (some? other) (= (ValueNode''getStackKind-1 value) (ValueNode''getStackKind-1 other)))
                     (FrameStateBuilder''createValuePhi-4 this, value, other, block)
             )
         )
@@ -23843,7 +23774,7 @@ ZeroExtendNode'new-4
     (defn- #_"ValueNode" FrameStateBuilder''createLoopPhi-4 [#_"FrameStateBuilder" this, #_"AbstractMergeNode" block, #_"ValueNode" value, #_"boolean" stampFromValue]
         (when (and (some? value) (not= value :FrameState'TWO_SLOT_MARKER)) => value
             (let [
-                #_"ValuePhiNode" phi (Graph''add-2 (:graph this), (ValuePhiNode'new-2 (if stampFromValue (:stamp value) (Stamp'''unrestricted-1 (:stamp value))), block))
+                #_"ValuePhiNode" phi (Graph''add-2 (:graph (:parser this)), (ValuePhiNode'new-2 (if stampFromValue (:stamp value) (Stamp'''unrestricted-1 (:stamp value))), block))
             ]
                 (PhiNode''addInput-2 phi, value)
             )
@@ -23881,7 +23812,7 @@ ZeroExtendNode'new-4
             f'proxy
                 (fn #_"ValueNode" [#_"ValueNode" value]
                     (when (and (some? value) (not= value :FrameState'TWO_SLOT_MARKER) (or (not (FrameStateBuilder''contains-2 loopEntryState, value)) (AbstractMergeNode''isPhiAtMerge-2 (:loopBegin loopExit), value))) => value
-                        (Graph''add-2 (:graph this), (ValueProxyNode'new-2 value, loopExit))
+                        (Graph''add-2 (:graph (:parser this)), (ValueProxyNode'new-2 value, loopExit))
                     )
                 )
         ]
@@ -24087,22 +24018,13 @@ ZeroExtendNode'new-4
             #_"Graph" this
                 (merge (Graph'class.)
                     (hash-map
+                        #_"ResolvedJavaMethod" :method method
                         ;;;
                          ; The set of nodes in the graph, ordered by {@linkplain #register(Node) registration} time.
                          ;;
                         #_"[Node]" :gNodes []
-                        ;;;
-                         ; The number of nodes which have been deleted from this graph.
-                         ;;
-                        #_"int" :nodesDeleted 0
                         #_"StartNode" :start nil
-                        ;;;
-                         ; The root method from which this graph was built, or nil
-                         ; if this method was not built from a method or the method is not available.
-                         ;;
-                        #_"ResolvedJavaMethod" :rootMethod method
                         #_"GuardsStage" :guardsStage :GuardsStage'FLOATING_GUARDS
-                        #_"boolean" :isAfterFixedReadPhase false
                         #_"boolean" :hasValueProxies true
                         #_"Schedule" :lastSchedule nil
                     )
@@ -24112,14 +24034,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; Gets the number of live nodes in this graph. That is the number of nodes which have been
-     ; added to the graph minus the number of deleted nodes.
-     ;
-     ; @return the number of live nodes in this graph
-     ;;
     (defn #_"int" Graph''getNodeCount-1 [#_"Graph" this]
-        (- (count (:gNodes this)) (:nodesDeleted this))
+        (count (:gNodes this))
     )
 
     ;;;
@@ -24138,7 +24054,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"Node" Graph''maybeAddOrUnique-2 [#_"Graph" this, #_"Node" node]
-        (when-not (Node''isAlive-1 node) => node
+        (when-not (Node''isAlive-1 node) => node
             (Graph''add-2 this, node)
         )
     )
@@ -24149,7 +24065,7 @@ ZeroExtendNode'new-4
         (Node''applyInputs-2 node,
             (reify EdgeVisitor
                 (#_"Node" EdgeVisitor'''apply-3 [#_"EdgeVisitor" _, #_"Node" source, #_"Node" target]
-                    (if (Node''isAlive-1 target) target (Graph''addOrUniqueWithInputs-2 this, target))
+                    (if (Node''isAlive-1 target) target (Graph''addOrUniqueWithInputs-2 this, target))
                 )
             )
         )
@@ -24157,7 +24073,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"Node" Graph''addOrUniqueWithInputs-2 [#_"Graph" this, #_"Node" node]
-        (when-not (Node''isAlive-1 node) => node
+        (when-not (Node''isAlive-1 node) => node
             (Graph''addInputs-2 this, node)
             (Graph''add-2 this, node)
         )
@@ -24187,10 +24103,7 @@ ZeroExtendNode'new-4
     )
 
     (defn #_"this" Graph''unregister-2 [#_"Graph" this, #_"Node" node]
-        (-> this
-            (update :gNodes assoc' (:nid node) nil)
-            (update :nodesDeleted inc)
-        )
+        (update this :gNodes assoc' (:nid node) nil)
     )
 
     ;;;
@@ -24424,21 +24337,8 @@ ZeroExtendNode'new-4
         (assoc this :guardsStage guardsStage)
     )
 
-    (defn #_"this" Graph''setAfterFixReadPhase-2 [#_"Graph" this, #_"boolean" state]
-        (assoc this :isAfterFixedReadPhase state)
-    )
-
     (defn #_"this" Graph''setHasValueProxies-2 [#_"Graph" this, #_"boolean" state]
         (assoc this :hasValueProxies state)
-    )
-)
-
-;;;
- ; Parses the bytecodes of a method and builds the IR graph.
- ;;
-(value-ns GraphBuilderPhase
-    (defn #_"Graph" GraphBuilderPhase'run-1 [#_"Graph" graph]
-        (-> graph (BytecodeParser'new-1) (BytecodeParser''parse-1) :graph)
     )
 )
 
@@ -26988,10 +26888,10 @@ ZeroExtendNode'new-4
 )
 
 (class-ns LIRGenerationContext []
-    (defn #_"LIRGenerationContext" LIRGenerationContext'new-4 [#_"LIRGenerator" lirGen, #_"LIRBuilder" nodeLirBuilder, #_"Graph" graph, #_"Schedule" schedule]
+    (defn #_"LIRGenerationContext" LIRGenerationContext'new-3 [#_"LIRGenerator" lirGen, #_"Graph" graph, #_"Schedule" schedule]
         (merge (LIRGenerationContext'class.)
             (hash-map
-                #_"LIRBuilder" :nodeLirBuilder nodeLirBuilder
+                #_"LIRBuilder" :nodeLirBuilder (LIRBuilder'new-1 lirGen)
                 #_"LIRGenerator" :lirGen lirGen
                 #_"Graph" :graph graph
                 #_"Schedule" :schedule schedule
@@ -33270,46 +33170,33 @@ ZeroExtendNode'new-4
                 (loop-when [lowerer (LoweringTool'new-4 (:loweringStage this), startAnchor, activeGuards, (:beginNode block)) #_"seq" s (seq (get (:block->nodes (:schedule this)) block))] (some? s) => lowerer
                     (let [
                         #_"Node" node (first s)
+                        ;; Cache the next node to be able to reconstruct the previous of the next node after lowering.
+                        #_"FixedNode" nextNode (:next (if (satisfies? FixedWithNextNode node) node (:lastFixedNode lowerer)))
+                        _
+                            (when (satisfies? Lowerable node)
+                                (§ ass! node (Lowerable'''lower-2 node, lowerer))
+                            )
                     ]
-                        ;; => can happen when previous lowerings have deleted nodes
-                        (when-not (Node''isDeleted-1 node) => (recur lowerer (next s))
-                            ;; Cache the next node to be able to reconstruct the previous of the next node after lowering.
+                        ;; => can happen when the rest of the block is killed by lowering (e.g. by an unconditional deopt)
+                        (when (Node''isAlive-1 nextNode) => lowerer
                             (let [
-                                #_"FixedNode" nextNode (:next (if (satisfies? FixedWithNextNode node) node (:lastFixedNode lowerer)))
-                                lowerer
-                                    (when (satisfies? Lowerable node) => lowerer
+                                #_"Node" predecessor (:predecessor nextNode)
+                                predecessor
+                                    (when-not (satisfies? FixedWithNextNode predecessor) => predecessor
+                                        ;; Insert begin node, to have a valid last fixed for next lowerable node.
+                                        ;; This is about lowering a FixedWithNextNode to a control split while this
+                                        ;; FixedWithNextNode is followed by some kind of BeginNode.
+                                        ;; For example the when a FixedGuard followed by a loop exit is lowered to
+                                        ;; a control-split + deopt.
                                         (let [
-                                            _ (§ ass! node (Lowerable'''lower-2 node, lowerer))
+                                            #_"AbstractBeginNode" begin (Graph''add-2 (:graph node), (BeginNode'new-0))
                                         ]
-                                            (when (Node''isDeleted-1 (:guardAnchor lowerer)) => lowerer
-                                                ;; TODO nextNode could be deleted but this is not currently supported
-                                                (assoc lowerer :guardAnchor (AbstractBeginNode'prevBegin-1 nextNode))
-                                            )
+                                            (Node''replaceFirstSuccessor-3 predecessor, nextNode, begin)
+                                            (FixedWithNextNode''setNext-2 begin, nextNode)
                                         )
                                     )
                             ]
-                                ;; => can happen when the rest of the block is killed by lowering (e.g. by an unconditional deopt)
-                                (when (Node''isAlive-1 nextNode) => lowerer
-                                    (let [
-                                        #_"Node" predecessor (:predecessor nextNode)
-                                        predecessor
-                                            (when-not (satisfies? FixedWithNextNode predecessor) => predecessor
-                                                ;; Insert begin node, to have a valid last fixed for next lowerable node.
-                                                ;; This is about lowering a FixedWithNextNode to a control split while this
-                                                ;; FixedWithNextNode is followed by some kind of BeginNode.
-                                                ;; For example the when a FixedGuard followed by a loop exit is lowered to
-                                                ;; a control-split + deopt.
-                                                (let [
-                                                    #_"AbstractBeginNode" begin (Graph''add-2 (:graph node), (BeginNode'new-0))
-                                                ]
-                                                    (Node''replaceFirstSuccessor-3 predecessor, nextNode, begin)
-                                                    (FixedWithNextNode''setNext-2 begin, nextNode)
-                                                )
-                                            )
-                                    ]
-                                        (recur (LoweringTool''setLastFixedNode-2 lowerer, predecessor) (next s))
-                                    )
-                                )
+                                (recur (LoweringTool''setLastFixedNode-2 lowerer, predecessor) (next s))
                             )
                         )
                     )
@@ -34011,17 +33898,11 @@ ZeroExtendNode'new-4
  ; then there is an edge from this node to the node this field points to.
  ;;
 (class-ns Node []
-    (def #_"int" Node'DELETED_ID_START -1000000000)
-    (def #_"int" Node'INITIAL_ID -1)
-    (def #_"int" Node'ALIVE_ID_START 0)
-
-    (def #_"int" Node'NODE_LIST -2)
-
     (defn #_"Node" Node'new-0 []
         (merge (Node'class.)
             (hash-map
                 #_"NodeClass<? implements Node>" :nodeClass nil
-                #_"int" :nid Node'INITIAL_ID
+                #_"int" :nid 0
                 #_"Graph" :graph nil
                 #_"[Node]" :nodeUsages []
                 #_"Node" :predecessor nil
@@ -34107,12 +33988,8 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"boolean" Node''isDeleted-1 [#_"Node" this]
-        (<= (:nid this) Node'DELETED_ID_START)
-    )
-
-    (defn #_"boolean" Node''isAlive-1 [#_"Node" this]
-        (<= Node'ALIVE_ID_START (:nid this))
+    (defn #_"boolean" Node''isAlive-1 [#_"Node" this]
+        (pos? (:nid this))
     )
 
     ;;;
@@ -34241,14 +34118,11 @@ ZeroExtendNode'new-4
     (defn #_"this" Node''safeDelete-1 [#_"Node" this]
         (Node''clearInputs-1 this)
         (Node''clearSuccessors-1 this)
-        (Node''markDeleted-1 this)
+        (Node''delete-1 this)
     )
 
-    (defn #_"this" Node''markDeleted-1 [#_"Node" this]
-        (-> this
-            (update :graph Graph''unregister-2 this)
-            (update :nid #(- Node'DELETED_ID_START %))
-        )
+    (defn #_"this" Node''delete-1 [#_"Node" this]
+        (update this :graph Graph''unregister-2 this)
     )
 
     ;;;
@@ -34281,7 +34155,7 @@ ZeroExtendNode'new-4
             _ (Node''copyOrClearEdgesForClone-4 this, node, :EdgesType'Inputs, edgesToCopy)
             _ (Node''copyOrClearEdgesForClone-4 this, node, :EdgesType'Successors, edgesToCopy)
             node (assoc node :graph graph)
-            node (assoc node :nid Node'INITIAL_ID)
+            node (assoc node :nid 0)
             _
                 (when (some? graph)
                     (§ ass! graph (Graph''register-2 graph, node))
@@ -34297,7 +34171,7 @@ ZeroExtendNode'new-4
      ; stored in sets. It can give bad behavior when storing nodes of different graphs in the same set.
      ;;
     (§ override! #_"int" #_"Object." hashCode [#_"Node" this]
-        (if (Node''isDeleted-1 this) (- Node'DELETED_ID_START (:nid this)) (:nid this))
+        (:nid this)
     )
 
     ;;;
@@ -34656,7 +34530,7 @@ ZeroExtendNode'new-4
     (defn #_"DeoptimizeNode" DeoptimizeNode'new-2 [#_"DeoptimizationAction" action, #_"DeoptimizationReason" reason]
         (merge (DeoptimizeNode'class.) (ControlSinkNode'new-1 VoidStamp'instance)
             (hash-map
-                ; @OptionalInput
+                ; @Input
                 #_"FrameState" :stateBefore nil
                 #_"DeoptimizationAction" :action action
                 #_"DeoptimizationReason" :reason reason
@@ -34721,9 +34595,9 @@ ZeroExtendNode'new-4
     (defn #_"ReturnNode" ReturnNode'new-2 [#_"ValueNode" result, #_"MemoryMapNode" memoryMap]
         (merge (ReturnNode'class.) (ControlSinkNode'new-1 VoidStamp'instance)
             (hash-map
-                ; @OptionalInput
+                ; @Input
                 #_"ValueNode" :result result
-                ; @OptionalInput
+                ; @Input
                 #_"MemoryMapNode" :memoryMap memoryMap
             )
         )
@@ -35190,7 +35064,7 @@ ZeroExtendNode'new-4
     (defn #_"BeginStateSplitNode" BeginStateSplitNode'new-1 [#_"Stamp" stamp]
         (merge (BeginStateSplitNode'class.) (AbstractBeginNode'new-1 stamp)
             (hash-map
-                ; @OptionalInput
+                ; @Input
                 #_"FrameState" :stateAfter nil
             )
         )
@@ -35264,14 +35138,12 @@ ZeroExtendNode'new-4
             this (AbstractMergeNode'''deleteEnd-2 this, pred)
         ]
             (doseq [#_"PhiNode" phi (§ snap (AbstractMergeNode''phis-1 this))]
-                (when-not (Node''isDeleted-1 phi)
-                    (let [
-                        #_"ValueNode" removedValue (nth (:phiValues phi) i)
-                        _ (§ ass! phi (PhiNode''removeInput-2 phi, i))
-                    ]
-                        (when (some? removedValue)
-                            (GraphUtil'tryKillUnused-1 removedValue)
-                        )
+                (let [
+                    #_"ValueNode" removedValue (nth (:phiValues phi) i)
+                    _ (§ ass! phi (PhiNode''removeInput-2 phi, i))
+                ]
+                    (when (some? removedValue)
+                        (GraphUtil'tryKillUnused-1 removedValue)
                     )
                 )
             )
@@ -35524,7 +35396,7 @@ ZeroExtendNode'new-4
     (defn #_"AbstractStateSplit" AbstractStateSplit'new-2 [#_"Stamp" stamp, #_"FrameState" stateAfter]
         (merge (AbstractStateSplit'class.) (FixedWithNextNode'new-1 stamp)
             (hash-map
-                ; @OptionalInput
+                ; @Input
                 #_"FrameState" :stateAfter stateAfter
             )
         )
@@ -35582,7 +35454,7 @@ ZeroExtendNode'new-4
     (defn #_"AccessMonitorNode" AccessMonitorNode'new-2 [#_"ValueNode" object, #_"MonitorIdNode" monitorId]
         (merge (AccessMonitorNode'class.) (AbstractMemoryCheckpoint'new-1 VoidStamp'instance)
             (hash-map
-                ; @OptionalInput
+                ; @Input
                 #_"FrameState" :stateBefore nil
                 ; @Input
                 #_"ValueNode" :object object
@@ -35832,9 +35704,9 @@ ZeroExtendNode'new-4
                 ; @Input
                 #_"CallTargetNode" :callTarget callTarget
                 #_"int" :bci bci
-                ; @OptionalInput
+                ; @Input
                 #_"ValueNode" :classInit nil
-                ; @OptionalInput
+                ; @Input
                 #_"FrameState" :stateDuring nil
             )
         )
@@ -35842,28 +35714,6 @@ ZeroExtendNode'new-4
 
     (defn #_"InvokeNode" InvokeNode'new-2 [#_"CallTargetNode" callTarget, #_"int" bci]
         (InvokeNode'new-3 callTarget, bci, (:returnStamp callTarget))
-    )
-
-    ;;;
-     ; Returns the method from which this invoke is executed. This is the caller method and in
-     ; the case of inlining it may be different from the method of the graph this node is in.
-     ;;
-    (defn #_"ResolvedJavaMethod" InvokeNode''getContextMethod-1 [#_"InvokeNode" this]
-        (FrameState''getMethod-1 (or (:stateAfter this) (:stateDuring this)))
-    )
-
-    ;;;
-     ; Returns the type from which this invoke is executed.
-     ; This is the declaring type of the caller method.
-     ;;
-    (defn #_"ResolvedJavaType" InvokeNode''getContextType-1 [#_"InvokeNode" this]
-        (let [
-            #_"ResolvedJavaMethod" contextMethod (InvokeNode''getContextMethod-1 this)
-        ]
-            (when (some? contextMethod)
-                (JavaMethod'''getDeclaringType-1 contextMethod)
-            )
-        )
     )
 
     (defm InvokeNode DeoptDuring
@@ -36230,7 +36080,7 @@ ZeroExtendNode'new-4
             (hash-map
                 ; @Input
                 #_"ValueNode" :value value
-                ; @OptionalInput
+                ; @Input
                 #_"FrameState" :stateAfter nil
             )
         )
@@ -36250,7 +36100,7 @@ ZeroExtendNode'new-4
     (defn #_"AccessFieldNode" AccessFieldNode'new-3 [#_"Stamp" stamp, #_"ValueNode" object, #_"ResolvedJavaField" field]
         (merge (AccessFieldNode'class.) (FixedWithNextNode'new-1 stamp)
             (hash-map
-                ; @OptionalInput
+                ; @Input
                 #_"ValueNode" :object object
                 ;;;
                  ; The compiler interface field for this field access.
@@ -36394,7 +36244,7 @@ ZeroExtendNode'new-4
             (hash-map
                 ; @Input
                 #_"ValueNode" :value value
-                ; @OptionalInput
+                ; @Input
                 #_"FrameState" :stateAfter state
             )
         )
@@ -36658,7 +36508,7 @@ ZeroExtendNode'new-4
     (defn #_"DeoptimizingFixedWithNextNode" DeoptimizingFixedWithNextNode'new-1 [#_"Stamp" stamp]
         (merge (DeoptimizingFixedWithNextNode'class.) (FixedWithNextNode'new-1 stamp)
             (hash-map
-                ; @OptionalInput
+                ; @Input
                 #_"FrameState" :stateBefore nil
             )
         )
@@ -36832,7 +36682,7 @@ ZeroExtendNode'new-4
     (defn #_"FixedAccessNode" FixedAccessNode'new-4 [#_"AddressNode" address, #_"LocationIdentity" location, #_"Stamp" stamp, #_"BarrierType" barrierType]
         (merge (FixedAccessNode'class.) (DeoptimizingFixedWithNextNode'new-1 stamp)
             (hash-map
-                ; @OptionalInput(InputType'Guard)
+                ; @Input(InputType'Guard)
                 #_"GuardingNode" :guard nil
                 ; @Input
                 #_"AddressNode" :address address
@@ -36904,7 +36754,7 @@ ZeroExtendNode'new-4
                 #_"ValueNode" :expectedValue expectedValue
                 ; @Input
                 #_"ValueNode" :newValue newValue
-                ; @OptionalInput
+                ; @Input
                 #_"FrameState" :stateAfter nil
             )
         )
@@ -36988,9 +36838,9 @@ ZeroExtendNode'new-4
             (hash-map
                 ; @Input
                 #_"ValueNode" :value value
-                ; @OptionalInput
+                ; @Input
                 #_"FrameState" :stateAfter nil
-                ; @OptionalInput(InputType'Memory)
+                ; @Input(InputType'Memory)
                 #_"Node" :lastLocationAccess nil
             )
         )
@@ -37180,7 +37030,7 @@ ZeroExtendNode'new-4
             (hash-map
                 ; @Input
                 #_"ValueNode" :newValue newValue
-                ; @OptionalInput
+                ; @Input
                 #_"FrameState" :stateAfter nil
             )
         )
@@ -37588,7 +37438,7 @@ ZeroExtendNode'new-4
     (defn #_"FinalFieldBarrierNode" FinalFieldBarrierNode'new-1 [#_"ValueNode" value]
         (merge (FinalFieldBarrierNode'class.) (FixedWithNextNode'new-1 VoidStamp'instance)
             (hash-map
-                ; @OptionalInput
+                ; @Input
                 #_"ValueNode" :value value
             )
         )
@@ -37647,7 +37497,7 @@ ZeroExtendNode'new-4
     (defn #_"StateSplitProxyNode" StateSplitProxyNode'new-2 [#_"ValueNode" object, #_"boolean" delayElimination]
         (merge (StateSplitProxyNode'class.) (FixedValueAnchorNode'new-1 object)
             (hash-map
-                ; @OptionalInput
+                ; @Input
                 #_"FrameState" :stateAfter nil
                 ;;;
                  ; Disallows elimination of this node until after the FrameState has been consumed.
@@ -38069,7 +37919,7 @@ ZeroExtendNode'new-4
                 ; @Input
                 #_"ValueNode" :value value
                 #_"boolean" :needsBarrier needsBarrier
-                ; @OptionalInput
+                ; @Input
                 #_"FrameState" :stateAfter stateAfter
             )
         )
@@ -38192,7 +38042,7 @@ ZeroExtendNode'new-4
             (hash-map
                 ; @Input
                 #_"AddressNode" :address address
-                ; @OptionalInput
+                ; @Input
                 #_"ValueNode" :value value
                 #_"boolean" :precise? precise?
             )
@@ -38214,7 +38064,7 @@ ZeroExtendNode'new-4
     (defn #_"G1PreWriteBarrier" G1PreWriteBarrier'new-4 [#_"AddressNode" address, #_"ValueNode" expectedObject, #_"boolean" doLoad, #_"boolean" nullCheck]
         (merge (G1PreWriteBarrier'class.) (ObjectWriteBarrier'new-3 address, expectedObject, true)
             (hash-map
-                ; @OptionalInput
+                ; @Input
                 #_"FrameState" :stateBefore nil
                 #_"boolean" :nullCheck nullCheck
                 #_"boolean" :doLoad doLoad
@@ -38309,9 +38159,9 @@ ZeroExtendNode'new-4
     (defn #_"AMD64AddressNode" AMD64AddressNode'new-2 [#_"ValueNode" base, #_"ValueNode" index]
         (merge (AMD64AddressNode'class.) (AddressNode'new-0)
             (hash-map
-                ; @OptionalInput
+                ; @Input
                 #_"ValueNode" :base base
-                ; @OptionalInput
+                ; @Input
                 #_"ValueNode" :index index
                 #_"Scale" :scale Scale'Times1
                 #_"int" :displacement 0
@@ -38347,7 +38197,7 @@ ZeroExtendNode'new-4
 
     (defn #_"this" AMD64AddressNode''setBase-2 [#_"AMD64AddressNode" this, #_"ValueNode" base]
         ;; allow modification before inserting into the graph
-        (when (Node''isAlive-1 this)
+        (when (Node''isAlive-1 this)
             (Node''updateUsages-3 this, (:base this), base)
         )
         (assoc this :base base)
@@ -38361,7 +38211,7 @@ ZeroExtendNode'new-4
 
     (defn #_"this" AMD64AddressNode''setIndex-2 [#_"AMD64AddressNode" this, #_"ValueNode" index]
         ;; allow modification before inserting into the graph
-        (when (Node''isAlive-1 this)
+        (when (Node''isAlive-1 this)
             (Node''updateUsages-3 this, (:index this), index)
         )
         (assoc this :index index)
@@ -40254,7 +40104,7 @@ ZeroExtendNode'new-4
     (defn #_"FloatingGuardedNode" FloatingGuardedNode'new-2 [#_"Stamp" stamp, #_"GuardingNode" guard]
         (merge (FloatingGuardedNode'class.) (FloatingNode'new-1 stamp)
             (hash-map
-                ; @OptionalInput(InputType'Guard)
+                ; @Input(InputType'Guard)
                 #_"GuardingNode" :guard guard
             )
         )
@@ -40320,7 +40170,7 @@ ZeroExtendNode'new-4
         ;; The input to floating reads must be always non-nil or have at least a guard.
         (merge (FloatingReadNode'class.) (FloatingAccessNode'new-5 address, location, stamp, guard, barrierType)
             (hash-map
-                ; @OptionalInput(InputType'Memory)
+                ; @Input(InputType'Memory)
                 #_"MemoryNode" :lastLocationAccess lastLocationAccess
             )
         )
@@ -41433,7 +41283,7 @@ ZeroExtendNode'new-4
         (merge (InstanceOfNode'class.) (UnaryOpLogicNode'new-1 object)
             (hash-map
                 #_"ObjectStamp" :checkedStamp checkedStamp
-                ; @OptionalInput(InputType'Anchor)
+                ; @Input(InputType'Anchor)
                 #_"AnchoringNode" :anchor anchor
             )
         )
@@ -42102,7 +41952,7 @@ ZeroExtendNode'new-4
         (let [
             #_"ValueNode" convert (IntegerConvertNode'convert-3b input, stamp, false)
         ]
-            (when-not (Node''isAlive-1 convert) => convert
+            (when-not (Node''isAlive-1 convert) => convert
                 (Graph''addOrUniqueWithInputs-2 graph, convert)
             )
         )
@@ -42118,7 +41968,7 @@ ZeroExtendNode'new-4
         (let [
             #_"ValueNode" convert (IntegerConvertNode'convert-3b input, stamp, true)
         ]
-            (when-not (Node''isAlive-1 convert) => convert
+            (when-not (Node''isAlive-1 convert) => convert
                 (Graph''addOrUniqueWithInputs-2 graph, convert)
             )
         )
@@ -42546,48 +42396,31 @@ ZeroExtendNode'new-4
  ; point in the abstract interpretation.
  ;;
 (class-ns FrameState [Node]
-    (defn- #_"FrameState" FrameState'new-7i [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"int" localsSize, #_"int" stackSize, #_"MonitorIdNode*" monitorIds, #_"EscapeObjectState*" virtualMappings]
-        (when (some? code)
-            ;; Make sure the bci is within range of the bytecodes. If the code size is 0 then allow any value, otherwise the
-            ;; bci must be less than the code size. Any negative value is also allowed to represent special bytecode states.
-            (let [
-                #_"int" codeSize (count (:code code))
-            ]
-                (when (and (not (zero? codeSize)) (<= codeSize bci))
-                    (throw! (str "bci " bci " is out of range for " (:method code) " " codeSize " bytes"))
-                )
-            )
-        )
+    (defn- #_"FrameState" FrameState'new-5 [#_"FrameState" outerFrameState, #_"int" bci, #_"int" localsSize, #_"int" stackSize, #_"MonitorIdNode*" monitorIds]
         (merge (FrameState'class.) (Node'new-0)
             (hash-map
                 #_"int" :localsSize localsSize
                 #_"int" :stackSize stackSize
-                ; @OptionalInput
+                ; @Input
                 #_"FrameState" :outerFrameState outerFrameState
                 ;;;
                  ; Contains the locals, the expressions and the locked objects, in this order.
                  ;;
-                ; @OptionalInput
+                ; @Input
                 #_"[ValueNode]" :fsValues nil
                 ; @Input
                 #_"[MonitorIdNode]" :monitorNodes (when (seq monitorIds) (vec monitorIds))
-                ; @OptionalInput
-                #_"[EscapeObjectState]" :virtualMappings (when (seq virtualMappings) (vec virtualMappings))
                 ;;;
                  ; The bytecode index to which this frame state applies.
                  ;;
                 #_"int" :bci bci
-                ;;;
-                 ; The bytecode to which this frame state applies.
-                 ;;
-                #_"Bytecode" :bytecode code
             )
         )
     )
 
-    (defn- #_"FrameState" FrameState'new-8 [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"ValueNode*" values, #_"int" localsSize, #_"int" stackSize, #_"MonitorIdNode*" monitorIds, #_"EscapeObjectState*" virtualMappings]
+    (defn- #_"FrameState" FrameState'new-6i [#_"FrameState" outerFrameState, #_"int" bci, #_"ValueNode*" values, #_"int" localsSize, #_"int" stackSize, #_"MonitorIdNode*" monitorIds]
         (let [
-            #_"FrameState" this (FrameState'new-7i outerFrameState, code, bci, localsSize, stackSize, monitorIds, virtualMappings)
+            #_"FrameState" this (FrameState'new-5 outerFrameState, bci, localsSize, stackSize, monitorIds)
         ]
             (assoc this :fsValues (vec values))
         )
@@ -42596,7 +42429,7 @@ ZeroExtendNode'new-4
     #_unused
     (defn #_"FrameState" FrameState'new-1 [#_"int" bci]
         (let [
-            #_"FrameState" this (FrameState'new-7i nil, nil, bci, 0, 0, nil, nil)
+            #_"FrameState" this (FrameState'new-5 nil, bci, 0, 0, nil)
         ]
             (assoc this :fsValues [])
         )
@@ -42612,33 +42445,18 @@ ZeroExtendNode'new-4
     #_unused
     (defn #_"FrameState" FrameState'new-2 [#_"int" bci, #_"ValueNode" returnValue]
         (let [
-            #_"FrameState" this (FrameState'new-7i nil, nil, bci, 0, (JavaKind'getSlotCount-1 (ValueNode''getStackKind-1 returnValue)), nil, nil)
+            #_"FrameState" this (FrameState'new-5 nil, bci, 0, (JavaKind'getSlotCount-1 (ValueNode''getStackKind-1 returnValue)), nil)
         ]
             (assoc this :fsValues [ returnValue ])
         )
     )
 
-    (defn #_"FrameState" FrameState'new-7a [#_"FrameState" outerFrameState, #_"Bytecode" code, #_"int" bci, #_"ValueNode*" locals, #_"(ValueNode)" stack, #_"ValueNode*" locks, #_"MonitorIdNode*" monitorIds]
+    (defn #_"FrameState" FrameState'new-6a [#_"FrameState" outerFrameState, #_"int" bci, #_"ValueNode*" locals, #_"(ValueNode)" stack, #_"ValueNode*" locks, #_"MonitorIdNode*" monitorIds]
         (let [
-            #_"FrameState" this (FrameState'new-7i outerFrameState, code, bci, (count locals), (count stack), monitorIds, nil)
+            #_"FrameState" this (FrameState'new-5 outerFrameState, bci, (count locals), (count stack), monitorIds)
             f'slot #(when-not (= % :FrameState'TWO_SLOT_MARKER) %)
         ]
             (assoc this :fsValues (vec (concat (map f'slot locals) (map f'slot (reverse stack)) locks)))
-        )
-    )
-
-    (defn #_"ResolvedJavaMethod" FrameState''getMethod-1 [#_"FrameState" this]
-        (when (some? (:bytecode this))
-            (:method (:bytecode this))
-        )
-    )
-
-    (defn #_"this" FrameState''addVirtualObjectMapping-2 [#_"FrameState" this, #_"EscapeObjectState" virtualObject]
-        (let [
-            this (update this :virtualMappings conj' virtualObject)
-        ]
-            (Node''updateUsages-3 this, nil, virtualObject)
-            this
         )
     )
 
@@ -42672,7 +42490,7 @@ ZeroExtendNode'new-4
             #_"int" stackSize (- (count values) (:localsSize this))
             values (catvec values (subvec (:fsValues this) (+ (:localsSize this) (:stackSize this))))
         ]
-            (Graph''add-2 graph, (FrameState'new-8 (:outerFrameState this), (:bytecode this), bci, values, (:localsSize this), stackSize, (:monitorNodes this), (:virtualMappings this)))
+            (Graph''add-2 graph, (FrameState'new-6i (:outerFrameState this), bci, values, (:localsSize this), stackSize, (:monitorNodes this)))
         )
     )
 
@@ -43980,7 +43798,7 @@ ZeroExtendNode'new-4
                         (recur this start mapping i (next s))
                     )
                 )
-            ;; Now process guards.
+            ;; Process guards.
             this
                 (when (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph this))) => this
                     (let [
@@ -43991,7 +43809,7 @@ ZeroExtendNode'new-4
                         )
                     )
                 )
-            ;; Now process inputs of fixed nodes.
+            ;; Process inputs of fixed nodes.
             this
                 (reduce #(Schedule''processNodes-4 %1, %2, start, mapping) this
                     (for [#_"Block" b (:reversePostOrder (:cfg this)) #_"FixedNode" n (AbstractBeginNode''getBlockNodes-1 (:beginNode b))]
@@ -44039,13 +43857,13 @@ ZeroExtendNode'new-4
                         )
                     )
                 )
-            ;; Check for dead nodes.
+            ;; Delete unscheduled nodes.
             _
                 (when (< (:counter this) (Graph''getNodeCount-1 (:graph this)))
                     (doseq [#_"Node" node (Graph''getNodes-1 (:graph this))]
                         (when-not (contains? (:agenda this) node)
                             (Node''clearInputs-1 node)
-                            (§ ass! node (Node''markDeleted-1 node))
+                            (§ ass! node (Node''delete-1 node))
                         )
                     )
                 )
@@ -44532,7 +44350,7 @@ ZeroExtendNode'new-4
                     (let [
                         #_"Node" node (#_"ListIterator" .next (:iterator this))
                         this
-                            (when (Node''isAlive-1 node) => this
+                            (when (Node''isAlive-1 node) => this
                                 (let [
                                     this
                                         (when (and (some? (:reconnect this)) (satisfies? FixedNode node)) => this
@@ -44756,8 +44574,7 @@ ZeroExtendNode'new-4
                     )
                 )
             #_"ResolvedJavaMethod" method (:method (:info args))
-            #_"Graph" graph (Graph'new-1 method)
-            graph (GraphBuilderPhase'run-1 graph)
+            #_"Graph" graph (BytecodeParser'parse-1 method)
             ;; copy snippet graph replacing constant parameters with given arguments
             #_"Graph" snippet (Graph'new-1 method)
             _ (Graph''addDuplicates-4m snippet, (Graph''getNodes-1 graph), graph, { (:start graph) (:start snippet) })
@@ -44878,7 +44695,7 @@ ZeroExtendNode'new-4
                                     this (update this :returnNode ReturnNode''setMemoryMap-2 memoryMap)
                                 ]
                                     (doseq [#_"MemoryMapNode" m memMaps]
-                                        (when (and (not= m memoryMap) (Node''isAlive-1 m))
+                                        (when (and (not= m memoryMap) (Node''isAlive-1 m))
                                             (GraphUtil'killWithUnusedFloatingInputs-1 m)
                                         )
                                     )
@@ -45059,7 +44876,7 @@ ZeroExtendNode'new-4
                     #_"ReturnNode" returnDuplicate (get duplicates (:returnNode this))
                     _ (§ ass! SnippetTemplate'DEFAULT_REPLACER (UsageReplacer'''replace-3 SnippetTemplate'DEFAULT_REPLACER, replacee, (:result returnDuplicate)))
                 ]
-                    (when (Node''isAlive-1 returnDuplicate)
+                    (when (Node''isAlive-1 returnDuplicate)
                         (let [
                             #_"FixedNode" _next
                                 (when (satisfies? FixedWithNextNode replacee)
@@ -45111,7 +44928,7 @@ ZeroExtendNode'new-4
                 #_"ReturnNode" returnDuplicate (get duplicates (:returnNode this))
                 _ (§ ass! replacer (UsageReplacer'''replace-3 replacer, replacee, (:result returnDuplicate)))
             ]
-                (when (Node''isAlive-1 returnDuplicate)
+                (when (Node''isAlive-1 returnDuplicate)
                     (§ ass! returnDuplicate (Node''replaceAndDelete-2 returnDuplicate, _next))
                 )
             )
@@ -50066,35 +49883,30 @@ ZeroExtendNode'new-4
     )
 
     (defn- #_"Graph" Compiler'emitFrontEnd-1 [#_"Graph" graph]
-        (let [
-            graph
-                (when (nil? (:next (:start graph))) => graph
-                    (GraphBuilderPhase'run-1 graph)
-                )
+        (-> graph
             ;;; HighTier
-            graph (RemoveValueProxyPhase'run-1 graph)
-            graph (LoweringPhase'run-2 graph, :LoweringStage'HIGH_TIER)
+            (RemoveValueProxyPhase'run-1)
+            (LoweringPhase'run-2 :LoweringStage'HIGH_TIER)
             ;;; MidTier
-            graph (LockEliminationPhase'run-1 graph)
-            graph (GuardLoweringPhase'run-1 graph)
-            graph (LoweringPhase'run-2 graph, :LoweringStage'MID_TIER)
-            graph (FrameStateAssignmentPhase'run-1 graph)
-            graph (WriteBarrierAdditionPhase'run-1 graph)
+            (LockEliminationPhase'run-1)
+            (GuardLoweringPhase'run-1)
+            (LoweringPhase'run-2 :LoweringStage'MID_TIER)
+            (FrameStateAssignmentPhase'run-1)
+            (WriteBarrierAdditionPhase'run-1)
             ;;; LowTier
-            graph (LoweringPhase'run-2 graph, :LoweringStage'LOW_TIER)
-            graph (ExpandLogicPhase'run-1 graph)
-            graph (FixReadsPhase''run-1 graph)
-            graph (AddressLoweringPhase'run-2 graph, (AddressLowering'new-1 HotSpot'heapBaseRegister))
-            graph (UseTrappingNullChecksPhase'run-1 graph)
-            graph (PropagateDeoptimizeProbabilityPhase'run-1 graph)
-            graph (SchedulePhase'run-2 graph, :SchedulingStrategy'FINAL_SCHEDULE)
-        ]
-            graph
+            (LoweringPhase'run-2 :LoweringStage'LOW_TIER)
+            (ExpandLogicPhase'run-1)
+            (FixReadsPhase''run-1)
+            (AddressLoweringPhase'run-1)
+            (UseTrappingNullChecksPhase'run-1)
+            (PropagateDeoptimizeProbabilityPhase'run-1)
+            (SchedulePhase'run-2 :SchedulingStrategy'FINAL_SCHEDULE)
         )
     )
 
-    (defn- #_"LIRGenerationResult" Compiler'emitLowLevel-3 [#_"LIRGenerationResult" res, #_"LIRGenerator" gen, #_"LIRSuites" suites]
+    (defn- #_"LIRGenerationResult" Compiler'emitLowLevel-2 [#_"LIRGenerationResult" res, #_"LIRGenerator" gen]
         (let [
+            #_"LIRSuites" suites (LIRSuites'new-0)
             #_"LIRPhaseContext" context (LIRPhaseContext'new-1 gen)
         ]
             (LIRPhase'''run-3 (:preAllocStage suites), res, context)
@@ -50121,36 +49933,27 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"LIRGenerationResult" Compiler'emitLIR-2 [#_"Graph" graph, #_"LIRSuites" suites]
+    (defn- #_"LIRGenerationResult" Compiler'emitLIR-1 [#_"Graph" graph]
         (let [
             #_"Schedule" schedule (:lastSchedule graph)
             #_"Block" start (ControlFlowGraph''getStartBlock-1 (:cfg schedule))
             #_"LIR" lir (LIR'new-3 (:cfg schedule), (ComputeBlockOrder'computeLinearScanOrder-1 start), (ComputeBlockOrder'computeCodeEmittingOrder-1 start))
-            #_"CallingConvention" callingConvention (Compiler'getCallingConvention-2 :CallingConventionType'JavaCallee, (:rootMethod graph))
+            #_"CallingConvention" callingConvention (Compiler'getCallingConvention-2 :CallingConventionType'JavaCallee, (:method graph))
             #_"LIRGenerationResult" res (LIRGenerationResult'new-2 lir, callingConvention)
             #_"LIRGenerator" gen (LIRGenerator'new-1 res)
-            #_"LIRBuilder" builder (LIRBuilder'new-1 gen)
         ]
-            (LIRPhase'''run-3 (LIRGenerationPhase'new-0), res, (LIRGenerationContext'new-4 gen, builder, graph, schedule))
-            (Compiler'emitLowLevel-3 res, gen, suites)
+            (LIRPhase'''run-3 (LIRGenerationPhase'new-0), res, (LIRGenerationContext'new-3 gen, graph, schedule))
+            (Compiler'emitLowLevel-2 res, gen)
         )
     )
 
-    (defn- #_"CompilationResult" Compiler'emitBackEnd-2 [#_"Graph" graph, #_"LIRSuites" suites]
-        (-> (Compiler'emitLIR-2 graph, suites) (Assembler'new-1) (Assembler''assemble-1) (Assembler''finish-1))
-    )
-
-    (defn #_"CompilationResult" Compiler'compileGraph-1 [#_"Graph" graph]
-        (let [
-            graph (Compiler'emitFrontEnd-1 graph)
-        ]
-            (Compiler'emitBackEnd-2 graph, (LIRSuites'new-0))
-        )
+    (defn- #_"CompilationResult" Compiler'emitBackEnd-1 [#_"Graph" graph]
+        (-> graph (Compiler'emitLIR-1) (Assembler'new-1) (Assembler''assemble-1) (Assembler''finish-1))
     )
 
     #_unused
     (defn #_"CompilationResult" Compiler'compileMethod-1 [#_"ResolvedJavaMethod" method]
-        (Compiler'compileGraph-1 (Graph'new-1 method))
+        (-> method (BytecodeParser'parse-1) (Compiler'emitFrontEnd-1) (Compiler'emitBackEnd-1))
     )
 
     ;;;
