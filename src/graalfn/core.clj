@@ -120,7 +120,7 @@
 (import
     [java.io DataInputStream IOException]
     [java.lang.ref Reference]
-    [java.lang.reflect Array Constructor Field Modifier]
+    [java.lang.reflect Array Field Modifier]
     [java.nio ByteBuffer ByteOrder]
     [java.util BitSet Iterator List ListIterator]
 
@@ -142,8 +142,6 @@ InjectedNodeParameter
 Input
 InputType
 InstanceOfSnippets
-MetaspaceOperation
-MetaspaceOperation''opcode-1
 MonitorSnippets
 NewObjectSnippets
 OperandFlag
@@ -154,13 +152,6 @@ Successor
 Temp
 UnsafeLoadSnippets
 Use
-WordFactoryOperation
-WordFactoryOperation''opcode-1
-WordOperation
-WordOperation''condition-1
-WordOperation''node-1
-WordOperation''opcode-1
-WordOperation''rightOperandIsInt-1
 WriteBarrierSnippets
 )
 
@@ -690,8 +681,6 @@ Bytecode'new-3
 BytecodeFrame'AFTER_BCI
 BytecodeFrame'BEFORE_BCI
 BytecodeLookupSwitch'new-2
-BytecodeParser''add-2
-BytecodeParser''addPush-3
 BytecodeParser''append-2
 BytecodeParser''push-3
 BytecodeParser'parse-1
@@ -2077,7 +2066,6 @@ MetaReflection'lookupJavaType-1c
 MetaReflection'lookupJavaType-1j
 MetaspaceConstant''asResolvedJavaType-1
 MetaspaceConstant'new-2
-MetaspaceOpcode'SET
 MethodCallOp'new-4
 MethodCallTargetNode''invoke-1
 MethodCallTargetNode''isStatic-1
@@ -2282,7 +2270,6 @@ PiNode'new-2
 PiNode'new-3
 Placeholder'new-1
 PlaceholderStamp'SINGLETON
-PointerCastNode'new-2
 PointerCompressionOp''getBaseRegister-1
 PointerCompressionOp''getShift-1
 PointerCompressionOp''move-3
@@ -2460,8 +2447,6 @@ SignedRemNode'new-2
 Signedness'SET
 SlotSize'SET
 SnippetAnchorNode'new-0
-SnippetReflection'asObject-2c
-SnippetReflection'asObject-2t
 SpillRegistersNode'new-0
 SpillRegistersOp'new-0
 SpillState'ALWAYS_IN_MEMORY
@@ -2684,160 +2669,11 @@ VariableMap''remove-2
 VariableMap'new-0
 VirtualStackSlot'new-2
 VoidStamp'instance
-Word''aboveOrEqual-2i
-Word''aboveOrEqual-2w
-Word''aboveThan-2i
-Word''aboveThan-2w
-Word''add-2i
-Word''add-2w
-Word''and-2i
-Word''and-2w
-Word''belowOrEqual-2i
-Word''belowOrEqual-2w
-Word''belowThan-2i
-Word''belowThan-2w
-Word''compareAndSwapInt-5
-Word''compareAndSwapLong-5
-Word''compareAndSwapObject-5
-Word''compareAndSwapWord-5
-Word''equal-2i
-Word''equal-2w
-Word''greaterOrEqual-2i
-Word''greaterOrEqual-2w
-Word''greaterThan-2i
-Word''greaterThan-2w
-Word''initializeLong-4i
-Word''initializeLong-4w
-Word''isNonNull-1
-Word''isNull-1
-Word''klassPointerAsWord-1
-Word''klassPointerIsNull-1
-Word''klassPointersEqual-2
-Word''klassPointersNotEqual-2
-Word''lessOrEqual-2i
-Word''lessOrEqual-2w
-Word''lessThan-2i
-Word''lessThan-2w
-Word''logicCompareAndSwapInt-5i
-Word''logicCompareAndSwapInt-5w
-Word''logicCompareAndSwapLong-5i
-Word''logicCompareAndSwapLong-5w
-Word''logicCompareAndSwapObject-5i
-Word''logicCompareAndSwapObject-5w
-Word''logicCompareAndSwapWord-5
-Word''multiply-2i
-Word''multiply-2w
-Word''not-1
-Word''notEqual-2i
-Word''notEqual-2w
-Word''or-2i
-Word''or-2w
-Word''rawValue-1
-Word''readByte-2i
-Word''readByte-2w
-Word''readByte-3i
-Word''readByte-3w
-Word''readChar-2i
-Word''readChar-2w
-Word''readChar-3i
-Word''readChar-3w
-Word''readInt-2i
-Word''readInt-2w
-Word''readInt-3i
-Word''readInt-3w
-Word''readKlassPointer-3
-Word''readLong-2i
-Word''readLong-2w
-Word''readLong-3i
-Word''readLong-3w
-Word''readObject-2
-Word''readObject-3ib
-Word''readObject-3il
-Word''readObject-3w
-Word''readShort-2i
-Word''readShort-2w
-Word''readShort-3i
-Word''readShort-3w
-Word''readWord-2i
-Word''readWord-2w
-Word''readWord-3i
-Word''readWord-3w
-Word''shiftLeft-2i
-Word''shiftLeft-2w
-Word''signedDivide-2i
-Word''signedDivide-2w
-Word''signedRemainder-2i
-Word''signedRemainder-2w
-Word''signedShiftRight-2i
-Word''signedShiftRight-2w
-Word''subtract-2i
-Word''subtract-2w
-Word''toObject-1
-Word''toObjectNonNull-1
-Word''unbox-1
-Word''unsignedDivide-2i
-Word''unsignedDivide-2w
-Word''unsignedRemainder-2i
-Word''unsignedRemainder-2w
-Word''unsignedShiftRight-2i
-Word''unsignedShiftRight-2w
-Word''writeByte-3i
-Word''writeByte-3w
-Word''writeByte-4i
-Word''writeByte-4w
-Word''writeChar-3i
-Word''writeChar-3w
-Word''writeChar-4i
-Word''writeChar-4w
-Word''writeInt-3i
-Word''writeInt-3w
-Word''writeInt-4i
-Word''writeInt-4w
-Word''writeKlassPointer-4
-Word''writeLong-3i
-Word''writeLong-3w
-Word''writeLong-4i
-Word''writeLong-4w
-Word''writeObject-3
-Word''writeObject-4
-Word''writeShort-3i
-Word''writeShort-3w
-Word''writeShort-4i
-Word''writeShort-4w
-Word''writeWord-3i
-Word''writeWord-3w
-Word''writeWord-4i
-Word''writeWord-4w
-Word''xor-2i
-Word''xor-2w
-Word'box-1
-Word'fromAddress-1
-Word'klassPointerFromWord-1
-Word'objectToTrackedPointer-1
-WordCastNode'addressToWord-2
-WordCastNode'new-2
-WordCastNode'objectToWord-2
-WordCastNode'wordToObject-2
-WordCastNode'wordToObjectNonNull-2
-WordFactory'nullPointer-0
-WordFactory'signed-1i
-WordFactory'signed-1l
-WordFactory'unsigned-1i
-WordFactory'unsigned-1l
-WordFactory'zero-0
-WordFactoryOpcode'SET
-WordOpcode'SET
-WordOperationPlugin'fromSigned-2
-WordOperationPlugin'fromUnsigned-2
-WordOperationPlugin'makeAddress-3
-WordOperationPlugin'new-0
-WordOperationPlugin'toUnsigned-3
 WordSize'inBytes-1
 WordTypes'asKind-1
 WordTypes'getWordStamp-1
 WordTypes'isWord-1j
 WordTypes'isWord-1v
-WordTypes'isWordOperation-1
 WordTypes'klassPointer
 WordTypes'word
 WriteBarrier'new-0
@@ -2877,34 +2713,13 @@ ZeroExtendNode'new-4
  ; {@linkplain Stamp#javaType type} of the injected stamp is the return type of the annotated
  ; method (which cannot be {@code void}).
  ;;
-(§ annotation InjectedNodeParameter
-)
-
-(§ annotation MetaspaceOperation
-    (§ value #_"MetaspaceOpcode" opcode nil)
+(§ annotation InjectedNodeParameter
 )
 
 (§ annotation Use   (§ value #_"[OperandFlag]" value :OperandFlag'REG))
 (§ annotation Alive (§ value #_"[OperandFlag]" value :OperandFlag'REG))
 (§ annotation Temp  (§ value #_"[OperandFlag]" value :OperandFlag'REG))
 (§ annotation Def   (§ value #_"[OperandFlag]" value :OperandFlag'REG))
-
-;;;
- ; Links a method to a canonical operation represented by a WordFactoryOpcode val.
- ;;
-(§ annotation WordFactoryOperation
-    (§ value #_"WordFactoryOpcode" WordFactoryOperation''opcode-1)
-)
-
-;;;
- ; Links a method to a canonical operation represented by a WordOpcode val.
- ;;
-(§ annotation WordOperation
-    (§ value #_"Class<? implements ValueNode>" WordOperation''node-1 ValueNode'iface)
-    (§ value #_"boolean" WordOperation''rightOperandIsInt-1 false)
-    (§ value #_"WordOpcode" WordOperation''opcode-1 :WordOpcode'NODE_CLASS)
-    (§ value #_"Condition" WordOperation''condition-1 Condition'EQ)
-)
 
 (defp AMD64Address)
 (defp AMD64AddressNode)
@@ -4330,7 +4145,6 @@ ZeroExtendNode'new-4
 (defp Placeholder)
 
 (defp PlaceholderStamp)
-(defp PointerCastNode)
 (defp PointerCompressionOp)
 (defp PointerEqualsNode)
 (defp PointerEqualsOp)
@@ -5086,9 +4900,6 @@ ZeroExtendNode'new-4
 (defp VariableMap)
 (defp VirtualStackSlot)
 (defp VoidStamp)
-(defp Word)
-(defp WordCastNode)
-(defp WordOperationPlugin)
 (defp WriteBarrier)
 (defp WriteBarrierTemplates)
 (defp WriteNode)
@@ -5975,6 +5786,7 @@ ZeroExtendNode'new-4
      ;         {@link ResolvedJavaType#isInstance(JavaConstant) instance of} {@code type}
      ;         otherwise {@code null}
      ;;
+    #_unused
     (defn #_"Object" ObjectConstant''asObject-2c [#_"ObjectConstant" this, #_"Class" type]
         (when (#_"Class" .isInstance type, (:object this))
             (#_"Class" .cast type, (:object this))
@@ -5991,6 +5803,7 @@ ZeroExtendNode'new-4
      ;         {@link ResolvedJavaType#isInstance(JavaConstant) instance of} {@code type}
      ;         otherwise {@code null}
      ;;
+    #_unused
     (defn #_"Object" ObjectConstant''asObject-2t [#_"ObjectConstant" this, #_"ResolvedJavaType" type]
         (when (ResolvedJavaType'''isInstance-2 type, this)
             (:object this)
@@ -7727,56 +7540,14 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Reflection operations on values represented as constants for the processing of snippets.
- ; Snippets need a direct access to the value of object constants, which is not allowed in
- ; other parts of Graal to enforce compiler-VM separation.
- ;
- ; This interface must not be used in Graal code that is not related to snippet processing.
- ;;
-(value-ns SnippetReflection
-    ;;;
-     ; Gets the object reference a given constant represents if it is of a given type. The constant
-     ; must have kind JavaKind#Object.
-     ;
-     ; @param type the expected type of the object represented by {@code constant}. If the object is required
-     ;            to be of this type, then wrap the call to this method in Objects#requireNonNull(Object).
-     ; @param constant an object constant
-     ; @return the object value represented by {@code constant} if it is an
-     ;         {@link ResolvedJavaType#isInstance(JavaConstant) instance of} {@code type} otherwise nil
-     ;;
-    #_unused
-    (defn #_"Object" SnippetReflection'asObject-2t [#_"ResolvedJavaType" type, #_"JavaConstant" constant]
-        (when-not (JavaConstant'''isNull-1 constant)
-            (ObjectConstant''asObject-2t constant, type)
-        )
-    )
-
-    ;;;
-     ; Gets the object reference a given constant represents if it is of a given type. The constant
-     ; must have kind JavaKind#Object.
-     ;
-     ; @param type the expected type of the object represented by {@code constant}. If the object is required
-     ;            to be of this type, then wrap the call to this method in Objects#requireNonNull(Object).
-     ; @param constant an object constant
-     ; @return the object value represented by {@code constant} cast to {@code type} if it is an
-     ;         {@link Class#isInstance(Object) instance of} {@code type} otherwise nil
-     ;;
-    (defn #_"<T> T" SnippetReflection'asObject-2c [#_"Class<T>" type, #_"JavaConstant" constant]
-        (when-not (JavaConstant'''isNull-1 constant)
-            (ObjectConstant''asObject-2c constant, type)
-        )
-    )
-)
-
-;;;
  ; A collection of methods used in HotSpot snippets, substitutions and stubs.
  ;;
 (value-ns ReplacementsUtil
-    (defn #_"Word" ReplacementsUtil'readTlabTop-1 [#_"Word" thread] (Word''readWord-3i thread, HotSpot'threadTlabTopOffset, NamedLocationIdentity'TLAB_TOP))
-    (defn #_"Word" ReplacementsUtil'readTlabEnd-1 [#_"Word" thread] (Word''readWord-3i thread, HotSpot'threadTlabEndOffset, NamedLocationIdentity'TLAB_END))
+    (defn #_"Word" ReplacementsUtil'readTlabTop-1 [#_"Word" thread] (ß Word''readWord-3i thread, HotSpot'threadTlabTopOffset, NamedLocationIdentity'TLAB_TOP))
+    (defn #_"Word" ReplacementsUtil'readTlabEnd-1 [#_"Word" thread] (ß Word''readWord-3i thread, HotSpot'threadTlabEndOffset, NamedLocationIdentity'TLAB_END))
 
-    (defn #_"void" ReplacementsUtil'writeTlabTop-2 [#_"Word" thread, #_"Word" top]
-        (Word''writeWord-4i thread, HotSpot'threadTlabTopOffset, top, NamedLocationIdentity'TLAB_TOP)
+    (defn #_"void" ReplacementsUtil'writeTlabTop-2 [#_"Word" thread, #_"Word" top]
+        (ß Word''writeWord-4i thread, HotSpot'threadTlabTopOffset, top, NamedLocationIdentity'TLAB_TOP)
         nil
     )
 
@@ -7785,11 +7556,11 @@ ZeroExtendNode'new-4
      ;
      ; @return the pending exception, or nil if there was none
      ;;
-    (defn #_"Object" ReplacementsUtil'clearPendingException-1 [#_"Word" thread]
+    (defn #_"Object" ReplacementsUtil'clearPendingException-1 [#_"Word" thread]
         (let [
-            #_"Object" result (Word''readObject-3il thread, HotSpot'pendingExceptionOffset, NamedLocationIdentity'PENDING_EXCEPTION)
+            #_"Object" result (ß Word''readObject-3il thread, HotSpot'pendingExceptionOffset, NamedLocationIdentity'PENDING_EXCEPTION)
         ]
-            (Word''writeObject-4 thread, HotSpot'pendingExceptionOffset, nil, NamedLocationIdentity'PENDING_EXCEPTION)
+            (ß Word''writeObject-4 thread, HotSpot'pendingExceptionOffset, nil, NamedLocationIdentity'PENDING_EXCEPTION)
             result
         )
     )
@@ -7800,16 +7571,16 @@ ZeroExtendNode'new-4
      ; @return true if there was a pending deoptimization
      ;;
     #_unused
-    (defn #_"int" ReplacementsUtil'readPendingDeoptimization-1 [#_"Word" thread]
-        (Word''readInt-3i thread, HotSpot'pendingDeoptimizationOffset, NamedLocationIdentity'PENDING_DEOPTIMIZATION)
+    (defn #_"int" ReplacementsUtil'readPendingDeoptimization-1 [#_"Word" thread]
+        (ß Word''readInt-3i thread, HotSpot'pendingDeoptimizationOffset, NamedLocationIdentity'PENDING_DEOPTIMIZATION)
     )
 
     ;;;
      ; Writes the pending deoptimization value for the given thread.
      ;;
     #_unused
-    (defn #_"void" ReplacementsUtil'writePendingDeoptimization-2 [#_"Word" thread, #_"int" value]
-        (Word''writeInt-4i thread, HotSpot'pendingDeoptimizationOffset, value, NamedLocationIdentity'PENDING_DEOPTIMIZATION)
+    (defn #_"void" ReplacementsUtil'writePendingDeoptimization-2 [#_"Word" thread, #_"int" value]
+        (ß Word''writeInt-4i thread, HotSpot'pendingDeoptimizationOffset, value, NamedLocationIdentity'PENDING_DEOPTIMIZATION)
         nil
     )
 
@@ -7818,11 +7589,11 @@ ZeroExtendNode'new-4
      ;
      ; @return the object that was in the thread local
      ;;
-    (defn #_"Object" ReplacementsUtil'getAndClearObjectResult-1 [#_"Word" thread]
+    (defn #_"Object" ReplacementsUtil'getAndClearObjectResult-1 [#_"Word" thread]
         (let [
-            #_"Object" result (Word''readObject-3il thread, HotSpot'objectResultOffset, NamedLocationIdentity'OBJECT_RESULT)
+            #_"Object" result (ß Word''readObject-3il thread, HotSpot'objectResultOffset, NamedLocationIdentity'OBJECT_RESULT)
         ]
-            (Word''writeObject-4 thread, HotSpot'objectResultOffset, nil, NamedLocationIdentity'OBJECT_RESULT)
+            (ß Word''writeObject-4 thread, HotSpot'objectResultOffset, nil, NamedLocationIdentity'OBJECT_RESULT)
             result
         )
     )
@@ -7835,7 +7606,7 @@ ZeroExtendNode'new-4
         (LoadHubNode'loadHubIntrinsic-1 object)
     )
 
-    (defn #_"Word" ReplacementsUtil'loadWordFromObject-2 [#_"Object" object, #_"int" offset]
+    (defn #_"Word" ReplacementsUtil'loadWordFromObject-2 [#_"Object" object, #_"int" offset]
         (RawLoadNode'loadWordFromObjectIntrinsic-4 object, offset, LocationIdentity'ANY, :JavaKind'Long)
     )
 
@@ -7845,7 +7616,7 @@ ZeroExtendNode'new-4
      ; @param register a register which must not be available to the register allocator
      ; @return the value of {@code register} as a word
      ;;
-    (defn #_"Word" ReplacementsUtil'registerAsWord-1 [#_"Register" register]
+    (defn #_"Word" ReplacementsUtil'registerAsWord-1 [#_"Register" register]
         (ReadRegisterNode'registerAsWord-3 register, true, false)
     )
 
@@ -7869,7 +7640,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"KlassPointer" objectHub (LoadHubNode'loadHubIntrinsic-1 (PiNode'piCastNonNull-2 object, (SnippetAnchorNode'anchor-0)))
             ]
-                (if (Word''klassPointersNotEqual-2 objectHub, exactHub)
+                (if (ß Word''klassPointersNotEqual-2 objectHub, exactHub)
                     falseValue
                     trueValue
                 )
@@ -7885,7 +7656,7 @@ ZeroExtendNode'new-4
             (let [
                 #_"KlassPointer" objectHub (LoadHubNode'loadHubIntrinsic-1 (PiNode'piCastNonNull-2 object, (SnippetAnchorNode'anchor-0)))
             ]
-                (if (Word''klassPointersNotEqual-2 (Word''readKlassPointer-3 objectHub, superCheckOffset, NamedLocationIdentity'PRIMARY_SUPERS), hub)
+                (if (ß Word''klassPointersNotEqual-2 (ß Word''readKlassPointer-3 objectHub, superCheckOffset, NamedLocationIdentity'PRIMARY_SUPERS), hub)
                     falseValue
                     trueValue
                 )
@@ -7918,7 +7689,7 @@ ZeroExtendNode'new-4
                 #_"KlassPointer" objectHub (LoadHubNode'loadHubIntrinsic-1 (PiNode'piCastNonNull-2 object, (SnippetAnchorNode'anchor-0)))
             ]
                 ;; The hub of a primitive type can be nil => always return false in this case.
-                (if (and (not (Word''klassPointerIsNull-1 hub)) (TypeCheckSnippetUtils'checkUnknownSubType-2 hub, objectHub))
+                (if (and (not (ß Word''klassPointerIsNull-1 hub)) (TypeCheckSnippetUtils'checkUnknownSubType-2 hub, objectHub))
                     trueValue
                     falseValue
                 )
@@ -8004,18 +7775,18 @@ ZeroExtendNode'new-4
  ; appropriately to comply with the layouts above.
  ;;
 (value-ns MonitorSnippets (§ implements Snippets)
-    (defn- #_"boolean" MonitorSnippets'tryEnterBiased-4 [#_"Object" object, #_"KlassPointer" hub, #_"Word" lock, #_"Word" mark]
+    (defn- #_"boolean" MonitorSnippets'tryEnterBiased-4 [#_"Object" object, #_"KlassPointer" hub, #_"Word" lock, #_"Word" mark]
         ;; See whether the lock is currently biased toward our thread and whether the epoch is still valid.
         ;; Note that the runtime guarantees sufficient alignment of JavaThread pointers to allow age to be placed into low bits.
         (let [
-            #_"Word" biasableLockBits (Word''and-2i mark, HotSpot'biasedLockMaskInPlace)
+            #_"Word" biasableLockBits (ß Word''and-2i mark, HotSpot'biasedLockMaskInPlace)
             ;; Check whether the bias pattern is present in the object's mark word and the bias owner and the epoch are both still current.
-            #_"Word" prototypeMarkWord (Word''readWord-3i hub, HotSpot'prototypeMarkWordOffset, NamedLocationIdentity'PROTOTYPE_MARK_WORD)
-            #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
-            #_"Word" tmp (Word''and-2i (Word''xor-2w (Word''or-2w prototypeMarkWord, thread), mark), (bit-not HotSpot'ageMaskInPlace))
+            #_"Word" prototypeMarkWord (ß Word''readWord-3i hub, HotSpot'prototypeMarkWordOffset, NamedLocationIdentity'PROTOTYPE_MARK_WORD)
+            #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
+            #_"Word" tmp (ß Word''and-2i (ß Word''xor-2w (ß Word''or-2w prototypeMarkWord, thread), mark), (bit-not HotSpot'ageMaskInPlace))
         ]
             (or
-                (and (Word''equal-2i tmp, 0)
+                (and (ß Word''equal-2i tmp, 0)
                     (do
                         ;; object is already biased to current thread -> done
                         (FastAcquireBiasedLockNode'mark-1 object)
@@ -8024,9 +7795,9 @@ ZeroExtendNode'new-4
                 )
 
                 ;; now check to see whether biasing is enabled for this object ;; => biasing not enabled -> fall through to lightweight locking
-                (and (Word''equal-2w biasableLockBits, (WordFactory'unsigned-1i HotSpot'biasedLockPattern))
+                (and (ß Word''equal-2w biasableLockBits, (ß WordFactory'unsigned-1i HotSpot'biasedLockPattern))
                     (let [
-                        #_"Word" objectPointer (Word'objectToTrackedPointer-1 object)
+                        #_"Word" objectPointer (ß Word'objectToTrackedPointer-1 object)
                     ]
                         ;; At this point we know that the mark word has the bias pattern and that we are not the bias owner in the
                         ;; current epoch. We need to figure out more details about the state of the mark word in order to know what
@@ -8034,23 +7805,23 @@ ZeroExtendNode'new-4
 
                         ;; If the low three bits in the xor result aren't clear, that means the prototype header is no longer biasable
                         ;; and we have to revoke the bias on this object.
-                        (if (Word''equal-2i (Word''and-2i tmp, HotSpot'biasedLockMaskInPlace), 0)
+                        (if (ß Word''equal-2i (ß Word''and-2i tmp, HotSpot'biasedLockMaskInPlace), 0)
                             (or
                                 ;; Biasing is still enabled for object's type. See whether the epoch of the current bias is still valid,
                                 ;; meaning that the epoch bits of the mark word are equal to the epoch bits of the prototype mark word.
                                 ;; (Note that the prototype mark word's epoch bits only change at a safepoint.) If not, attempt to rebias
                                 ;; the object toward the current thread. Note that we must be absolutely sure that the current epoch is
                                 ;; invalid in order to do this, because otherwise the manipulations it performs on the mark word are illegal.
-                                (if (Word''equal-2i (Word''and-2i tmp, HotSpot'epochMaskInPlace), 0)
+                                (if (ß Word''equal-2i (ß Word''and-2i tmp, HotSpot'epochMaskInPlace), 0)
                                     ;; The epoch of the current bias is still valid but we know nothing about the owner, it might be
                                     ;; set or it might be clear. Try to acquire the bias of the object using an atomic operation. If
                                     ;; this fails we will go in to the runtime to revoke the object's bias. Note that we first construct
                                     ;; the presumed unbiased header so we don't accidentally blow away another thread's valid bias.
                                     (let [
-                                        #_"Word" unbiasedMark (Word''and-2i mark, (| HotSpot'biasedLockMaskInPlace HotSpot'ageMaskInPlace HotSpot'epochMaskInPlace))
-                                        #_"Word" biasedMark (Word''or-2w unbiasedMark, thread)
+                                        #_"Word" unbiasedMark (ß Word''and-2i mark, (| HotSpot'biasedLockMaskInPlace HotSpot'ageMaskInPlace HotSpot'epochMaskInPlace))
+                                        #_"Word" biasedMark (ß Word''or-2w unbiasedMark, thread)
                                     ]
-                                        (and (Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, unbiasedMark, biasedMark, NamedLocationIdentity'MARK_WORD)
+                                        (and (ß Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, unbiasedMark, biasedMark, NamedLocationIdentity'MARK_WORD)
                                             ;; object is now biased to current thread -> done
                                             true
                                         )
@@ -8062,9 +7833,9 @@ ZeroExtendNode'new-4
                                     ;; value as the comparison value when doing the CAS to acquire the bias in the current epoch. In
                                     ;; other words, we allow transfer of the bias from one thread to another directly in this situation.
                                     (let [
-                                        #_"Word" biasedMark (Word''or-2w prototypeMarkWord, thread)
+                                        #_"Word" biasedMark (ß Word''or-2w prototypeMarkWord, thread)
                                     ]
-                                        (and (Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, mark, biasedMark, NamedLocationIdentity'MARK_WORD)
+                                        (and (ß Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, mark, biasedMark, NamedLocationIdentity'MARK_WORD)
                                             ;; object is now biased to current thread -> done
                                             true
                                         )
@@ -8088,7 +7859,7 @@ ZeroExtendNode'new-4
                             ;; CAS fails, it means that another thread raced us for the privilege of revoking the bias of this
                             ;; particular object, so it's okay to continue in the normal locking code.
                             (do
-                                (Word''compareAndSwapWord-5 objectPointer, HotSpot'markOffset, mark, prototypeMarkWord, NamedLocationIdentity'MARK_WORD)
+                                (ß Word''compareAndSwapWord-5 objectPointer, HotSpot'markOffset, mark, prototypeMarkWord, NamedLocationIdentity'MARK_WORD)
                                 ;; Fall through to the normal CAS-based lock, because no matter what the result of the above CAS,
                                 ;; some thread must have succeeded in removing the bias bit from the object's header.
                                 false
@@ -8104,18 +7875,18 @@ ZeroExtendNode'new-4
         (and GraalOptions'simpleFastInflatedLocking (<= 0 HotSpot'monitorMask) (<= 0 HotSpot'objectMonitorOwnerOffset))
     )
 
-    (defn- #_"boolean" MonitorSnippets'tryEnterInflated-3 [#_"Object" object, #_"Word" lock, #_"Word" mark]
+    (defn- #_"boolean" MonitorSnippets'tryEnterInflated-3 [#_"Object" object, #_"Word" lock, #_"Word" mark]
         ;; write non-zero value to lock slot
-        (Word''writeWord-4i lock, HotSpot'lockDisplacedMarkOffset, lock, NamedLocationIdentity'DISPLACED_MARK_WORD)
+        (ß Word''writeWord-4i lock, HotSpot'lockDisplacedMarkOffset, lock, NamedLocationIdentity'DISPLACED_MARK_WORD)
         ;; mark is a pointer to the ObjectMonitor + monitorMask
         (let [
-            #_"Word" monitor (Word''subtract-2i mark, HotSpot'monitorMask)
-            #_"Word" owner (Word''readWord-3i monitor, HotSpot'objectMonitorOwnerOffset, NamedLocationIdentity'OBJECT_MONITOR_OWNER)
-            #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
+            #_"Word" monitor (ß Word''subtract-2i mark, HotSpot'monitorMask)
+            #_"Word" owner (ß Word''readWord-3i monitor, HotSpot'objectMonitorOwnerOffset, NamedLocationIdentity'OBJECT_MONITOR_OWNER)
+            #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
         ]
             ;; appears being unlocked when owner is 0
-            (and (Word''equal-2i owner, 0)
-                 (Word''logicCompareAndSwapWord-5 monitor, HotSpot'objectMonitorOwnerOffset, owner, thread, NamedLocationIdentity'OBJECT_MONITOR_OWNER)
+            (and (ß Word''equal-2i owner, 0)
+                 (ß Word''logicCompareAndSwapWord-5 monitor, HotSpot'objectMonitorOwnerOffset, owner, thread, NamedLocationIdentity'OBJECT_MONITOR_OWNER)
             )
         )
     )
@@ -8123,31 +7894,31 @@ ZeroExtendNode'new-4
     (§ snippet! #_"void" #_"MonitorSnippets" "monitorenter" [#_"Object" object, #_"KlassPointer" hub, #_"int" lockDepth]
         ;; load the mark word - this includes a nil-check on object
         (let [
-            #_"Word" mark (ReplacementsUtil'loadWordFromObject-2 object, HotSpot'markOffset)
-            #_"Word" lock (BeginLockScopeNode'beginLockScope-1 lockDepth)
+            #_"Word" mark (ReplacementsUtil'loadWordFromObject-2 object, HotSpot'markOffset)
+            #_"Word" lock (BeginLockScopeNode'beginLockScope-1 lockDepth)
         ]
             (when-not (and HotSpot'useBiasedLocking (MonitorSnippets'tryEnterBiased-4 object, hub, lock, mark))
                 ;; not biased, fall-through
                 (or
-                    (if (and (MonitorSnippets'inlineFastLockSupported-0) (Word''notEqual-2i (Word''and-2i mark, HotSpot'monitorMask), 0))
+                    (if (and (MonitorSnippets'inlineFastLockSupported-0) (ß Word''notEqual-2i (ß Word''and-2i mark, HotSpot'monitorMask), 0))
                         ;; inflated case
                         (when (MonitorSnippets'tryEnterInflated-3 object, lock, mark)
                             :done
                         )
                         ;; create the unlocked mark word pattern
                         (let [
-                            #_"Word" unlockedMark (Word''or-2i mark, HotSpot'unlockedMask)
+                            #_"Word" unlockedMark (ß Word''or-2i mark, HotSpot'unlockedMask)
                         ]
                             ;; copy this unlocked mark word into the lock slot on the stack
-                            (Word''writeWord-4i lock, HotSpot'lockDisplacedMarkOffset, unlockedMark, NamedLocationIdentity'DISPLACED_MARK_WORD)
+                            (ß Word''writeWord-4i lock, HotSpot'lockDisplacedMarkOffset, unlockedMark, NamedLocationIdentity'DISPLACED_MARK_WORD)
                             ;; make sure previous store does not float below compareAndSwap
                             (MembarNode'memoryBarrier-1 MemoryBarriers'STORE_STORE)
                             ;; Test if the object's mark word is unlocked, and if so, store the (address of) the lock slot into the object's mark word.
                             (let [
-                                #_"Word" objectPointer (Word'objectToTrackedPointer-1 object)
-                                #_"Word" currentMark (Word''compareAndSwapWord-5 objectPointer, HotSpot'markOffset, unlockedMark, lock, NamedLocationIdentity'MARK_WORD)
+                                #_"Word" objectPointer (ß Word'objectToTrackedPointer-1 object)
+                                #_"Word" currentMark (ß Word''compareAndSwapWord-5 objectPointer, HotSpot'markOffset, unlockedMark, lock, NamedLocationIdentity'MARK_WORD)
                             ]
-                                (if (Word''equal-2w currentMark, unlockedMark)
+                                (if (ß Word''equal-2w currentMark, unlockedMark)
                                     (do
                                         (AcquiredCASLockNode'mark-1 object)
                                         :done
@@ -8168,12 +7939,12 @@ ZeroExtendNode'new-4
                                     ;; assuming both the stack pointer and page_size have their least
                                     ;; significant 2 bits cleared and page_size is a power of 2
                                     (let [
-                                        #_"Word" alignedMask (WordFactory'unsigned-1i (dec (WordSize'inBytes-1 AMD64'wordSize)))
-                                        #_"Word" stackPointer (Word''add-2i (ReplacementsUtil'registerAsWord-1 HotSpot'stackPointerRegister), HotSpot'stackBias)
+                                        #_"Word" alignedMask (ß WordFactory'unsigned-1i (dec (WordSize'inBytes-1 AMD64'wordSize)))
+                                        #_"Word" stackPointer (ß Word''add-2i (ReplacementsUtil'registerAsWord-1 HotSpot'stackPointerRegister), HotSpot'stackBias)
                                     ]
-                                        (when (Word''equal-2i (Word''and-2w (Word''subtract-2w currentMark, stackPointer), (Word''subtract-2i alignedMask, (.pageSize HotSpot'unsafe))), 0)
+                                        (when (ß Word''equal-2i (ß Word''and-2w (ß Word''subtract-2w currentMark, stackPointer), (ß Word''subtract-2i alignedMask, (.pageSize HotSpot'unsafe))), 0)
                                             ;; recursively locked => write 0 to the lock slot
-                                            (Word''writeWord-4i lock, HotSpot'lockDisplacedMarkOffset, (WordFactory'zero-0), NamedLocationIdentity'DISPLACED_MARK_WORD)
+                                            (ß Word''writeWord-4i lock, HotSpot'lockDisplacedMarkOffset, (ß WordFactory'zero-0), NamedLocationIdentity'DISPLACED_MARK_WORD)
                                             :done
                                         )
                                     )
@@ -8183,7 +7954,7 @@ ZeroExtendNode'new-4
                     )
                     ;; slow-path runtime-call
                     (let [
-                        #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
+                        #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
                     ]
                         (StubForeignCallNode'monitorenter-4 ForeignCallDescriptor'MONITORENTER, thread, object, lock)
                         (when (some? (ReplacementsUtil'clearPendingException-1 thread))
@@ -8202,7 +7973,7 @@ ZeroExtendNode'new-4
     (§ snippet! #_"void" #_"MonitorSnippets" "monitorenterStub" [#_"Object" object, #_"int" lockDepth]
         (when (some? object) => (DeoptimizeNode'deopt-2 :DeoptimizationAction'InvalidateReprofile, :DeoptimizationReason'NullCheckException)
             (let [
-                #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
+                #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
             ]
                 ;; BeginLockScope nodes do not read from object, so a use of object cannot float about the nil-check above.
                 (StubForeignCallNode'monitorenter-4 ForeignCallDescriptor'MONITORENTER, thread, object, (BeginLockScopeNode'beginLockScope-1 lockDepth))
@@ -8224,26 +7995,26 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn- #_"boolean" MonitorSnippets'tryExitInflated-3 [#_"Object" object, #_"Word" mark, #_"Word" lock]
+    (defn- #_"boolean" MonitorSnippets'tryExitInflated-3 [#_"Object" object, #_"Word" mark, #_"Word" lock]
         (and (MonitorSnippets'inlineFastUnlockSupported-0)
-             (Word''notEqual-2i (Word''and-2i mark, HotSpot'monitorMask), 0)
+             (ß Word''notEqual-2i (ß Word''and-2i mark, HotSpot'monitorMask), 0)
             ;; inflated case: mark is a pointer to the ObjectMonitor + monitorMask
             (let [
-                #_"Word" monitor (Word''subtract-2i mark, HotSpot'monitorMask)
+                #_"Word" monitor (ß Word''subtract-2i mark, HotSpot'monitorMask)
                 #_"int" ownerOffset HotSpot'objectMonitorOwnerOffset
-                #_"Word" owner (Word''readWord-3i monitor, ownerOffset, NamedLocationIdentity'OBJECT_MONITOR_OWNER)
-                #_"Word" recursions (Word''readWord-3i monitor, HotSpot'objectMonitorRecursionsOffset, NamedLocationIdentity'OBJECT_MONITOR_RECURSION)
-                #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
+                #_"Word" owner (ß Word''readWord-3i monitor, ownerOffset, NamedLocationIdentity'OBJECT_MONITOR_OWNER)
+                #_"Word" recursions (ß Word''readWord-3i monitor, HotSpot'objectMonitorRecursionsOffset, NamedLocationIdentity'OBJECT_MONITOR_RECURSION)
+                #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
             ]
                 (or
-                    (when (Word''equal-2i (Word''or-2w (Word''xor-2w owner, thread), recursions), 0) ;; owner == thread && recursions == 0
+                    (when (ß Word''equal-2i (ß Word''or-2w (ß Word''xor-2w owner, thread), recursions), 0) ;; owner == thread && recursions == 0
                         (let [
-                            #_"Word" cxq (Word''readWord-3i monitor, HotSpot'objectMonitorCxqOffset, NamedLocationIdentity'OBJECT_MONITOR_CXQ)
-                            #_"Word" entryList (Word''readWord-3i monitor, HotSpot'objectMonitorEntryListOffset, NamedLocationIdentity'OBJECT_MONITOR_ENTRY_LIST)
+                            #_"Word" cxq (ß Word''readWord-3i monitor, HotSpot'objectMonitorCxqOffset, NamedLocationIdentity'OBJECT_MONITOR_CXQ)
+                            #_"Word" entryList (ß Word''readWord-3i monitor, HotSpot'objectMonitorEntryListOffset, NamedLocationIdentity'OBJECT_MONITOR_ENTRY_LIST)
                         ]
-                            (when (Word''equal-2i (Word''or-2w cxq, entryList), 0) ;; cxq == 0 && entryList == 0: nobody is waiting, success
+                            (when (ß Word''equal-2i (ß Word''or-2w cxq, entryList), 0) ;; cxq == 0 && entryList == 0: nobody is waiting, success
                                 (MembarNode'memoryBarrier-1 (| MemoryBarriers'LOAD_STORE MemoryBarriers'STORE_STORE))
-                                (Word''writeWord-3i monitor, ownerOffset, (WordFactory'zero-0))
+                                (ß Word''writeWord-3i monitor, ownerOffset, (ß WordFactory'zero-0))
                                 :done
                             )
                         )
@@ -8263,25 +8034,25 @@ ZeroExtendNode'new-4
 
     (§ snippet! #_"void" #_"MonitorSnippets" "monitorexit" [#_"Object" object, #_"int" lockDepth]
         (let [
-            #_"Word" mark (ReplacementsUtil'loadWordFromObject-2 object, HotSpot'markOffset)
+            #_"Word" mark (ReplacementsUtil'loadWordFromObject-2 object, HotSpot'markOffset)
         ]
             ;; Check for biased locking unlock case, which is a no-op. Note: we do not have to check the thread ID for two reasons.
             ;; First, the interpreter checks for IllegalMonitorStateException at a higher level.
             ;; Second, if the bias was revoked while we held the lock, the object could not be rebiased toward another thread, so the bias bit would be clear.
-            (when-not (and HotSpot'useBiasedLocking (Word''equal-2w (Word''and-2i mark, HotSpot'biasedLockMaskInPlace), (WordFactory'unsigned-1i HotSpot'biasedLockPattern)))
+            (when-not (and HotSpot'useBiasedLocking (ß Word''equal-2w (ß Word''and-2i mark, HotSpot'biasedLockMaskInPlace), (ß WordFactory'unsigned-1i HotSpot'biasedLockPattern)))
                 (let [
-                    #_"Word" lock (CurrentLockNode'currentLock-1 lockDepth)
-                    #_"Word" displacedMark (Word''readWord-3i lock, HotSpot'lockDisplacedMarkOffset, NamedLocationIdentity'DISPLACED_MARK_WORD)
+                    #_"Word" lock (CurrentLockNode'currentLock-1 lockDepth)
+                    #_"Word" displacedMark (ß Word''readWord-3i lock, HotSpot'lockDisplacedMarkOffset, NamedLocationIdentity'DISPLACED_MARK_WORD)
                 ]
                     ;; => recursive locking, done
-                    (when (and (not (Word''equal-2i displacedMark, 0)) (not (MonitorSnippets'tryExitInflated-3 object, mark, lock)))
+                    (when (and (not (ß Word''equal-2i displacedMark, 0)) (not (MonitorSnippets'tryExitInflated-3 object, mark, lock)))
                         ;; Test if object's mark word is pointing to the displaced mark word, and if so,
                         ;; restore the displaced mark in the object. Otherwise, do unlocking via runtime call.
                         (let [
-                            #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
-                            #_"Word" objectPointer (Word'objectToTrackedPointer-1 object)
+                            #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
+                            #_"Word" objectPointer (ß Word'objectToTrackedPointer-1 object)
                         ]
-                            (when-not (Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, lock, displacedMark, NamedLocationIdentity'MARK_WORD)
+                            (when-not (ß Word''logicCompareAndSwapWord-5 objectPointer, HotSpot'markOffset, lock, displacedMark, NamedLocationIdentity'MARK_WORD)
                                 ;; the object's mark word was not pointing to the displaced header
                                 (StubForeignCallNode'monitorexit-4 ForeignCallDescriptor'MONITOREXIT, thread, object, lock)
                                 (when (some? (ReplacementsUtil'clearPendingException-1 thread))
@@ -8302,8 +8073,8 @@ ZeroExtendNode'new-4
      ;;
     (§ snippet! #_"void" #_"MonitorSnippets" "monitorexitStub" [#_"Object" object, #_"int" lockDepth]
         (let [
-            #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
-            #_"Word" lock (CurrentLockNode'currentLock-1 lockDepth)
+            #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
+            #_"Word" lock (CurrentLockNode'currentLock-1 lockDepth)
         ]
             (StubForeignCallNode'monitorexit-4 ForeignCallDescriptor'MONITOREXIT, thread, object, lock)
             (when (some? (ReplacementsUtil'clearPendingException-1 thread))
@@ -8319,7 +8090,7 @@ ZeroExtendNode'new-4
  ; Snippets used for implementing NEW, ANEWARRAY and NEWARRAY.
  ;;
 (value-ns NewObjectSnippets (§ implements Snippets)
-    (defn- #_"void" NewObjectSnippets'emitPrefetchAllocate-2 [#_"Word" address, #_"boolean" array?]
+    (defn- #_"void" NewObjectSnippets'emitPrefetchAllocate-2 [#_"Word" address, #_"boolean" array?]
         (when (pos? HotSpot'allocatePrefetchStyle)
             ;; Insert a prefetch for each allocation only on the fast-path.
             ;; Generate several prefetch instructions.
@@ -8337,8 +8108,8 @@ ZeroExtendNode'new-4
         nil
     )
 
-    (defn- #_"void" NewObjectSnippets'initializeObjectHeader-3 [#_"Word" memory, #_"Word" markWord, #_"KlassPointer" hub]
-        (Word''writeWord-4i memory, HotSpot'markOffset, markWord, NamedLocationIdentity'MARK_WORD)
+    (defn- #_"void" NewObjectSnippets'initializeObjectHeader-3 [#_"Word" memory, #_"Word" markWord, #_"KlassPointer" hub]
+        (ß Word''writeWord-4i memory, HotSpot'markOffset, markWord, NamedLocationIdentity'MARK_WORD)
         (StoreHubNode'write-2 memory, hub)
         nil
     )
@@ -8353,11 +8124,11 @@ ZeroExtendNode'new-4
      ;;
     (def- #_"int" NewObjectSnippets'MAX_UNROLLED_OBJECT_ZEROING_STORES 8)
 
-    (defn- #_"void" NewObjectSnippets'fillMemory-6 [#_"long" value, #_"int" size, #_"Word" memory, #_"boolean" constantSize, #_"int" offset, #_"boolean" manualUnroll]
+    (defn- #_"void" NewObjectSnippets'fillMemory-6 [#_"long" value, #_"int" size, #_"Word" memory, #_"boolean" constantSize, #_"int" offset, #_"boolean" manualUnroll]
         (let [
             offset
                 (when-not (zero? (& offset 0x7)) => offset
-                    (Word''writeInt-4i memory, offset, (int value), LocationIdentity'INIT)
+                    (ß Word''writeInt-4i memory, offset, (int value), LocationIdentity'INIT)
                     (+ offset 4)
                 )
         ]
@@ -8368,16 +8139,16 @@ ZeroExtendNode'new-4
                     ;; the break statement will trim excess stores.
                     #_explode_loop
                     (loop-when-recur [#_"int" i offset #_"int" n 0] (and (< i size) (< n NewObjectSnippets'MAX_UNROLLED_OBJECT_ZEROING_STORES)) [(+ i 8) (inc n)]
-                        (Word''initializeLong-4i memory, i, value, LocationIdentity'INIT)
+                        (ß Word''initializeLong-4i memory, i, value, LocationIdentity'INIT)
                     )
                 )
-                ;; Use Word instead of int to avoid extension to long in generated code.
+                ;; Use Word instead of int to avoid extension to long in generated code.
                 (do
                     (when (and constantSize (<= (quot (- size offset) 8) NewObjectSnippets'MAX_UNROLLED_OBJECT_ZEROING_STORES))
                         #_explode_loop
                     )
-                    (loop-when-recur [#_"Word" w (WordFactory'signed-1i offset)] (< (Word''rawValue-1 w) size) [(Word''add-2i w, 8)]
-                        (Word''initializeLong-4w memory, w, value, LocationIdentity'INIT)
+                    (loop-when-recur [#_"Word" w (ß WordFactory'signed-1i offset)] (< (ß Word''rawValue-1 w) size) [(ß Word''add-2i w, 8)]
+                        (ß Word''initializeLong-4w memory, w, value, LocationIdentity'INIT)
                     )
                 )
             )
@@ -8394,7 +8165,7 @@ ZeroExtendNode'new-4
      ; @param startOffset offset to begin zeroing. May not be word aligned.
      ; @param manualUnroll maximally unroll zeroing
      ;;
-    (defn- #_"void" NewObjectSnippets'zeroMemory-5 [#_"int" size, #_"Word" memory, #_"boolean" constantSize, #_"int" startOffset, #_"boolean" manualUnroll]
+    (defn- #_"void" NewObjectSnippets'zeroMemory-5 [#_"int" size, #_"Word" memory, #_"boolean" constantSize, #_"int" startOffset, #_"boolean" manualUnroll]
         (NewObjectSnippets'fillMemory-6 0, size, memory, constantSize, startOffset, manualUnroll)
         nil
     )
@@ -8402,29 +8173,29 @@ ZeroExtendNode'new-4
     ;;;
      ; Formats some allocated memory with an object header and zeroes out the rest.
      ;;
-    (defn- #_"Object" NewObjectSnippets'formatObject-6 [#_"KlassPointer" hub, #_"int" size, #_"Word" memory, #_"Word" compileTimePrototypeMarkWord, #_"boolean" fillContents, #_"boolean" constantSize]
+    (defn- #_"Object" NewObjectSnippets'formatObject-6 [#_"KlassPointer" hub, #_"int" size, #_"Word" memory, #_"Word" compileTimePrototypeMarkWord, #_"boolean" fillContents, #_"boolean" constantSize]
         (let [
-            #_"Word" prototypeMarkWord (if HotSpot'useBiasedLocking (Word''readWord-3i hub, HotSpot'prototypeMarkWordOffset, NamedLocationIdentity'PROTOTYPE_MARK_WORD) compileTimePrototypeMarkWord)
+            #_"Word" prototypeMarkWord (if HotSpot'useBiasedLocking (ß Word''readWord-3i hub, HotSpot'prototypeMarkWordOffset, NamedLocationIdentity'PROTOTYPE_MARK_WORD) compileTimePrototypeMarkWord)
         ]
             (NewObjectSnippets'initializeObjectHeader-3 memory, prototypeMarkWord, hub)
             (when fillContents
                 (NewObjectSnippets'zeroMemory-5 size, memory, constantSize, (NewObjectSnippets'instanceHeaderSize-0), false)
             )
             (MembarNode'memoryBarrier-2 MemoryBarriers'STORE_STORE, LocationIdentity'INIT)
-            (Word''toObjectNonNull-1 memory)
+            (ß Word''toObjectNonNull-1 memory)
         )
     )
 
-    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateInstance" [#_"int" size, #_"KlassPointer" hub, #_"Word" prototypeMarkWord]
+    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateInstance" [#_"int" size, #_"KlassPointer" hub, #_"Word" prototypeMarkWord]
         (let [
             #_"Object" object
                 (let [
-                    #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
-                    #_"Word" top (ReplacementsUtil'readTlabTop-1 thread)
-                    #_"Word" end (ReplacementsUtil'readTlabEnd-1 thread)
-                    #_"Word" newTop (Word''add-2i top, size)
+                    #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
+                    #_"Word" top (ReplacementsUtil'readTlabTop-1 thread)
+                    #_"Word" end (ReplacementsUtil'readTlabEnd-1 thread)
+                    #_"Word" newTop (ß Word''add-2i top, size)
                 ]
-                    (if (and HotSpot'useTLAB (Word''belowOrEqual-2w newTop, end))
+                    (if (and HotSpot'useTLAB (ß Word''belowOrEqual-2w newTop, end))
                         (do
                             (ReplacementsUtil'writeTlabTop-2 thread, newTop)
                             (NewObjectSnippets'emitPrefetchAllocate-2 newTop, false)
@@ -8468,15 +8239,15 @@ ZeroExtendNode'new-4
     ;;;
      ; Formats some allocated memory with an object header and zeroes out the rest.
      ;;
-    (defn- #_"Object" NewObjectSnippets'formatArray-8 [#_"KlassPointer" hub, #_"int" allocationSize, #_"int" length, #_"int" headerSize, #_"Word" memory, #_"Word" prototypeMarkWord, #_"boolean" fillContents, #_"boolean" maybeUnroll]
-        (Word''writeInt-4i memory, HotSpot'arrayLengthOffset, length, LocationIdentity'INIT)
+    (defn- #_"Object" NewObjectSnippets'formatArray-8 [#_"KlassPointer" hub, #_"int" allocationSize, #_"int" length, #_"int" headerSize, #_"Word" memory, #_"Word" prototypeMarkWord, #_"boolean" fillContents, #_"boolean" maybeUnroll]
+        (ß Word''writeInt-4i memory, HotSpot'arrayLengthOffset, length, LocationIdentity'INIT)
         ;; store hub last as the concurrent garbage collectors assume length is valid if hub field is not nil
         (NewObjectSnippets'initializeObjectHeader-3 memory, prototypeMarkWord, hub)
         (when fillContents
             (NewObjectSnippets'zeroMemory-5 allocationSize, memory, false, headerSize, maybeUnroll)
         )
         (MembarNode'memoryBarrier-2 MemoryBarriers'STORE_STORE, LocationIdentity'INIT)
-        (Word''toObjectNonNull-1 memory)
+        (ß Word''toObjectNonNull-1 memory)
     )
 
     ;;;
@@ -8484,17 +8255,17 @@ ZeroExtendNode'new-4
      ;;
     (def- #_"int" NewObjectSnippets'MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH 0x00ffffff)
 
-    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateArray" [#_"KlassPointer" hub, #_"int" length, #_"Word" prototypeMarkWord, #_"int" headerSize, #_"int" log2ElementSize, #_"boolean" maybeUnroll]
+    (§ snippet! #_"Object" #_"NewObjectSnippets" "allocateArray" [#_"KlassPointer" hub, #_"int" length, #_"Word" prototypeMarkWord, #_"int" headerSize, #_"int" log2ElementSize, #_"boolean" maybeUnroll]
         (let [
             #_"Object" object
                 (let [
                     #_"int" allocationSize (NewObjectSnippets'arrayAllocationSize-3 length, headerSize, log2ElementSize)
-                    #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
-                    #_"Word" top (ReplacementsUtil'readTlabTop-1 thread)
-                    #_"Word" end (ReplacementsUtil'readTlabEnd-1 thread)
-                    #_"Word" newTop (Word''add-2i top, allocationSize)
+                    #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
+                    #_"Word" top (ReplacementsUtil'readTlabTop-1 thread)
+                    #_"Word" end (ReplacementsUtil'readTlabEnd-1 thread)
+                    #_"Word" newTop (ß Word''add-2i top, allocationSize)
                 ]
-                    (if (and HotSpot'useTLAB (Word''belowOrEqual-2w newTop, end) (UnsignedMath'belowThan-2i length, NewObjectSnippets'MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH))
+                    (if (and HotSpot'useTLAB (ß Word''belowOrEqual-2w newTop, end) (UnsignedMath'belowThan-2i length, NewObjectSnippets'MAX_ARRAY_FAST_PATH_ALLOCATION_LENGTH))
                         (do
                             (ReplacementsUtil'writeTlabTop-2 thread, newTop)
                             (NewObjectSnippets'emitPrefetchAllocate-2 newTop, true)
@@ -8520,21 +8291,21 @@ ZeroExtendNode'new-4
  ; Utilities and common code paths used by the type check snippets.
  ;;
 (value-ns TypeCheckSnippetUtils
-    (defn- #_"KlassPointer" TypeCheckSnippetUtils'loadSecondarySupersElement-2 [#_"Word" metaspaceArray, #_"int" index]
-        (Word'klassPointerFromWord-1 (Word''readWord-3i metaspaceArray, (+ HotSpot'metaspaceArrayBaseOffset (* index (WordSize'inBytes-1 AMD64'wordSize))), NamedLocationIdentity'SECONDARY_SUPERS_ELEMENT))
+    (defn- #_"KlassPointer" TypeCheckSnippetUtils'loadSecondarySupersElement-2 [#_"Word" metaspaceArray, #_"int" index]
+        (ß Word'klassPointerFromWord-1 (ß Word''readWord-3i metaspaceArray, (+ HotSpot'metaspaceArrayBaseOffset (* index (WordSize'inBytes-1 AMD64'wordSize))), NamedLocationIdentity'SECONDARY_SUPERS_ELEMENT))
     )
 
     (defn- #_"boolean" TypeCheckSnippetUtils'checkSelfAndSupers-2 [#_"KlassPointer" t, #_"KlassPointer" s]
         ;; if (T == S) return true
-        (or (Word''klassPointersEqual-2 s, t)
+        (or (ß Word''klassPointersEqual-2 s, t)
             ;; if (S.scan_s_s_array(T)) { S.cache = T; return true; }
             (let [
-                #_"Word" secondarySupers (Word''readWord-3i s, HotSpot'secondarySupersOffset, NamedLocationIdentity'SECONDARY_SUPERS)
-                #_"int" n (Word''readInt-3i secondarySupers, HotSpot'metaspaceArrayLengthOffset, NamedLocationIdentity'METASPACE_ARRAY_LENGTH)
+                #_"Word" secondarySupers (ß Word''readWord-3i s, HotSpot'secondarySupersOffset, NamedLocationIdentity'SECONDARY_SUPERS)
+                #_"int" n (ß Word''readInt-3i secondarySupers, HotSpot'metaspaceArrayLengthOffset, NamedLocationIdentity'METASPACE_ARRAY_LENGTH)
             ]
                 (loop-when [#_"int" i 0] (< i n) => false
-                    (when (Word''klassPointersEqual-2 t, (TypeCheckSnippetUtils'loadSecondarySupersElement-2 secondarySupers, i)) => (recur (inc i))
-                        (Word''writeKlassPointer-4 s, HotSpot'secondarySuperCacheOffset, t, NamedLocationIdentity'SECONDARY_SUPER_CACHE)
+                    (when (ß Word''klassPointersEqual-2 t, (TypeCheckSnippetUtils'loadSecondarySupersElement-2 secondarySupers, i)) => (recur (inc i))
+                        (ß Word''writeKlassPointer-4 s, HotSpot'secondarySuperCacheOffset, t, NamedLocationIdentity'SECONDARY_SUPER_CACHE)
                         true
                     )
                 )
@@ -8544,7 +8315,7 @@ ZeroExtendNode'new-4
 
     (defn #_"boolean" TypeCheckSnippetUtils'checkSecondarySubType-2 [#_"KlassPointer" t, #_"KlassPointer" sNonNull]
         ;; if (S.cache == T) return true
-        (or (Word''klassPointersEqual-2 (Word''readKlassPointer-3 sNonNull, HotSpot'secondarySuperCacheOffset, NamedLocationIdentity'SECONDARY_SUPER_CACHE), t)
+        (or (ß Word''klassPointersEqual-2 (ß Word''readKlassPointer-3 sNonNull, HotSpot'secondarySuperCacheOffset, NamedLocationIdentity'SECONDARY_SUPER_CACHE), t)
             (TypeCheckSnippetUtils'checkSelfAndSupers-2 t, sNonNull)
         )
     )
@@ -8552,10 +8323,10 @@ ZeroExtendNode'new-4
     (defn #_"boolean" TypeCheckSnippetUtils'checkUnknownSubType-2 [#_"KlassPointer" t, #_"KlassPointer" sNonNull]
         ;; int off = T.offset
         (let [
-            #_"int" superCheckOffset (Word''readInt-3i t, HotSpot'superCheckOffsetOffset, NamedLocationIdentity'KLASS_SUPER_CHECK_OFFSET)
+            #_"int" superCheckOffset (ß Word''readInt-3i t, HotSpot'superCheckOffsetOffset, NamedLocationIdentity'KLASS_SUPER_CHECK_OFFSET)
         ]
             ;; if (T = S[off]) return true
-            (or (Word''klassPointersEqual-2 (Word''readKlassPointer-3 sNonNull, superCheckOffset, NamedLocationIdentity'PRIMARY_SUPERS), t)
+            (or (ß Word''klassPointersEqual-2 (ß Word''readKlassPointer-3 sNonNull, superCheckOffset, NamedLocationIdentity'PRIMARY_SUPERS), t)
                 ;; if (off != &cache) return false
                 (and (= superCheckOffset HotSpot'secondarySuperCacheOffset)
                     (TypeCheckSnippetUtils'checkSelfAndSupers-2 t, sNonNull)
@@ -8567,31 +8338,31 @@ ZeroExtendNode'new-4
 
 (value-ns UnsafeLoadSnippets (§ implements Snippets)
     (§ snippet! #_"Object" #_"UnsafeLoadSnippets" "lowerUnsafeLoad" [#_"Object" object, #_"long" offset]
-        (Word''readObject-3ib (Word'objectToTrackedPointer-1 (FixedValueAnchorNode'getObject-1 object)), (int offset), (if (and (instance? Reference object) (= offset ReplacementsUtil'REFERENT_OFFSET)) :BarrierType'PRECISE :BarrierType'NONE))
+        (ß Word''readObject-3ib (ß Word'objectToTrackedPointer-1 (FixedValueAnchorNode'getObject-1 object)), (int offset), (if (and (instance? Reference object) (= offset ReplacementsUtil'REFERENT_OFFSET)) :BarrierType'PRECISE :BarrierType'NONE))
     )
 )
 
 (value-ns WriteBarrierSnippets (§ implements Snippets)
-    (defn- #_"void" WriteBarrierSnippets'serialWriteBarrier-1 [#_"Word" ptr]
+    (defn- #_"void" WriteBarrierSnippets'serialWriteBarrier-1 [#_"Word" ptr]
         (let [
             #_"long" startAddress (VMConfigNode'cardTableAddress-0)
-            #_"Word" base (Word''unsignedShiftRight-2i ptr, HotSpot'cardTableShift)
+            #_"Word" base (ß Word''unsignedShiftRight-2i ptr, HotSpot'cardTableShift)
         ]
             (if (and (= (int startAddress) startAddress) (VMConfigNode'isCardTableAddressConstant-0))
-                (Word''writeByte-4i base, (int startAddress), (byte 0), NamedLocationIdentity'GC_CARD)
-                (Word''writeByte-4w base, (WordFactory'unsigned-1l startAddress), (byte 0), NamedLocationIdentity'GC_CARD)
+                (ß Word''writeByte-4i base, (int startAddress), (byte 0), NamedLocationIdentity'GC_CARD)
+                (ß Word''writeByte-4w base, (ß WordFactory'unsigned-1l startAddress), (byte 0), NamedLocationIdentity'GC_CARD)
             )
         )
         nil
     )
 
     (§ snippet! #_"void" #_"WriteBarrierSnippets" "serialImpreciseWriteBarrier" [#_"Object" object]
-        (WriteBarrierSnippets'serialWriteBarrier-1 (Word'objectToTrackedPointer-1 object))
+        (WriteBarrierSnippets'serialWriteBarrier-1 (ß Word'objectToTrackedPointer-1 object))
         nil
     )
 
     (§ snippet! #_"void" #_"WriteBarrierSnippets" "serialPreciseWriteBarrier" [#_"Address" address]
-        (WriteBarrierSnippets'serialWriteBarrier-1 (Word'fromAddress-1 address))
+        (WriteBarrierSnippets'serialWriteBarrier-1 (ß Word'fromAddress-1 address))
         nil
     )
 
@@ -8600,35 +8371,35 @@ ZeroExtendNode'new-4
             (NullCheckNode'nullCheck-1 address)
         )
         (let [
-            #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
-            #_"byte" markingValue (Word''readByte-2i thread, HotSpot'g1SATBQueueMarkingOffset)
+            #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
+            #_"byte" markingValue (ß Word''readByte-2i thread, HotSpot'g1SATBQueueMarkingOffset)
         ]
             ;; If the concurrent marker is enabled, the barrier is issued.
             (when (not= markingValue (byte 0))
                 ;; If the previous value has to be loaded (before the write), the load is issued.
                 ;; The load is always issued except the cases of CAS and referent field.
                 (let [
-                    #_"Word" previousOop (Word'objectToTrackedPointer-1 (if doLoad (Word''readObject-3ib (Word'fromAddress-1 address), 0, :BarrierType'NONE) (FixedValueAnchorNode'getObject-1 expectedObject)))
+                    #_"Word" previousOop (ß Word'objectToTrackedPointer-1 (if doLoad (ß Word''readObject-3ib (ß Word'fromAddress-1 address), 0, :BarrierType'NONE) (FixedValueAnchorNode'getObject-1 expectedObject)))
                 ]
                     ;; If the previous value is nil the barrier should not be issued.
-                    (when (Word''notEqual-2i previousOop, 0)
+                    (when (ß Word''notEqual-2i previousOop, 0)
                         ;; If the thread-local SATB buffer is full, issue a native call, which will initialize a new one and add the entry.
                         (let [
-                            #_"Word" indexAddress (Word''add-2i thread, HotSpot'g1SATBQueueIndexOffset)
-                            #_"Word" indexValue (Word''readWord-2i indexAddress, 0)
+                            #_"Word" indexAddress (ß Word''add-2i thread, HotSpot'g1SATBQueueIndexOffset)
+                            #_"Word" indexValue (ß Word''readWord-2i indexAddress, 0)
                         ]
-                            (if (Word''notEqual-2i indexValue, 0)
+                            (if (ß Word''notEqual-2i indexValue, 0)
                                 (let [
-                                    #_"Word" bufferAddress (Word''readWord-2i thread, HotSpot'g1SATBQueueBufferOffset)
-                                    #_"Word" nextIndex (Word''subtract-2i indexValue, (WordSize'inBytes-1 AMD64'wordSize))
-                                    #_"Word" logAddress (Word''add-2w bufferAddress, nextIndex)
+                                    #_"Word" bufferAddress (ß Word''readWord-2i thread, HotSpot'g1SATBQueueBufferOffset)
+                                    #_"Word" nextIndex (ß Word''subtract-2i indexValue, (WordSize'inBytes-1 AMD64'wordSize))
+                                    #_"Word" logAddress (ß Word''add-2w bufferAddress, nextIndex)
                                 ]
                                     ;; Log the object to be marked as well as update the SATB's buffer next index.
-                                    (Word''writeWord-4i logAddress, 0, previousOop, NamedLocationIdentity'GC_LOG)
-                                    (Word''writeWord-4i indexAddress, 0, nextIndex, NamedLocationIdentity'GC_INDEX)
+                                    (ß Word''writeWord-4i logAddress, 0, previousOop, NamedLocationIdentity'GC_LOG)
+                                    (ß Word''writeWord-4i indexAddress, 0, nextIndex, NamedLocationIdentity'GC_INDEX)
                                 )
                                 (do
-                                    (StubForeignCallNode'g1PreBarrier-3 ForeignCallDescriptor'G1WBPRECALL, thread, (Word''toObject-1 previousOop))
+                                    (StubForeignCallNode'g1PreBarrier-3 ForeignCallDescriptor'G1WBPRECALL, thread, (ß Word''toObject-1 previousOop))
                                     (when (some? (ReplacementsUtil'clearPendingException-1 thread))
                                         (DeoptimizeCallerNode'deopt-2 :DeoptimizationAction'None, :DeoptimizationReason'RuntimeConstraint)
                                     )
@@ -8644,49 +8415,49 @@ ZeroExtendNode'new-4
 
     (§ snippet! #_"void" #_"WriteBarrierSnippets" "g1PostWriteBarrier" [#_"Address" address, #_"Object" object, #_"Object" value, #_"boolean" precise?]
         (let [
-            #_"Word" oop (if precise? (Word'fromAddress-1 address) (Word'objectToTrackedPointer-1 object))
-            #_"Word" writtenValue (Word'objectToTrackedPointer-1 (FixedValueAnchorNode'getObject-1 value))
+            #_"Word" oop (if precise? (ß Word'fromAddress-1 address) (ß Word'objectToTrackedPointer-1 object))
+            #_"Word" writtenValue (ß Word'objectToTrackedPointer-1 (FixedValueAnchorNode'getObject-1 value))
             ;; The result of the xor reveals whether the installed pointer crosses heap regions.
             ;; In case it does the write barrier has to be issued.
-            #_"Word" xorResult (Word''unsignedShiftRight-2i (Word''xor-2w oop, writtenValue), (VMConfigNode'logOfHeapRegionGrainBytes-0))
+            #_"Word" xorResult (ß Word''unsignedShiftRight-2i (ß Word''xor-2w oop, writtenValue), (VMConfigNode'logOfHeapRegionGrainBytes-0))
             ;; Calculate the address of the card to be enqueued to the thread local card queue.
-            #_"Word" cardBase (Word''unsignedShiftRight-2i oop, HotSpot'cardTableShift)
+            #_"Word" cardBase (ß Word''unsignedShiftRight-2i oop, HotSpot'cardTableShift)
             #_"long" startAddress (VMConfigNode'cardTableAddress-0)
             [cardBase #_"int" displacement]
                 (if (and (= (int startAddress) startAddress) (VMConfigNode'isCardTableAddressConstant-0))
                     [cardBase (int startAddress)]
-                    [(Word''add-2w cardBase, (WordFactory'unsigned-1l startAddress)) 0]
+                    [(ß Word''add-2w cardBase, (ß WordFactory'unsigned-1l startAddress)) 0]
                 )
-            #_"Word" cardAddress (Word''add-2i cardBase, displacement)
+            #_"Word" cardAddress (ß Word''add-2i cardBase, displacement)
         ]
-            (when (and (Word''notEqual-2i xorResult, 0) (Word''notEqual-2i writtenValue, 0))
+            (when (and (ß Word''notEqual-2i xorResult, 0) (ß Word''notEqual-2i writtenValue, 0))
                 ;; If the written value is not nil, continue with the barrier addition.
                 (let [
-                    #_"byte" cardByte (Word''readByte-3i cardAddress, 0, NamedLocationIdentity'GC_CARD)
+                    #_"byte" cardByte (ß Word''readByte-3i cardAddress, 0, NamedLocationIdentity'GC_CARD)
                 ]
                     ;; If the card is already dirty, (hence already enqueued) skip the insertion.
                     (when (not= cardByte HotSpot'g1YoungCardValue)
                         (MembarNode'memoryBarrier-2 MemoryBarriers'STORE_LOAD, NamedLocationIdentity'GC_CARD)
                         (let [
-                            #_"byte" cardByteReload (Word''readByte-3i cardAddress, 0, NamedLocationIdentity'GC_CARD)
+                            #_"byte" cardByteReload (ß Word''readByte-3i cardAddress, 0, NamedLocationIdentity'GC_CARD)
                         ]
                             (when (not= cardByteReload HotSpot'dirtyCardValue)
-                                (Word''writeByte-4i cardAddress, 0, (byte 0), NamedLocationIdentity'GC_CARD)
+                                (ß Word''writeByte-4i cardAddress, 0, (byte 0), NamedLocationIdentity'GC_CARD)
                                 ;; If the thread-local card queue is full, issue a native call, which will initialize a new one and add the card entry.
                                 (let [
-                                    #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
-                                    #_"Word" indexAddress (Word''add-2i thread, HotSpot'g1CardQueueIndexOffset)
-                                    #_"Word" indexValue (Word''readWord-2i thread, HotSpot'g1CardQueueIndexOffset)
+                                    #_"Word" thread (ReplacementsUtil'registerAsWord-1 HotSpot'threadRegister)
+                                    #_"Word" indexAddress (ß Word''add-2i thread, HotSpot'g1CardQueueIndexOffset)
+                                    #_"Word" indexValue (ß Word''readWord-2i thread, HotSpot'g1CardQueueIndexOffset)
                                 ]
-                                    (if (Word''notEqual-2i indexValue, 0)
+                                    (if (ß Word''notEqual-2i indexValue, 0)
                                         (let [
-                                            #_"Word" bufferAddress (Word''readWord-2i thread, HotSpot'g1CardQueueBufferOffset)
-                                            #_"Word" nextIndex (Word''subtract-2i indexValue, (WordSize'inBytes-1 AMD64'wordSize))
-                                            #_"Word" logAddress (Word''add-2w bufferAddress, nextIndex)
+                                            #_"Word" bufferAddress (ß Word''readWord-2i thread, HotSpot'g1CardQueueBufferOffset)
+                                            #_"Word" nextIndex (ß Word''subtract-2i indexValue, (WordSize'inBytes-1 AMD64'wordSize))
+                                            #_"Word" logAddress (ß Word''add-2w bufferAddress, nextIndex)
                                         ]
                                             ;; Log the object to be scanned as well as update the card queue's next index.
-                                            (Word''writeWord-4i logAddress, 0, cardAddress, NamedLocationIdentity'GC_LOG)
-                                            (Word''writeWord-4i indexAddress, 0, nextIndex, NamedLocationIdentity'GC_INDEX)
+                                            (ß Word''writeWord-4i logAddress, 0, cardAddress, NamedLocationIdentity'GC_LOG)
+                                            (ß Word''writeWord-4i indexAddress, 0, nextIndex, NamedLocationIdentity'GC_INDEX)
                                         )
                                         (do
                                             (StubForeignCallNode'g1PostBarrier-3 ForeignCallDescriptor'G1WBPOSTCALL, thread, cardAddress)
@@ -8706,23 +8477,9 @@ ZeroExtendNode'new-4
     )
 )
 
-(value-ns MetaspaceOpcode
-    #_unused
-    (def #_"ordered {MetaspaceOpcode}" MetaspaceOpcode'SET
-        (ordered-set
-            :MetaspaceOpcode'FROM_POINTER
-            :MetaspaceOpcode'TO_KLASS_POINTER
-            :MetaspaceOpcode'POINTER_EQ
-            :MetaspaceOpcode'POINTER_NE
-            :MetaspaceOpcode'IS_NULL
-            :MetaspaceOpcode'READ_KLASS_POINTER
-        )
-    )
-)
-
 (value-ns WordTypes
-    (def #_"ResolvedJavaType" WordTypes'word         (§ soon MetaReflection'lookupJavaType-1c Word'iface))
-    (def #_"ResolvedJavaType" WordTypes'klassPointer (§ soon MetaReflection'lookupJavaType-1c #_"KlassPointer" Word'iface))
+    (def #_"ResolvedJavaType" WordTypes'word         (§ soon MetaReflection'lookupJavaType-1c (ß Word'iface)))
+    (def #_"ResolvedJavaType" WordTypes'klassPointer (§ soon MetaReflection'lookupJavaType-1c #_"KlassPointer" (ß Word'iface)))
 
     ;;;
      ; Determines if a given type is a word type.
@@ -8745,15 +8502,9 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Determines if a given method denotes a word operation.
-     ;;
-    (defn #_"boolean" WordTypes'isWordOperation-1 [#_"ResolvedJavaMethod" targetMethod]
-        (WordTypes'isWord-1j (JavaMethod'''getDeclaringType-1 targetMethod))
-    )
-
-    ;;;
      ; Gets the kind for a given type.
      ;;
+    #_unused
     (defn #_"JavaKind" WordTypes'asKind-1 [#_"JavaType" type]
         (if (or (= type WordTypes'klassPointer) (WordTypes'isWord-1j type))
             :JavaKind'Long
@@ -8764,6 +8515,7 @@ ZeroExtendNode'new-4
     ;;;
      ; Gets the stamp for a given {@linkplain #isWord(JavaType) word type}.
      ;;
+    #_unused
     (defn #_"Stamp" WordTypes'getWordStamp-1 [#_"ResolvedJavaType" type]
         (if (= type WordTypes'klassPointer)
             KlassPointerStamp'KLASS
@@ -10625,111 +10377,6 @@ ZeroExtendNode'new-4
             #_"ValueNode" offset (Graph''add-2 graph, (AddNode'new-2 scaledIndex, (ConstantNode'forIntegerKind-3 :JavaKind'Long, base, graph)))
         ]
             (Graph''add-2 graph, (OffsetAddressNode'new-2 array, offset))
-        )
-    )
-)
-
-;;;
- ; Provides factory methods to create machine-word-sized values.
- ;;
-(value-ns WordFactory
-    ;;;
-     ; The constant 0, i.e. the word with no bits set.
-     ; There is no difference between a signed and unsigned zero.
-     ;;
-    ; @WordFactoryOperation(opcode = WordFactoryOpcode'ZERO)
-    (defn #_"Word" WordFactory'zero-0 []
-        (Word'box-1 0)
-    )
-
-    ;;;
-     ; The null pointer, i.e. the pointer with no bits set.
-     ; There is no difference to a signed or unsigned {@link #zero}.
-     ;;
-    ; @WordFactoryOperation(opcode = WordFactoryOpcode'ZERO)
-    #_unused
-    (defn #_"Word" WordFactory'nullPointer-0 []
-        (Word'box-1 0)
-    )
-
-    ;;;
-     ; Unsafe conversion from a Java long value to a Word. The parameter is treated as an unsigned
-     ; 64-bit value (in contrast to the semantics of a Java long).
-     ;;
-    ; @WordFactoryOperation(opcode = WordFactoryOpcode'FROM_UNSIGNED)
-    (defn #_"Word" WordFactory'unsigned-1l [#_"long" val]
-        (Word'box-1 val)
-    )
-
-    ;;;
-     ; Unsafe conversion from a Java int value to a Word. The parameter is treated as an unsigned
-     ; 32-bit value (in contrast to the semantics of a Java int).
-     ;;
-    ; @WordFactoryOperation(opcode = WordFactoryOpcode'FROM_UNSIGNED)
-    (defn #_"Word" WordFactory'unsigned-1i [#_"int" val]
-        (Word'box-1 (& val 0xffffffff))
-    )
-
-    ;;;
-     ; Unsafe conversion from a Java long value to a Word. The parameter is treated as a signed
-     ; 64-bit value (unchanged semantics of a Java long).
-     ;;
-    ; @WordFactoryOperation(opcode = WordFactoryOpcode'FROM_SIGNED)
-    #_unused
-    (defn #_"Word" WordFactory'signed-1l [#_"long" val]
-        (Word'box-1 val)
-    )
-
-    ;;;
-     ; Unsafe conversion from a Java int value to a Word. The parameter is treated as a signed
-     ; 32-bit value (unchanged semantics of a Java int).
-     ;;
-    ; @WordFactoryOperation(opcode = WordFactoryOpcode'FROM_SIGNED)
-    (defn #_"Word" WordFactory'signed-1i [#_"int" val]
-        (Word'box-1 val)
-    )
-)
-
-;;;
- ; The canonical WordFactoryOperation represented by a method in a word type.
- ;;
-(value-ns WordFactoryOpcode
-    #_unused
-    (def #_"ordered {WordFactoryOpcode}" WordFactoryOpcode'SET
-        (ordered-set
-            :WordFactoryOpcode'ZERO
-            :WordFactoryOpcode'FROM_UNSIGNED
-            :WordFactoryOpcode'FROM_SIGNED
-        )
-    )
-)
-
-;;;
- ; The canonical WordOperation represented by a method in the Word class.
- ;;
-(value-ns WordOpcode
-    #_unused
-    (def #_"ordered {WordOpcode}" WordOpcode'SET
-        (ordered-set
-            :WordOpcode'NODE_CLASS
-            :WordOpcode'COMPARISON
-            :WordOpcode'IS_NULL
-            :WordOpcode'IS_NON_NULL
-            :WordOpcode'NOT
-            :WordOpcode'READ_POINTER
-            :WordOpcode'READ_OBJECT
-            :WordOpcode'READ_BARRIERED
-            :WordOpcode'READ_HEAP
-            :WordOpcode'WRITE_POINTER
-            :WordOpcode'WRITE_OBJECT
-            :WordOpcode'WRITE_BARRIERED
-            :WordOpcode'INITIALIZE
-            :WordOpcode'TO_RAW_VALUE
-            :WordOpcode'FROM_OBJECT
-            :WordOpcode'FROM_ADDRESS
-            :WordOpcode'TO_OBJECT
-            :WordOpcode'TO_OBJECT_NON_NULL
-            :WordOpcode'CAS_POINTER
         )
     )
 )
@@ -15521,7 +15168,7 @@ ZeroExtendNode'new-4
      ;            is used when type checking this operation.
      ; @return a node equivalent to {@code value} in the graph
      ;;
-    (defn #_"ValueNode" BytecodeParser''add-2 [#_"BytecodeParser" this, #_"ValueNode" value]
+    (defn- #_"ValueNode" BytecodeParser''add-2 [#_"BytecodeParser" this, #_"ValueNode" value]
         (when (nil? (:graph value)) => value
             (let [
                 value (BytecodeParser''append-2 this, value)
@@ -15554,7 +15201,7 @@ ZeroExtendNode'new-4
      ; @param value the value to add to the graph and push to the stack
      ; @return a node equivalent to {@code value} in the graph
      ;;
-    (defn #_"ValueNode" BytecodeParser''addPush-3 [#_"BytecodeParser" this, #_"JavaKind" kind, #_"ValueNode" value]
+    (defn- #_"ValueNode" BytecodeParser''addPush-3 [#_"BytecodeParser" this, #_"JavaKind" kind, #_"ValueNode" value]
         (let [
             value (if (some? (:graph value)) value (BytecodeParser''append-2 this, value))
             _ (§ ass! this (BytecodeParser''push-3 this, kind, value))
@@ -22461,14 +22108,14 @@ ZeroExtendNode'new-4
     (def #_"ForeignCallDescriptor" ForeignCallDescriptor'DEOPTIMIZATION_HANDLER (ForeignCallDescriptor'new-2* void'class))
     (def #_"ForeignCallDescriptor" ForeignCallDescriptor'UNCOMMON_TRAP_HANDLER  (ForeignCallDescriptor'new-2* void'class))
 
-    (def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_INSTANCE (ForeignCallDescriptor'new-2* void'class, Word'iface, #_"KlassPointer" Word'iface))
-    (def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_ARRAY    (ForeignCallDescriptor'new-2* void'class, Word'iface, #_"KlassPointer" Word'iface, int'class))
+    (def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_INSTANCE (ForeignCallDescriptor'new-2* void'class, (ß Word'iface), #_"KlassPointer" (ß Word'iface)))
+    (def #_"ForeignCallDescriptor" ForeignCallDescriptor'NEW_ARRAY    (ForeignCallDescriptor'new-2* void'class, (ß Word'iface), #_"KlassPointer" (ß Word'iface), int'class))
 
-    (def #_"ForeignCallDescriptor" ForeignCallDescriptor'MONITORENTER (ForeignCallDescriptor'new-2* void'class, Word'iface, Object, Word'iface))
-    (def #_"ForeignCallDescriptor" ForeignCallDescriptor'MONITOREXIT  (ForeignCallDescriptor'new-2* void'class, Word'iface, Object, Word'iface))
+    (def #_"ForeignCallDescriptor" ForeignCallDescriptor'MONITORENTER (ForeignCallDescriptor'new-2* void'class, (ß Word'iface), Object, (ß Word'iface)))
+    (def #_"ForeignCallDescriptor" ForeignCallDescriptor'MONITOREXIT  (ForeignCallDescriptor'new-2* void'class, (ß Word'iface), Object, (ß Word'iface)))
 
-    (def #_"ForeignCallDescriptor" ForeignCallDescriptor'G1WBPRECALL  (ForeignCallDescriptor'new-2* void'class, Word'iface, Object))
-    (def #_"ForeignCallDescriptor" ForeignCallDescriptor'G1WBPOSTCALL (ForeignCallDescriptor'new-2* void'class, Word'iface, Word'iface))
+    (def #_"ForeignCallDescriptor" ForeignCallDescriptor'G1WBPRECALL  (ForeignCallDescriptor'new-2* void'class, (ß Word'iface), Object))
+    (def #_"ForeignCallDescriptor" ForeignCallDescriptor'G1WBPOSTCALL (ForeignCallDescriptor'new-2* void'class, (ß Word'iface), (ß Word'iface)))
 )
 
 ;;;
@@ -23790,17 +23437,9 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; This plugin handles the HotSpot-specific customizations of bytecode parsing:
- ;
- ; Word-type rewriting for {@link BytecodeParser#parsingIntrinsic intrinsic} functions (snippets and
- ; method substitutions), by forwarding to the WordOperationPlugin. Note that we forward the NodePlugin
- ; and TypePlugin methods, but not the InlineInvokePlugin methods implemented by WordOperationPlugin.
- ; The latter is not necessary because HotSpot only uses the Word type in methods that are force-inlined,
- ; i.e. there are never non-inlined invokes that involve the Word type.
- ;
- ; Constant folding of field loads.
+ ; This plugin handles the HotSpot-specific customizations of bytecode parsing.
  ;;
-(class-ns HotSpotPlugin [NodePlugin, TypePlugin]
+(class-ns HotSpotPlugin [NodePlugin, TypePlugin]
     (defn #_"HotSpotPlugin" HotSpotPlugin'new-0 []
         (HotSpotPlugin'class.)
     )
@@ -34790,7 +34429,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (§ intrinsic! #_"Word" BeginLockScopeNode'beginLockScope-1 [#_"int" lockDepth])
+    (§ intrinsic! #_"Word" BeginLockScopeNode'beginLockScope-1 [#_"int" lockDepth])
 
     #_intrinsifier
     (defn #_"BeginLockScopeNode" BeginLockScopeNode'new-1 [#_"int" lockDepth]
@@ -35637,7 +35276,7 @@ ZeroExtendNode'new-4
  ; Intrinsic for getting the lock in the current lock scope.
  ;;
 (class-ns CurrentLockNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable]
-    (§ intrinsic! #_"Word" CurrentLockNode'currentLock-1 [#_"int" lockDepth])
+    (§ intrinsic! #_"Word" CurrentLockNode'currentLock-1 [#_"int" lockDepth])
 
     #_intrinsifier
     (defn #_"CurrentLockNode" CurrentLockNode'new-1 [#_"int" lockDepth]
@@ -36759,7 +36398,7 @@ ZeroExtendNode'new-4
  ; Access the value of a specific register.
  ;;
 (class-ns ReadRegisterNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable]
-    (§ intrinsic! #_"Word" ReadRegisterNode'registerAsWord-3 [#_"Register" register, #_"boolean" directUse, #_"boolean" incoming])
+    (§ intrinsic! #_"Word" ReadRegisterNode'registerAsWord-3 [#_"Register" register, #_"boolean" directUse, #_"boolean" incoming])
 
     #_intrinsifier
     (defn #_"ReadRegisterNode" ReadRegisterNode'new-4i [#_@InjectedNodeParameter #_"Stamp" stamp, #_"Register" register, #_"boolean" directUse, #_"boolean" incoming]
@@ -36913,14 +36552,14 @@ ZeroExtendNode'new-4
         )
     )
 
-    (§ intrinsic! #_"void" StubForeignCallNode'newInstance-3 [#_"ForeignCallDescriptor" descriptor, #_"Word" thread, #_"KlassPointer" hub])
-    (§ intrinsic! #_"void" StubForeignCallNode'newArray-4 [#_"ForeignCallDescriptor" descriptor, #_"Word" thread, #_"KlassPointer" hub, #_"int" length])
+    (§ intrinsic! #_"void" StubForeignCallNode'newInstance-3 [#_"ForeignCallDescriptor" descriptor, #_"Word" thread, #_"KlassPointer" hub])
+    (§ intrinsic! #_"void" StubForeignCallNode'newArray-4 [#_"ForeignCallDescriptor" descriptor, #_"Word" thread, #_"KlassPointer" hub, #_"int" length])
 
-    (§ intrinsic! #_"void" StubForeignCallNode'monitorenter-4 [#_"ForeignCallDescriptor" descriptor, #_"Word" thread, #_"Object" object, #_"Word" lock])
-    (§ intrinsic! #_"void" StubForeignCallNode'monitorexit-4 [#_"ForeignCallDescriptor" descriptor, #_"Word" thread, #_"Object" object, #_"Word" lock])
+    (§ intrinsic! #_"void" StubForeignCallNode'monitorenter-4 [#_"ForeignCallDescriptor" descriptor, #_"Word" thread, #_"Object" object, #_"Word" lock])
+    (§ intrinsic! #_"void" StubForeignCallNode'monitorexit-4 [#_"ForeignCallDescriptor" descriptor, #_"Word" thread, #_"Object" object, #_"Word" lock])
 
-    (§ intrinsic! #_"void" StubForeignCallNode'g1PreBarrier-3 [#_"ForeignCallDescriptor" descriptor, #_"Word" thread, #_"Object" object])
-    (§ intrinsic! #_"void" StubForeignCallNode'g1PostBarrier-3 [#_"ForeignCallDescriptor" descriptor, #_"Word" thread, #_"Word" card])
+    (§ intrinsic! #_"void" StubForeignCallNode'g1PreBarrier-3 [#_"ForeignCallDescriptor" descriptor, #_"Word" thread, #_"Object" object])
+    (§ intrinsic! #_"void" StubForeignCallNode'g1PostBarrier-3 [#_"ForeignCallDescriptor" descriptor, #_"Word" thread, #_"Word" card])
 
     (defm StubForeignCallNode Multi
         (#_"LocationIdentity*" Multi'''getLocationIdentities-1 [#_"StubForeignCallNode" this]
@@ -36967,7 +36606,7 @@ ZeroExtendNode'new-4
  ; Load of a value from a location specified as an offset relative to an object. No nil-check is performed before the load.
  ;;
 (class-ns RawLoadNode [UnsafeAccessNode, FixedWithNextNode, FixedNode, ValueNode, Node, Lowerable]
-    (§ intrinsic! #_"Word" RawLoadNode'loadWordFromObjectIntrinsic-4 [#_"Object" object, #_"long" offset, #_"LocationIdentity" location, #_"JavaKind" wordKind])
+    (§ intrinsic! #_"Word" RawLoadNode'loadWordFromObjectIntrinsic-4 [#_"Object" object, #_"long" offset, #_"LocationIdentity" location, #_"JavaKind" wordKind])
 
     #_unused
     (§ intrinsic! #_"KlassPointer" RawLoadNode'loadKlassFromObjectIntrinsic-4 [#_"Object" object, #_"long" offset, #_"LocationIdentity" location, #_"JavaKind" wordKind])
@@ -37102,62 +36741,6 @@ ZeroExtendNode'new-4
 
         (#_"ValueNode" UnsafeAccessNode'''cloneAsArrayAccess-3 [#_"RawStoreNode" this, #_"ValueNode" offset, #_"LocationIdentity" location]
             (RawStoreNode'new-8 (:object this), offset, (:value this), (:accessKind this), location, (:needsBarrier this), (:stateAfter this), (:forceAnyLocation this))
-        )
-    )
-)
-
-;;;
- ; Casts between Word and Object exposed by the Word#fromAddress, Word#objectToTrackedPointer,
- ; Word#objectToUntrackedPointer and Word#toObject() operations. It has an impact on the pointer
- ; maps for the GC, so it must not be scheduled or optimized away.
- ;;
-(class-ns WordCastNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable]
-    (defn #_"WordCastNode" WordCastNode'new-2 [#_"Stamp" stamp, #_"ValueNode" input]
-        (merge (WordCastNode'class.) (FixedWithNextNode'new-1 stamp)
-            (hash-map
-                ; @Input
-                #_"ValueNode" :input input
-            )
-        )
-    )
-
-    (defn #_"WordCastNode" WordCastNode'wordToObject-2 [#_"ValueNode" input, #_"JavaKind" wordKind]
-        (WordCastNode'new-2 StampFactory'objectStamp, input)
-    )
-
-    (defn #_"WordCastNode" WordCastNode'wordToObjectNonNull-2 [#_"ValueNode" input, #_"JavaKind" wordKind]
-        (WordCastNode'new-2 StampFactory'objectNonNullStamp, input)
-    )
-
-    (defn #_"WordCastNode" WordCastNode'objectToWord-2 [#_"ValueNode" input, #_"JavaKind" wordKind]
-        (WordCastNode'new-2 (StampFactory'forKind-1 wordKind), input)
-    )
-
-    (defn #_"WordCastNode" WordCastNode'addressToWord-2 [#_"ValueNode" input, #_"JavaKind" wordKind]
-        (WordCastNode'new-2 (StampFactory'forKind-1 wordKind), input)
-    )
-
-    (defm WordCastNode LIRLowerable
-        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"WordCastNode" this, #_"LIRBuilder" builder]
-            (let [
-                #_"Value" value (LIRBuilder''operand-2 builder, (:input this))
-                #_"ValueKind" kind (Stamp'''getValueKind-1 (:stamp this))
-                kind
-                    (when (and (ValueKind''isValue-1 kind) (not (ValueKind'isValue-1v value))) => kind
-                        ;; just change the WordSize, but don't drop reference information
-                        (ValueKind''changeSize-2 (:valueKind value), (:wordSize kind))
-                    )
-            ]
-                (if (and (= kind (:valueKind value)) (not (satisfies? ConstantValue value)))
-                    (LIRBuilder''setResult-3 builder, this, value)
-                    (let [
-                        #_"AllocatableValue" result (LIRGenerator''newVariable-2 (:gen builder), kind)
-                        builder (update builder :gen LIRGenerator''emitMove-3 result, value)
-                    ]
-                        (LIRBuilder''setResult-3 builder, this, result)
-                    )
-                )
-            )
         )
     )
 )
@@ -40642,27 +40225,6 @@ ZeroExtendNode'new-4
                     )
                 )
             )
-        )
-    )
-)
-
-;;;
- ; Cast between Word and metaspace pointers exposed by the MetaspaceOpcode#FROM_POINTER
- ; and MetaspaceOpcode#TO_KLASS_POINTER operations.
- ;;
-(class-ns PointerCastNode [FloatingNode, ValueNode, Node, LIRLowerable]
-    (defn #_"PointerCastNode" PointerCastNode'new-2 [#_"Stamp" stamp, #_"ValueNode" input]
-        (merge (PointerCastNode'class.) (FloatingNode'new-1 stamp)
-            (hash-map
-                ; @Input
-                #_"ValueNode" :input input
-            )
-        )
-    )
-
-    (defm PointerCastNode LIRLowerable
-        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"PointerCastNode" this, #_"LIRBuilder" builder]
-            (LIRBuilder''setResult-3 builder, this, (LIRBuilder''operand-2 builder, (:input this)))
         )
     )
 )
@@ -47030,1162 +46592,6 @@ ZeroExtendNode'new-4
             )
         )
         this
-    )
-)
-
-(class-ns Word []
-    (defn- #_"Word" Word'new-1 [#_"long" rawValue]
-        (merge (Word'class.)
-            (hash-map
-                #_"long" :rawValue rawValue
-            )
-        )
-    )
-
-    ;; Outside users must use the different signed() and unsigned() methods to ensure proper
-    ;; expansion of 32-bit values on 64-bit systems.
-    #_memoize
-    (defn #_"Word" Word'box-1 [#_"long" val]
-        (Word'new-1 val)
-    )
-
-    (defn #_"long" Word''unbox-1 [#_"Word" this]
-        (:rawValue this)
-    )
-
-    (defn- #_"Word" Word'intParam-1 [#_"int" val]
-        (Word'box-1 val)
-    )
-
-    ; @WordOperation(opcode = WordOpcode'TO_RAW_VALUE)
-    (defn #_"long" Word''rawValue-1 [#_"Word" this]
-        (Word''unbox-1 this)
-    )
-
-    ;;;
-     ; Convert an Object to a Pointer, keeping the reference information. If the returned pointer
-     ; or any value derived from it is alive across a safepoint, it will be tracked. Depending on
-     ; the arithmetic on the pointer and the capabilities of the backend to deal with derived
-     ; references, this may work correctly, or result in a compiler error.
-     ;;
-    ; @WordOperation(opcode = WordOpcode'FROM_OBJECT)
-    (§ native #_"Word" Word'objectToTrackedPointer-1 [#_"Object" val])
-
-    ; @WordOperation(opcode = WordOpcode'FROM_ADDRESS)
-    (§ native #_"Word" Word'fromAddress-1 [#_"Address" address])
-
-    ; @WordOperation(opcode = WordOpcode'TO_OBJECT)
-    (§ native #_"Object" Word''toObject-1 [#_"Word" this])
-
-    ; @WordOperation(opcode = WordOpcode'TO_OBJECT_NON_NULL)
-    (§ native #_"Object" Word''toObjectNonNull-1 [#_"Word" this])
-
-    ; @WordOperation(node = AddNode.class)
-    (defn #_"Word" Word''add-2i [#_"Word" this, #_"int" val]
-        (Word''add-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(node = AddNode.class)
-    (defn #_"Word" Word''add-2w [#_"Word" this, #_"Word" val]
-        (Word'box-1 (+ (Word''unbox-1 this) (Word''unbox-1 val)))
-    )
-
-    ; @WordOperation(node = SubNode.class)
-    (defn #_"Word" Word''subtract-2i [#_"Word" this, #_"int" val]
-        (Word''subtract-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(node = SubNode.class)
-    (defn #_"Word" Word''subtract-2w [#_"Word" this, #_"Word" val]
-        (Word'box-1 (- (Word''unbox-1 this) (Word''unbox-1 val)))
-    )
-
-    ; @WordOperation(node = MulNode.class)
-    (defn #_"Word" Word''multiply-2i [#_"Word" this, #_"int" val]
-        (Word''multiply-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(node = MulNode.class)
-    (defn #_"Word" Word''multiply-2w [#_"Word" this, #_"Word" val]
-        (Word'box-1 (* (Word''unbox-1 this) (Word''unbox-1 val)))
-    )
-
-    ; @WordOperation(node = SignedDivNode.class)
-    #_unused
-    (defn #_"Word" Word''signedDivide-2i [#_"Word" this, #_"int" val]
-        (Word''signedDivide-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(node = SignedDivNode.class)
-    (defn #_"Word" Word''signedDivide-2w [#_"Word" this, #_"Word" val]
-        (Word'box-1 (quot (Word''unbox-1 this) (Word''unbox-1 val)))
-    )
-
-    ; @WordOperation(node = UnsignedDivNode.class)
-    #_unused
-    (defn #_"Word" Word''unsignedDivide-2i [#_"Word" this, #_"int" val]
-        (Word''signedDivide-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(node = UnsignedDivNode.class)
-    (defn #_"Word" Word''unsignedDivide-2w [#_"Word" this, #_"Word" val]
-        (Word'box-1 (Long/divideUnsigned (Word''unbox-1 this), (Word''unbox-1 val)))
-    )
-
-    ; @WordOperation(node = SignedRemNode.class)
-    #_unused
-    (defn #_"Word" Word''signedRemainder-2i [#_"Word" this, #_"int" val]
-        (Word''signedRemainder-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(node = SignedRemNode.class)
-    (defn #_"Word" Word''signedRemainder-2w [#_"Word" this, #_"Word" val]
-        (Word'box-1 (% (Word''unbox-1 this) (Word''unbox-1 val)))
-    )
-
-    ; @WordOperation(node = UnsignedRemNode.class)
-    #_unused
-    (defn #_"Word" Word''unsignedRemainder-2i [#_"Word" this, #_"int" val]
-        (Word''signedRemainder-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(node = UnsignedRemNode.class)
-    #_unused
-    (defn #_"Word" Word''unsignedRemainder-2w [#_"Word" this, #_"Word" val]
-        (Word'box-1 (Long/remainderUnsigned (Word''unbox-1 this), (Word''unbox-1 val)))
-    )
-
-    ; @WordOperation(node = LeftShiftNode.class, rightOperandIsInt = true)
-    #_unused
-    (defn #_"Word" Word''shiftLeft-2i [#_"Word" this, #_"int" val]
-        (Word''shiftLeft-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(node = LeftShiftNode.class, rightOperandIsInt = true)
-    (defn #_"Word" Word''shiftLeft-2w [#_"Word" this, #_"Word" val]
-        (Word'box-1 (<< (Word''unbox-1 this) (Word''unbox-1 val)))
-    )
-
-    ; @WordOperation(node = RightShiftNode.class, rightOperandIsInt = true)
-    #_unused
-    (defn #_"Word" Word''signedShiftRight-2i [#_"Word" this, #_"int" val]
-        (Word''signedShiftRight-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(node = RightShiftNode.class, rightOperandIsInt = true)
-    (defn #_"Word" Word''signedShiftRight-2w [#_"Word" this, #_"Word" val]
-        (Word'box-1 (>> (Word''unbox-1 this) (Word''unbox-1 val)))
-    )
-
-    ; @WordOperation(node = UnsignedRightShiftNode.class, rightOperandIsInt = true)
-    (defn #_"Word" Word''unsignedShiftRight-2i [#_"Word" this, #_"int" val]
-        (Word''unsignedShiftRight-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(node = UnsignedRightShiftNode.class, rightOperandIsInt = true)
-    (defn #_"Word" Word''unsignedShiftRight-2w [#_"Word" this, #_"Word" val]
-        (Word'box-1 (>>> (Word''unbox-1 this) (Word''unbox-1 val)))
-    )
-
-    ; @WordOperation(node = AndNode.class)
-    (defn #_"Word" Word''and-2i [#_"Word" this, #_"int" val]
-        (Word''and-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(node = AndNode.class)
-    (defn #_"Word" Word''and-2w [#_"Word" this, #_"Word" val]
-        (Word'box-1 (& (Word''unbox-1 this) (Word''unbox-1 val)))
-    )
-
-    ; @WordOperation(node = OrNode.class)
-    (defn #_"Word" Word''or-2i [#_"Word" this, #_"int" val]
-        (Word''or-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(node = OrNode.class)
-    (defn #_"Word" Word''or-2w [#_"Word" this, #_"Word" val]
-        (Word'box-1 (| (Word''unbox-1 this) (Word''unbox-1 val)))
-    )
-
-    ; @WordOperation(node = XorNode.class)
-    #_unused
-    (defn #_"Word" Word''xor-2i [#_"Word" this, #_"int" val]
-        (Word''xor-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(node = XorNode.class)
-    (defn #_"Word" Word''xor-2w [#_"Word" this, #_"Word" val]
-        (Word'box-1 (bit-xor (Word''unbox-1 this) (Word''unbox-1 val)))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'NOT)
-    #_unused
-    (defn #_"Word" Word''not-1 [#_"Word" this]
-        (Word'box-1 (bit-not (Word''unbox-1 this)))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'IS_NULL)
-    #_unused
-    (defn #_"boolean" Word''isNull-1 [#_"Word" this]
-        (Word''equal-2w this, (WordFactory'zero-0))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'IS_NON_NULL)
-    #_unused
-    (defn #_"boolean" Word''isNonNull-1 [#_"Word" this]
-        (Word''notEqual-2w this, (WordFactory'zero-0))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'COMPARISON, condition = Condition'EQ)
-    (defn #_"boolean" Word''equal-2i [#_"Word" this, #_"int" val]
-        (Word''equal-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'COMPARISON, condition = Condition'EQ)
-    (defn #_"boolean" Word''equal-2w [#_"Word" this, #_"Word" val]
-        (= (Word''unbox-1 this) (Word''unbox-1 val))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'COMPARISON, condition = Condition'NE)
-    (defn #_"boolean" Word''notEqual-2i [#_"Word" this, #_"int" val]
-        (Word''notEqual-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'COMPARISON, condition = Condition'NE)
-    (defn #_"boolean" Word''notEqual-2w [#_"Word" this, #_"Word" val]
-        (not= (Word''unbox-1 this) (Word''unbox-1 val))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'COMPARISON, condition = Condition'LT)
-    #_unused
-    (defn #_"boolean" Word''lessThan-2i [#_"Word" this, #_"int" val]
-        (Word''lessThan-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'COMPARISON, condition = Condition'LT)
-    (defn #_"boolean" Word''lessThan-2w [#_"Word" this, #_"Word" val]
-        (< (Word''unbox-1 this) (Word''unbox-1 val))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'COMPARISON, condition = Condition'LE)
-    #_unused
-    (defn #_"boolean" Word''lessOrEqual-2i [#_"Word" this, #_"int" val]
-        (Word''lessOrEqual-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'COMPARISON, condition = Condition'LE)
-    (defn #_"boolean" Word''lessOrEqual-2w [#_"Word" this, #_"Word" val]
-        (<= (Word''unbox-1 this) (Word''unbox-1 val))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'COMPARISON, condition = Condition'GT)
-    #_unused
-    (defn #_"boolean" Word''greaterThan-2i [#_"Word" this, #_"int" val]
-        (Word''greaterThan-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'COMPARISON, condition = Condition'GT)
-    (defn #_"boolean" Word''greaterThan-2w [#_"Word" this, #_"Word" val]
-        (> (Word''unbox-1 this) (Word''unbox-1 val))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'COMPARISON, condition = Condition'GE)
-    #_unused
-    (defn #_"boolean" Word''greaterOrEqual-2i [#_"Word" this, #_"int" val]
-        (Word''greaterOrEqual-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'COMPARISON, condition = Condition'GE)
-    (defn #_"boolean" Word''greaterOrEqual-2w [#_"Word" this, #_"Word" val]
-        (>= (Word''unbox-1 this) (Word''unbox-1 val))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'COMPARISON, condition = Condition'BT)
-    #_unused
-    (defn #_"boolean" Word''belowThan-2i [#_"Word" this, #_"int" val]
-        (Word''belowThan-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'COMPARISON, condition = Condition'BT)
-    (defn #_"boolean" Word''belowThan-2w [#_"Word" this, #_"Word" val]
-        (UnsignedMath'belowThan-2l (Word''unbox-1 this), (Word''unbox-1 val))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'COMPARISON, condition = Condition'BE)
-    #_unused
-    (defn #_"boolean" Word''belowOrEqual-2i [#_"Word" this, #_"int" val]
-        (Word''belowOrEqual-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'COMPARISON, condition = Condition'BE)
-    (defn #_"boolean" Word''belowOrEqual-2w [#_"Word" this, #_"Word" val]
-        (UnsignedMath'belowOrEqual-2l (Word''unbox-1 this), (Word''unbox-1 val))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'COMPARISON, condition = Condition'AT)
-    #_unused
-    (defn #_"boolean" Word''aboveThan-2i [#_"Word" this, #_"int" val]
-        (Word''aboveThan-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'COMPARISON, condition = Condition'AT)
-    (defn #_"boolean" Word''aboveThan-2w [#_"Word" this, #_"Word" val]
-        (UnsignedMath'aboveThan-2l (Word''unbox-1 this), (Word''unbox-1 val))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'COMPARISON, condition = Condition'AE)
-    #_unused
-    (defn #_"boolean" Word''aboveOrEqual-2i [#_"Word" this, #_"int" val]
-        (Word''aboveOrEqual-2w this, (Word'intParam-1 val))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'COMPARISON, condition = Condition'AE)
-    (defn #_"boolean" Word''aboveOrEqual-2w [#_"Word" this, #_"Word" val]
-        (UnsignedMath'aboveOrEqual-2l (Word''unbox-1 this), (Word''unbox-1 val))
-    )
-
-    ;;;
-     ; Reads the memory at address {@code (this + offset)}. Both the base address and offset are in bytes.
-     ;
-     ; The offset is always treated as a SignedWord value. However, the static type is Word to avoid the frequent casts
-     ; of UnsignedWord values (where the caller knows that the highest-order bit of the unsigned value is never used).
-     ;;
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"byte" Word''readByte-3w [#_"Word" this, #_"Word" offset, #_"LocationIdentity" location]
-        (.getByte HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"char" Word''readChar-3w [#_"Word" this, #_"Word" offset, #_"LocationIdentity" location]
-        (.getChar HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"short" Word''readShort-3w [#_"Word" this, #_"Word" offset, #_"LocationIdentity" location]
-        (.getShort HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"int" Word''readInt-3w [#_"Word" this, #_"Word" offset, #_"LocationIdentity" location]
-        (.getInt HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"long" Word''readLong-3w [#_"Word" this, #_"Word" offset, #_"LocationIdentity" location]
-        (.getLong HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"Word" Word''readWord-3w [#_"Word" this, #_"Word" offset, #_"LocationIdentity" location]
-        (Word'box-1 (.getAddress HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset))))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (§ native #_"Object" Word''readObject-3w [#_"Word" this, #_"Word" offset, #_"LocationIdentity" location])
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"byte" Word''readByte-3i [#_"Word" this, #_"int" offset, #_"LocationIdentity" location]
-        (Word''readByte-3w this, (WordFactory'signed-1i offset), location)
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (defn #_"char" Word''readChar-3i [#_"Word" this, #_"int" offset, #_"LocationIdentity" location]
-        (Word''readChar-3w this, (WordFactory'signed-1i offset), location)
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (defn #_"short" Word''readShort-3i [#_"Word" this, #_"int" offset, #_"LocationIdentity" location]
-        (Word''readShort-3w this, (WordFactory'signed-1i offset), location)
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"int" Word''readInt-3i [#_"Word" this, #_"int" offset, #_"LocationIdentity" location]
-        (Word''readInt-3w this, (WordFactory'signed-1i offset), location)
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"long" Word''readLong-3i [#_"Word" this, #_"int" offset, #_"LocationIdentity" location]
-        (Word''readLong-3w this, (WordFactory'signed-1i offset), location)
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"Word" Word''readWord-3i [#_"Word" this, #_"int" offset, #_"LocationIdentity" location]
-        (Word''readWord-3w this, (WordFactory'signed-1i offset), location)
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"Object" Word''readObject-3il [#_"Word" this, #_"int" offset, #_"LocationIdentity" location]
-        (Word''readObject-3w this, (WordFactory'signed-1i offset), location)
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeByte-4w [#_"Word" this, #_"Word" offset, #_"byte" val, #_"LocationIdentity" location]
-        (.putByte HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)), val)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeChar-4w [#_"Word" this, #_"Word" offset, #_"char" val, #_"LocationIdentity" location]
-        (.putChar HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)), val)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeShort-4w [#_"Word" this, #_"Word" offset, #_"short" val, #_"LocationIdentity" location]
-        (.putShort HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)), val)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeInt-4w [#_"Word" this, #_"Word" offset, #_"int" val, #_"LocationIdentity" location]
-        (.putInt HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)), val)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeLong-4w [#_"Word" this, #_"Word" offset, #_"long" val, #_"LocationIdentity" location]
-        (.putLong HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)), val)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeWord-4w [#_"Word" this, #_"Word" offset, #_"Word" val, #_"LocationIdentity" location]
-        (.putAddress HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)), (Word''unbox-1 val))
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'INITIALIZE)
-    (defn #_"void" Word''initializeLong-4w [#_"Word" this, #_"Word" offset, #_"long" val, #_"LocationIdentity" location]
-        (.putLong HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)), val)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (§ native #_"void" Word''writeObject-4 [#_"Word" this, #_"Word" offset, #_"Object" val, #_"LocationIdentity" location])
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeByte-4i [#_"Word" this, #_"int" offset, #_"byte" val, #_"LocationIdentity" location]
-        (Word''writeByte-4w this, (WordFactory'signed-1i offset), val, location)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (defn #_"void" Word''writeChar-4i [#_"Word" this, #_"int" offset, #_"char" val, #_"LocationIdentity" location]
-        (Word''writeChar-4w this, (WordFactory'signed-1i offset), val, location)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (defn #_"void" Word''writeShort-4i [#_"Word" this, #_"int" offset, #_"short" val, #_"LocationIdentity" location]
-        (Word''writeShort-4w this, (WordFactory'signed-1i offset), val, location)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeInt-4i [#_"Word" this, #_"int" offset, #_"int" val, #_"LocationIdentity" location]
-        (Word''writeInt-4w this, (WordFactory'signed-1i offset), val, location)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeLong-4i [#_"Word" this, #_"int" offset, #_"long" val, #_"LocationIdentity" location]
-        (Word''writeLong-4w this, (WordFactory'signed-1i offset), val, location)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeWord-4i [#_"Word" this, #_"int" offset, #_"Word" val, #_"LocationIdentity" location]
-        (Word''writeWord-4w this, (WordFactory'signed-1i offset), val, location)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'INITIALIZE)
-    (defn #_"void" Word''initializeLong-4i [#_"Word" this, #_"int" offset, #_"long" val, #_"LocationIdentity" location]
-        (Word''initializeLong-4w this, (WordFactory'signed-1i offset), val, location)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeObject-4 [#_"Word" this, #_"int" offset, #_"Object" val, #_"LocationIdentity" location]
-        (Word''writeObject-4 this, (WordFactory'signed-1i offset), val, location)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"byte" Word''readByte-2w [#_"Word" this, #_"Word" offset]
-        (.getByte HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"char" Word''readChar-2w [#_"Word" this, #_"Word" offset]
-        (.getChar HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"short" Word''readShort-2w [#_"Word" this, #_"Word" offset]
-        (.getShort HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"int" Word''readInt-2w [#_"Word" this, #_"Word" offset]
-        (.getInt HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"long" Word''readLong-2w [#_"Word" this, #_"Word" offset]
-        (.getLong HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"Word" Word''readWord-2w [#_"Word" this, #_"Word" offset]
-        (Word'box-1 (.getAddress HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset))))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (§ native #_"Object" Word''readObject-2 [#_"Word" this, #_"Word" offset])
-
-    ; @WordOperation(opcode = WordOpcode'READ_HEAP)
-    (§ native #_"Object" Word''readObject-3w [#_"Word" this, #_"Word" offset, #_"BarrierType" barrierType])
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"byte" Word''readByte-2i [#_"Word" this, #_"int" offset]
-        (Word''readByte-2w this, (WordFactory'signed-1i offset))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (defn #_"char" Word''readChar-2i [#_"Word" this, #_"int" offset]
-        (Word''readChar-2w this, (WordFactory'signed-1i offset))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (defn #_"short" Word''readShort-2i [#_"Word" this, #_"int" offset]
-        (Word''readShort-2w this, (WordFactory'signed-1i offset))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (defn #_"int" Word''readInt-2i [#_"Word" this, #_"int" offset]
-        (Word''readInt-2w this, (WordFactory'signed-1i offset))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    #_unused
-    (defn #_"long" Word''readLong-2i [#_"Word" this, #_"int" offset]
-        (Word''readLong-2w this, (WordFactory'signed-1i offset))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"Word" Word''readWord-2i [#_"Word" this, #_"int" offset]
-        (Word''readWord-2w this, (WordFactory'signed-1i offset))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_POINTER)
-    (defn #_"Object" Word''readObject-2 [#_"Word" this, #_"int" offset]
-        (Word''readObject-2 this, (WordFactory'signed-1i offset))
-    )
-
-    ; @WordOperation(opcode = WordOpcode'READ_HEAP)
-    (defn #_"Object" Word''readObject-3ib [#_"Word" this, #_"int" offset, #_"BarrierType" barrierType]
-        (Word''readObject-3w this, (WordFactory'signed-1i offset), barrierType)
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeByte-3w [#_"Word" this, #_"Word" offset, #_"byte" val]
-        (.putByte HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)), val)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeChar-3w [#_"Word" this, #_"Word" offset, #_"char" val]
-        (.putChar HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)), val)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeShort-3w [#_"Word" this, #_"Word" offset, #_"short" val]
-        (.putShort HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)), val)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeInt-3w [#_"Word" this, #_"Word" offset, #_"int" val]
-        (.putInt HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)), val)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeLong-3w [#_"Word" this, #_"Word" offset, #_"long" val]
-        (.putLong HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)), val)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (§ native #_"int" Word''compareAndSwapInt-5 [#_"Word" this, #_"Word" offset, #_"int" expectedValue, #_"int" newValue, #_"LocationIdentity" location])
-
-    ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (§ native #_"long" Word''compareAndSwapLong-5 [#_"Word" this, #_"Word" offset, #_"long" expectedValue, #_"long" newValue, #_"LocationIdentity" location])
-
-    ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (§ native #_"Word" Word''compareAndSwapWord-5 [#_"Word" this, #_"Word" offset, #_"Word" expectedValue, #_"Word" newValue, #_"LocationIdentity" location])
-
-    ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (§ native #_"Object" Word''compareAndSwapObject-5 [#_"Word" this, #_"Word" offset, #_"Object" expectedValue, #_"Object" newValue, #_"LocationIdentity" location])
-
-    ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (defn #_"boolean" Word''logicCompareAndSwapInt-5w [#_"Word" this, #_"Word" offset, #_"int" expectedValue, #_"int" newValue, #_"LocationIdentity" location]
-        (.compareAndSwapInt HotSpot'unsafe, (Word''toObject-1 this), (Word''unbox-1 offset), expectedValue, newValue)
-    )
-
-    ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (defn #_"boolean" Word''logicCompareAndSwapLong-5w [#_"Word" this, #_"Word" offset, #_"long" expectedValue, #_"long" newValue, #_"LocationIdentity" location]
-        (.compareAndSwapLong HotSpot'unsafe, (Word''toObject-1 this), (Word''unbox-1 offset), expectedValue, newValue)
-    )
-
-    ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (§ native #_"boolean" Word''logicCompareAndSwapWord-5 [#_"Word" this, #_"Word" offset, #_"Word" expectedValue, #_"Word" newValue, #_"LocationIdentity" location])
-
-    ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (defn #_"boolean" Word''logicCompareAndSwapObject-5w [#_"Word" this, #_"Word" offset, #_"Object" expectedValue, #_"Object" newValue, #_"LocationIdentity" location]
-        (.compareAndSwapObject HotSpot'unsafe, (Word''toObject-1 this), (Word''unbox-1 offset), expectedValue, newValue)
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeWord-3w [#_"Word" this, #_"Word" offset, #_"Word" val]
-        (.putAddress HotSpot'unsafe, (Word''unbox-1 (Word''add-2w this, offset)), (Word''unbox-1 val))
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (§ native #_"void" Word''writeObject-3 [#_"Word" this, #_"Word" offset, #_"Object" val])
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (defn #_"void" Word''writeByte-3i [#_"Word" this, #_"int" offset, #_"byte" val]
-        (Word''writeByte-3w this, (WordFactory'signed-1i offset), val)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (defn #_"void" Word''writeChar-3i [#_"Word" this, #_"int" offset, #_"char" val]
-        (Word''writeChar-3w this, (WordFactory'signed-1i offset), val)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (defn #_"void" Word''writeShort-3i [#_"Word" this, #_"int" offset, #_"short" val]
-        (Word''writeShort-3w this, (WordFactory'signed-1i offset), val)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (defn #_"void" Word''writeInt-3i [#_"Word" this, #_"int" offset, #_"int" val]
-        (Word''writeInt-3w this, (WordFactory'signed-1i offset), val)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    #_unused
-    (defn #_"void" Word''writeLong-3i [#_"Word" this, #_"int" offset, #_"long" val]
-        (Word''writeLong-3w this, (WordFactory'signed-1i offset), val)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeWord-3i [#_"Word" this, #_"int" offset, #_"Word" val]
-        (Word''writeWord-3w this, (WordFactory'signed-1i offset), val)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (defn #_"void" Word''writeObject-3 [#_"Word" this, #_"int" offset, #_"Object" val]
-        (Word''writeObject-3 this, (WordFactory'signed-1i offset), val)
-        nil
-    )
-
-    ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (defn #_"int" Word''compareAndSwapInt-5 [#_"Word" this, #_"int" offset, #_"int" expectedValue, #_"int" newValue, #_"LocationIdentity" location]
-        (Word''compareAndSwapInt-5 this, (WordFactory'signed-1i offset), expectedValue, newValue, location)
-    )
-
-    ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (defn #_"long" Word''compareAndSwapLong-5 [#_"Word" this, #_"int" offset, #_"long" expectedValue, #_"long" newValue, #_"LocationIdentity" location]
-        (Word''compareAndSwapLong-5 this, (WordFactory'signed-1i offset), expectedValue, newValue, location)
-    )
-
-    ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (defn #_"Word" Word''compareAndSwapWord-5 [#_"Word" this, #_"int" offset, #_"Word" expectedValue, #_"Word" newValue, #_"LocationIdentity" location]
-        (Word''compareAndSwapWord-5 this, (WordFactory'signed-1i offset), expectedValue, newValue, location)
-    )
-
-    ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (defn #_"Object" Word''compareAndSwapObject-5 [#_"Word" this, #_"int" offset, #_"Object" expectedValue, #_"Object" newValue, #_"LocationIdentity" location]
-        (Word''compareAndSwapObject-5 this, (WordFactory'signed-1i offset), expectedValue, newValue, location)
-    )
-
-    ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    #_unused
-    (defn #_"boolean" Word''logicCompareAndSwapInt-5i [#_"Word" this, #_"int" offset, #_"int" expectedValue, #_"int" newValue, #_"LocationIdentity" location]
-        (Word''logicCompareAndSwapInt-5w this, (WordFactory'signed-1i offset), expectedValue, newValue, location)
-    )
-
-    ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    #_unused
-    (defn #_"boolean" Word''logicCompareAndSwapLong-5i [#_"Word" this, #_"int" offset, #_"long" expectedValue, #_"long" newValue, #_"LocationIdentity" location]
-        (Word''logicCompareAndSwapLong-5w this, (WordFactory'signed-1i offset), expectedValue, newValue, location)
-    )
-
-    ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    (defn #_"boolean" Word''logicCompareAndSwapWord-5 [#_"Word" this, #_"int" offset, #_"Word" expectedValue, #_"Word" newValue, #_"LocationIdentity" location]
-        (Word''logicCompareAndSwapWord-5 this, (WordFactory'signed-1i offset), expectedValue, newValue, location)
-    )
-
-    ; @WordOperation(opcode = WordOpcode'CAS_POINTER)
-    #_unused
-    (defn #_"boolean" Word''logicCompareAndSwapObject-5i [#_"Word" this, #_"int" offset, #_"Object" expectedValue, #_"Object" newValue, #_"LocationIdentity" location]
-        (Word''logicCompareAndSwapObject-5w this, (WordFactory'signed-1i offset), expectedValue, newValue, location)
-    )
-
-    ; @MetaspaceOperation(opcode = MetaspaceOpcode'POINTER_EQ)
-    (§ native #_"boolean" Word''klassPointersEqual-2 [#_"KlassPointer" this, #_"KlassPointer" other])
-
-    ; @MetaspaceOperation(opcode = MetaspaceOpcode'POINTER_NE)
-    (§ native #_"boolean" Word''klassPointersNotEqual-2 [#_"KlassPointer" this, #_"KlassPointer" other])
-
-    ; @MetaspaceOperation(opcode = MetaspaceOpcode'TO_KLASS_POINTER)
-    (§ native #_"KlassPointer" Word'klassPointerFromWord-1 [#_"Word" pointer])
-
-    ; @MetaspaceOperation(opcode = MetaspaceOpcode'READ_KLASS_POINTER)
-    (§ native #_"KlassPointer" Word''readKlassPointer-3 [#_"KlassPointer" this, #_"int" offset, #_"LocationIdentity" location])
-
-    ; @WordOperation(opcode = WordOpcode'WRITE_POINTER)
-    (§ native #_"void" Word''writeKlassPointer-4 [#_"KlassPointer" this, #_"int" offset, #_"KlassPointer" t, #_"LocationIdentity" location])
-
-    ; @MetaspaceOperation(opcode = MetaspaceOpcode'IS_NULL)
-    (§ native #_"boolean" Word''klassPointerIsNull-1 [#_"KlassPointer" this])
-
-    ; @MetaspaceOperation(opcode = MetaspaceOpcode'FROM_POINTER)
-    #_unused
-    (§ native #_"Word" Word''klassPointerAsWord-1 [#_"KlassPointer" this])
-)
-
-;;;
- ; A plugin for calls to word operations, as well as all other nodes that need special handling for Word types.
- ;;
-(class-ns WordOperationPlugin [NodePlugin, TypePlugin]
-    #_unused
-    (defn #_"WordOperationPlugin" WordOperationPlugin'new-0 []
-        (WordOperationPlugin'class.)
-    )
-
-    (defn- #_"ValueNode" WordOperationPlugin'convert-4 [#_"BytecodeParser" parser, #_"ValueNode" value, #_"JavaKind" toKind, #_"boolean" unsigned?]
-        (cond
-            (= (ValueNode''getStackKind-1 value) toKind) value
-            (= toKind :JavaKind'Int)                     (BytecodeParser''add-2 parser, (NarrowNode'new-2 value, 32))
-            unsigned?                                    (BytecodeParser''add-2 parser, (ZeroExtendNode'new-2 value, 64))
-            :else                                        (BytecodeParser''add-2 parser, (SignExtendNode'new-2 value, 64))
-        )
-    )
-
-    (defn #_"ValueNode" WordOperationPlugin'fromUnsigned-2 [#_"BytecodeParser" parser, #_"ValueNode" value]
-        (WordOperationPlugin'convert-4 parser, value, :JavaKind'Long, true)
-    )
-
-    (defn #_"ValueNode" WordOperationPlugin'fromSigned-2 [#_"BytecodeParser" parser, #_"ValueNode" value]
-        (WordOperationPlugin'convert-4 parser, value, :JavaKind'Long, false)
-    )
-
-    (defn #_"ValueNode" WordOperationPlugin'toUnsigned-3 [#_"BytecodeParser" parser, #_"ValueNode" value, #_"JavaKind" toKind]
-        (WordOperationPlugin'convert-4 parser, value, toKind, true)
-    )
-
-    (defn #_"AddressNode" WordOperationPlugin'makeAddress-3 [#_"BytecodeParser" parser, #_"ValueNode" base, #_"ValueNode" offset]
-        (BytecodeParser''add-2 parser, (OffsetAddressNode'new-2 base, (WordOperationPlugin'fromSigned-2 parser, offset)))
-    )
-
-    (defn- #_"void" WordOperationPlugin'processMetaspaceOperation-4 [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode*" args, #_"MetaspaceOperation" operation]
-        (let [
-            #_"JavaKind" returnKind (JavaType'''getJavaKind-1 (Signature'''getReturnType-1 (JavaMethod'''getSignature-1 method)))
-        ]
-            (condp =? (MetaspaceOperation''opcode-1 operation)
-               [:MetaspaceOpcode'POINTER_EQ :MetaspaceOpcode'POINTER_NE]
-                    (let [
-                        #_"MetaspaceOpcode" opcode (MetaspaceOperation''opcode-1 operation)
-                        #_"PointerEqualsNode" comparison (BytecodeParser''add-2 parser, (PointerEqualsNode'new-2 (nth args 0), (nth args 1)))
-                        #_"ValueNode" eqValue (BytecodeParser''add-2 parser, (ConstantNode'forBoolean-1 (= opcode :MetaspaceOpcode'POINTER_EQ)))
-                        #_"ValueNode" neValue (BytecodeParser''add-2 parser, (ConstantNode'forBoolean-1 (= opcode :MetaspaceOpcode'POINTER_NE)))
-                    ]
-                        (BytecodeParser''addPush-3 parser, returnKind, (ConditionalNode'create-3 comparison, eqValue, neValue))
-                    )
-                :MetaspaceOpcode'IS_NULL
-                    (let [
-                        #_"LogicNode" isNull (BytecodeParser''add-2 parser, (IsNullNode'create-1 (nth args 0)))
-                    ]
-                        (BytecodeParser''addPush-3 parser, returnKind, (ConditionalNode'create-3 isNull, (BytecodeParser''add-2 parser, (ConstantNode'forBoolean-1 true)), (BytecodeParser''add-2 parser, (ConstantNode'forBoolean-1 false))))
-                    )
-                :MetaspaceOpcode'FROM_POINTER
-                    (BytecodeParser''addPush-3 parser, returnKind, (PointerCastNode'new-2 (StampFactory'forKind-1 :JavaKind'Long), (nth args 0)))
-                :MetaspaceOpcode'TO_KLASS_POINTER
-                    (BytecodeParser''addPush-3 parser, returnKind, (PointerCastNode'new-2 KlassPointerStamp'KLASS, (nth args 0)))
-                :MetaspaceOpcode'READ_KLASS_POINTER
-                    (let [
-                        #_"AddressNode" address (WordOperationPlugin'makeAddress-3 parser, (nth args 0), (nth args 1))
-                        #_"LocationIdentity" location
-                            (if (= (count args) 2)
-                                LocationIdentity'ANY
-                                (SnippetReflection'asObject-2c LocationIdentity'iface, (ValueNode''asJavaConstant-1 (nth args 2)))
-                            )
-                    ]
-                        (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (BytecodeParser''add-2 parser, (ReadNode'new-4 address, location, KlassPointerStamp'KLASS, :BarrierType'NONE))))
-                    )
-            )
-        )
-        nil
-    )
-
-    ;;;
-     ; Create an instance of a binary node which is used to lower Word operations.
-     ; This method is called for all Word operations which are annotated with
-     ; @WordOperation(node = ...) and encapsulates the reflective allocation of the node.
-     ;;
-    (defn- #_"ValueNode" WordOperationPlugin'createBinaryNodeInstance-3 [#_"Class<? implements ValueNode>" nodeClass, #_"ValueNode" left, #_"ValueNode" right]
-        (#_"Constructor" .newInstance (#_"Class" .getDeclaredConstructor nodeClass, ValueNode'iface, ValueNode'iface), left, right)
-    )
-
-    (defn- #_"ValueNode" WordOperationPlugin'comparisonOp-4 [#_"BytecodeParser" parser, #_"Condition" condition, #_"ValueNode" left, #_"ValueNode" right]
-        (let [
-            #_"CanonicalizedCondition" canonical (Condition''canonicalize-1 condition)
-            #_"ValueNode" a (if (:mirror? canonical) right left)
-            #_"ValueNode" b (if (:mirror? canonical) left right)
-            #_"CompareNode" comparison
-                (condp = (:canonicalCondition canonical)
-                    CanonicalCondition'EQ (IntegerEqualsNode'new-2 a, b)
-                    CanonicalCondition'BT (IntegerBelowNode'new-2 a, b)
-                                          (IntegerLessThanNode'new-2 a, b)
-                )
-            #_"ConstantNode" t (BytecodeParser''add-2 parser, (ConstantNode'forInt-1 1))
-            #_"ConstantNode" f (BytecodeParser''add-2 parser, (ConstantNode'forInt-1 0))
-            [t f] (if (:negate? canonical) [f t] [t f])
-        ]
-            (BytecodeParser''add-2 parser, (ConditionalNode'new-3 (BytecodeParser''add-2 parser, comparison), t, f))
-        )
-    )
-
-    (defn- #_"ValueNode" WordOperationPlugin'readOp-6 [#_"BytecodeParser" parser, #_"JavaKind" readKind, #_"AddressNode" address, #_"LocationIdentity" location, #_"BarrierType" barrierType, #_"boolean" compressible?]
-        ;; A JavaReadNode lowered to a ReadNode that will not float. This means it cannot float above
-        ;; an explicit zero check on its base address or any other test that ensures the read is safe.
-        (BytecodeParser''add-2 parser, (JavaReadNode'new-5 readKind, address, location, barrierType, compressible?))
-    )
-
-    (defn- #_"ValueNode" WordOperationPlugin'readOp-5 [#_"BytecodeParser" parser, #_"JavaKind" readKind, #_"AddressNode" address, #_"LocationIdentity" location, #_"WordOpcode" op]
-        (let [
-            #_"BarrierType" barrier (if (= op :WordOpcode'READ_BARRIERED) :BarrierType'PRECISE :BarrierType'NONE)
-            #_"boolean" compressible? (any = op :WordOpcode'READ_OBJECT :WordOpcode'READ_BARRIERED)
-        ]
-            (WordOperationPlugin'readOp-6 parser, readKind, address, location, barrier, compressible?)
-        )
-    )
-
-    (defn- #_"void" WordOperationPlugin'writeOp-6 [#_"BytecodeParser" parser, #_"JavaKind" writeKind, #_"AddressNode" address, #_"LocationIdentity" location, #_"ValueNode" value, #_"WordOpcode" op]
-        (let [
-            #_"BarrierType" barrier (if (= op :WordOpcode'WRITE_BARRIERED) :BarrierType'PRECISE :BarrierType'NONE)
-            #_"boolean" compressible? (any = op :WordOpcode'WRITE_OBJECT :WordOpcode'WRITE_BARRIERED)
-        ]
-            (BytecodeParser''add-2 parser, (JavaWriteNode'new-6 writeKind, address, location, value, barrier, compressible?))
-        )
-        nil
-    )
-
-    (defn- #_"AbstractCompareAndSwapNode" WordOperationPlugin'casOp-6 [#_"JavaKind" writeKind, #_"JavaKind" returnKind, #_"AddressNode" address, #_"LocationIdentity" location, #_"ValueNode" expectedValue, #_"ValueNode" newValue]
-        (if (= returnKind :JavaKind'Boolean)
-            (LogicCompareAndSwapNode'new-4 address, expectedValue, newValue, location)
-            (ValueCompareAndSwapNode'new-4 address, expectedValue, newValue, location)
-        )
-    )
-
-    (defn- #_"void" WordOperationPlugin'processWordOperation-3 [#_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode*" args]
-        (let [
-            #_"JavaKind" returnKind (JavaType'''getJavaKind-1 (Signature'''getReturnType-1 (JavaMethod'''getSignature-1 method)))
-            #_"WordFactoryOperation" factoryOperation (#_"ResolvedJavaMethod" .getAnnotation method, WordFactoryOperation)
-        ]
-            (or
-                (when (some? factoryOperation)
-                    (condp = (WordFactoryOperation''opcode-1 factoryOperation)
-                        :WordFactoryOpcode'ZERO
-                        (do
-                            (BytecodeParser''addPush-3 parser, returnKind, (ConstantNode'forIntegerKind-2 :JavaKind'Long, 0))
-                            :done
-                        )
-                        :WordFactoryOpcode'FROM_UNSIGNED
-                        (do
-                            (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'fromUnsigned-2 parser, (nth args 0))))
-                            :done
-                        )
-                        :WordFactoryOpcode'FROM_SIGNED
-                        (do
-                            (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'fromSigned-2 parser, (nth args 0))))
-                            :done
-                        )
-                        nil
-                    )
-                )
-
-                (let [
-                    #_"WordOperation" operation (#_"ResolvedJavaMethod" .getAnnotation method, WordOperation)
-                ]
-                    (when (nil? operation)
-                        (throw! (str "cannot call method on a word value: " method))
-                    )
-                    (condp =? (WordOperation''opcode-1 operation)
-                        :WordOpcode'NODE_CLASS
-                            (let [
-                                #_"ValueNode" left (nth args 0)
-                                #_"ValueNode" right (if (WordOperation''rightOperandIsInt-1 operation) (WordOperationPlugin'toUnsigned-3 parser, (nth args 1), :JavaKind'Int) (WordOperationPlugin'fromSigned-2 parser, (nth args 1)))
-                            ]
-                                (BytecodeParser''addPush-3 parser, returnKind, (WordOperationPlugin'createBinaryNodeInstance-3 (WordOperation''node-1 operation), left, right))
-                            )
-                        :WordOpcode'COMPARISON
-                            (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'comparisonOp-4 parser, (WordOperation''condition-1 operation), (nth args 0), (WordOperationPlugin'fromSigned-2 parser, (nth args 1)))))
-                        :WordOpcode'IS_NULL
-                            (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'comparisonOp-4 parser, Condition'EQ, (nth args 0), (ConstantNode'forIntegerKind-2 :JavaKind'Long, 0))))
-                        :WordOpcode'IS_NON_NULL
-                            (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'comparisonOp-4 parser, Condition'NE, (nth args 0), (ConstantNode'forIntegerKind-2 :JavaKind'Long, 0))))
-                        :WordOpcode'NOT
-                            (BytecodeParser''addPush-3 parser, returnKind, (XorNode'new-2 (nth args 0), (BytecodeParser''add-2 parser, (ConstantNode'forIntegerKind-2 :JavaKind'Long, -1))))
-                       [:WordOpcode'READ_POINTER :WordOpcode'READ_OBJECT :WordOpcode'READ_BARRIERED]
-                            (let [
-                                #_"JavaKind" readKind (WordTypes'asKind-1 (Signature'''getReturnType-1 (JavaMethod'''getSignature-1 method)))
-                                #_"AddressNode" address (WordOperationPlugin'makeAddress-3 parser, (nth args 0), (nth args 1))
-                                #_"LocationIdentity" location
-                                    (if (= (count args) 2)
-                                        LocationIdentity'ANY
-                                        (SnippetReflection'asObject-2c LocationIdentity'iface, (ValueNode''asJavaConstant-1 (nth args 2)))
-                                    )
-                            ]
-                                (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'readOp-5 parser, readKind, address, location, (WordOperation''opcode-1 operation))))
-                            )
-                        :WordOpcode'READ_HEAP
-                            (let [
-                                #_"JavaKind" readKind (WordTypes'asKind-1 (Signature'''getReturnType-1 (JavaMethod'''getSignature-1 method)))
-                                #_"AddressNode" address (WordOperationPlugin'makeAddress-3 parser, (nth args 0), (nth args 1))
-                                #_"BarrierType" barrierType (SnippetReflection'asObject-2c BarrierType, (ValueNode''asJavaConstant-1 (nth args 2)))
-                            ]
-                                (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'readOp-6 parser, readKind, address, LocationIdentity'ANY, barrierType, true)))
-                            )
-                       [:WordOpcode'WRITE_POINTER :WordOpcode'WRITE_OBJECT :WordOpcode'WRITE_BARRIERED :WordOpcode'INITIALIZE]
-                            (let [
-                                #_"JavaKind" writeKind (WordTypes'asKind-1 (Signature'''getParameterType-2 (JavaMethod'''getSignature-1 method), (if (ResolvedJavaMethod''isStatic-1 method) 2 1)))
-                                #_"AddressNode" address (WordOperationPlugin'makeAddress-3 parser, (nth args 0), (nth args 1))
-                                #_"LocationIdentity" location
-                                    (if (= (count args) 3)
-                                        LocationIdentity'ANY
-                                        (SnippetReflection'asObject-2c LocationIdentity'iface, (ValueNode''asJavaConstant-1 (nth args 3)))
-                                    )
-                            ]
-                                (WordOperationPlugin'writeOp-6 parser, writeKind, address, location, (nth args 2), (WordOperation''opcode-1 operation))
-                            )
-                        :WordOpcode'TO_RAW_VALUE
-                            (§ ass! parser (BytecodeParser''push-3 parser, returnKind, (WordOperationPlugin'toUnsigned-3 parser, (nth args 0), :JavaKind'Long)))
-                        :WordOpcode'FROM_OBJECT
-                            (let [
-                                #_"WordCastNode" objectToTracked (BytecodeParser''add-2 parser, (WordCastNode'objectToWord-2 (nth args 0), :JavaKind'Long))
-                            ]
-                                (§ ass! parser (BytecodeParser''push-3 parser, returnKind, objectToTracked))
-                            )
-                        :WordOpcode'FROM_ADDRESS
-                            (let [
-                                #_"WordCastNode" addressToWord (BytecodeParser''add-2 parser, (WordCastNode'addressToWord-2 (nth args 0), :JavaKind'Long))
-                            ]
-                                (§ ass! parser (BytecodeParser''push-3 parser, returnKind, addressToWord))
-                            )
-                        :WordOpcode'TO_OBJECT
-                            (let [
-                                #_"WordCastNode" wordToObject (BytecodeParser''add-2 parser, (WordCastNode'wordToObject-2 (nth args 0), :JavaKind'Long))
-                            ]
-                                (§ ass! parser (BytecodeParser''push-3 parser, returnKind, wordToObject))
-                            )
-                        :WordOpcode'TO_OBJECT_NON_NULL
-                            (let [
-                                #_"WordCastNode" wordToObjectNonNull (BytecodeParser''add-2 parser, (WordCastNode'wordToObjectNonNull-2 (nth args 0), :JavaKind'Long))
-                            ]
-                                (§ ass! parser (BytecodeParser''push-3 parser, returnKind, wordToObjectNonNull))
-                            )
-                        :WordOpcode'CAS_POINTER
-                            (let [
-                                #_"AddressNode" address (WordOperationPlugin'makeAddress-3 parser, (nth args 0), (nth args 1))
-                                #_"JavaKind" valueKind (WordTypes'asKind-1 (Signature'''getParameterType-2 (JavaMethod'''getSignature-1 method), 1))
-                                #_"LocationIdentity" location (SnippetReflection'asObject-2c LocationIdentity'iface, (ValueNode''asJavaConstant-1 (nth args 4)))
-                                #_"JavaType" returnType (Signature'''getReturnType-1 (JavaMethod'''getSignature-1 method))
-                            ]
-                                (BytecodeParser''addPush-3 parser, returnKind, (WordOperationPlugin'casOp-6 valueKind, (WordTypes'asKind-1 returnType), address, location, (nth args 2), (nth args 3)))
-                            )
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    ;;;
-     ; Processes a call to a method if it is annotated as a word operation by adding nodes to the graph being
-     ; built that implement the denoted operation.
-     ;
-     ; @return true iff {@code method} is annotated with WordOperation (and was thus processed by this method)
-     ;;
-    (defm WordOperationPlugin NodePlugin
-        (#_"boolean" NodePlugin'''handleInvoke-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaMethod" method, #_"ValueNode*" args]
-            (and (WordTypes'isWordOperation-1 method)
-                (let [
-                    #_"MetaspaceOperation" operation (#_"ResolvedJavaMethod" .getAnnotation method, MetaspaceOperation)
-                ]
-                    (if (some? operation)
-                        (WordOperationPlugin'processMetaspaceOperation-4 parser, method, args, operation)
-                        (WordOperationPlugin'processWordOperation-3 parser, method, args)
-                    )
-                    true
-                )
-            )
-        )
-    )
-
-    (defm WordOperationPlugin TypePlugin
-        (#_"Stamp" TypePlugin'''interceptType-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"JavaType" type, #_"boolean" never-nil?]
-            (when (satisfies? ResolvedJavaType type)
-                (cond
-                    (WordTypes'isWord-1j type)
-                        (WordTypes'getWordStamp-1 type)
-                    (and (JavaType''isArray-1 type) (WordTypes'isWord-1j (JavaType''getElementalType-1 type)))
-                        (StampFactory'object-2 (TypeReference'createTrusted-1 type), never-nil?)
-                )
-            )
-        )
-    )
-
-    (defm WordOperationPlugin NodePlugin
-        (#_"boolean" NodePlugin'''handleLoadField-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" receiver, #_"ResolvedJavaField" field]
-            (let [
-                #_"Stamp" wordStamp (TypePlugin'''interceptType-4 this, parser, (JavaField'''getType-1 field), false)
-            ]
-                (and (some? wordStamp)
-                    (do
-                        (BytecodeParser''addPush-3 parser, (JavaField''getJavaKind-1 field), (LoadFieldNode'createOverrideStamp-3 wordStamp, receiver, field))
-                        true
-                    )
-                )
-            )
-        )
-
-        (#_"boolean" NodePlugin'''handleLoadStaticField-3 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" staticField]
-            (NodePlugin'''handleLoadField-4 this, parser, nil, staticField)
-        )
-    )
-
-    (defn- #_"LoadIndexedNode" WordOperationPlugin'createLoadIndexedNode-2 [#_"ValueNode" array, #_"ValueNode" index]
-        (let [
-            #_"ResolvedJavaType" arrayType (StampTool'typeOrNull-1 (:stamp array))
-            #_"Stamp" componentStamp (WordTypes'getWordStamp-1 (JavaType'''getComponentType-1 arrayType))
-        ]
-            (if (satisfies? KlassPointerStamp componentStamp)
-                (LoadIndexedPointerNode'new-3 componentStamp, array, index)
-                (LoadIndexedNode'new-3 array, index, :JavaKind'Long)
-            )
-        )
-    )
-
-    (defn- #_"StoreIndexedNode" WordOperationPlugin'createStoreIndexedNode-3 [#_"ValueNode" array, #_"ValueNode" index, #_"ValueNode" value]
-        (StoreIndexedNode'new-4 array, index, :JavaKind'Long, value)
-    )
-
-    (defm WordOperationPlugin NodePlugin
-        (#_"boolean" NodePlugin'''handleLoadIndexed-5 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind]
-            (let [
-                #_"ResolvedJavaType" arrayType (StampTool'typeOrNull-1 (:stamp array))
-            ]
-                ;; There are cases where the array does not have a known type yet, i.e. the type is nil.
-                ;; In that case we assume it is not a word type.
-                (and (some? arrayType) (WordTypes'isWord-1j (JavaType'''getComponentType-1 arrayType))
-                    (do
-                        (BytecodeParser''addPush-3 parser, elementKind, (WordOperationPlugin'createLoadIndexedNode-2 array, index))
-                        true
-                    )
-                )
-            )
-        )
-
-        (#_"boolean" NodePlugin'''handleStoreField-5 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaField" field, #_"ValueNode" value]
-            (and (= (JavaField''getJavaKind-1 field) :JavaKind'Object)
-                (let [
-                    #_"boolean" isWordField (WordTypes'isWord-1j (JavaField'''getType-1 field))
-                    #_"boolean" isWordValue (= (ValueNode''getStackKind-1 value) :JavaKind'Long)
-                ]
-                    (cond
-                        (and isWordField (not isWordValue))
-                            (throw! (str "cannot store a non-word value into a word field: " field))
-                        (and (not isWordField) isWordValue)
-                            (throw! (str "cannot store a word value into a non-word field: " field))
-                        :else
-                            false ;; we never need to intercept the field store
-                    )
-                )
-            )
-        )
-
-        (#_"boolean" NodePlugin'''handleStoreStaticField-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ResolvedJavaField" field, #_"ValueNode" value]
-            (NodePlugin'''handleStoreField-5 this, parser, nil, field, value)
-        )
-
-        (#_"boolean" NodePlugin'''handleStoreIndexed-6 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" array, #_"ValueNode" index, #_"JavaKind" elementKind, #_"ValueNode" value]
-            (let [
-                #_"ResolvedJavaType" arrayType (StampTool'typeOrNull-1 (:stamp array))
-            ]
-                (if (and (some? arrayType) (WordTypes'isWord-1j (JavaType'''getComponentType-1 arrayType)))
-                    (do
-                        (when-not (= (ValueNode''getStackKind-1 value) :JavaKind'Long)
-                            (throw! (str "cannot store a non-word value into a word array: " (JavaType''toJavaName-2 arrayType, true)))
-                        )
-                        (BytecodeParser''add-2 parser, (WordOperationPlugin'createStoreIndexedNode-3 array, index, value))
-                        true
-                    )
-                    (do
-                        (when (and (= elementKind :JavaKind'Object) (= (ValueNode''getStackKind-1 value) :JavaKind'Long))
-                            (throw! (str "cannot store a word value into a non-word array: " (JavaType''toJavaName-2 arrayType, true)))
-                        )
-                        false
-                    )
-                )
-            )
-        )
-
-        (#_"boolean" NodePlugin'''handleCheckCast-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
-            (if (WordTypes'isWord-1j type)
-                (when (= (ValueNode''getStackKind-1 object) :JavaKind'Long) => (throw! (str "cannot cast a non-word value to a word type: " (JavaType''toJavaName-2 type, true)))
-                    (§ ass! parser (BytecodeParser''push-3 parser, :JavaKind'Object, object))
-                    true
-                )
-                (when (= (ValueNode''getStackKind-1 object) :JavaKind'Object) => (throw! (str "cannot cast a word value to a non-word type: " (JavaType''toJavaName-2 type, true)))
-                    false
-                )
-            )
-        )
-
-        (#_"boolean" NodePlugin'''handleInstanceOf-4 [#_"WordOperationPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
-            (cond
-                (WordTypes'isWord-1j type)
-                    (throw! (str "cannot use instanceof for word a type: " (JavaType''toJavaName-2 type, true)))
-                (not= (ValueNode''getStackKind-1 object) :JavaKind'Object)
-                    (throw! (str "cannot use instanceof on a word value: " (JavaType''toJavaName-2 type, true)))
-                :else
-                    false
-            )
-        )
     )
 )
 
