@@ -120,7 +120,7 @@
 (import
     [java.io DataInputStream IOException]
     [java.lang.ref Reference]
-    [java.lang.reflect Array Constructor Executable Field Method Modifier]
+    [java.lang.reflect Array Constructor Field Modifier]
     [java.nio ByteBuffer ByteOrder]
     [java.util BitSet Iterator List ListIterator]
 
@@ -360,7 +360,6 @@ AbstractMemoryCheckpoint'new-1
 AbstractMemoryCheckpoint'new-2
 AbstractMergeNode''addForwardEnd-2
 AbstractMergeNode''isPhiAtMerge-2
-AbstractMergeNode''memoryPhis-1
 AbstractMergeNode''phis-1
 AbstractMergeNode''removeEnd-2
 AbstractMergeNode''valuePhis-1
@@ -376,8 +375,6 @@ AbstractPointerStamp''asNonNull-1
 AbstractPointerStamp''defaultPointerJoin-2
 AbstractPointerStamp'new-2
 AbstractStateSplit'new-2
-AbstractTemplates'new-0
-AbstractTemplates'snippet-3*
 AbstractWriteNode'new-4
 AccessArrayNode'new-2
 AccessFieldNode''isStatic-1
@@ -1140,21 +1137,16 @@ EMOptimizer''optimizeMovesAtBlockEnd-2
 EMOptimizer'new-1
 EdgeInfo'new-4
 EdgeMoveOptimizer'new-0
-Edges''copy-3
 Edges''getPositions-2
-Edges''initializeList-4
-Edges''initializeLists-3
 Edges''initializeNode-4
 Edges''setNode-4
 Edges'getNode-3
 Edges'getNodeList-3
 Edges'getNodeListUnsafe-2
 Edges'getNodeUnsafe-2
-Edges'new-3
-Edges'putNodeListUnsafe-3
+Edges'new-2
 Edges'putNodeUnsafe-3
 Edges'translateInto-2
-EdgesType'SET
 EffortClosure''getAverageEffort-1
 EffortClosure'new-2
 EndLockScopeNode'new-0
@@ -1170,7 +1162,6 @@ FieldLocationIdentity'new-1
 FieldRef''resolve-3
 FieldRef'new-1
 Fields''getObject-3
-Fields''isSame-3
 Fields''putObject-4
 Fields'new-1
 FinalFieldBarrierNode'new-1
@@ -1303,21 +1294,17 @@ GraalOptions'zapStackOnMethodEntry
 Graph''add-2
 Graph''addAfterFixed-3
 Graph''addBeforeFixed-3
-Graph''addDuplicates-4m
-Graph''addDuplicates-4r
 Graph''addInputs-2
 Graph''addOrUniqueWithInputs-2
 Graph''getInvokes-1
 Graph''getNodeCount-1
 Graph''getNodes-1
 Graph''getNodes-2
-Graph''getParameter-2
 Graph''getReturnStamp-1
 Graph''hasLoops-1
 Graph''maybeAddOrUnique-2
 Graph''reduceDegenerateLoopBegin-2
 Graph''reduceTrivialMerge-2
-Graph''register-2
 Graph''removeFixed-2
 Graph''removeSplit-3
 Graph''replaceFixed-3
@@ -1510,16 +1497,7 @@ InstanceOfNode'createAllowNull-2
 InstanceOfNode'createHelper-3
 InstanceOfNode'findSynonym-2
 InstanceOfNode'new-3
-InstanceOfSnippetsTemplates''lower-3
-InstanceOfSnippetsTemplates''makeArguments-3
-InstanceOfSnippetsTemplates'new-0
 InstanceOfTemplates'new-0
-InstanceOfUsageReplacer'new-4
-Instantiation''asCondition-2
-Instantiation''asMaterialization-4
-Instantiation''initialize-4
-Instantiation''isInitialized-1
-Instantiation'new-0
 IntegerAddExactNode'new-2
 IntegerAddExactSplitNode'new-5
 IntegerBelowNode'create-2
@@ -2064,8 +2042,6 @@ LoweringTool''setLastFixedNode-2
 LoweringTool'new-4
 MOp'new-4
 MROp'new-4
-MapReplacement'new-1
-MaterializationUsageReplacer'new-5
 MathUtil'add-3
 MathUtil'mul-3
 MathUtil'sub-3
@@ -2073,7 +2049,6 @@ MembarNode'new-1
 MembarNode'new-2
 MembarOp'new-1
 MemberRef'new-2
-MemoryAnchorNode'new-0
 MemoryBarriers'JMM_POST_VOLATILE_READ
 MemoryBarriers'JMM_POST_VOLATILE_WRITE
 MemoryBarriers'JMM_PRE_VOLATILE_READ
@@ -2086,12 +2061,7 @@ MemoryConstOp'new-4
 MemoryConstOp'new-4a
 MemoryConstOp'new-4b
 MemoryMROp'new-4
-MemoryMap0'copy-1
-MemoryMap0'new-0
-MemoryMap0'new-1
-MemoryMapNode'new-1
 MemoryOp'new-4
-MemoryPhiNode'new-2
 MemoryReflection'readFieldValue-2
 MemoryReflection'readPrimitiveConstant-4
 MemoryReflection'readObjectConstant-2
@@ -2105,7 +2075,6 @@ MergeNode'new-0
 MetaReflection'encodeDeoptActionAndReason-2
 MetaReflection'lookupJavaType-1c
 MetaReflection'lookupJavaType-1j
-MetaReflection'lookupJavaMethod-1
 MetaspaceConstant''asResolvedJavaType-1
 MetaspaceConstant'new-2
 MetaspaceOpcode'SET
@@ -2211,7 +2180,6 @@ Node''addUsage-2
 Node''applyInputs-2
 Node''clearInputs-1
 Node''clearSuccessors-1
-Node''clone-3
 Node''hasExactlyOneUsage-1
 Node''hasMoreThanOneUsage-1
 Node''hasNoUsages-1
@@ -2238,26 +2206,20 @@ Node'new-0
 NodeClass''applyInputs-3
 NodeClass''equalInputs-3
 NodeClass''equalSuccessors-3
-NodeClass''getEdges-2
-NodeClass''isValid-4
 NodeClass''registerAtInputsAsUsage-2
 NodeClass''registerAtSuccessorsAsPredecessor-2
 NodeClass''replaceFirstInput-4
 NodeClass''replaceFirstSuccessor-4
 NodeClass''unregisterAtInputsAsUsage-2
 NodeClass''unregisterAtSuccessorsAsPredecessor-2
-NodeClass''updateInputSuccInPlace-3
 NodeClass'NEXT_EDGE
-NodeClass'addGraphDuplicate-4
 NodeClass'new-2
 NodeClass'replaceFirstEdge-4
-NodeClass'updateEdgesInPlace-3
 NodeCost'new-3
 NodeEntry'new-1
 NodeFieldsScanner''scan-3
 NodeFieldsScanner'new-1
 NodeLoopInfo'new-0
-NonMaterializationUsageReplacer'new-5
 NormalizeCompareNode'create-3
 NormalizeCompareNode'new-3
 NormalizeCompareNode'tryConstantFold-3
@@ -2313,7 +2275,6 @@ PhiNode''setValueAt-3n
 PhiNode''singleValueOrThis-1
 PhiNode''valueAt-2n
 PhiNode'new-2
-PiArrayNode'new-3
 PiNode'canonical-3
 PiNode'create-3
 PiNode'intrinsify-4
@@ -2446,9 +2407,7 @@ ResolvedJavaType''isInterface-1
 ResolvedJavaType''isJavaLangObject-1
 ResolvedJavaType''isLeaf-1
 ResolvedJavaType''resolveConcreteMethod-3
-ReturnNode''setMemoryMap-2
 ReturnNode'new-1
-ReturnNode'new-2
 ReturnOp'new-1
 RightShiftNode'create-2
 RightShiftNode'new-2
@@ -2501,12 +2460,8 @@ SignedRemNode'new-2
 Signedness'SET
 SlotSize'SET
 SnippetAnchorNode'new-0
-SnippetInfo'new-2
 SnippetReflection'asObject-2c
 SnippetReflection'asObject-2t
-SnippetTemplate''instantiate-3
-SnippetTemplate''instantiate-5
-SnippetTemplate'new-2
 SpillRegistersNode'new-0
 SpillRegistersOp'new-0
 SpillState'ALWAYS_IN_MEMORY
@@ -3047,7 +3002,6 @@ ZeroExtendNode'new-4
 )
 
 (defp AbstractStateSplit)
-(defp AbstractTemplates)
 (defp AbstractWriteNode)
 
 (defp Access
@@ -3494,11 +3448,6 @@ ZeroExtendNode'new-4
 (defp DirectVirtualCallOp)
 (defp Div)
 (defp DummyGuardHandle)
-
-(defp DuplicationReplacement
-    (#_"Node" DuplicationReplacement'''replacement-2 [#_"DuplicationReplacement" this, #_"Node" original])
-)
-
 (defp EMOptimizer)
 (defp EdgeInfo)
 (defp EdgeMoveOptimizer)
@@ -3617,8 +3566,6 @@ ZeroExtendNode'new-4
      ; Gets the metaspace Klass boxed in a {@link JavaConstant}.
      ;;
     (#_"Constant" HotSpotResolvedObjectType'''klass-1 [#_"HotSpotResolvedObjectType" this])
-    (#_"boolean" HotSpotResolvedObjectType'''isPrimaryType-1 [#_"HotSpotResolvedObjectType" this])
-    (#_"int" HotSpotResolvedObjectType'''superCheckOffset-1 [#_"HotSpotResolvedObjectType" this])
     (#_"long" HotSpotResolvedObjectType'''prototypeMarkWord-1 [#_"HotSpotResolvedObjectType" this])
 )
 
@@ -3631,43 +3578,11 @@ ZeroExtendNode'new-4
     (#_"boolean" ImplicitNullCheck'''makeNullCheckFor-3 [#_"ImplicitNullCheck" this, #_"Value" value, #_"int" implicitNullCheckLimit])
 )
 
-(defp InplaceUpdateClosure
-    (#_"Node" InplaceUpdateClosure'''replacement-3 [#_"InplaceUpdateClosure" this, #_"Node" node, #_"EdgesType" type])
-)
-
 (defp InputEdges)
 (defp InputInfo)
 (defp InstanceOfDynamicNode)
 (defp InstanceOfNode)
-
-;;;
- ; Helper class for lowering InstanceOfNodes with snippets. The majority of the complexity
- ; in such a lowering derives from the fact that InstanceOfNode is a floating node. A snippet
- ; used to lower an InstanceOfNode will almost always incorporate control flow and replacing
- ; a floating node with control flow is not trivial.
- ;
- ; The mechanism implemented in this class ensures that the graph for an instanceof snippet
- ; is instantiated once per InstanceOfNode being lowered. The result produced is then re-used
- ; by all usages of the node. Additionally, if there is a single usage that is an IfNode, the
- ; control flow in the snippet is connected directly to the true and false successors of the
- ; IfNode. This avoids materializing the instanceof test as a boolean which is then retested
- ; by the IfNode.
- ;;
-(defp InstanceOfSnippetsTemplates)
-
 (defp InstanceOfTemplates)
-
-;;;
- ; Replaces a usage of an InstanceOfNode or InstanceOfDynamicNode.
- ;;
-(defp InstanceOfUsageReplacer
-    ;;;
-     ; Does the replacement based on a previously snippet instantiation.
-     ;;
-    (#_"this" InstanceOfUsageReplacer'''replaceUsingInstantiation-1 [#_"InstanceOfUsageReplacer" this])
-)
-
-(defp Instantiation)
 (defp IntegerAddExactNode)
 (defp IntegerAddExactSplitNode)
 (defp IntegerBelowNode)
@@ -4180,8 +4095,6 @@ ZeroExtendNode'new-4
 (defp LoweringTool)
 (defp MOp)
 (defp MROp)
-(defp MapReplacement)
-(defp MaterializationUsageReplacer)
 (defp MembarNode)
 (defp MembarOp)
 (defp MemberRef)
@@ -4197,26 +4110,8 @@ ZeroExtendNode'new-4
     (#_"this" MemoryAccess'''setLastLocationAccess-2 [#_"MemoryAccess" this, #_"MemoryNode" lla])
 )
 
-(defp MemoryAnchorNode)
 (defp MemoryConstOp)
 (defp MemoryMROp)
-
-;;;
- ; Maps a location to the last node that (potentially) wrote to the location.
- ;;
-(defp MemoryMap
-    ;;;
-     ; Gets the last node that that (potentially) wrote to {@code location}.
-     ;;
-    (#_"MemoryNode" MemoryMap'''getLastLocationAccess-2 [#_"MemoryMap" this, #_"LocationIdentity" location])
-    ;;;
-     ; Gets the location identities in the domain of this map.
-     ;;
-    (#_"LocationIdentity*" MemoryMap'''getLocations-1 [#_"MemoryMap" this])
-)
-
-(defp MemoryMap0)
-(defp MemoryMapNode)
 
 ;;;
  ; This interface marks nodes that are part of the memory graph.
@@ -4224,7 +4119,6 @@ ZeroExtendNode'new-4
 (defp MemoryNode)
 
 (defp MemoryOp)
-(defp MemoryPhiNode)
 (defp MemoryRMOp)
 (defp MemoryTwoOp)
 (defp MemoryVMConstOp)
@@ -4388,7 +4282,6 @@ ZeroExtendNode'new-4
     (#_"boolean" NodePlugin'''handleInstanceOf-4 [#_"NodePlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type])
 )
 
-(defp NonMaterializationUsageReplacer)
 (defp NormalizeCompareNode)
 (defp Not)
 (defp NotNode)
@@ -4429,20 +4322,12 @@ ZeroExtendNode'new-4
     (#_"void" PhiValueVisitor'''visit-3 [#_"PhiValueVisitor" this, #_"Value" phiIn, #_"Value" phiOut])
 )
 
-(defp PiArrayNode)
 (defp PiNode)
 
 ;;;
  ; A placeholder node in a snippet that will be replaced with a PiNode when the snippet is instantiated.
  ;;
-(defp Placeholder
-    ;;;
-     ; Replaces this node with a PiNode during snippet instantiation.
-     ;
-     ; @param snippetReplaceeStamp the stamp of the node being replace by the snippet
-     ;;
-    (#_"this" Placeholder'''makeReplacement-2 [#_"Placeholder" this, #_"Stamp" snippetReplaceeStamp])
-)
+(defp Placeholder)
 
 (defp PlaceholderStamp)
 (defp PointerCastNode)
@@ -4830,14 +4715,6 @@ ZeroExtendNode'new-4
 (defp SnippetAnchorNode)
 
 ;;;
- ; Holds the ResolvedJavaMethod of the snippet, together with some information about the method that
- ; needs to be computed only once. The SnippetInfo should be created once per snippet and then cached.
- ;;
-(defp SnippetInfo)
-
-(defp SnippetTemplate)
-
-;;;
  ; Marker interface for a class that defines one or more Snippets.
  ;;
 (defp Snippets)
@@ -5123,20 +5000,6 @@ ZeroExtendNode'new-4
 (defp UnsignedRemNode)
 (defp UnsignedRightShiftNode)
 (defp Unsupported)
-
-;;;
- ; Logic for replacing a snippet-lowered node at its usages with the return value of the snippet.
- ; An alternative to the {@linkplain SnippetTemplate#DEFAULT_REPLACER default} replacement logic
- ; can be used to handle mismatches between the stamp of the node being lowered and the stamp of
- ; the snippet's return value.
- ;;
-(defp UsageReplacer
-    ;;;
-     ; Replaces all usages of {@code oldNode} with direct or indirect usages of {@code newNode}.
-     ;;
-    (#_"this" UsageReplacer'''replace-3 [#_"UsageReplacer" this, #_"ValueNode" oldNode, #_"ValueNode" newNode])
-)
-
 (defp UseEntry)
 (defp UsePosList)
 (defp Utf8)
@@ -5782,15 +5645,6 @@ ZeroExtendNode'new-4
     (defn #_"ResolvedJavaType" MetaReflection'lookupJavaType-1j [#_"JavaConstant" constant]
         (when (and (not (JavaConstant'''isNull-1 constant)) (satisfies? ObjectConstant constant))
             (ObjectConstant''getType-1 constant)
-        )
-    )
-
-    ;;;
-     ; Provides the {@link ResolvedJavaMethod} for a {@link Method} or {@link Constructor} obtained via reflection.
-     ;;
-    (defn #_"ResolvedJavaMethod" MetaReflection'lookupJavaMethod-1 [#_"Executable" executable]
-        (when (some? executable) => (throw! "executable is nil")
-            (#_"CompilerToVM" .asResolvedJavaMethod HotSpot'native, executable)
         )
     )
 )
@@ -7749,18 +7603,6 @@ ZeroExtendNode'new-4
 )
 
 ;;;
- ; Constants denoting whether a set of edges are inputs or successors.
- ;;
-(value-ns EdgesType
-    (def #_"ordered {EdgesType}" EdgesType'SET
-        (ordered-set
-            :EdgesType'Inputs
-            :EdgesType'Successors
-        )
-    )
-)
-
-;;;
  ; Constants for specifying whether a foreign call destroys or preserves registers. A foreign
  ; call will always destroy {@link ForeignCallLinkage#getOutgoingCallingConvention() its}
  ; {@linkplain ForeignCallLinkage#getTemporaries() temporary} registers.
@@ -9585,7 +9427,7 @@ ZeroExtendNode'new-4
             ;;;
              ; Inputs that consume the memory state of the referenced node.
              ;;
-            :InputType'Memory
+            :InputType'Memory
             ;;;
              ; Inputs that reference a guard (guards, begin nodes).
              ;;
@@ -9593,7 +9435,7 @@ ZeroExtendNode'new-4
             ;;;
              ; Inputs that reference an anchor (begin nodes, value anchors).
              ;;
-            :InputType'Anchor
+            :InputType'Anchor
         )
     )
 )
@@ -11283,182 +11125,27 @@ ZeroExtendNode'new-4
     )
 )
 
-;;;
- ; Base class for snippet classes. It provides a cache for SnippetTemplates.
- ;;
-(class-ns AbstractTemplates []
-    (defn #_"AbstractTemplates" AbstractTemplates'new-0 []
-        (AbstractTemplates'class.)
-    )
-
-    (defn- #_"Method" AbstractTemplates'findMethod-3 [#_"Class<Snippets>" declaringClass, #_"String" methodName]
-        (loop-when [#_"seq" s (seq (#_"Class" .getDeclaredMethods declaringClass))] (some? s)
-            (let [
-                #_"Method" method (first s)
-            ]
-                (if (= (#_"Method" .getName method) methodName) method (recur (next s)))
-            )
-        )
-    )
-
-    ;;;
-     ; Finds the unique method in {@code declaringClass} named {@code methodName} annotated by Snippet
-     ; and returns a SnippetInfo value describing it. There must be exactly one snippet method in
-     ; {@code declaringClass}.
-     ;;
-    (defn #_"SnippetInfo" AbstractTemplates'snippet-3* [#_"Class<Snippets>" declaringClass, #_"String" methodName & #_"LocationIdentity..." privateLocations]
-        (let [
-            #_"ResolvedJavaMethod" method (MetaReflection'lookupJavaMethod-1 (AbstractTemplates'findMethod-3 declaringClass, methodName))
-        ]
-            (SnippetInfo'new-2 method, privateLocations)
-        )
-    )
-)
-
-(class-ns InstanceOfSnippetsTemplates [AbstractTemplates]
-    (defn #_"InstanceOfSnippetsTemplates" InstanceOfSnippetsTemplates'new-0 []
-        (merge (InstanceOfSnippetsTemplates'class.) (AbstractTemplates'new-0))
-    )
-
-    ;;;
-     ; Determines if an {@code instanceof} usage can be materialized.
-     ;;
-    (defn- #_"boolean" InstanceOfSnippetsTemplates'canMaterialize-1 [#_"Node" usage]
-        (condp satisfies? usage
-            ConditionalNode (and (satisfies? ConstantNode (:trueValue usage)) (satisfies? ConstantNode (:falseValue usage)))
-            IfNode              false
-            FixedGuardNode      false
-            ShortCircuitOrNode  false
-                                true
-        )
-    )
-
-    ;;;
-     ; Gets the specific replacer object used to replace the usage of an instanceof node with
-     ; the result of an instantiated instanceof snippet.
-     ;;
-    (defn- #_"InstanceOfUsageReplacer" InstanceOfSnippetsTemplates'createReplacer-3 [#_"FloatingNode" instanceOf, #_"Instantiation" instantiation, #_"Node" usage]
-        (if (InstanceOfSnippetsTemplates'canMaterialize-1 usage)
-            (MaterializationUsageReplacer'new-5 instantiation, (:trueValue usage), (:falseValue usage), instanceOf, usage)
-            (let [
-                #_"ValueNode" trueValue (ConstantNode'forInt-2 1, (:graph usage))
-                #_"ValueNode" falseValue (ConstantNode'forInt-2 0, (:graph usage))
-                [trueValue falseValue]
-                    (if (and (Instantiation''isInitialized-1 instantiation) (not (and (= trueValue (:trueValue instantiation)) (= falseValue (:falseValue instantiation)))))
-                        ;; This code doesn't really care what values are used, so adopt the values from the previous instantiation.
-                        [(:trueValue instantiation) (:falseValue instantiation)]
-                        [trueValue falseValue]
-                    )
-            ]
-                (NonMaterializationUsageReplacer'new-5 instantiation, trueValue, falseValue, instanceOf, usage)
-            )
-        )
-    )
-
-    (defn #_"void" InstanceOfSnippetsTemplates''lower-3 [#_"InstanceOfSnippetsTemplates" this, #_"FloatingNode" instanceOf, #_"LoweringTool" lowerer]
-        (let [
-            #_"Instantiation" instantiation (Instantiation'new-0)
-        ]
-            (doseq [#_"Node" usage (:nodeUsages instanceOf)]
-                (let [
-                    #_"InstanceOfUsageReplacer" replacer (InstanceOfSnippetsTemplates'createReplacer-3 instanceOf, instantiation, usage)
-                ]
-                    (if (Instantiation''isInitialized-1 instantiation)
-                        ;; no need to re-instantiate the snippet - just re-use its result
-                        (§ ass! replacer (InstanceOfUsageReplacer'''replaceUsingInstantiation-1 replacer))
-                        (let [
-                            #_"Arguments" args (InstanceOfSnippetsTemplates''makeArguments-3 this, replacer, lowerer)
-                        ]
-                            (SnippetTemplate''instantiate-5 (SnippetTemplate'new-2 args, instanceOf), instanceOf, replacer, lowerer, args)
-                        )
-                    )
-                )
-            )
-            (GraphUtil'killWithUnusedFloatingInputs-1 instanceOf)
-        )
-        nil
-    )
-)
-
-(class-ns InstanceOfTemplates [InstanceOfSnippetsTemplates, AbstractTemplates]
+(class-ns InstanceOfTemplates []
     (defn #_"InstanceOfTemplates" InstanceOfTemplates'new-0 []
-        (merge (InstanceOfTemplates'class.) (InstanceOfSnippetsTemplates'new-0)
+        (merge (InstanceOfTemplates'class.)
             (hash-map
-                #_"SnippetInfo" :instanceofExact (AbstractTemplates'snippet-3* InstanceOfSnippets, "instanceofExact")
-                #_"SnippetInfo" :instanceofPrimary (AbstractTemplates'snippet-3* InstanceOfSnippets, "instanceofPrimary")
-                #_"SnippetInfo" :instanceofSecondary (AbstractTemplates'snippet-3* InstanceOfSnippets, "instanceofSecondary", NamedLocationIdentity'SECONDARY_SUPER_CACHE)
-                #_"SnippetInfo" :instanceofDynamic (AbstractTemplates'snippet-3* InstanceOfSnippets, "instanceofDynamic", NamedLocationIdentity'SECONDARY_SUPER_CACHE)
+                #_"SnippetInfo" :instanceofExact (ß AbstractTemplates'snippet-3* InstanceOfSnippets, "instanceofExact")
+                #_"SnippetInfo" :instanceofPrimary (ß AbstractTemplates'snippet-3* InstanceOfSnippets, "instanceofPrimary")
+                #_"SnippetInfo" :instanceofSecondary (ß AbstractTemplates'snippet-3* InstanceOfSnippets, "instanceofSecondary", NamedLocationIdentity'SECONDARY_SUPER_CACHE)
+                #_"SnippetInfo" :instanceofDynamic (ß AbstractTemplates'snippet-3* InstanceOfSnippets, "instanceofDynamic", NamedLocationIdentity'SECONDARY_SUPER_CACHE)
             )
-        )
-    )
-
-    ;;;
-     ; Gets the arguments used to retrieve and instantiate an instanceof snippet template.
-     ;;
-    (defn #_"Arguments" InstanceOfSnippetsTemplates''makeArguments-3 [#_"InstanceOfTemplates" this, #_"InstanceOfUsageReplacer" replacer, #_"LoweringTool" lowerer]
-        (condp satisfies? (:instanceOf replacer)
-            InstanceOfNode
-                (let [
-                    #_"InstanceOfNode" instanceOf (:instanceOf replacer)
-                    #_"ValueNode" object (Unary'''getValue-1 instanceOf)
-                    #_"TypeReference" targetType (InstanceOfNode''type-1 instanceOf)
-                    #_"HotSpotResolvedObjectType" type (:type targetType)
-                    ;; If non-nil, this is the only type that could pass the type check, because the target of the type check is a final
-                    ;; class or has been speculated to be a final class and this value is the only concrete subclass of the target type.
-                    #_"ResolvedJavaType" exact (when (and (some? targetType) (:exactReference targetType)) type)
-                    #_"ConstantNode" hub (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (HotSpotResolvedObjectType'''klass-1 type), (:graph instanceOf))
-                    #_"Graph" graph (:graph instanceOf)
-                ]
-                    (cond
-                        (some? exact)
-                            (Arguments'new-4* (:instanceofExact this), (:guardsStage graph), (:loweringStage lowerer),
-                                object,
-                                (ConstantNode'forConstant-3s KlassPointerStamp'KLASS_NON_NULL, (HotSpotResolvedObjectType'''klass-1 exact), graph),
-                                (:trueValue replacer),
-                                (:falseValue replacer)
-                            )
-                        (HotSpotResolvedObjectType'''isPrimaryType-1 type)
-                            (Arguments'new-4* (:instanceofPrimary this), (:guardsStage graph), (:loweringStage lowerer),
-                                hub,
-                                object,
-                                (HotSpotResolvedObjectType'''superCheckOffset-1 type),
-                                (:trueValue replacer),
-                                (:falseValue replacer)
-                            )
-                        :else
-                            (Arguments'new-4* (:instanceofSecondary this), (:guardsStage graph), (:loweringStage lowerer),
-                                hub,
-                                object,
-                                (:trueValue replacer),
-                                (:falseValue replacer)
-                            )
-                    )
-                )
-            InstanceOfDynamicNode
-                (let [
-                    #_"InstanceOfDynamicNode" instanceOf (:instanceOf replacer)
-                    #_"ValueNode" object (:y instanceOf)
-                ]
-                    (Arguments'new-4* (:instanceofDynamic this), (:guardsStage (:graph instanceOf)), (:loweringStage lowerer),
-                        (:x instanceOf),
-                        object,
-                        (:trueValue replacer),
-                        (:falseValue replacer),
-                        (:allow-nil? instanceOf)
-                    )
-                )
         )
     )
 )
 
-(class-ns MonitorTemplates [AbstractTemplates]
+(class-ns MonitorTemplates []
     (defn #_"MonitorTemplates" MonitorTemplates'new-1 [#_"boolean" useFastLocking]
-        (merge (MonitorTemplates'class.) (AbstractTemplates'new-0)
+        (merge (MonitorTemplates'class.)
             (hash-map
-                #_"SnippetInfo" :monitorenter (AbstractTemplates'snippet-3* MonitorSnippets, "monitorenter")
-                #_"SnippetInfo" :monitorexit (AbstractTemplates'snippet-3* MonitorSnippets, "monitorexit")
-                #_"SnippetInfo" :monitorenterStub (AbstractTemplates'snippet-3* MonitorSnippets, "monitorenterStub")
-                #_"SnippetInfo" :monitorexitStub (AbstractTemplates'snippet-3* MonitorSnippets, "monitorexitStub")
+                #_"SnippetInfo" :monitorenter (ß AbstractTemplates'snippet-3* MonitorSnippets, "monitorenter")
+                #_"SnippetInfo" :monitorexit (ß AbstractTemplates'snippet-3* MonitorSnippets, "monitorexit")
+                #_"SnippetInfo" :monitorenterStub (ß AbstractTemplates'snippet-3* MonitorSnippets, "monitorenterStub")
+                #_"SnippetInfo" :monitorexitStub (ß AbstractTemplates'snippet-3* MonitorSnippets, "monitorexitStub")
                 #_"boolean" :useFastLocking useFastLocking
             )
         )
@@ -11479,7 +11166,7 @@ ZeroExtendNode'new-4
                     )
                 )
         ]
-            (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, node), node, args)
+            (ß SnippetTemplate''instantiate-3 (ß SnippetTemplate'new-2 args, node), node, args)
         )
         nil
     )
@@ -11492,18 +11179,18 @@ ZeroExtendNode'new-4
                     (:lockDepth (:monitorId node))
                 )
         ]
-            (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, node), node, args)
+            (ß SnippetTemplate''instantiate-3 (ß SnippetTemplate'new-2 args, node), node, args)
         )
         nil
     )
 )
 
-(class-ns NewObjectTemplates [AbstractTemplates]
+(class-ns NewObjectTemplates []
     (defn #_"NewObjectTemplates" NewObjectTemplates'new-0 []
-        (merge (NewObjectTemplates'class.) (AbstractTemplates'new-0)
+        (merge (NewObjectTemplates'class.)
             (hash-map
-                #_"SnippetInfo" :allocateInstance (AbstractTemplates'snippet-3* NewObjectSnippets, "allocateInstance", NamedLocationIdentity'MARK_WORD, NamedLocationIdentity'HUB_WRITE, NamedLocationIdentity'TLAB_TOP, NamedLocationIdentity'TLAB_END)
-                #_"SnippetInfo" :allocateArray (AbstractTemplates'snippet-3* NewObjectSnippets, "allocateArray", NamedLocationIdentity'MARK_WORD, NamedLocationIdentity'HUB_WRITE, NamedLocationIdentity'TLAB_TOP, NamedLocationIdentity'TLAB_END)
+                #_"SnippetInfo" :allocateInstance (ß AbstractTemplates'snippet-3* NewObjectSnippets, "allocateInstance", NamedLocationIdentity'MARK_WORD, NamedLocationIdentity'HUB_WRITE, NamedLocationIdentity'TLAB_TOP, NamedLocationIdentity'TLAB_END)
+                #_"SnippetInfo" :allocateArray (ß AbstractTemplates'snippet-3* NewObjectSnippets, "allocateArray", NamedLocationIdentity'MARK_WORD, NamedLocationIdentity'HUB_WRITE, NamedLocationIdentity'TLAB_TOP, NamedLocationIdentity'TLAB_END)
             )
         )
     )
@@ -11518,7 +11205,7 @@ ZeroExtendNode'new-4
                     (HotSpotResolvedObjectType'''prototypeMarkWord-1 type)
                 )
         ]
-            (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, node), node, args)
+            (ß SnippetTemplate''instantiate-3 (ß SnippetTemplate'new-2 args, node), node, args)
         )
         nil
     )
@@ -11538,17 +11225,17 @@ ZeroExtendNode'new-4
                     (satisfies? ConstantNode length)
                 )
         ]
-            (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, node), node, args)
+            (ß SnippetTemplate''instantiate-3 (ß SnippetTemplate'new-2 args, node), node, args)
         )
         nil
     )
 )
 
-(class-ns UnsafeLoadTemplates [AbstractTemplates]
+(class-ns UnsafeLoadTemplates []
     (defn #_"UnsafeLoadTemplates" UnsafeLoadTemplates'new-0 []
-        (merge (UnsafeLoadTemplates'class.) (AbstractTemplates'new-0)
+        (merge (UnsafeLoadTemplates'class.)
             (hash-map
-                #_"SnippetInfo" :lowerUnsafeLoad (AbstractTemplates'snippet-3* UnsafeLoadSnippets, "lowerUnsafeLoad")
+                #_"SnippetInfo" :lowerUnsafeLoad (ß AbstractTemplates'snippet-3* UnsafeLoadSnippets, "lowerUnsafeLoad")
             )
         )
     )
@@ -11561,21 +11248,21 @@ ZeroExtendNode'new-4
                     (:offset node)
                 )
         ]
-            (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, node), node, args)
+            (ß SnippetTemplate''instantiate-3 (ß SnippetTemplate'new-2 args, node), node, args)
         )
         nil
     )
 )
 
-(class-ns WriteBarrierTemplates [AbstractTemplates]
+(class-ns WriteBarrierTemplates []
     (defn #_"WriteBarrierTemplates" WriteBarrierTemplates'new-1 [#_"CompressEncoding" oopEncoding]
-        (merge (WriteBarrierTemplates'class.) (AbstractTemplates'new-0)
+        (merge (WriteBarrierTemplates'class.)
             (hash-map
-                #_"SnippetInfo" :serialImpreciseWriteBarrier (AbstractTemplates'snippet-3* WriteBarrierSnippets, "serialImpreciseWriteBarrier", NamedLocationIdentity'GC_CARD)
-                #_"SnippetInfo" :serialPreciseWriteBarrier (AbstractTemplates'snippet-3* WriteBarrierSnippets, "serialPreciseWriteBarrier", NamedLocationIdentity'GC_CARD)
-                #_"SnippetInfo" :g1PreWriteBarrier (AbstractTemplates'snippet-3* WriteBarrierSnippets, "g1PreWriteBarrier", NamedLocationIdentity'GC_INDEX, NamedLocationIdentity'GC_LOG)
-                #_"SnippetInfo" :g1ReferentReadBarrier (AbstractTemplates'snippet-3* WriteBarrierSnippets, "g1PreWriteBarrier", NamedLocationIdentity'GC_INDEX, NamedLocationIdentity'GC_LOG)
-                #_"SnippetInfo" :g1PostWriteBarrier (AbstractTemplates'snippet-3* WriteBarrierSnippets, "g1PostWriteBarrier", NamedLocationIdentity'GC_CARD, NamedLocationIdentity'GC_INDEX, NamedLocationIdentity'GC_LOG)
+                #_"SnippetInfo" :serialImpreciseWriteBarrier (ß AbstractTemplates'snippet-3* WriteBarrierSnippets, "serialImpreciseWriteBarrier", NamedLocationIdentity'GC_CARD)
+                #_"SnippetInfo" :serialPreciseWriteBarrier (ß AbstractTemplates'snippet-3* WriteBarrierSnippets, "serialPreciseWriteBarrier", NamedLocationIdentity'GC_CARD)
+                #_"SnippetInfo" :g1PreWriteBarrier (ß AbstractTemplates'snippet-3* WriteBarrierSnippets, "g1PreWriteBarrier", NamedLocationIdentity'GC_INDEX, NamedLocationIdentity'GC_LOG)
+                #_"SnippetInfo" :g1ReferentReadBarrier (ß AbstractTemplates'snippet-3* WriteBarrierSnippets, "g1PreWriteBarrier", NamedLocationIdentity'GC_INDEX, NamedLocationIdentity'GC_LOG)
+                #_"SnippetInfo" :g1PostWriteBarrier (ß AbstractTemplates'snippet-3* WriteBarrierSnippets, "g1PostWriteBarrier", NamedLocationIdentity'GC_CARD, NamedLocationIdentity'GC_INDEX, NamedLocationIdentity'GC_LOG)
                 #_"CompressEncoding" :oopEncoding oopEncoding
             )
         )
@@ -11593,7 +11280,7 @@ ZeroExtendNode'new-4
                     )
                 )
         ]
-            (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, node), node, args)
+            (ß SnippetTemplate''instantiate-3 (ß SnippetTemplate'new-2 args, node), node, args)
         )
         nil
     )
@@ -11614,7 +11301,7 @@ ZeroExtendNode'new-4
                     (:nullCheck node)
                 )
         ]
-            (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, node), node, args)
+            (ß SnippetTemplate''instantiate-3 (ß SnippetTemplate'new-2 args, node), node, args)
         )
         nil
     )
@@ -11635,7 +11322,7 @@ ZeroExtendNode'new-4
                     false
                 )
         ]
-            (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, node), node, args)
+            (ß SnippetTemplate''instantiate-3 (ß SnippetTemplate'new-2 args, node), node, args)
         )
         nil
     )
@@ -11655,7 +11342,7 @@ ZeroExtendNode'new-4
                         (:precise? node)
                     )
             ]
-                (SnippetTemplate''instantiate-3 (SnippetTemplate'new-2 args, node), node, args)
+                (ß SnippetTemplate''instantiate-3 (ß SnippetTemplate'new-2 args, node), node, args)
             )
         )
         nil
@@ -12213,10 +11900,10 @@ ZeroExtendNode'new-4
  ; Values that are bound to the snippet method parameters.
  ;;
 (class-ns Arguments []
-    (defn #_"Arguments" Arguments'new-4* [#_"SnippetInfo" info, #_"GuardsStage" guardsStage, #_"LoweringStage" loweringStage & #_"Object..." values]
+    (defn #_"Arguments" Arguments'new-4* [#_"SnippetInfo" info, #_"GuardsStage" guardsStage, #_"LoweringStage" loweringStage & #_"Object..." values]
         (merge (Arguments'class.)
             (hash-map
-                #_"SnippetInfo" :info info
+                #_"SnippetInfo" :info info
                 #_"GuardsStage" :guardsStage guardsStage
                 #_"LoweringStage" :loweringStage loweringStage
                 #_"Object*" :argValues values
@@ -21920,177 +21607,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"boolean" NodeClass''isValid-4 [#_"NodeClass" this, #_"Position" pos, #_"NodeClass" from, #_"Edges" fromEdges]
-        (or (= this from)
-            (let [
-                #_"Edges" toEdges (NodeClass''getEdges-2 this, (:type fromEdges))
-            ]
-                (and (< (:index pos) (count (:offsets toEdges)))
-                     (< (:index pos) (count (:offsets fromEdges)))
-                     (Fields''isSame-3 toEdges, fromEdges, (:index pos))
-                )
-            )
-        )
-    )
-
-    (defn- #_"[Node]" NodeClass'updateEdgeListCopy-4 [#_"Node" node, #_"[Node]" nodeList, #_"InplaceUpdateClosure" duplicationReplacement, #_"EdgesType" edgesType]
-        (loop-when [#_"[Node]" result [] #_"seq" s (seq nodeList)] (some? s) => result
-            (let [
-                #_"Node" oldNode (first s)
-                result
-                    (when (some? oldNode) => (conj' result nil)
-                        (let [
-                            #_"Node" replacement (InplaceUpdateClosure'''replacement-3 duplicationReplacement, oldNode, edgesType)
-                        ]
-                            (if (= edgesType :EdgesType'Inputs)
-                                (Node''updateUsages-3 node, nil, replacement)
-                                (Node''updatePredecessor-3 node, nil, replacement)
-                            )
-                            (conj' result replacement)
-                        )
-                    )
-            ]
-                (recur result (next s))
-            )
-        )
-    )
-
-    (defn #_"void" NodeClass'updateEdgesInPlace-3 [#_"Node" node, #_"InplaceUpdateClosure" duplicationReplacement, #_"Edges" edges]
-        (let [
-            #_"int" i
-                (loop-when-recur [i 0] (< i (:directCount edges)) [(inc i)] => i
-                    (let [
-                        #_"Node" edge (Edges'getNode-3 node, (:offsets edges), i)
-                    ]
-                        (when (some? edge)
-                            (let [
-                                #_"Node" replacement (InplaceUpdateClosure'''replacement-3 duplicationReplacement, edge, (:type edges))
-                            ]
-                                (if (= (:type edges) :EdgesType'Inputs)
-                                    (Node''updateUsages-3 node, nil, replacement)
-                                    (Node''updatePredecessor-3 node, nil, replacement)
-                                )
-                                (§ ass! node (Edges''initializeNode-4 edges, node, i, replacement))
-                            )
-                        )
-                    )
-                )
-        ]
-            (loop-when-recur i (< i (count (:offsets edges))) (inc i)
-                (let [
-                    #_"[Node]" nodeList (Edges'getNodeList-3 node, (:offsets edges), i)
-                ]
-                    (when (some? nodeList)
-                        (§ ass! node (Edges''initializeList-4 edges, node, i, (NodeClass'updateEdgeListCopy-4 node, nodeList, duplicationReplacement, (:type edges))))
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (defn #_"void" NodeClass''updateInputSuccInPlace-3 [#_"NodeClass" this, #_"Node" node, #_"InplaceUpdateClosure" duplicationReplacement]
-        (NodeClass'updateEdgesInPlace-3 node, duplicationReplacement, (:inputEdges this))
-        (NodeClass'updateEdgesInPlace-3 node, duplicationReplacement, (:successorEdges this))
-        nil
-    )
-
-    ;;;
-     ; Gets the input or successor edges defined by this node class.
-     ;;
-    (defn #_"Edges" NodeClass''getEdges-2 [#_"NodeClass" this, #_"EdgesType" type]
-        (if (= type :EdgesType'Inputs) (:inputEdges this) (:successorEdges this))
-    )
-
-    (defn- #_"{Node Node}" NodeClass'createNodeDuplicates-3 [#_"Graph" graph, #_"Node*" nodes, #_"DuplicationReplacement" replacements]
-        (into {}
-            (for [#_"Node" node nodes :when (some? node)]
-                (let [
-                    #_"Node" replacement (if (some? replacements) (DuplicationReplacement'''replacement-2 replacements, node) node)
-                ]
-                    [node (if (= replacement node) (Node''clone-3 node, graph, EdgesType'SET) replacement)]
-                )
-            )
-        )
-    )
-
-    (defn- #_"void" NodeClass'transferEdges-6 [#_"Graph" graph, #_"DuplicationReplacement" replacements, #_"{Node Node}" newNodes, #_"Node" oldNode, #_"Node" node, #_"EdgesType" type]
-        (let [
-            #_"NodeClass" nodeClass (:nodeClass node)
-            #_"NodeClass" oldNodeClass (:nodeClass oldNode)
-            #_"Edges" oldEdges (NodeClass''getEdges-2 oldNodeClass, type)
-        ]
-            (doseq [#_"Position" pos (Edges''getPositions-2 oldEdges, oldNode)]
-                (when (NodeClass''isValid-4 nodeClass, pos, oldNodeClass, oldEdges)
-                    (let [
-                        #_"Node" oldEdge (Position''get-2 pos, oldNode)
-                    ]
-                        (when (some? oldEdge)
-                            (let [
-                                #_"Node" target
-                                    (or (get newNodes oldEdge)
-                                        (let [
-                                            #_"Node" replacement (if (some? replacements) (DuplicationReplacement'''replacement-2 replacements, oldEdge) oldEdge)
-                                        ]
-                                            (cond
-                                                (not= replacement oldEdge)                                  replacement
-                                                (and (= (:graph oldEdge) graph) (= type :EdgesType'Inputs)) oldEdge ;; patch to the outer world
-                                            )
-                                        )
-                                    )
-                            ]
-                                (Position''set-3 pos, node, target)
-                            )
-                        )
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (defn- #_"void" NodeClass'transferEdgesDifferentNodeClass-5 [#_"Graph" graph, #_"DuplicationReplacement" replacements, #_"{Node Node}" newNodes, #_"Node" oldNode, #_"Node" node]
-        (NodeClass'transferEdges-6 graph, replacements, newNodes, oldNode, node, :EdgesType'Inputs)
-        (NodeClass'transferEdges-6 graph, replacements, newNodes, oldNode, node, :EdgesType'Successors)
-        nil
-    )
-
-    (defn #_"{Node Node}" NodeClass'addGraphDuplicate-4 [#_"Graph" graph, #_"Graph" oldGraph, #_"Node*" nodes, #_"DuplicationReplacement" replacements]
-        (let [
-            #_"{Node Node}" newNodes (NodeClass'createNodeDuplicates-3 graph, nodes, replacements)
-            #_"InplaceUpdateClosure" replacementClosure
-                (reify InplaceUpdateClosure
-                    (#_"Node" InplaceUpdateClosure'''replacement-3 [#_"InplaceUpdateClosure" _, #_"Node" node, #_"EdgesType" type]
-                        (or (get newNodes node)
-                            (let [
-                                #_"Node" replacement (if (some? replacements) (DuplicationReplacement'''replacement-2 replacements, node) node)
-                            ]
-                                (cond
-                                    (not= replacement node)                                  replacement
-                                    (and (= (:graph node) graph) (= type :EdgesType'Inputs)) node ;; patch to the outer world
-                                )
-                            )
-                        )
-                    )
-                )
-        ]
-            ;; re-wire inputs
-            (doseq [#_"Node" oldNode nodes]
-                (let [
-                    #_"Node" node (get newNodes oldNode)
-                    #_"NodeClass" nodeClass (:nodeClass node)
-                ]
-                    (if (or (nil? replacements) (= (DuplicationReplacement'''replacement-2 replacements, oldNode) oldNode))
-                        (NodeClass''updateInputSuccInPlace-3 nodeClass, node, replacementClosure)
-                        (NodeClass'transferEdgesDifferentNodeClass-5 graph, replacements, newNodes, oldNode, node)
-                    )
-                )
-            )
-
-            newNodes
-        )
-    )
-
     (defn- #_"boolean" NodeClass'equalEdges-3 [#_"Node" node, #_"Node" other, #_"long" mask]
         (loop [mask mask]
             (or (zero? mask)
@@ -22384,14 +21900,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    ;;;
-     ; Determines if a field in the domain of this object is the same as the field denoted by
-     ; the same index in another Fields object.
-     ;;
-    (defn #_"boolean" Fields''isSame-3 [#_"Fields" this, #_"Fields" other, #_"int" index]
-        (= (nth (:offsets other) index) (nth (:offsets this) index))
-    )
-
     (defn #_"Object" Fields''getObject-3  [#_"Fields" this, #_"Object" o, #_"int" i]
         (.getObject HotSpot'unsafe, o, (nth (:offsets this) i))
     )
@@ -22403,10 +21911,9 @@ ZeroExtendNode'new-4
 )
 
 (class-ns Edges [Fields]
-    (defn #_"Edges" Edges'new-3 [#_"EdgesType" type, #_"int" directCount, #_"FieldInfo*" edges]
+    (defn #_"Edges" Edges'new-2 [#_"int" directCount, #_"FieldInfo*" edges]
         (merge (Edges'class.) (Fields'new-1 edges)
             (hash-map
-                #_"EdgesType" :type type
                 ;;;
                  ; Number of direct edges represented by this object. A direct edge goes directly
                  ; to another Node. An indirect edge goes via a NodeList.
@@ -22435,11 +21942,6 @@ ZeroExtendNode'new-4
         node
     )
 
-    (defn #_"Node" Edges'putNodeListUnsafe-3 [#_"Node" node, #_"long" offset, #_"[Node]" value]
-        (.putObject HotSpot'unsafe, node, offset, value)
-        node
-    )
-
     ;;;
      ; Gets the Node at the end point of a {@linkplain #getDirectCount() direct} edge.
      ;
@@ -22463,48 +21965,6 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; Initializes the list edges in a given node based on the size of the list edges in a prototype node.
-     ;
-     ; @param node the node whose list edges are to be initialized
-     ; @param prototype the node whose list edge sizes are used when creating new edge lists
-     ;;
-    (defn #_"void" Edges''initializeLists-3 [#_"Edges" this, #_"Node" node, #_"Node" prototype]
-        (loop-when-recur [#_"int" i (:directCount this)] (< i (count (:offsets this))) [(inc i)]
-            (when (some? (Edges'getNodeList-3 prototype, (:offsets this), i))
-                (§ ass! node (Edges''initializeList-4 this, node, i, []))
-            )
-        )
-        nil
-    )
-
-    ;;;
-     ; Copies edges from {@code fromNode} to {@code toNode}. The nodes are expected to be of the exact same type.
-     ;
-     ; @param fromNode the node from which the edges should be copied.
-     ; @param toNode the node to which the edges should be copied.
-     ;;
-    (defn #_"void" Edges''copy-3 [#_"Edges" this, #_"Node" fromNode, #_"Node" toNode]
-        (let [
-            #_"int" i
-                (loop-when-recur [i 0] (< i (:directCount this)) [(inc i)] => i
-                    (§ ass! toNode (Edges''initializeNode-4 this, toNode, i, (Edges'getNode-3 fromNode, (:offsets this), i)))
-                )
-        ]
-            (loop-when-recur i (< i (count (:offsets this))) (inc i)
-                (let [
-                    #_"[Node]" from (Edges'getNodeList-3 fromNode, (:offsets this), i)
-                    #_"[Node]" to (Edges'getNodeList-3 toNode, (:offsets this), i)
-                ]
-                    (when (any = to nil from) => (§ ass! to (§ snap from))
-                        (§ ass! toNode (Edges''initializeList-4 this, toNode, i, (§ snap from)))
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    ;;;
      ; Sets the value of a given edge without notifying the new and old nodes on the other end of the edge of the change.
      ;
      ; @param node the node whose edge is to be updated
@@ -22513,10 +21973,6 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"Node" Edges''initializeNode-4 [#_"Edges" this, #_"Node" node, #_"int" index, #_"Node" value]
         (Edges'putNodeUnsafe-3 node, (nth (:offsets this) index), value)
-    )
-
-    (defn #_"Node" Edges''initializeList-4 [#_"Edges" this, #_"Node" node, #_"int" index, #_"[Node]" value]
-        (Edges'putNodeListUnsafe-3 node, (nth (:offsets this) index), value)
     )
 
     ;;;
@@ -22597,7 +22053,7 @@ ZeroExtendNode'new-4
 
 (class-ns InputEdges [Edges, Fields]
     (defn #_"InputEdges" InputEdges'new-2 [#_"int" directCount, #_"InputInfo*" edges]
-        (merge (InputEdges'class.) (Edges'new-3 :EdgesType'Inputs, directCount, edges)
+        (merge (InputEdges'class.) (Edges'new-2 directCount, edges)
             (hash-map
                 #_"InputType*" :inputTypes (map :inputType edges)
             )
@@ -22620,7 +22076,7 @@ ZeroExtendNode'new-4
 
 (class-ns SuccessorEdges [Edges, Fields]
     (defn #_"SuccessorEdges" SuccessorEdges'new-2 [#_"int" directCount, #_"EdgeInfo*" edges]
-        (merge (SuccessorEdges'class.) (Edges'new-3 :EdgesType'Successors, directCount, edges))
+        (merge (SuccessorEdges'class.) (Edges'new-2 directCount, edges))
     )
 
     (defm SuccessorEdges Edges
@@ -24044,13 +23500,15 @@ ZeroExtendNode'new-4
     (defn #_"Node" Graph''add-2 [#_"Graph" this, #_"Node" node]
         (let [
             _ (§ ass! node (assoc node :graph this))
-            _ (§ ass! this (Graph''register-2 this, node))
-            #_"NodeClass<? implements Node>" c (:nodeClass node)
+            #_"int" id (count (:gNodes this))
+            _ (§ ass! node (assoc node :nid id))
+            _ (§ ass! this (update this :gNodes assoc' id node))
+            #_"NodeClass" c (:nodeClass node)
         ]
             (NodeClass''registerAtInputsAsUsage-2 c, node)
             (NodeClass''registerAtSuccessorsAsPredecessor-2 c, node)
+            node
         )
-        node
     )
 
     (defn #_"Node" Graph''maybeAddOrUnique-2 [#_"Graph" this, #_"Node" node]
@@ -24093,36 +23551,8 @@ ZeroExtendNode'new-4
         (filter #(satisfies? type %) (Graph''getNodes-1 this))
     )
 
-    (defn #_"this" Graph''register-2 [#_"Graph" this, #_"Node" node]
-        (let [
-            #_"int" id (count (:gNodes this))
-            _ (§ ass! node (assoc node :nid id))
-        ]
-            (update this :gNodes assoc' id node)
-        )
-    )
-
     (defn #_"this" Graph''unregister-2 [#_"Graph" this, #_"Node" node]
         (update this :gNodes assoc' (:nid node) nil)
-    )
-
-    ;;;
-     ; Adds duplicates of the nodes in {@code newNodes} to this graph. This will recreate any edges
-     ; between the duplicate nodes. The {@code replacement} map can be used to replace a node from
-     ; the source graph by a given node (which must already be in this graph). Edges between
-     ; duplicate and replacement nodes will also be recreated so care should be taken regarding the
-     ; matching of node types in the replacement map.
-     ;
-     ; @param newNodes the nodes to be duplicated
-     ; @param replacementsMap the replacement map (can be nil if no replacement is to be performed)
-     ; @return a map which associates the original nodes from {@code nodes} to their duplicates
-     ;;
-    (defn #_"{Node Node}" Graph''addDuplicates-4m [#_"Graph" this, #_"Node*" newNodes, #_"Graph" oldGraph, #_"{Node Node}" replacementsMap]
-        (Graph''addDuplicates-4r this, newNodes, oldGraph, (when (some? replacementsMap) (MapReplacement'new-1 replacementsMap)))
-    )
-
-    (defn #_"{Node Node}" Graph''addDuplicates-4r [#_"Graph" this, #_"Node*" newNodes, #_"Graph" oldGraph, #_"DuplicationReplacement" replacements]
-        (NodeClass'addGraphDuplicate-4 this, oldGraph, newNodes, replacements)
     )
 
     #_unused
@@ -24138,19 +23568,6 @@ ZeroExtendNode'new-4
                     )
             ]
                 (recur stamp (next s))
-            )
-        )
-    )
-
-    (defn #_"ParameterNode" Graph''getParameter-2 [#_"Graph" this, #_"int" index]
-        (loop-when [#_"seq" s (seq (Graph''getNodes-2 this, ParameterNode))] (some? s)
-            (let [
-                #_"ParameterNode" param (first s)
-            ]
-                (if (= (AbstractLocalNode''index-1 param) index)
-                    param
-                    (recur (next s))
-                )
             )
         )
     )
@@ -24449,159 +23866,6 @@ ZeroExtendNode'new-4
 
         (#_"boolean" NodePlugin'''handleInstanceOf-4 [#_"HotSpotPlugin" this, #_"BytecodeParser" parser, #_"ValueNode" object, #_"ResolvedJavaType" type]
             false
-        )
-    )
-)
-
-(class-ns InstanceOfUsageReplacer [UsageReplacer]
-    (defn #_"InstanceOfUsageReplacer" InstanceOfUsageReplacer'new-4 [#_"Instantiation" instantiation, #_"FloatingNode" instanceOf, #_"ValueNode" trueValue, #_"ValueNode" falseValue]
-        (merge (InstanceOfUsageReplacer'class.)
-            (hash-map
-                #_"Instantiation" :instantiation instantiation
-                #_"FloatingNode" :instanceOf instanceOf
-                #_"ValueNode" :trueValue trueValue
-                #_"ValueNode" :falseValue falseValue
-            )
-        )
-    )
-)
-
-;;;
- ; Replaces the usage of an InstanceOfNode or InstanceOfDynamicNode that does
- ; materializes the result of the type test.
- ;;
-(class-ns MaterializationUsageReplacer [InstanceOfUsageReplacer, UsageReplacer]
-    (defn #_"MaterializationUsageReplacer" MaterializationUsageReplacer'new-5 [#_"Instantiation" instantiation, #_"ValueNode" trueValue, #_"ValueNode" falseValue, #_"FloatingNode" instanceOf, #_"ConditionalNode" usage]
-        (merge (MaterializationUsageReplacer'class.) (InstanceOfUsageReplacer'new-4 instantiation, instanceOf, trueValue, falseValue)
-            (hash-map
-                #_"ConditionalNode" :usage usage
-            )
-        )
-    )
-
-    (defm MaterializationUsageReplacer InstanceOfUsageReplacer
-        (#_"this" InstanceOfUsageReplacer'''replaceUsingInstantiation-1 [#_"MaterializationUsageReplacer" this]
-            (let [
-                #_"ValueNode" newValue (Instantiation''asMaterialization-4 (:instantiation this), (:graph (:usage this)), (:trueValue this), (:falseValue this))
-                this (update this :usage Node''replaceAtUsages-2 newValue)
-            ]
-                (GraphUtil'killWithUnusedFloatingInputs-1 (:usage this))
-                this
-            )
-        )
-    )
-
-    (defm MaterializationUsageReplacer UsageReplacer
-        (#_"this" UsageReplacer'''replace-3 [#_"MaterializationUsageReplacer" this, #_"ValueNode" oldNode, #_"ValueNode" newNode]
-            (let [
-                _ (ValueNode'''inferStamp-1 newNode)
-                this (update this :instantiation Instantiation''initialize-4 newNode, (:trueValue this), (:falseValue this))
-                this (update this :usage Node''replaceAtUsages-2 newNode)
-            ]
-                (GraphUtil'killWithUnusedFloatingInputs-1 (:usage this))
-                this
-            )
-        )
-    )
-)
-
-;;;
- ; Replaces the usage of an InstanceOfNode or InstanceOfDynamicNode that does
- ; not materialize the result of the type test.
- ;;
-(class-ns NonMaterializationUsageReplacer [InstanceOfUsageReplacer, UsageReplacer]
-    (defn #_"NonMaterializationUsageReplacer" NonMaterializationUsageReplacer'new-5 [#_"Instantiation" instantiation, #_"ValueNode" trueValue, #_"ValueNode" falseValue, #_"FloatingNode" instanceOf, #_"Node" usage]
-        (merge (NonMaterializationUsageReplacer'class.) (InstanceOfUsageReplacer'new-4 instantiation, instanceOf, trueValue, falseValue)
-            (hash-map
-                #_"Node" :usage usage
-            )
-        )
-    )
-
-    (defm NonMaterializationUsageReplacer InstanceOfUsageReplacer
-        (#_"this" InstanceOfUsageReplacer'''replaceUsingInstantiation-1 [#_"NonMaterializationUsageReplacer" this]
-            (Node''replaceFirstInput-3 (:usage this), (:instanceOf this), (Instantiation''asCondition-2 (:instantiation this), (:trueValue this)))
-            this
-        )
-    )
-
-    (defm NonMaterializationUsageReplacer UsageReplacer
-        (#_"this" UsageReplacer'''replace-3 [#_"NonMaterializationUsageReplacer" this, #_"ValueNode" oldNode, #_"ValueNode" newNode]
-            (let [
-                _ (ValueNode'''inferStamp-1 newNode)
-                this (update this :instantiation Instantiation''initialize-4 newNode, (:trueValue this), (:falseValue this))
-            ]
-                (Node''replaceFirstInput-3 (:usage this), oldNode, (Instantiation''asCondition-2 (:instantiation this), (:trueValue this)))
-                this
-            )
-        )
-    )
-)
-
-;;;
- ; The result of instantiating an instanceof snippet. This enables a snippet instantiation to be
- ; re-used which reduces compile time and produces better code.
- ;;
-(class-ns Instantiation []
-    (defn #_"Instantiation" Instantiation'new-0 []
-        (merge (Instantiation'class.)
-            (hash-map
-                #_"ValueNode" :result nil
-                #_"LogicNode" :logic nil
-                #_"ValueNode" :trueValue nil
-                #_"ValueNode" :falseValue nil
-            )
-        )
-    )
-
-    ;;;
-     ; Determines if the instantiation has occurred.
-     ;;
-    (defn #_"boolean" Instantiation''isInitialized-1 [#_"Instantiation" this]
-        (some? (:result this))
-    )
-
-    (defn #_"this" Instantiation''initialize-4 [#_"Instantiation" this, #_"ValueNode" r, #_"ValueNode" t, #_"ValueNode" f]
-        (let [
-            this (assoc this :result r)
-            this (assoc this :trueValue t)
-            this (assoc this :falseValue f)
-        ]
-            this
-        )
-    )
-
-    ;;;
-     ; Gets the result of this instantiation as a condition.
-     ;
-     ; @param testValue the returned condition is true if the result is equal to this value
-     ;;
-    (defn #_"LogicNode" Instantiation''asCondition-2 [#_"Instantiation" this, #_"ValueNode" testValue]
-        (if (satisfies? ConstantNode (:result this))
-            (LogicConstantNode'forBoolean-2 (= (:value (:result this)) (ValueNode''asConstant-1 testValue)), (:graph (:result this)))
-            (let [
-                _
-                    (when-not (and (some? (:logic this)) (satisfies? CompareNode (:logic this)) (= (:y (:logic this)) testValue))
-                        ;; re-use previously generated condition if the trueValue for the test is the same
-                        (§ ass! this (assoc this :logic (CompareNode'createCompareNode-4g (:graph (:result this)), CanonicalCondition'EQ, (:result this), testValue)))
-                    )
-            ]
-                (:logic this)
-            )
-        )
-    )
-
-    ;;;
-     ; Gets the result of the instantiation as a materialized value.
-     ;
-     ; @param t the true value for the materialization
-     ; @param f the false value for the materialization
-     ;;
-    (defn #_"ValueNode" Instantiation''asMaterialization-4 [#_"Instantiation" this, #_"Graph" graph, #_"ValueNode" t, #_"ValueNode" f]
-        (if (and (= t (:trueValue this)) (= f (:falseValue this)))
-            ;; Can simply use the phi result if the same materialized values are expected.
-            (:result this)
-            (Graph''add-2 graph, (ConditionalNode'new-3 (Instantiation''asCondition-2 this, (:trueValue this)), t, f))
         )
     )
 )
@@ -33271,62 +32535,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns MapReplacement [DuplicationReplacement]
-    (defn #_"MapReplacement" MapReplacement'new-1 [#_"{Node Node}" dupeMap]
-        (merge (MapReplacement'class.)
-            (hash-map
-                #_"{Node Node}" :dupeMap dupeMap
-            )
-        )
-    )
-
-    (defm MapReplacement DuplicationReplacement
-        (#_"Node" DuplicationReplacement'''replacement-2 [#_"MapReplacement" this, #_"Node" original]
-            (or (get (:dupeMap this) original) original)
-        )
-    )
-)
-
-(class-ns MemoryMap0 [MemoryMap]
-    (defn #_"MemoryMap0" MemoryMap0'new-0 []
-        (merge (MemoryMap0'class.)
-            (hash-map
-                #_"{LocationIdentity MemoryNode}" :lastMemorySnapshot {}
-            )
-        )
-    )
-
-    (defn #_"MemoryMap0" MemoryMap0'new-1 [#_"StartNode" start]
-        (let [
-            #_"MemoryMap0" this (MemoryMap0'new-0)
-        ]
-            (update this :lastMemorySnapshot assoc LocationIdentity'ANY start)
-        )
-    )
-
-    (defn #_"MemoryMap0" MemoryMap0'copy-1 [#_"MemoryMap0" other]
-        (merge (MemoryMap0'class.)
-            (hash-map
-                #_"{LocationIdentity MemoryNode}" :lastMemorySnapshot (:lastMemorySnapshot other)
-            )
-        )
-    )
-
-    (defm MemoryMap0 MemoryMap
-        (#_"MemoryNode" MemoryMap'''getLastLocationAccess-2 [#_"MemoryMap0" this, #_"LocationIdentity" location]
-            (when-not (:immutable location)
-                (or (get (:lastMemorySnapshot this) location)
-                    (get (:lastMemorySnapshot this) LocationIdentity'ANY)
-                )
-            )
-        )
-
-        (#_"LocationIdentity*" MemoryMap'''getLocations-1 [#_"MemoryMap0" this]
-            (keys (:lastMemorySnapshot this))
-        )
-    )
-)
-
 ;;;
  ; Micro block that is allocated for each fixed node and captures all floating nodes that
  ; need to be scheduled immediately after the corresponding fixed node.
@@ -34126,47 +33334,6 @@ ZeroExtendNode'new-4
     )
 
     ;;;
-     ; @param newNode the result of cloning this node or {@link Unsafe#allocateInstance(Class) raw allocating} a copy of this node
-     ; @param type the type of edges to process
-     ; @param edgesToCopy if {@code type} is in this set, the edges are copied otherwise they are cleared
-     ;;
-    (defn- #_"void" Node''copyOrClearEdgesForClone-4 [#_"Node" this, #_"Node" newNode, #_"EdgesType" type, #_"{EdgesType}" edgesToCopy]
-        (if (contains? edgesToCopy type)
-            (Edges''copy-3 (NodeClass''getEdges-2 (:nodeClass this), type), this, newNode)
-            ;; the direct edges are already nil
-            (Edges''initializeLists-3 (NodeClass''getEdges-2 (:nodeClass this), type), newNode, this)
-        )
-        nil
-    )
-
-    ;;;
-     ; Makes a copy of this node in(to) a given graph.
-     ;
-     ; @param graph the graph in which the copy will be registered (which may be this node's graph)
-     ;            or nil if the copy should not be registered in a graph
-     ; @param edgesToCopy specifies the edges to be copied. The edges not specified in this set are initialized
-     ;            to their default value (i.e. nil for a direct edge, an empty list for an edge list)
-     ; @return the copy of this node
-     ;;
-    (defn #_"Node" Node''clone-3 [#_"Node" this, #_"Graph" graph, #_"{EdgesType}" edgesToCopy]
-        (let [
-            #_"Node" node (.allocateInstance HotSpot'unsafe, (#_"Object" .getClass this))
-            node (assoc node :nodeClass (:nodeClass this))
-            _ (Node''copyOrClearEdgesForClone-4 this, node, :EdgesType'Inputs, edgesToCopy)
-            _ (Node''copyOrClearEdgesForClone-4 this, node, :EdgesType'Successors, edgesToCopy)
-            node (assoc node :graph graph)
-            node (assoc node :nid 0)
-            _
-                (when (some? graph)
-                    (§ ass! graph (Graph''register-2 graph, node))
-                )
-            node (assoc node :nodeUsages [])
-        ]
-            node
-        )
-    )
-
-    ;;;
      ; Nodes using their #id as the hash code. This works very well when nodes of the same graph are
      ; stored in sets. It can give bad behavior when storing nodes of different graphs in the same set.
      ;;
@@ -34589,16 +33756,10 @@ ZeroExtendNode'new-4
 
 (class-ns ReturnNode [ControlSinkNode, FixedNode, ValueNode, Node, LIRLowerable]
     (defn #_"ReturnNode" ReturnNode'new-1 [#_"ValueNode" result]
-        (ReturnNode'new-2 result, nil)
-    )
-
-    (defn #_"ReturnNode" ReturnNode'new-2 [#_"ValueNode" result, #_"MemoryMapNode" memoryMap]
         (merge (ReturnNode'class.) (ControlSinkNode'new-1 VoidStamp'instance)
             (hash-map
                 ; @Input
                 #_"ValueNode" :result result
-                ; @Input
-                #_"MemoryMapNode" :memoryMap memoryMap
             )
         )
     )
@@ -34607,11 +33768,6 @@ ZeroExtendNode'new-4
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"ReturnNode" this, #_"LIRBuilder" builder]
             (update builder :gen LIRGenerator''emitReturn-2 (when (some? (:result this)) (LIRBuilder''operand-2 builder, (:result this))))
         )
-    )
-
-    (defn #_"this" ReturnNode''setMemoryMap-2 [#_"ReturnNode" this, #_"MemoryMapNode" memoryMap]
-        (Node''updateUsages-3 this, (:memoryMap this), memoryMap)
-        (assoc this :memoryMap memoryMap)
     )
 )
 
@@ -35183,10 +34339,6 @@ ZeroExtendNode'new-4
 
     (defn #_"ValuePhiNode*" AbstractMergeNode''valuePhis-1 [#_"AbstractMergeNode" this]
         (filter #(satisfies? ValuePhiNode %) (:nodeUsages this))
-    )
-
-    (defn #_"MemoryPhiNode*" AbstractMergeNode''memoryPhis-1 [#_"AbstractMergeNode" this]
-        (filter #(satisfies? MemoryPhiNode %) (:nodeUsages this))
     )
 
     (defm AbstractMergeNode AbstractBeginNode
@@ -36840,7 +35992,7 @@ ZeroExtendNode'new-4
                 #_"ValueNode" :value value
                 ; @Input
                 #_"FrameState" :stateAfter nil
-                ; @Input(InputType'Memory)
+                ; @Input(InputType'Memory)
                 #_"Node" :lastLocationAccess nil
             )
         )
@@ -37579,19 +36731,6 @@ ZeroExtendNode'new-4
     (defm MembarNode LIRLowerable
         (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"MembarNode" this, #_"LIRBuilder" builder]
             (update builder :gen LIRGenerator''emitMembar-2 (:barriers this))
-        )
-    )
-)
-
-(class-ns MemoryAnchorNode [FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, MemoryNode]
-    (defn #_"MemoryAnchorNode" MemoryAnchorNode'new-0 []
-        (merge (MemoryAnchorNode'class.) (FixedWithNextNode'new-1 VoidStamp'instance))
-    )
-
-    (defm MemoryAnchorNode LIRLowerable
-        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"MemoryAnchorNode" this, #_"LIRBuilder" builder]
-            ;; Nothing to emit, since this node is used for structural purposes only.
-            builder
         )
     )
 )
@@ -39576,9 +38715,9 @@ ZeroExtendNode'new-4
             (hash-map
                 ; @Input
                 #_"LogicNode" :logic logic
-                ; @Input(InputType'Value)
+                ; @Input
                 #_"ValueNode" :trueValue trueValue
-                ; @Input(InputType'Value)
+                ; @Input
                 #_"ValueNode" :falseValue falseValue
             )
         )
@@ -40067,7 +39206,7 @@ ZeroExtendNode'new-4
     (defn #_"FloatingAnchoredNode" FloatingAnchoredNode'new-2 [#_"Stamp" stamp, #_"AnchoringNode" anchor]
         (merge (FloatingAnchoredNode'class.) (FloatingNode'new-1 stamp)
             (hash-map
-                ; @Input(InputType'Anchor)
+                ; @Input(InputType'Anchor)
                 #_"AnchoringNode" :anchor anchor
             )
         )
@@ -40170,7 +39309,7 @@ ZeroExtendNode'new-4
         ;; The input to floating reads must be always non-nil or have at least a guard.
         (merge (FloatingReadNode'class.) (FloatingAccessNode'new-5 address, location, stamp, guard, barrierType)
             (hash-map
-                ; @Input(InputType'Memory)
+                ; @Input(InputType'Memory)
                 #_"MemoryNode" :lastLocationAccess lastLocationAccess
             )
         )
@@ -40316,28 +39455,6 @@ ZeroExtendNode'new-4
     )
 )
 
-;;;
- ; A PiNode that also provides an array length in addition to a more refined stamp. A usage
- ; that reads the array length, such as an ArrayLengthNode, can be canonicalized based on
- ; this information.
- ;;
-(class-ns PiArrayNode [PiNode, FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode, LIRLowerable, ValueProxy, LimitedValueProxy, Proxy, ArrayLengthProvider]
-    (defm PiArrayNode ArrayLengthProvider
-        (#_"ValueNode" ArrayLengthProvider'''length-1 [#_"PiArrayNode" this]
-            (:length this)
-        )
-    )
-
-    (defn #_"PiArrayNode" PiArrayNode'new-3 [#_"ValueNode" object, #_"ValueNode" length, #_"Stamp" stamp]
-        (merge (PiArrayNode'class.) (PiNode'new-3 object, stamp, nil)
-            (hash-map
-                ; @Input
-                #_"ValueNode" :length length
-            )
-        )
-    )
-)
-
 (class-ns Placeholder [FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode]
     ;;;
      ; Changes the stamp of an object inside a snippet to be the stamp of the node replaced by the snippet.
@@ -40353,17 +39470,10 @@ ZeroExtendNode'new-4
             )
         )
     )
-
-    (defm Placeholder Placeholder
-        (#_"this" Placeholder'''makeReplacement-2 [#_"Placeholder" this, #_"Stamp" snippetReplaceeStamp]
-            (Node''replaceAndDelete-2 this, (Graph''maybeAddOrUnique-2 (:graph this), (PiNode'create-3 (:object this), snippetReplaceeStamp, nil)))
-        )
-    )
 )
 
 ;;;
- ; A placeholder node in a snippet that will be replaced with a PiArrayNode when the
- ; snippet is instantiated.
+ ; A placeholder node in a snippet that will be replaced with a PiArrayNode when the snippet is instantiated.
  ;;
 (class-ns ArrayPlaceholder [Placeholder, FloatingGuardedNode, FloatingNode, ValueNode, Node, GuardedNode]
     ;;;
@@ -40378,12 +39488,6 @@ ZeroExtendNode'new-4
                 ; @Input
                 #_"ValueNode" :length length
             )
-        )
-    )
-
-    (defm ArrayPlaceholder Placeholder
-        (#_"this" Placeholder'''makeReplacement-2 [#_"ArrayPlaceholder" this, #_"Stamp" snippetReplaceeStamp]
-            (Node''replaceAndDelete-2 this, (Graph''add-2 (:graph this), (PiArrayNode'new-3 (:object this), (:length this), snippetReplaceeStamp)))
         )
     )
 )
@@ -41035,7 +40139,7 @@ ZeroExtendNode'new-4
         (#_"this" Lowerable'''lower-2 [#_"InstanceOfDynamicNode" this, #_"LoweringTool" lowerer]
             (if (GuardsStage'areDeoptsFixed-1 (:guardsStage (:graph this)))
                 (do
-                    (InstanceOfSnippetsTemplates''lower-3 Lowerer'instanceofSnippets, this, lowerer)
+                    (ß InstanceOfSnippetsTemplates''lower-3 Lowerer'instanceofSnippets, this, lowerer)
                     this
                 )
                 (let [
@@ -41283,7 +40387,7 @@ ZeroExtendNode'new-4
         (merge (InstanceOfNode'class.) (UnaryOpLogicNode'new-1 object)
             (hash-map
                 #_"ObjectStamp" :checkedStamp checkedStamp
-                ; @Input(InputType'Anchor)
+                ; @Input(InputType'Anchor)
                 #_"AnchoringNode" :anchor anchor
             )
         )
@@ -41312,7 +40416,7 @@ ZeroExtendNode'new-4
         (#_"this" Lowerable'''lower-2 [#_"InstanceOfNode" this, #_"LoweringTool" lowerer]
             (if (GuardsStage'areDeoptsFixed-1 (:guardsStage (:graph this)))
                 (do
-                    (InstanceOfSnippetsTemplates''lower-3 Lowerer'instanceofSnippets, this, lowerer)
+                    (ß InstanceOfSnippetsTemplates''lower-3 Lowerer'instanceofSnippets, this, lowerer)
                     this
                 )
                 (when (InstanceOfNode''allowsNull-1 this) => this
@@ -41406,45 +40510,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns MemoryMapNode [FloatingNode, ValueNode, Node, MemoryMap, MemoryNode, LIRLowerable]
-    (defn #_"MemoryMapNode" MemoryMapNode'new-1 [#_"{LocationIdentity MemoryNode}" mmap]
-        (merge (MemoryMapNode'class.) (FloatingNode'new-1 VoidStamp'instance)
-            (hash-map
-                #_"[LocationIdentity]" :locationIdentities (vec (keys mmap))
-                ; @Input(InputType'Memory)
-                #_"[ValueNode]" :memNodes (vec (vals mmap))
-            )
-        )
-    )
-
-    (defm MemoryMapNode MemoryMap
-        (#_"MemoryNode" MemoryMap'''getLastLocationAccess-2 [#_"MemoryMapNode" this, #_"LocationIdentity" location]
-            (when-not (:immutable location)
-                (let [
-                    #_"int" index (index-of (:locationIdentities this) location)
-                    index
-                        (when (= index -1) => index
-                            (index-of (:locationIdentities this) LocationIdentity'ANY)
-                        )
-                ]
-                    (nth (:memNodes this) index)
-                )
-            )
-        )
-
-        (#_"LocationIdentity*" MemoryMap'''getLocations-1 [#_"MemoryMapNode" this]
-            (:locationIdentities this)
-        )
-    )
-
-    (defm MemoryMapNode LIRLowerable
-        (#_"LIRBuilder" LIRLowerable'''generate-2 [#_"MemoryMapNode" this, #_"LIRBuilder" builder]
-            ;; nothing to do...
-            builder
-        )
-    )
-)
-
 (class-ns OpaqueNode [FloatingNode, ValueNode, Node, LIRLowerable]
     #_unused
     (defn #_"OpaqueNode" OpaqueNode'new-1 [#_"ValueNode" value]
@@ -41516,21 +40581,6 @@ ZeroExtendNode'new-4
         ]
             (loop-when [#_"int" i 1] (< i (count (:phiValues this))) => singleValue
                 (recur-if (any = (nth (:phiValues this) i) this singleValue) [(inc i)] => this)
-            )
-        )
-    )
-)
-
-;;;
- ; Memory PhiNodes merge memory dependencies at control flow merges.
- ;;
-(class-ns MemoryPhiNode [PhiNode, FloatingNode, ValueNode, Node, MemoryNode]
-    (defn #_"MemoryPhiNode" MemoryPhiNode'new-2 [#_"AbstractMergeNode" merge, #_"LocationIdentity" locationIdentity]
-        (merge (MemoryPhiNode'class.) (PhiNode'new-2 VoidStamp'instance, merge)
-            (hash-map
-                ; @Input(InputType'Memory)
-                #_"[ValueNode]" :phiValues []
-                #_"LocationIdentity" :locationIdentity locationIdentity
             )
         )
     )
@@ -44413,12 +43463,6 @@ ZeroExtendNode'new-4
     (defm FixReadsClosure ScheduledNodeIterator
         (#_"void" ScheduledNodeIterator'''processNode-2 [#_"FixReadsClosure" this, #_"Node" node]
             (condp satisfies? node
-                AbstractMergeNode
-                    (doseq [#_"MemoryPhiNode" memoryPhi (§ snap (AbstractMergeNode''memoryPhis-1 node))]
-                        ;; Memory phi nodes are no longer necessary at this point.
-                        (§ ass! memoryPhi (Node''replaceAtUsages-2 memoryPhi, nil))
-                        (§ ass! memoryPhi (Node''safeDelete-1 memoryPhi))
-                    )
                 FloatingAccessNode
                     (do
                         (§ ass! node (MemoryAccess'''setLastLocationAccess-2 node, nil))
@@ -44480,460 +43524,6 @@ ZeroExtendNode'new-4
             )
             nil
         )
-    )
-)
-
-(class-ns SnippetInfo []
-    (defn #_"SnippetInfo" SnippetInfo'new-2 [#_"ResolvedJavaMethod" method, #_"[LocationIdentity]" privateLocations]
-        (merge (SnippetInfo'class.)
-            (hash-map
-                #_"ResolvedJavaMethod" :method method
-                #_"[LocationIdentity]" :privateLocations privateLocations
-            )
-        )
-    )
-)
-
-;;;
- ; A snippet template is a graph created by parsing a snippet method and then specialized by binding
- ; constants to the snippet's ConstantParameter parameters.
- ;;
-(class-ns SnippetTemplate []
-    (defn- #_"MemoryMap0" SnippetTemplate'mergeMemoryMaps-2 [#_"AbstractMergeNode" merge, #_"MemoryMap*" states]
-        (loop-when [#_"MemoryMap0" state' (MemoryMap0'new-0) #_"seq" s (seq (set (mapcat MemoryMap'''getLocations-1 states)))] (some? s) => state'
-            (let [
-                #_"LocationIdentity" key (first s)
-                #_"MemoryNode" merged
-                    (loop-when [merged nil #_"boolean" isPhi false #_"int" n 0 #_"seq" s (seq states)] (some? s) => merged
-                        (let [
-                            #_"MemoryMap" state (first s)
-                            #_"MemoryNode" last (MemoryMap'''getLastLocationAccess-2 state, key)
-                            [merged isPhi]
-                                (cond
-                                    isPhi                              [(PhiNode''addInput-2 merged, last) isPhi]
-                                    (or (nil? merged) (= merged last)) [last isPhi] ;; nothing to do
-                                    :else
-                                        (let [
-                                            #_"MemoryPhiNode" phi (Graph''add-2 (:graph merge), (MemoryPhiNode'new-2 merge, key))
-                                            phi (reduce PhiNode''addInput-2 phi (repeat n merged))
-                                        ]
-                                            [(PhiNode''addInput-2 phi, last) true]
-                                        )
-                                )
-                        ]
-                            (recur merged isPhi (inc n) (next s))
-                        )
-                    )
-            ]
-                (recur (update state' :lastMemorySnapshot assoc key merged) (next s))
-            )
-        )
-    )
-
-    (defn #_"SnippetTemplate" SnippetTemplate'new-2 [#_"Arguments" args, #_"Node" replacee]
-        (let [
-            #_"SnippetTemplate" this
-                (merge (SnippetTemplate'class.)
-                    (hash-map
-                        ;;;
-                         ; The graph built from the snippet method.
-                         ;;
-                        #_"Graph" :snippet nil
-                        #_"SnippetInfo" :info (:info args)
-                        ;;;
-                         ; The named parameters of this template that must be bound to values during instantiation.
-                         ; For a parameter that is still live after specialization, the value in this map is either
-                         ; a ParameterNode instance or a ParameterNode array. For an eliminated parameter,
-                         ; the value is identical to the key.
-                         ;;
-                        #_"[Object]" :parameters nil
-                        ;;;
-                         ; The return node (if any) of the snippet.
-                         ;;
-                        #_"ReturnNode" :returnNode nil
-                        ;;;
-                         ; The memory anchor (if any) of the snippet.
-                         ;;
-                        #_"MemoryAnchorNode" :memoryAnchor nil
-                        ;;;
-                         ; Nodes that inherit the StateSplit#stateAfter() from the replacee during instantiation.
-                         ;;
-                        #_"StateSplit*" :sideEffectNodes nil
-                        ;;;
-                         ; Nodes that inherit a deoptimization FrameState from the replacee during instantiation.
-                         ;;
-                        #_"DeoptimizingNode*" :deoptNodes nil
-                        ;;;
-                         ; Nodes that have a stamp originating from a Placeholder.
-                         ;;
-                        #_"ValueNode*" :placeholderStampedNodes nil
-                        ;;;
-                         ; The nodes to be inlined when this specialization is instantiated.
-                         ;;
-                        #_"Node*" :snippetNodes nil
-                    )
-                )
-            #_"ResolvedJavaMethod" method (:method (:info args))
-            #_"Graph" graph (BytecodeParser'parse-1 method)
-            ;; copy snippet graph replacing constant parameters with given arguments
-            #_"Graph" snippet (Graph'new-1 method)
-            _ (Graph''addDuplicates-4m snippet, (Graph''getNodes-1 graph), graph, { (:start graph) (:start snippet) })
-            ;; gather the template parameters
-            this
-                (assoc this :parameters
-                    (vec
-                        (for [#_"int" i (range (Signature'''getParameterCount-2 (JavaMethod'''getSignature-1 method), false))]
-                            (or (Graph''getParameter-2 snippet, i) "UNUSED_PARAMETER") ;; parameter value was eliminated
-                        )
-                    )
-                )
-            #_do_explode_loops
-            ;; perform lowering on the snippet
-            snippet
-                (when-not (GuardsStage'allowsFloatingGuards-1 (:guardsStage args)) => snippet
-                    (GuardLoweringPhase'run-1 snippet)
-                )
-            snippet (Graph''setGuardsStage-2 snippet, (:guardsStage args))
-            snippet (LoweringPhase'run-2 snippet, (:loweringStage args))
-            #_"ValueNode*" placeholderStampedNodes
-                (for [#_"Node" node (Graph''getNodes-1 snippet) :when (and (satisfies? ValueNode node) (= (:stamp node) PlaceholderStamp'SINGLETON))]
-                    node
-                )
-            #_"StateSplit*" sideEffectNodes
-                (loop-when [sideEffectNodes nil #_"seq" s (seq (Graph''getNodes-1 snippet))] (some? s) => sideEffectNodes
-                    (let [
-                        #_"Node" node (first s)
-                        sideEffectNodes
-                            (when (satisfies? StateSplit node) => sideEffectNodes
-                                (when (some? (:stateAfter node))
-                                    (§ ass! node (StateSplit'''setStateAfter-2 node, nil))
-                                )
-                                (when (StateSplit'''hasSideEffect-1 node) => sideEffectNodes
-                                    (conj' sideEffectNodes node)
-                                )
-                            )
-                    ]
-                        (recur sideEffectNodes (next s))
-                    )
-                )
-            #_"DeoptimizingNode*" deoptNodes
-                (for [#_"Node" node (Graph''getNodes-1 snippet) :when (and (satisfies? DeoptimizingNode node) (DeoptimizingNode'''canDeoptimize-1 node))]
-                    node
-                )
-            snippet (RemoveValueProxyPhase'run-1 snippet)
-            #_"MemoryAnchorNode" anchor (Graph''add-2 snippet, (MemoryAnchorNode'new-0))
-            _ (Node''replaceAtUsages-3 (:start snippet), :InputType'Memory, anchor)
-            this (assoc this :snippet snippet)
-            #_"StartNode" start (:start (:snippet this))
-            this
-                (if (Node''hasNoUsages-1 anchor)
-                    (let [
-                        _ (§ ass! anchor (Node''safeDelete-1 anchor))
-                    ]
-                        (assoc this :memoryAnchor nil)
-                    )
-                    ;; find out if all the return memory maps point to the anchor (i.e. there's no kill anywhere)
-                    (let [
-                        #_"boolean" needsMemoryMaps
-                            (loop-when [#_"seq" s (seq (Graph''getNodes-2 (:snippet this), ReturnNode))] (some? s) => false
-                                (let [
-                                    #_"MemoryMapNode" memoryMap (:memoryMap (first s))
-                                ]
-                                    (or (< 1 (count (MemoryMap'''getLocations-1 memoryMap))) (not= (MemoryMap'''getLastLocationAccess-2 memoryMap, LocationIdentity'ANY) anchor)
-                                        (recur (next s))
-                                    )
-                                )
-                            )
-                        #_"boolean" needsAnchor
-                            (or needsMemoryMaps
-                                ;; check that all those memory maps where the only usages of the anchor
-                                (let [
-                                    needsAnchor (seq (remove #(satisfies? MemoryMapNode %) (:nodeUsages anchor)))
-                                    ;; remove the useless memory map
-                                    #_"MemoryMapNode" memoryMap
-                                        (loop-when [memoryMap nil #_"seq" s (seq (Graph''getNodes-2 (:snippet this), ReturnNode))] (some? s) => memoryMap
-                                            (let [
-                                                #_"ReturnNode" retNode (first s)
-                                                memoryMap (or memoryMap (:memoryMap retNode))
-                                                _ (§ ass! retNode (ReturnNode''setMemoryMap-2 retNode, nil))
-                                            ]
-                                                (recur memoryMap (next s))
-                                            )
-                                        )
-                                    _ (§ ass! memoryMap (Node''safeDelete-1 memoryMap))
-                                ]
-                                    needsAnchor
-                                )
-                            )
-                    ]
-                        (if needsAnchor
-                            (do
-                                (Graph''addAfterFixed-3 snippet, (:start snippet), anchor)
-                                (assoc this :memoryAnchor anchor)
-                            )
-                            (let [
-                                _ (§ ass! anchor (Node''safeDelete-1 anchor))
-                            ]
-                                (assoc this :memoryAnchor nil)
-                            )
-                        )
-                    )
-                )
-            #_"ReturnNode*" returnNodes (Graph''getNodes-2 (:snippet this), ReturnNode)
-            this
-                (case (count returnNodes)
-                    0 (assoc this :returnNode nil)
-                    1 (assoc this :returnNode (nth returnNodes 0))
-                    (let [
-                        #_"MemoryMapNode*" memMaps (for [#_"ReturnNode" r returnNodes :let [#_"MemoryMapNode" m (:memoryMap r)] :when (some? m)] m)
-                        #_"AbstractMergeNode" merge (Graph''add-2 (:snippet this), (MergeNode'new-0))
-                        this (assoc this :returnNode (Graph''add-2 (:snippet this), (ReturnNode'new-1 (ValueMergeUtil'mergeReturns-2 merge, returnNodes))))
-                        this
-                            (when (seq memMaps) => this
-                                (let [
-                                    #_"MemoryMapNode" memoryMap (Graph''add-2 (:snippet this), (MemoryMapNode'new-1 (:lastMemorySnapshot (SnippetTemplate'mergeMemoryMaps-2 merge, memMaps))))
-                                    this (update this :returnNode ReturnNode''setMemoryMap-2 memoryMap)
-                                ]
-                                    (doseq [#_"MemoryMapNode" m memMaps]
-                                        (when (and (not= m memoryMap) (Node''isAlive-1 m))
-                                            (GraphUtil'killWithUnusedFloatingInputs-1 m)
-                                        )
-                                    )
-                                    this
-                                )
-                            )
-                        _ (§ ass! merge (FixedWithNextNode''setNext-2 merge, (:returnNode this)))
-                    ]
-                        this
-                    )
-                )
-            this (assoc this :sideEffectNodes sideEffectNodes)
-            this (assoc this :deoptNodes deoptNodes)
-            this (assoc this :placeholderStampedNodes placeholderStampedNodes)
-            this (assoc this :snippetNodes (remove #(any = % start (:stateAfter start)) (Graph''getNodes-1 (:snippet this))))
-        ]
-            this
-        )
-    )
-
-    ;;;
-     ; Gets the instantiation-time bindings to this template's parameters.
-     ;
-     ; @return the map that will be used to bind arguments to parameters when inlining this template
-     ;;
-    (defn- #_"{Node Node}" SnippetTemplate''bind-3 [#_"SnippetTemplate" this, #_"Graph" replaceeGraph, #_"Arguments" args]
-        (loop-when [#_"{Node Node}" replacements {} #_"int" i 0] (< i (count (:parameters this))) => replacements
-            (let [
-                #_"Object" parameter (nth (:parameters this) i)
-                #_"Object" argument (nth (:argValues args) i)
-                replacements
-                    (condp instance? parameter
-                        ParameterNode'iface
-                            (assoc replacements parameter (if (satisfies? ValueNode argument) argument (throw! (str "non più boxe per " argument))))
-                        (ß ParameterNode'array)
-                            (loop-when [replacements replacements #_"int" j 0] (< j (count parameter)) => replacements
-                                (let [
-                                    #_"ParameterNode" param (nth parameter j)
-                                    #_"Object" value (nth (:value argument) j)
-                                    replacements (assoc replacements param (if (satisfies? ValueNode value) value (throw! (str "non più boxe per " value))))
-                                ]
-                                    (recur replacements (inc j))
-                                )
-                            )
-                        replacements
-                    )
-            ]
-                (recur replacements (inc i))
-            )
-        )
-    )
-
-    (defn- #_"{Node Node}" SnippetTemplate''inlineSnippet-4 [#_"SnippetTemplate" this, #_"Node" replacee, #_"Graph" replaceeGraph, #_"{Node Node}" replacements]
-        (Graph''addDuplicates-4m replaceeGraph, (:snippetNodes this), (:snippet this), replacements)
-    )
-
-    (defn- #_"void" SnippetTemplate''rewireFrameStates-3 [#_"SnippetTemplate" this, #_"ValueNode" replacee, #_"{Node Node}" duplicates]
-        (when (satisfies? StateSplit replacee)
-            (doseq [#_"StateSplit" sideEffectNode (:sideEffectNodes this)]
-                (§ ass! (get duplicates sideEffectNode) (StateSplit'''setStateAfter-2 (get duplicates sideEffectNode), (:stateAfter replacee)))
-            )
-        )
-        nil
-    )
-
-    (defn- #_"void" SnippetTemplate''propagateStamp-2 [#_"SnippetTemplate" this, #_"Node" node]
-        (when (and (satisfies? PhiNode node) (ValueNode'''inferStamp-1 node))
-            (doseq [#_"Node" usage (:nodeUsages node)]
-                (SnippetTemplate''propagateStamp-2 this, usage)
-            )
-        )
-        nil
-    )
-
-    (defn- #_"void" SnippetTemplate''updateStamps-3 [#_"SnippetTemplate" this, #_"ValueNode" replacee, #_"{Node Node}" duplicates]
-        (let [
-            _
-                (doseq [#_"ValueNode" node (:placeholderStampedNodes this)]
-                    (let [
-                        #_"ValueNode" dup (get duplicates node)
-                        #_"Stamp" replaceeStamp (:stamp replacee)
-                    ]
-                        (if (satisfies? Placeholder node)
-                            (§ ass! dup (Placeholder'''makeReplacement-2 dup, replaceeStamp))
-                            (§ ass! dup (ValueNode''setStamp-2 dup, replaceeStamp))
-                        )
-                    )
-                )
-        ]
-            (doseq [#_"ParameterNode" paramNode (Graph''getNodes-2 (:snippet this), ParameterNode) #_"Node" usage (:nodeUsages paramNode)]
-                (SnippetTemplate''propagateStamp-2 this, (get duplicates usage))
-            )
-        )
-        nil
-    )
-
-    ;;;
-     ; Represents the default {@link UsageReplacer usage replacer} logic which simply delegates to Node#replaceAtUsages(Node).
-     ;;
-    (def- #_"UsageReplacer" SnippetTemplate'DEFAULT_REPLACER
-        (reify UsageReplacer
-            (#_"this" UsageReplacer'''replace-3 [#_"UsageReplacer" _, #_"ValueNode" oldNode, #_"ValueNode" newNode]
-                (when (some? newNode)
-                    (§ ass! oldNode (Node''replaceAtUsages-2 oldNode, newNode))
-                )
-                _
-            )
-        )
-    )
-
-    ;;;
-     ; Replaces a given fixed node with this specialized snippet.
-     ;
-     ; @param replacee the node that will be replaced
-     ; @param args the arguments to be bound to the flattened positional parameters of the snippet
-     ; @return the map of duplicated nodes (original -> duplicate)
-     ;;
-    (defn #_"void" SnippetTemplate''instantiate-3 [#_"SnippetTemplate" this, #_"FixedNode" replacee, #_"Arguments" args]
-        ;; inline the snippet nodes replacing parameters with the given args in the process
-        (let [
-            #_"StartNode" start (:start (:snippet this))
-            #_"FixedNode" firstCFGNode (:next start)
-            #_"{Node Node}" replacements (assoc (SnippetTemplate''bind-3 this, (:graph replacee), args) start (AbstractBeginNode'prevBegin-1 replacee))
-            #_"{Node Node}" duplicates (SnippetTemplate''inlineSnippet-4 this, replacee, (:graph replacee), replacements)
-        ]
-            ;; re-wire the control flow graph around the replacee
-            (Node''replaceAtPredecessor-2 replacee, (get duplicates firstCFGNode))
-
-            (SnippetTemplate''rewireFrameStates-3 this, replacee, duplicates)
-
-            (when (satisfies? DeoptimizingNode replacee)
-                (let [
-                    #_"FrameState" stateBefore nil
-                    #_"FrameState" stateDuring nil
-                    #_"FrameState" stateAfter nil
-                    _
-                        (when (DeoptimizingNode'''canDeoptimize-1 replacee)
-                            (when (satisfies? DeoptBefore replacee)
-                                (§ ass stateBefore (:stateBefore replacee))
-                            )
-                            (when (satisfies? DeoptDuring replacee)
-                                (§ ass stateDuring (:stateDuring replacee))
-                            )
-                            (when (satisfies? DeoptAfter replacee)
-                                (§ ass stateAfter (:stateAfter replacee))
-                            )
-                        )
-                ]
-                    (doseq [#_"DeoptimizingNode" deoptNode (:deoptNodes this)]
-                        (let [
-                            #_"DeoptimizingNode" deoptDup (get duplicates deoptNode)
-                        ]
-                            (when (DeoptimizingNode'''canDeoptimize-1 deoptDup)
-                                (when (satisfies? DeoptBefore deoptDup)
-                                    (§ ass! deoptDup (DeoptBefore'''setStateBefore-2 deoptDup, stateBefore))
-                                )
-                                (when (satisfies? DeoptDuring deoptDup)
-                                    (cond
-                                        (some? stateDuring) (§ ass! deoptDup (DeoptDuring'''setStateDuring-2 deoptDup, stateDuring))
-                                        (some? stateAfter)  (§ ass! deoptDup (DeoptDuring'''computeStateDuring-2 deoptDup, stateAfter))
-                                        (some? stateBefore) (§ ass! deoptDup (DeoptDuring'''setStateDuring-2 deoptDup, stateBefore))
-                                    )
-                                )
-                                (when (satisfies? DeoptAfter deoptDup)
-                                    (§ ass! deoptDup (StateSplit'''setStateAfter-2 deoptDup, (or stateAfter stateBefore)))
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-
-            (SnippetTemplate''updateStamps-3 this, replacee, duplicates)
-
-            ;; replace all usages of the replacee with the value returned by the snippet
-            (when (and (some? (:returnNode this)) (not (satisfies? ControlSinkNode replacee)))
-                (let [
-                    #_"ReturnNode" returnDuplicate (get duplicates (:returnNode this))
-                    _ (§ ass! SnippetTemplate'DEFAULT_REPLACER (UsageReplacer'''replace-3 SnippetTemplate'DEFAULT_REPLACER, replacee, (:result returnDuplicate)))
-                ]
-                    (when (Node''isAlive-1 returnDuplicate)
-                        (let [
-                            #_"FixedNode" _next
-                                (when (satisfies? FixedWithNextNode replacee)
-                                    (let [
-                                        _next (:next replacee)
-                                        _ (§ ass! replacee (FixedWithNextNode''setNext-2 replacee, nil))
-                                    ]
-                                        _next
-                                    )
-                                )
-                        ]
-                            (§ ass! returnDuplicate (Node''replaceAndDelete-2 returnDuplicate, _next))
-                        )
-                    )
-                )
-            )
-
-            (GraphUtil'killCFG-1 replacee)
-        )
-        nil
-    )
-
-    ;;;
-     ; Replaces a given floating node with this specialized snippet.
-     ;
-     ; @param replacee the node that will be replaced
-     ; @param replacer object that replaces the usages of {@code replacee}
-     ; @param lowerer lowering tool used to insert the snippet into the control-flow
-     ; @param args the arguments to be bound to the flattened positional parameters of the snippet
-     ;;
-    (defn #_"void" SnippetTemplate''instantiate-5 [#_"SnippetTemplate" this, #_"FloatingNode" replacee, #_"UsageReplacer" replacer, #_"LoweringTool" lowerer, #_"Arguments" args]
-        ;; inline the snippet nodes replacing parameters with the given args in the process
-        (let [
-            #_"StartNode" start (:start (:snippet this))
-            #_"FixedNode" firstCFGNode (:next start)
-            #_"{Node Node}" replacements (assoc (SnippetTemplate''bind-3 this, (:graph replacee), args) start (:guardAnchor lowerer))
-            #_"{Node Node}" duplicates (SnippetTemplate''inlineSnippet-4 this, replacee, (:graph replacee), replacements)
-            #_"FixedWithNextNode" lastFixedNode (:lastFixedNode lowerer)
-            #_"FixedNode" _next (:next lastFixedNode)
-            _ (§ ass! lastFixedNode (FixedWithNextNode''setNext-2 lastFixedNode, nil))
-        ]
-            (Graph''addAfterFixed-3 (:graph replacee), lastFixedNode, (get duplicates firstCFGNode))
-
-            (SnippetTemplate''rewireFrameStates-3 this, replacee, duplicates)
-            (SnippetTemplate''updateStamps-3 this, replacee, duplicates)
-
-            ;; replace all usages of the replacee with the value returned by the snippet
-            (let [
-                #_"ReturnNode" returnDuplicate (get duplicates (:returnNode this))
-                _ (§ ass! replacer (UsageReplacer'''replace-3 replacer, replacee, (:result returnDuplicate)))
-            ]
-                (when (Node''isAlive-1 returnDuplicate)
-                    (§ ass! returnDuplicate (Node''replaceAndDelete-2 returnDuplicate, _next))
-                )
-            )
-        )
-        nil
     )
 )
 
