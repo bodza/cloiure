@@ -337,7 +337,6 @@ AMD64SwitchClosure'new-3
 AMD64TailcallOp'new-2
 Abs'new-0
 AbstractAddress'new-0
-AbstractBeginNode''getBlockNodes-1
 AbstractBeginNode''prepareDelete-1
 AbstractBeginNode'new-0
 AbstractBeginNode'new-1
@@ -653,10 +652,7 @@ BitCountNode'computeStamp-2
 BitCountNode'new-1
 BlackholeNode'new-1
 BlackholeOp'new-1
-Block''canKill-2
-Block''canKillBetweenThisAndDominator-2
 Block''delete-1
-Block''getDominator-2
 Block''getFirstPredecessor-1
 Block''getFirstSuccessor-1
 Block''getKillLocations-1
@@ -665,7 +661,6 @@ Block''getLoopDepth-1
 Block''getNodes-1
 Block''isLoopEnd-1
 Block''isLoopHeader-1
-Block''setDominator-2
 Block'new-1
 BlockClosure''addRegisterHint-6
 BlockClosure''processInstructionBottomUp-2
@@ -1069,17 +1064,6 @@ ConsumerConstOp'new-4a
 ConsumerConstOp'new-4b
 ConsumerOp'new-4
 ControlFlowAnchorNode'new-0
-ControlFlowGraph''blockFor-2
-ControlFlowGraph''computePostdominators-1
-ControlFlowGraph''getStartBlock-1
-ControlFlowGraph'BLOCK_ID_INITIAL
-ControlFlowGraph'BLOCK_ID_VISITED
-ControlFlowGraph'MAX_PROBABILITY
-ControlFlowGraph'MIN_PROBABILITY
-ControlFlowGraph'commonDominator-2
-ControlFlowGraph'compute-3
-ControlFlowGraph'dominates-2
-ControlFlowGraph'strictlyDominates-2
 ControlFlowOptimizer'new-0
 ControlSinkNode'new-1
 ControlSplitNode'new-1
@@ -1275,7 +1259,6 @@ GraalOptions'mitigateSpeculativeExecutionAttacks
 GraalOptions'optClearNonLiveLocals
 GraalOptions'optEliminateGuards
 GraalOptions'optImplicitNullChecks
-GraalOptions'optScheduleOutOfLoops
 GraalOptions'simpleFastInflatedLocking
 GraalOptions'trustFinalDefaultFields
 GraalOptions'useTrappingNullChecks
@@ -1286,11 +1269,9 @@ Graph''addBeforeFixed-3
 Graph''addInputs-2
 Graph''addOrUniqueWithInputs-2
 Graph''getInvokes-1
-Graph''getNodeCount-1
 Graph''getNodes-1
 Graph''getNodes-2
 Graph''getReturnStamp-1
-Graph''hasLoops-1
 Graph''maybeAddOrUnique-2
 Graph''reduceDegenerateLoopBegin-2
 Graph''reduceTrivialMerge-2
@@ -1967,8 +1948,6 @@ LogicNode'and-5
 LogicNode'new-0
 LogicNode'or-3
 LogicNode'or-5
-Loop''addExit-2
-Loop''canKill-2
 Loop''getKillLocations-1
 Loop''numBackedges-1
 Loop'new-3
@@ -1976,7 +1955,6 @@ LoopBeginNode''forwardEnd-1
 LoopBeginNode''loopEnds-1
 LoopBeginNode''loopExits-1
 LoopBeginNode''nextEndIndex-1
-LoopBeginNode''orderedLoopEnds-1
 LoopBeginNode''removeExits-1
 LoopBeginNode'new-0
 LoopEndNode''setEndIndex-2
@@ -2074,9 +2052,6 @@ MethodCallTargetNode'devirtualizeCall-4
 MethodCallTargetNode'findSpecialCallTarget-4
 MethodCallTargetNode'new-4
 MethodRef'new-1
-MicroBlock''add-2
-MicroBlock''prependChildrenTo-2
-MicroBlock'new-1
 MonitorEnterNode'new-2
 MonitorExitNode'new-2
 MonitorIdNode''setLockDepth-2
@@ -2204,7 +2179,6 @@ NodeClass'NEXT_EDGE
 NodeClass'new-2
 NodeClass'replaceFirstEdge-4
 NodeCost'new-3
-NodeEntry'new-1
 NodeFieldsScanner''scan-3
 NodeFieldsScanner'new-1
 NodeLoopInfo'new-0
@@ -2413,14 +2387,10 @@ Scale'Times4
 Scale'Times8
 Scale'fromInt-1
 Scale'fromShift-1
-Schedule''run-1
-Schedule'new-3
-SchedulePhase'run-2
 ScheduledNodeIterator''insert-3
 ScheduledNodeIterator''processNodes-3
 ScheduledNodeIterator''replaceCurrent-2
 ScheduledNodeIterator'new-0
-SchedulingStrategy'SET
 SequentialStrategy'new-2
 SerialWriteBarrier'new-2
 ShiftNode''getOp-2
@@ -2713,7 +2683,7 @@ ZeroExtendNode'new-4
  ; {@linkplain Stamp#javaType type} of the injected stamp is the return type of the annotated
  ; method (which cannot be {@code void}).
  ;;
-(§ annotation InjectedNodeParameter
+(§ annotation InjectedNodeParameter
 )
 
 (§ annotation Use   (§ value #_"[OperandFlag]" value :OperandFlag'REG))
@@ -3131,7 +3101,6 @@ ZeroExtendNode'new-4
  ;;
 (defp ControlFlowAnchored)
 
-(defp ControlFlowGraph)
 (defp ControlFlowOptimizer)
 (defp ControlSinkNode)
 
@@ -3942,7 +3911,6 @@ ZeroExtendNode'new-4
 (defp MethodCallOp)
 (defp MethodCallTargetNode)
 (defp MethodRef)
-(defp MicroBlock)
 
 ;;;
  ; Denotes monitor locking transition.
@@ -4000,7 +3968,6 @@ ZeroExtendNode'new-4
 (defp Node)
 (defp NodeClass)
 (defp NodeCost)
-(defp NodeEntry)
 (defp NodeFieldsScanner)
 
 (defp NodeIteratorClosure #_"<T>"
@@ -4426,10 +4393,9 @@ ZeroExtendNode'new-4
 (defp SafepointOp)
 (defp SaveRbp)
 (defp Scale)
-(defp Schedule)
 
 ;;;
- ; Iterates over a list of nodes, which usually comes from Schedule#getBlockToNodesMap().
+ ; Iterates over a list of nodes, which usually comes from Schedule#getBlockToNodesMap().
  ;
  ; While iterating, it is possible to {@link #insert(FixedNode, FixedWithNextNode) insert} and
  ; {@link #replaceCurrent(FixedWithNextNode) replace} nodes.
@@ -7265,7 +7231,6 @@ ZeroExtendNode'new-4
     (def #_"boolean" GraalOptions'canOmitFrame true)
 
     ;; runtime settings
-    (def #_"boolean" GraalOptions'optScheduleOutOfLoops true)
     (def #_"boolean" GraalOptions'optEliminateGuards true)
     (def #_"boolean" GraalOptions'optImplicitNullChecks true)
     (def #_"boolean" GraalOptions'optClearNonLiveLocals true)
@@ -10098,18 +10063,6 @@ ZeroExtendNode'new-4
                 (assoc :endStates  (into {} (for [#_"LoopEndNode"  e (LoopBeginNode''loopEnds-1  _loop) :when (contains? m'blockEndStates e)] [e (get m'blockEndStates e)])))
                 (assoc :exitStates (into {} (for [#_"LoopExitNode" e (LoopBeginNode''loopExits-1 _loop) :when (contains? m'blockEndStates e)] [e (get m'blockEndStates e)])))
             )
-        )
-    )
-)
-
-(value-ns SchedulingStrategy
-    #_unused
-    (def #_"ordered {SchedulingStrategy}" SchedulingStrategy'SET
-        (ordered-set
-            :SchedulingStrategy'EARLIEST
-            :SchedulingStrategy'LATEST
-            :SchedulingStrategy'LATEST_OUT_OF_LOOPS
-            :SchedulingStrategy'FINAL_SCHEDULE
         )
     )
 )
@@ -14583,7 +14536,7 @@ ZeroExtendNode'new-4
     (defn #_"Block" Block'new-1 [#_"AbstractBeginNode" node]
         (merge (Block'class.)
             (hash-map
-                #_"int" :id ControlFlowGraph'BLOCK_ID_INITIAL
+                #_"int" :id (ß ControlFlowGraph'BLOCK_ID_INITIAL)
                 ;;;
                  ; Level in the dominator tree starting with 0 for the start block.
                  ;;
@@ -14608,10 +14561,6 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"this" Block''setDominator-2 [#_"Block" this, #_"Block" dominator]
-        (assoc this :dominator dominator, :domDepth (inc (:domDepth dominator)))
-    )
-
     (defn #_"int" Block''getLoopDepth-1 [#_"Block" this]
         (if (some? (:loop this)) (:depth (:loop this)) 0)
     )
@@ -14624,6 +14573,7 @@ ZeroExtendNode'new-4
         (satisfies? LoopEndNode (:endNode this))
     )
 
+    #_unused
     (defn #_"Block" Block''getFirstPredecessor-1 [#_"Block" this]
         (nth (:predecessors this) 0)
     )
@@ -14634,16 +14584,6 @@ ZeroExtendNode'new-4
 
     (defn #_"FixedNode*" Block''getNodes-1 [#_"Block" this]
         (->> (:beginNode this) (iterate #(when (and (satisfies? FixedWithNextNode %) (not (satisfies? AbstractBeginNode (:next %)))) (:next %))) (take-while some?))
-    )
-
-    (defn #_"Block" Block''getDominator-2 [#_"Block" this, #_"int" distance]
-        (loop-when-recur [#_"Block" block this #_"int" i 0] (< i distance) [(:dominator block) (inc i)] => block)
-    )
-
-    (defn #_"boolean" Block''canKill-2 [#_"Block" this, #_"LocationIdentity" location]
-        (and (not (:immutable location))
-            (LocationSet''contains-2 (Block''getKillLocations-1 this), location)
-        )
     )
 
     (defn- #_"LocationSet" Block''calcKillLocations-1 [#_"Block" this]
@@ -14731,12 +14671,6 @@ ZeroExtendNode'new-4
             (§ ass! this (assoc this :killLocationsBetweenThisAndDominator (Block''calcKillLocationsBetweenThisAndTarget-1 this)))
         )
         (:killLocationsBetweenThisAndDominator this)
-    )
-
-    (defn #_"boolean" Block''canKillBetweenThisAndDominator-2 [#_"Block" this, #_"LocationIdentity" location]
-        (and (not (:immutable location))
-            (LocationSet''contains-2 (Block''getKillLocationsBetweenThisAndDominator-1 this), location)
-        )
     )
 
     (defn #_"void" Block''delete-1 [#_"Block" this]
@@ -19626,588 +19560,6 @@ ZeroExtendNode'new-4
     )
 )
 
-(class-ns ControlFlowGraph []
-    (def #_"int" ControlFlowGraph'BLOCK_ID_INITIAL -1)
-    (def #_"int" ControlFlowGraph'BLOCK_ID_VISITED -2)
-
-    ;;;
-     ; Don't allow probability values to be become too small or too high as this makes frequency
-     ; calculations over- or underflow the range of a double. This commonly happens with infinite
-     ; loops within infinite loops. The value is chosen a bit lower than half the maximum exponent
-     ; supported by double. That way we can never overflow to infinity when multiplying two
-     ; probability values.
-     ;;
-    (def #_"double" ControlFlowGraph'MIN_PROBABILITY #_"0x1.0p-500" 3.0549363634996047e-151)
-    (def #_"double" ControlFlowGraph'MAX_PROBABILITY (/ 1.0 ControlFlowGraph'MIN_PROBABILITY))
-
-    (defn- #_"ControlFlowGraph" ControlFlowGraph'new-1 [#_"Graph" graph]
-        (merge (ControlFlowGraph'class.)
-            (hash-map
-                #_"Graph" :graph graph
-                #_"{Node Block}" :node->block {}
-                ;;;
-                 ; The list of blocks contained in this control flow graph.
-                 ;
-                 ; It is guaranteed that the blocks are numbered and ordered according
-                 ; to a reverse post order traversal of the control flow graph.
-                 ;;
-                #_"[Block]" :reversePostOrder nil
-                #_"Loop*" :loops nil
-                #_"int" :maxDominatorDepth 0
-            )
-        )
-    )
-
-    (defn #_"Block" ControlFlowGraph''blockFor-2 [#_"ControlFlowGraph" this, #_"Node" node]
-        (get (:node->block this) node)
-    )
-
-    (defn #_"Block" ControlFlowGraph''getStartBlock-1 [#_"ControlFlowGraph" this]
-        (nth (:reversePostOrder this) 0)
-    )
-
-    (defn- #_"void" ControlFlowGraph''identifyBlock-2 [#_"ControlFlowGraph" this, #_"Block" block]
-        (loop [#_"FixedWithNextNode" node (:beginNode block)]
-            (let [
-                _ (§ ass! (:node->block this) (assoc (:node->block this) node block))
-                #_"FixedNode" _next (:next node)
-            ]
-                (condp satisfies? _next
-                    AbstractBeginNode
-                        (§ ass! block (assoc block :endNode node))
-                    FixedWithNextNode
-                        (recur _next)
-                    (let [
-                        _ (§ ass! (:node->block this) (assoc (:node->block this) _next block))
-                    ]
-                        (§ ass! block (assoc block :endNode _next))
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    ;;;
-     ; Identify and connect blocks (including loop backward edges). Predecessors need to be in the
-     ; order expected when iterating phi inputs.
-     ;;
-    (defn- #_"this" ControlFlowGraph''identifyBlocks-1 [#_"ControlFlowGraph" this]
-        ;; Find all block headers.
-        (let [
-            #_"int" n
-                (loop-when-recur [n 0 #_"seq" s (seq (Graph''getNodes-2 (:graph this), AbstractBeginNode))] (some? s) [(inc n) (next s)] => n
-                    (ControlFlowGraph''identifyBlock-2 this, (Block'new-1 (first s)))
-                )
-            ;; Compute reverse post order.
-            #_"{Node Block}" node->block (:node->block this)
-            #_"Block" start (ControlFlowGraph''blockFor-2 this, (:start (:graph this)))
-            start (assoc start :predecessors [])
-            #_"[Block]" stack
-                (loop [stack (assoc' (vec (repeat n nil)) 0 start) #_"int" tos 0 #_"int" total 0]
-                    (let [
-                        #_"Block" block (nth stack tos)
-                        [stack tos total]
-                            (condp = (:id block)
-                                ControlFlowGraph'BLOCK_ID_INITIAL
-                                    ;; First time we see this block: push all successors.
-                                    (let [
-                                        #_"FixedNode" end (:endNode block)
-                                        [stack tos]
-                                            (condp satisfies? end
-                                                EndNode
-                                                    (let [
-                                                        #_"Block" suxBlock (get node->block (AbstractEndNode'''merge-1 end))
-                                                        _
-                                                            (when (= (:id suxBlock) ControlFlowGraph'BLOCK_ID_INITIAL)
-                                                                (§ ass tos (inc tos))
-                                                                (§ ass! stack (assoc' stack tos suxBlock))
-                                                            )
-                                                        _ (§ ass! block (assoc block :successors [ suxBlock ]))
-                                                    ]
-                                                        [stack tos]
-                                                    )
-                                                IfNode
-                                                    (let [
-                                                        #_"Block" trueSucc (get node->block (:trueSuccessor end))
-                                                        tos (inc tos)
-                                                        stack (assoc' stack tos trueSucc)
-                                                        #_"Block" falseSucc (get node->block (:falseSuccessor end))
-                                                        tos (inc tos)
-                                                        stack (assoc' stack tos falseSucc)
-                                                        _ (§ ass! block (assoc block :successors [ trueSucc falseSucc ]))
-                                                        #_"[Block]" ifPred [ block ]
-                                                        _ (§ ass! trueSucc (assoc trueSucc :predecessors ifPred))
-                                                        _ (§ ass! falseSucc (assoc falseSucc :predecessors ifPred))
-                                                    ]
-                                                        [stack tos]
-                                                    )
-                                                LoopEndNode
-                                                    (let [
-                                                        _ (§ ass! block (assoc block :successors [ (get node->block (:loopBegin end)) ]))
-                                                    ]
-                                                        [stack tos]
-                                                    )
-                                                ControlSinkNode
-                                                    (let [
-                                                        _ (§ ass! block (assoc block :successors []))
-                                                    ]
-                                                        [stack tos]
-                                                    )
-                                                #_else
-                                                    (let [
-                                                        #_"int" o'tos tos
-                                                        #_"[Block]" ifPred [ block ]
-                                                        [stack tos]
-                                                            (loop-when [stack stack tos tos #_"seq" s (seq (Node''successors-1 end))] (some? s) => [stack tos]
-                                                                (let [
-                                                                    #_"Block" successor (get node->block (first s))
-                                                                    _ (§ ass! successor (assoc successor :predecessors ifPred))
-                                                                ]
-                                                                    (recur (assoc' stack (inc tos) successor) (inc tos) (next s))
-                                                                )
-                                                            )
-                                                        _ (§ ass! block (assoc block :successors (subvec stack (inc o'tos) (inc tos))))
-                                                    ]
-                                                        [stack tos]
-                                                    )
-                                            )
-                                        _ (§ ass! block (assoc block :id ControlFlowGraph'BLOCK_ID_VISITED))
-                                        #_"AbstractBeginNode" beginNode (:beginNode block)
-                                        _
-                                            (condp satisfies? beginNode
-                                                LoopBeginNode
-                                                    (let [
-                                                        #_"[Block]" predecessors (vec (map node->block (concat (:ends beginNode) (LoopBeginNode''orderedLoopEnds-1 beginNode))))
-                                                    ]
-                                                        (§ ass! block (assoc block :predecessors predecessors))
-                                                    )
-                                                MergeNode
-                                                    (let [
-                                                        #_"[Block]" predecessors (vec (map node->block (:ends beginNode)))
-                                                    ]
-                                                        (§ ass! block (assoc block :predecessors predecessors))
-                                                    )
-                                                nil
-                                            )
-                                    ]
-                                        [stack tos total]
-                                    )
-                                ControlFlowGraph'BLOCK_ID_VISITED
-                                    ;; Second time we see this block: All successors have been processed,
-                                    ;; so add block to result list. Can safely reuse the stack for this.
-                                    (let [
-                                        tos (dec tos)
-                                        total (inc total)
-                                        #_"int" i (- n total)
-                                        _ (§ ass! block (assoc block :id i))
-                                    ]
-                                        [(assoc' stack i block) tos total]
-                                    )
-                            )
-                    ]
-                        (recur-if (<= 0 tos) [stack tos total] => stack)
-                    )
-                )
-        ]
-            ;; Compute reverse postorder and number blocks.
-            (assoc this :reversePostOrder stack)
-        )
-    )
-
-    ;;;
-     ; Multiplies a and b and clamps the between ControlFlowGraph#MIN_PROBABILITY and
-     ; ControlFlowGraph#MAX_PROBABILITY.
-     ;;
-    (defn- #_"double" ControlFlowGraph'multiplyProbabilities-2 [#_"double" a, #_"double" b]
-        (let [
-            #_"double" r (* a b)
-        ]
-            (cond
-                (< ControlFlowGraph'MAX_PROBABILITY r) ControlFlowGraph'MAX_PROBABILITY
-                (< r ControlFlowGraph'MIN_PROBABILITY) ControlFlowGraph'MIN_PROBABILITY
-                :else                                  r
-            )
-        )
-    )
-
-    (defn- #_"this" ControlFlowGraph''computeProbabilities-1 [#_"ControlFlowGraph" this]
-        (doseq [#_"Block" block (:reversePostOrder this)]
-            (let [
-                #_"[Block]" predecessors (:predecessors block)
-                #_"double" probability
-                    (case (count predecessors)
-                        0   1.0
-                        1   (let [
-                                #_"Block" pred (nth predecessors 0)
-                            ]
-                                (when (< 1 (count (:successors pred))) => (:probability pred)
-                                    (ControlFlowGraph'multiplyProbabilities-2 (:probability pred), (ControlSplitNode'''probability-2 (:endNode pred), (:beginNode block)))
-                                )
-                            )
-                            (let [
-                                probability
-                                    (loop-when-recur [probability (:probability (nth predecessors 0)) #_"int" i 1]
-                                                     (< i (count predecessors))
-                                                     [(+ probability (:probability (nth predecessors i))) (inc i)]
-                                                  => probability
-                                    )
-                            ]
-                                (when (satisfies? LoopBeginNode (:beginNode block)) => probability
-                                    (ControlFlowGraph'multiplyProbabilities-2 probability, (:loopFrequency (:beginNode block)))
-                                )
-                            )
-                    )
-                probability
-                    (cond
-                        (< probability ControlFlowGraph'MIN_PROBABILITY) ControlFlowGraph'MIN_PROBABILITY
-                        (< ControlFlowGraph'MAX_PROBABILITY probability) ControlFlowGraph'MAX_PROBABILITY
-                        :else                                            probability
-                    )
-                _ (§ ass! block (assoc block :probability probability))
-            ]
-            )
-        )
-        this
-    )
-
-    (defn- #_"void" ControlFlowGraph'computeLoopBlocks-3 [#_"Block" start, #_"Loop" _loop, #_"boolean" pred?]
-        (when-not (= (:loop start) _loop)
-            (let [
-                _ (§ ass! start (assoc start :loop _loop))
-                _ (§ ass! _loop (update _loop :loopBlocks conj' start))
-            ]
-                (loop [#_"(Block)" stack (list start)]
-                    (let [
-                        [#_"Block" block & stack] stack
-                        ;; Add predecessors or successors to the loop.
-                        stack
-                            (loop-when [stack stack #_"seq" s (seq (if pred? (:predecessors block) (:successors block)))] (some? s) => stack
-                                (let [
-                                    #_"Block" b (first s)
-                                    stack
-                                        (when-not (= (:loop b) _loop) => stack
-                                            (let [
-                                                _ (§ ass! b (assoc b :loop _loop))
-                                                _ (§ ass! _loop (update _loop :loopBlocks conj' b))
-                                            ]
-                                                (cons b stack)
-                                            )
-                                        )
-                                ]
-                                    (recur stack (next s))
-                                )
-                            )
-                    ]
-                        (recur-if (seq stack) [stack])
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (defn- #_"this" ControlFlowGraph''computeLoopInformation-1 [#_"ControlFlowGraph" this]
-        (let [
-            this (assoc this :loops [])
-            this
-                (when (Graph''hasLoops-1 (:graph this)) => this
-                    (doseq [#_"Block" block (:reversePostOrder this)]
-                        (let [
-                            #_"AbstractBeginNode" beginNode (:beginNode block)
-                        ]
-                            (when (satisfies? LoopBeginNode beginNode)
-                                (let [
-                                    #_"Loop" parent (:loop block)
-                                    #_"Loop" _loop (Loop'new-3 parent, (count (:loops this)), block)
-                                    _
-                                        (when (some? parent)
-                                            (§ ass! parent (update parent :children conj' _loop))
-                                        )
-                                    _ (§ ass! this (update this :loops conj' _loop))
-                                    _ (§ ass! block (assoc block :loop _loop))
-                                    _loop (update _loop :loopBlocks conj' block)
-                                ]
-                                    (doseq [#_"LoopEndNode" end (LoopBeginNode''loopEnds-1 beginNode)]
-                                        (ControlFlowGraph'computeLoopBlocks-3 (get (:node->block this) end), _loop, true)
-                                    )
-
-                                    (when-not (= (:guardsStage (:graph this)) :GuardsStage'AFTER_FSA)
-                                        (doseq [#_"LoopExitNode" exit (LoopBeginNode''loopExits-1 beginNode)]
-                                            (let [
-                                                #_"Block" exitBlock (get (:node->block this) exit)
-                                            ]
-                                                (ControlFlowGraph'computeLoopBlocks-3 (Block''getFirstPredecessor-1 exitBlock), _loop, true)
-                                                (§ ass! _loop (Loop''addExit-2 _loop, exitBlock))
-                                            )
-                                        )
-
-                                        ;; The following loop can add new blocks to the end of the loop's block list.
-                                        (doseq [#_"Block" b (:loopBlocks _loop) #_"Block" s (:successors b)]
-                                            (when-not (or (= (:loop s) _loop) (and (satisfies? LoopExitNode (:beginNode s)) (= (:loopBegin (:beginNode s)) beginNode)))
-                                                (ControlFlowGraph'computeLoopBlocks-3 s, _loop, false)
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                    this
-                )
-        ]
-            ;; Compute the loop exit blocks after FSA.
-            (when (= (:guardsStage (:graph this)) :GuardsStage'AFTER_FSA)
-                (doseq [#_"Block" b (:reversePostOrder this)]
-                    (when (some? (:loop b))
-                        (doseq [#_"Block" succ (:successors b)]
-                            ;; if the loop of the succ is a different one (or none)
-                            (when-not (= (:loop b) (:loop succ))
-                                ;; and the succ loop is not a child loop of the curr one
-                                (if (nil? (:loop succ))
-                                    ;; we might exit multiple loops if b.loops is not a loop at depth 0
-                                    (loop-when-recur [#_"Loop" curr (:loop b)] (some? curr) [(:parent curr)]
-                                        (§ ass! curr (Loop''addExit-2 curr, succ))
-                                    )
-                                    ;; succ also has a loop, might be a child loop
-                                    ;;
-                                    ;; if it is a child loop, we do not exit a loop. if it is a loop different than
-                                    ;; b.loop and not a child loop, it must be a parent loop, thus we exit all loops
-                                    ;; between b.loop and succ.loop
-                                    ;;
-                                    ;; if we exit multiple loops immediately after each other, the bytecode parser
-                                    ;; might generate loop exit nodes after another and the CFG will identify them
-                                    ;; as separate blocks, we just take the first one and exit all loops at this one
-                                    (when-not (= (:parent (:loop succ)) (:loop b))
-                                        ;; b.loop must not be a transitive parent of succ.loop
-                                        (loop-when-recur [#_"Loop" curr (:loop b)] (and (some? curr) (not= curr (:loop succ))) [(:parent curr)]
-                                            (§ ass! curr (Loop''addExit-2 curr, succ))
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            )
-            this
-        )
-    )
-
-    (defn- #_"Block" ControlFlowGraph'commonDominatorRawSameDepth-2 [#_"Block" a, #_"Block" b]
-        (loop-when-recur [a a b b] (not= a b) [(:dominator a) (:dominator b)] => a)
-    )
-
-    (defn- #_"Block" ControlFlowGraph'commonDominatorRaw-2 [#_"Block" a, #_"Block" b]
-        (if (< (:domDepth b) (:domDepth a))
-            (ControlFlowGraph'commonDominatorRawSameDepth-2 (Block''getDominator-2 a, (- (:domDepth a) (:domDepth b))), b)
-            (ControlFlowGraph'commonDominatorRawSameDepth-2 a, (Block''getDominator-2 b, (- (:domDepth b) (:domDepth a))))
-        )
-    )
-
-    (defn- #_"void" ControlFlowGraph'calcDominatorRanges-1 [#_"Block" start]
-        (loop [#_"(Block)" stack (list start) #_"int" n 0]
-            (let [
-                #_"Block" block (first stack)
-                #_"Block" dominated (:firstDominated block)
-                [stack n]
-                    (if (= (:domNumber block) -1)
-                        (let [
-                            _ (§ ass! block (assoc block :domNumber n))
-                            stack
-                                (if (some? dominated)
-                                    ;; Push children onto stack.
-                                    (loop [stack stack dominated dominated]
-                                        (let [
-                                            stack (cons dominated stack)
-                                            dominated (:dominatedSibling dominated)
-                                        ]
-                                            (recur-if (some? dominated) [stack dominated] => stack)
-                                        )
-                                    )
-                                    (let [
-                                        _ (§ ass! block (assoc block :maxChildDomNumber n))
-                                    ]
-                                        (next stack)
-                                    )
-                                )
-                        ]
-                            [stack (inc n)]
-                        )
-                        (let [
-                            _ (§ ass! block (assoc block :maxChildDomNumber (:maxChildDomNumber dominated)))
-                        ]
-                            [(next stack) n]
-                        )
-                    )
-            ]
-                (recur-if (seq stack) [stack n])
-            )
-        )
-        nil
-    )
-
-    (defn- #_"this" ControlFlowGraph''computeDominators-1 [#_"ControlFlowGraph" this]
-        (let [
-            #_"[Block]" blocks (:reversePostOrder this)
-            #_"int" maxDominatorDepth
-                (loop-when [maxDominatorDepth 0 #_"int" i 1] (< i (count blocks)) => maxDominatorDepth
-                    (let [
-                        #_"Block" block (nth blocks i)
-                        #_"Block" dominator
-                            (loop-when [dominator nil #_"seq" s (seq (:predecessors block))] (some? s) => dominator
-                                (let [
-                                    #_"Block" pred (first s)
-                                    dominator
-                                        (when-not (Block''isLoopEnd-1 pred) => dominator
-                                            (if (some? dominator) (ControlFlowGraph'commonDominatorRaw-2 dominator, pred) pred)
-                                        )
-                                ]
-                                    (recur dominator (next s))
-                                )
-                            )
-                        ;; Set dominator.
-                        _ (§ ass! block (Block''setDominator-2 block, dominator))
-                        ;; Keep dominated linked list sorted by block ID such that predecessor blocks are always
-                        ;; before successor blocks.
-                        #_"Block" dominated (:firstDominated dominator)
-                        _
-                            (if (and (some? dominated) (< (:id dominated) (:id block)))
-                                (let [
-                                    dominated
-                                        (loop-when-recur dominated
-                                                         (and (some? (:dominatedSibling dominated)) (< (:id (:dominatedSibling dominated)) (:id block)))
-                                                         (:dominatedSibling dominated)
-                                                      => dominated
-                                        )
-                                ]
-                                    (§ ass! block (assoc block :dominatedSibling (:dominatedSibling dominated)))
-                                    (§ ass! dominated (assoc dominated :dominatedSibling block))
-                                )
-                                (do
-                                    (§ ass! block (assoc block :dominatedSibling (:firstDominated dominator)))
-                                    (§ ass! dominator (assoc dominator :firstDominated block))
-                                )
-                            )
-                    ]
-                        (recur (max maxDominatorDepth (:domDepth block)) (inc i))
-                    )
-                )
-            this (assoc this :maxDominatorDepth maxDominatorDepth)
-        ]
-            (ControlFlowGraph'calcDominatorRanges-1 (ControlFlowGraph''getStartBlock-1 this))
-            this
-        )
-    )
-
-    (defn- #_"Block" ControlFlowGraph'commonPostdominator-2 [#_"Block" a, #_"Block" b]
-        (loop-when [a a b b] (not= a b) => a
-            (if (< (:id a) (:id b))
-                (let [
-                    a (:postdominator a)
-                ]
-                    (recur-if (some? a) [a b])
-                )
-                (let [
-                    b (:postdominator b)
-                ]
-                    (recur-if (some? b) [a b])
-                )
-            )
-        )
-    )
-
-    (defn #_"this" ControlFlowGraph''computePostdominators-1 [#_"ControlFlowGraph" this]
-        (loop-when [#_"int" i (dec (count (:reversePostOrder this)))] (<= 0 i)
-            (let [
-                #_"Block" block (nth (:reversePostOrder this) i)
-            ]
-                ;; => We do not want the loop header registered as the postdominator of the loop end. ;; => No successors => no postdominator.
-                (when (and (not (Block''isLoopEnd-1 block)) (seq (:successors block)))
-                    (let [
-                        #_"Block" firstSucc (nth (:successors block) 0)
-                    ]
-                        (if (= (count (:successors block)) 1)
-                            (§ ass! block (assoc block :postdominator firstSucc))
-                            (loop-when [#_"Block" postdominator firstSucc #_"seq" s (seq (:successors block))] (some? s) => (§ ass! block (assoc block :postdominator postdominator))
-                                (let [
-                                    postdominator (ControlFlowGraph'commonPostdominator-2 postdominator, (first s))
-                                ]
-                                    (when (some? postdominator) ;; => There is a dead end => no postdominator available.
-                                        (recur postdominator (next s))
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-                (recur (dec i))
-            )
-        )
-        this
-    )
-
-    (defn #_"ControlFlowGraph" ControlFlowGraph'compute-3 [#_"Graph" graph, #_"boolean" dominators?, #_"boolean" postdominators?]
-        (let [
-            #_"ControlFlowGraph" cfg (ControlFlowGraph'new-1 graph)
-            cfg (ControlFlowGraph''identifyBlocks-1 cfg)
-            cfg (ControlFlowGraph''computeProbabilities-1 cfg)
-            cfg (ControlFlowGraph''computeLoopInformation-1 cfg)
-            cfg
-                (when dominators? => cfg
-                    (ControlFlowGraph''computeDominators-1 cfg)
-                )
-            cfg
-                (when postdominators? => cfg
-                    (ControlFlowGraph''computePostdominators-1 cfg)
-                )
-        ]
-            cfg
-        )
-    )
-
-    ;;;
-     ; True if block {@code a} is dominated by block {@code b}.
-     ;;
-    (defn- #_"boolean" ControlFlowGraph'isDominatedBy-2 [#_"Block" a, #_"Block" b]
-        (<= (:domNumber b) (:domNumber a) (:maxChildDomNumber b))
-    )
-
-    ;;;
-     ; True if block {@code a} dominates block {@code b}.
-     ;;
-    (defn #_"boolean" ControlFlowGraph'dominates-2 [#_"Block" a, #_"Block" b]
-        (ControlFlowGraph'isDominatedBy-2 b, a)
-    )
-
-    ;;;
-     ; True if block {@code a} dominates block {@code b} and {@code a} is not identical block to {@code b}.
-     ;;
-    #_unused
-    (defn #_"boolean" ControlFlowGraph'strictlyDominates-2 [#_"Block" a, #_"Block" b]
-        (and (not= a b) (ControlFlowGraph'dominates-2 a, b))
-    )
-
-    ;;;
-     ; Calculates the common dominator of two blocks.
-     ;
-     ; Note that this algorithm makes use of special properties regarding the numbering of blocks.
-     ;;
-    (defn #_"Block" ControlFlowGraph'commonDominator-2 [#_"Block" a, #_"Block" b]
-        (cond
-            (nil? a) b (nil? b) a (= a b) a
-            :else
-                (let [
-                    [a b] (if (< (:domDepth b) (:domDepth a)) [a b] [b a])
-                    b (loop-when-recur b (< (:domNumber a)         (:domNumber b)) (:dominator b) => b)
-                    b (loop-when-recur b (< (:maxChildDomNumber b) (:domNumber a)) (:dominator b) => b)
-                ]
-                    b
-                )
-        )
-    )
-)
-
 ;;;
  ; This class performs basic optimizations on the control flow graph after LIR generation.
  ;;
@@ -20415,7 +19767,7 @@ ZeroExtendNode'new-4
  ; the dominator (sub-)tree, esp. it represents a dominator (sub-)tree for a constant definition.
  ;;
 (class-ns ConstantTree []
-    (defn #_"ConstantTree" ConstantTree'new-2 [#_"ControlFlowGraph" cfg, #_"DefUseTree" tree]
+    (defn #_"ConstantTree" ConstantTree'new-2 [#_"ControlFlowGraph" cfg, #_"DefUseTree" tree]
         (merge (ConstantTree'class.)
             (hash-map
                 #_"[Block]" :blocks (:reversePostOrder cfg)
@@ -22062,8 +21414,7 @@ ZeroExtendNode'new-4
 (value-ns FixReadsPhase
     (defn #_"Graph" FixReadsPhase''run-1 [#_"Graph" graph]
         (let [
-            graph (SchedulePhase'run-2 graph, :SchedulingStrategy'LATEST_OUT_OF_LOOPS)
-            #_"Schedule" schedule (:lastSchedule graph)
+            #_"Schedule" schedule (ß :lastSchedule graph)
             _ (reduce #(ScheduledNodeIterator''processNodes-3 %1, %2, schedule) (FixReadsClosure'new-0) (:reversePostOrder (:cfg schedule)))
         ]
             graph
@@ -23129,16 +22480,11 @@ ZeroExtendNode'new-4
                         #_"StartNode" :start nil
                         #_"GuardsStage" :guardsStage :GuardsStage'FLOATING_GUARDS
                         #_"boolean" :hasValueProxies true
-                        #_"Schedule" :lastSchedule nil
                     )
                 )
         ]
             (assoc this :start (Graph''add-2 this, (StartNode'new-0)))
         )
-    )
-
-    (defn #_"int" Graph''getNodeCount-1 [#_"Graph" this]
-        (count (:gNodes this))
     )
 
     ;;;
@@ -23221,10 +22567,6 @@ ZeroExtendNode'new-4
 
     (defn #_"InvokeNode*" Graph''getInvokes-1 [#_"Graph" this]
         (->> (Graph''getNodes-2 this, MethodCallTargetNode) (map MethodCallTargetNode''invoke-1) (remove nil?))
-    )
-
-    (defn #_"boolean" Graph''hasLoops-1 [#_"Graph" this]
-        (seq (Graph''getNodes-2 this, LoopBeginNode))
     )
 
     ;;;
@@ -23420,18 +22762,14 @@ ZeroExtendNode'new-4
 (value-ns GuardLoweringPhase
     (defn #_"Graph" GuardLoweringPhase'run-1 [#_"Graph" graph]
         (when (GuardsStage'allowsFloatingGuards-1 (:guardsStage graph)) => graph
-            (let [
-                graph (SchedulePhase'run-2 graph, :SchedulingStrategy'EARLIEST)
-            ]
-                (doseq [#_"Block" block (:reversePostOrder (:cfg (:lastSchedule graph)))]
-                    (let [
-                        _ (LowerGuards'new-1 block)
-                    ]
-                        (§ ass! _ (ScheduledNodeIterator''processNodes-3 _, block, (:lastSchedule graph)))
-                    )
+            (doseq [#_"Block" block (:reversePostOrder (:cfg (ß :lastSchedule graph)))]
+                (let [
+                    _ (LowerGuards'new-1 block)
+                ]
+                    (§ ass! _ (ScheduledNodeIterator''processNodes-3 _, block, (ß :lastSchedule graph)))
                 )
-                (Graph''setGuardsStage-2 graph, :GuardsStage'FIXED_DEOPTS)
             )
+            (Graph''setGuardsStage-2 graph, :GuardsStage'FIXED_DEOPTS)
         )
     )
 )
@@ -23439,7 +22777,7 @@ ZeroExtendNode'new-4
 ;;;
  ; This plugin handles the HotSpot-specific customizations of bytecode parsing.
  ;;
-(class-ns HotSpotPlugin [NodePlugin, TypePlugin]
+(class-ns HotSpotPlugin [NodePlugin, TypePlugin]
     (defn #_"HotSpotPlugin" HotSpotPlugin'new-0 []
         (HotSpotPlugin'class.)
     )
@@ -25273,10 +24611,10 @@ ZeroExtendNode'new-4
     ;;;
      ; Creates a new LIR instance for the specified compilation.
      ;;
-    (defn #_"LIR" LIR'new-3 [#_"ControlFlowGraph" cfg, #_"[Block]" linearScanOrder, #_"[Block]" codeEmittingOrder]
+    (defn #_"LIR" LIR'new-3 [#_"ControlFlowGraph" cfg, #_"[Block]" linearScanOrder, #_"[Block]" codeEmittingOrder]
         (merge (LIR'class.)
             (hash-map
-                #_"ControlFlowGraph" :cfg cfg
+                #_"ControlFlowGraph" :cfg cfg
                 ;;;
                  ; The linear-scan ordered list of blocks.
                  ;;
@@ -25365,7 +24703,7 @@ ZeroExtendNode'new-4
 
     (defn #_"LabelRef" LIRBuilder''getLIRBlock-2 [#_"LIRBuilder" this, #_"FixedNode" node]
         (let [
-            #_"Block" block (ControlFlowGraph''blockFor-2 (:cfg (:lir (:res (:gen this)))), node)
+            #_"Block" block (ß ControlFlowGraph''blockFor-2 (:cfg (:lir (:res (:gen this)))), node)
         ]
             (loop-when [#_"int" i 0 #_"seq" s (seq (:successors (:currentBlock (:gen this))))] (some? s) => (throw! "Block not in successor list of current block")
                 (if (= (first s) block)
@@ -25513,7 +24851,7 @@ ZeroExtendNode'new-4
         (try (§ with [#_"BlockScope" _ (LIRGenerator''getBlockScope-2 (:gen this), block)])
             (let [
                 this
-                    (if (= block (ControlFlowGraph''getStartBlock-1 (:cfg (:lir (:res (:gen this))))))
+                    (if (= block (ß ControlFlowGraph''getStartBlock-1 (:cfg (:lir (:res (:gen this))))))
                         (LIRBuilder''emitPrologue-2 this, graph)
                         ;; create phi-in value array
                         (when (satisfies? AbstractMergeNode (:beginNode block)) => this
@@ -25791,13 +25129,13 @@ ZeroExtendNode'new-4
 )
 
 (class-ns LIRGenerationContext []
-    (defn #_"LIRGenerationContext" LIRGenerationContext'new-3 [#_"LIRGenerator" lirGen, #_"Graph" graph, #_"Schedule" schedule]
+    (defn #_"LIRGenerationContext" LIRGenerationContext'new-3 [#_"LIRGenerator" lirGen, #_"Graph" graph, #_"Schedule" schedule]
         (merge (LIRGenerationContext'class.)
             (hash-map
                 #_"LIRBuilder" :nodeLirBuilder (LIRBuilder'new-1 lirGen)
                 #_"LIRGenerator" :lirGen lirGen
                 #_"Graph" :graph graph
-                #_"Schedule" :schedule schedule
+                #_"Schedule" :schedule schedule
             )
         )
     )
@@ -30347,7 +29685,7 @@ ZeroExtendNode'new-4
 
             ;; check that the liveIn set of the first block is empty
             (let [
-                #_"Block" startBlock (ControlFlowGraph''getStartBlock-1 (:cfg (:lir allocator)))
+                #_"Block" startBlock (ß ControlFlowGraph''getStartBlock-1 (:cfg (:lir allocator)))
             ]
                 (when-not (zero? (#_"BitSet" .cardinality (:liveIn (LinearScan''getBlockData-2 allocator, startBlock))))
                     ;; bailout if this occurs in product mode.
@@ -30754,8 +30092,8 @@ ZeroExtendNode'new-4
                                                 (let [
                                                     #_"Block" splitBlock (first s)
                                                     spillBlock
-                                                        (when (ControlFlowGraph'dominates-2 defBlock, splitBlock) => spillBlock
-                                                            (if (some? spillBlock) (ControlFlowGraph'commonDominator-2 spillBlock, splitBlock) splitBlock)
+                                                        (when (ß ControlFlowGraph'dominates-2 defBlock, splitBlock) => spillBlock
+                                                            (if (some? spillBlock) (ß ControlFlowGraph'commonDominator-2 spillBlock, splitBlock) splitBlock)
                                                         )
                                                 ]
                                                     (recur spillBlock (next s))
@@ -31757,6 +31095,7 @@ ZeroExtendNode'new-4
         )
     )
 
+    #_unused
     (defn #_"boolean" LocationSet''contains-2 [#_"LocationSet" this, #_"LocationIdentity" location]
         (or (any = (:firstLocation this) LocationIdentity'ANY location)
             (loop-when [#_"seq" s (seq (:locations this))] (some? s) => false
@@ -31813,7 +31152,7 @@ ZeroExtendNode'new-4
 )
 
 (class-ns Loop []
-    (defn #_"Loop" Loop'new-3 [#_"Loop" parent, #_"int" index, #_"Block" header]
+    (defn #_"Loop" Loop'new-3 [#_"Loop" parent, #_"int" index, #_"Block" header]
         (merge (Loop'class.)
             (hash-map
                 #_"Loop" :parent parent
@@ -31830,10 +31169,6 @@ ZeroExtendNode'new-4
 
     (defn #_"long" Loop''numBackedges-1 [#_"Loop" this]
         (count (LoopBeginNode''loopEnds-1 (:beginNode (:header this))))
-    )
-
-    (defn #_"this" Loop''addExit-2 [#_"Loop" this, #_"Block" block]
-        (update this :loopExits conj' block)
     )
 
     (defn #_"LocationSet" Loop''getKillLocations-1 [#_"Loop" this]
@@ -31874,10 +31209,6 @@ ZeroExtendNode'new-4
         ]
             (:killLocations this)
         )
-    )
-
-    (defn #_"boolean" Loop''canKill-2 [#_"Loop" this, #_"LocationIdentity" location]
-        (LocationSet''contains-2 (Loop''getKillLocations-1 this), location)
     )
 )
 
@@ -32048,7 +31379,7 @@ ZeroExtendNode'new-4
         (merge (LoweringRound'class.)
             (hash-map
                 #_"LoweringStage" :loweringStage loweringStage
-                #_"Schedule" :schedule nil
+                #_"Schedule" :schedule nil
             )
         )
     )
@@ -32056,10 +31387,9 @@ ZeroExtendNode'new-4
     (defn #_"Graph" LoweringRound'run-2 [#_"Graph" graph, #_"LoweringStage" loweringStage]
         (let [
             #_"LoweringRound" this (LoweringRound'new-1 loweringStage)
-            graph (SchedulePhase'run-2 graph, (if GraalOptions'optScheduleOutOfLoops :SchedulingStrategy'LATEST_OUT_OF_LOOPS :SchedulingStrategy'LATEST))
-            this (assoc this :schedule (:lastSchedule graph))
-            _ (§ ass! (:cfg (:schedule this)) (ControlFlowGraph''computePostdominators-1 (:cfg (:schedule this))))
-            #_"Block" startBlock (ControlFlowGraph''getStartBlock-1 (:cfg (:schedule this)))
+            this (assoc this :schedule (ß :lastSchedule graph))
+            _ (§ ass! (:cfg (:schedule this)) (ß ControlFlowGraph''computePostdominators-1 (:cfg (:schedule this))))
+            #_"Block" startBlock (ß ControlFlowGraph''getStartBlock-1 (:cfg (:schedule this)))
         ]
             (LoweringPhase'processBlock-1 (ProcessFrame'new-5 nil, this, startBlock, #{}, (:beginNode startBlock)))
             graph
@@ -32171,79 +31501,6 @@ ZeroExtendNode'new-4
      ;;
     (defn #_"this" LoweringTool''setLastFixedNode-2 [#_"LoweringTool" this, #_"FixedWithNextNode" n]
         (assoc this :lastFixedNode n)
-    )
-)
-
-;;;
- ; Micro block that is allocated for each fixed node and captures all floating nodes that
- ; need to be scheduled immediately after the corresponding fixed node.
- ;;
-(class-ns MicroBlock []
-    (defn #_"MicroBlock" MicroBlock'new-1 [#_"int" id]
-        (merge (MicroBlock'class.)
-            (hash-map
-                ;;;
-                 ; The id of the micro block, with a block always associated with a lower id than its successors.
-                 ;;
-                #_"int" :id id
-                ;;;
-                 ; Number of nodes in this micro block.
-                 ;;
-                #_"int" :nodeCount 0
-                ;;;
-                 ; First node of the linked list of nodes of this micro block.
-                 ;;
-                #_"NodeEntry" :head nil
-                #_"NodeEntry" :tail nil
-            )
-        )
-    )
-
-    ;;;
-     ; Adds a new floating node into the micro block.
-     ;;
-    (defn #_"this" MicroBlock''add-2 [#_"MicroBlock" this, #_"Node" node]
-        (let [
-            #_"NodeEntry" tail (NodeEntry'new-1 node)
-            this
-                (if (nil? (:tail this))
-                    (let [
-                        this (assoc this :head tail)
-                        this (assoc this :tail tail)
-                    ]
-                        this
-                    )
-                    (let [
-                        _ (§ ass! (:next (:tail this)) tail)
-                        this (assoc this :tail tail)
-                    ]
-                        this
-                    )
-                )
-            this (update this :nodeCount inc)
-        ]
-            this
-        )
-    )
-
-    ;;;
-     ; Takes all nodes in this micro blocks and prepends them to the nodes of the given parameter.
-     ;
-     ; @param block the new block for the nodes
-     ;;
-    (defn #_"this" MicroBlock''prependChildrenTo-2 [#_"MicroBlock" this, #_"MicroBlock" block]
-        (when (some? (:tail this)) => this
-            (let [
-                _ (§ ass! (:next (:tail this)) (:head block))
-                _ (§ ass! block (assoc block :head (:head this)))
-                this (assoc this :tail nil)
-                this (assoc this :head nil)
-                _ (§ ass! block (assoc block :nodeCount (+ (:nodeCount block) (:nodeCount this))))
-                this (assoc this :nodeCount 0)
-            ]
-                this
-            )
-        )
     )
 )
 
@@ -32717,20 +31974,6 @@ ZeroExtendNode'new-4
                 #_"UseEntry*" :usages usages
                 #_"double" :bestCost bestCost
                 #_"int" :numMat numMat
-            )
-        )
-    )
-)
-
-;;;
- ; Entry in the linked list of nodes.
- ;;
-(class-ns NodeEntry []
-    (defn #_"NodeEntry" NodeEntry'new-1 [#_"Node" node]
-        (merge (NodeEntry'class.)
-            (hash-map
-                #_"Node" :node node
-                #_"NodeEntry" :next nil
             )
         )
     )
@@ -33823,10 +33066,6 @@ ZeroExtendNode'new-4
             (:nodeUsages this)
         )
     )
-
-    (defn #_"FixedNode*" AbstractBeginNode''getBlockNodes-1 [#_"AbstractBeginNode" this]
-        (->> this (iterate #(when (and (satisfies? FixedWithNextNode %) (not (satisfies? AbstractBeginNode (:next %)))) (:next %))) (take-while some?))
-    )
 )
 
 (class-ns BeginNode [AbstractBeginNode, FixedWithNextNode, FixedNode, ValueNode, Node, LIRLowerable, GuardingNode, AnchoringNode]
@@ -34016,24 +33255,6 @@ ZeroExtendNode'new-4
         (#_"Node*" AbstractBeginNode'''anchored-1 [#_"LoopBeginNode" this]
             (filter #(and (not (satisfies? LoopEndNode %)) (not (satisfies? LoopExitNode %))) (AbstractBeginNode'''anchored-1 (§ super AbstractMergeNode'iface)))
         )
-    )
-
-    ;;;
-     ; Returns the set of LoopEndNode that correspond to back-edges for this loop, in increasing
-     ; #phiPredecessorIndex order. This method is suited to create new loop PhiNode.
-     ;
-     ; For example a new PhiNode may be added as follow:
-     ;
-     ; PhiNode phi = ValuePhiNode'new(stamp, loop);
-     ; phi.addInput(forwardEdgeValue);
-     ; for (LoopEndNode loopEnd : loop.orderedLoopEnds()) {
-     ;     phi.addInput(backEdgeValue(loopEnd));
-     ; }
-     ;
-     ; @return the set of LoopEndNode that correspond to back-edges for this loop
-     ;;
-    (defn #_"[LoopEndNode]" LoopBeginNode''orderedLoopEnds-1 [#_"LoopBeginNode" this]
-        (reduce #(assoc' %1 (:endIndex %2) %2) (vec (repeat (:nextEndIndex this) nil)) (LoopBeginNode''loopEnds-1 this))
     )
 
     (defn #_"AbstractEndNode" LoopBeginNode''forwardEnd-1 [#_"LoopBeginNode" this]
@@ -42258,689 +41479,6 @@ ZeroExtendNode'new-4
     (defn #_"Scale" Scale'fromShift-1 [#_"int" shift] (case shift 0 Scale'Times1 1 Scale'Times2 2 Scale'Times4 3 Scale'Times8 nil))
 )
 
-(class-ns Schedule []
-    (def- #_"double" Schedule'IMPLICIT_NULL_CHECK_OPPORTUNITY_PROBABILITY_FACTOR 2)
-
-    (defn #_"Schedule" Schedule'new-3 [#_"ControlFlowGraph" cfg, #_"Graph" graph, #_"SchedulingStrategy" strategy]
-        (merge (Schedule'class.)
-            (hash-map
-                #_"ControlFlowGraph" :cfg (or cfg (ControlFlowGraph'compute-3 graph, true, false))
-                #_"Graph" :graph graph
-                #_"SchedulingStrategy" :strategy strategy
-                #_"{Node Block}" :node->block nil
-                #_"{Block Node*}" :block->nodes nil
-                #_"{Block FloatingReadNode*}" :watchMap nil
-                #_"{Node}" :agenda #{}
-                #_"int" :counter 0
-            )
-        )
-    )
-
-    (defn- #_"[this Node*]" Schedule''processStackPhi-4 [#_"Schedule" this, #_"Node*" stack, #_"PhiNode" phi, #_"{Node MicroBlock}" mapping]
-        (when-not (contains? (:agenda this) phi) => [this stack]
-            (let [
-                this (update this :counter inc)
-                this (update this :agenda conj phi)
-                _ (§ ass! mapping (assoc mapping phi (get mapping (:merge phi))))
-                _
-                    (dotimes [#_"int" i (count (:ends (:merge phi)))]
-                        (let [
-                            #_"Node" input (nth (:phiValues phi) i)
-                        ]
-                            (when (and (some? input) (nil? (get mapping input)))
-                                (§ ass! stack (cons input stack))
-                            )
-                        )
-                    )
-            ]
-                [this stack]
-            )
-        )
-    )
-
-    (defn- #_"[this Node*]" Schedule''processStackProxy-4 [#_"Schedule" this, #_"Node*" stack, #_"ValueProxyNode" proxy, #_"{Node MicroBlock}" mapping]
-        (when-not (contains? (:agenda this) proxy) => [this stack]
-            (let [
-                this (update this :counter inc)
-                this (update this :agenda conj proxy)
-                _ (§ ass! mapping (assoc mapping proxy (get mapping (:loopExit proxy))))
-                #_"Node" input (:value proxy)
-            ]
-                (when (and (some? input) (nil? (get mapping input))) => [this stack]
-                    [this (cons input stack)]
-                )
-            )
-        )
-    )
-
-    ;;;
-     ; Processes the inputs of given block. Pushes unprocessed inputs onto the stack. Returns nil if there
-     ; were still unprocessed inputs, otherwise returns the earliest block given node can be scheduled in.
-     ;;
-    (defn- #_"MicroBlock" Schedule'processInputs-4 [#_"MicroBlock" start, #_"Node*" stack, #_"Node" node, #_"{Node MicroBlock}" mapping]
-        (when-not (:isLeafNode (:nodeClass node)) => start
-            (loop-when [#_"MicroBlock" earliest start #_"seq" s (seq (Node''inputs-1 node))] (some? s) => earliest
-                (let [
-                    #_"Node" input (first s)
-                    #_"MicroBlock" block (get mapping input)
-                    earliest
-                        (when (nil? block) => (if (and (some? earliest) (< (:id earliest) (:id block))) block earliest)
-                            (§ ass! stack (cons input stack))
-                            nil
-                        )
-                ]
-                    (recur earliest (next s))
-                )
-            )
-        )
-    )
-
-    (defn- #_"this" Schedule''processStack-4 [#_"Schedule" this, #_"Node" node, #_"MicroBlock" start, #_"{Node MicroBlock}" mapping]
-        (loop [this this #_"Node*" stack (list node)]
-            (let [
-                node (first stack)
-                [this stack]
-                    (condp satisfies? node
-                        PhiNode        (Schedule''processStackPhi-4 this, (next stack), node, mapping)
-                        ValueProxyNode (Schedule''processStackProxy-4 this, (next stack), node, mapping)
-                        (when (nil? (get mapping node)) => [this (next stack)]
-                            (let [
-                                #_"MicroBlock" earliest (Schedule'processInputs-4 start, stack, node, mapping)
-                            ]
-                                (when (some? earliest) => [this stack] ;; We need to delay until inputs are processed.
-                                    ;; Can immediately process and pop.
-                                    (let [
-                                        this
-                                            (when-not (contains? (:agenda this) node) => this
-                                                (let [
-                                                    this (update this :counter inc)
-                                                ]
-                                                    (update this :agenda conj node)
-                                                )
-                                            )
-                                        _ (§ ass! mapping (assoc mapping node earliest))
-                                        _ (§ ass! earliest (MicroBlock''add-2 earliest, node))
-                                    ]
-                                        [this (next stack)]
-                                    )
-                                )
-                            )
-                        )
-                    )
-            ]
-                (recur-if (seq stack) [this stack] => this)
-            )
-        )
-    )
-
-    (defn- #_"this" Schedule''processNodes-4 [#_"Schedule" this, #_"Node*" nodes, #_"MicroBlock" start, #_"{Node MicroBlock}" mapping]
-        (doseq [#_"Node" node nodes]
-            (when (nil? (get mapping node))
-                (§ ass! this (Schedule''processStack-4 this, node, start, mapping))
-            )
-        )
-        this
-    )
-
-    (defn- #_"[this {Block Node*}]" Schedule''scheduleEarliestIterative-1 [#_"Schedule" this]
-        (let [
-            ;; Initialize with fixed nodes.
-            [this #_"MicroBlock" start #_"{Node MicroBlock}" mapping]
-                (loop-when [this this start nil mapping {} #_"int" i 1 #_"seq" s (seq (:reversePostOrder (:cfg this)))] (some? s) => [this start mapping]
-                    (let [
-                        #_"Block" block (first s)
-                        [this start mapping i]
-                            (loop-when [this this start start mapping mapping i i #_"seq" s (seq (AbstractBeginNode''getBlockNodes-1 (:beginNode block)))] (some? s) => [this start mapping i]
-                                (let [
-                                    #_"FixedNode" node (first s)
-                                    #_"MicroBlock" microBlock (MicroBlock'new-1 i)
-                                    mapping (assoc mapping node microBlock)
-                                    this
-                                        (when-not (contains? (:agenda this) node) => this
-                                            (-> this
-                                                (update :agenda conj node)
-                                                (update :counter inc)
-                                            )
-                                        )
-                                ]
-                                    (recur this (or start microBlock) mapping (inc i) (next s))
-                                )
-                            )
-                    ]
-                        (recur this start mapping i (next s))
-                    )
-                )
-            ;; Process guards.
-            this
-                (when (GuardsStage'allowsFloatingGuards-1 (:guardsStage (:graph this))) => this
-                    (let [
-                        #_"GuardNode*" guards (Graph''getNodes-2 (:graph this), GuardNode)
-                    ]
-                        (when (seq guards) => this
-                            (Schedule''processNodes-4 this, guards, start, mapping)
-                        )
-                    )
-                )
-            ;; Process inputs of fixed nodes.
-            this
-                (reduce #(Schedule''processNodes-4 %1, %2, start, mapping) this
-                    (for [#_"Block" b (:reversePostOrder (:cfg this)) #_"FixedNode" n (AbstractBeginNode''getBlockNodes-1 (:beginNode b))]
-                        (Node''inputs-1 n)
-                    )
-                )
-            this
-                (when (< (:counter this) (Graph''getNodeCount-1 (:graph this))) => this
-                    ;; Visit back input edges of loop phis.
-                    (loop [this this]
-                        (let [
-                            [this #_"boolean" unmarked? #_"boolean" changed?]
-                                (loop-when [this this unmarked? false changed? false #_"seq" s (seq (Graph''getNodes-2 (:graph this), LoopBeginNode))] (some? s) => [this unmarked? changed?]
-                                    (let [
-                                        #_"LoopBeginNode" loopBegin (first s)
-                                        [this unmarked? changed?]
-                                            (loop-when [this this unmarked? unmarked? changed? changed? #_"seq" s (seq (AbstractMergeNode''phis-1 loopBegin))] (some? s) => [this unmarked? changed?]
-                                                (let [
-                                                    #_"PhiNode" phi (first s)
-                                                    [this unmarked? changed?]
-                                                        (when (contains? (:agenda this) phi) => [this true changed?]
-                                                            (loop-when [this this changed? changed? #_"int" i 0] (< i (:nextEndIndex loopBegin)) => [this unmarked? changed?]
-                                                                (let [
-                                                                    #_"Node" node (nth (:phiValues phi) (+ i (count (:ends loopBegin))))
-                                                                    [this changed?]
-                                                                        (when (and (some? node) (nil? (get mapping node))) => [this changed?]
-                                                                            [(Schedule''processStack-4 this, node, start, mapping) true]
-                                                                        )
-                                                                ]
-                                                                    (recur this changed? (inc i))
-                                                                )
-                                                            )
-                                                        )
-                                                ]
-                                                    (recur this unmarked? changed? (next s))
-                                                )
-                                            )
-                                    ]
-                                        (recur this unmarked? changed? (next s))
-                                    )
-                                )
-                        ]
-                            ;; The processing of one loop phi could have marked a previously checked loop phi, therefore this needs to be iterative.
-                            (recur-if (and unmarked? changed?) [this] => this)
-                        )
-                    )
-                )
-            ;; Delete unscheduled nodes.
-            _
-                (when (< (:counter this) (Graph''getNodeCount-1 (:graph this)))
-                    (doseq [#_"Node" node (Graph''getNodes-1 (:graph this))]
-                        (when-not (contains? (:agenda this) node)
-                            (Node''clearInputs-1 node)
-                            (§ ass! node (Node''delete-1 node))
-                        )
-                    )
-                )
-            mapping
-                (loop-when [mapping mapping #_"seq" s (seq (:reversePostOrder (:cfg this)))] (some? s) => mapping
-                    (let [
-                        #_"FixedNode" fixedNode (:endNode (first s))
-                        mapping
-                            (when (satisfies? ControlSplitNode fixedNode) => mapping
-                                (let [
-                                    #_"AbstractBeginNode" primarySuccessor (ControlSplitNode'''getPrimarySuccessor-1 fixedNode)
-                                ]
-                                    (when (some? primarySuccessor) => mapping
-                                        (update mapping fixedNode MicroBlock''prependChildrenTo-2 (get mapping primarySuccessor))
-                                    )
-                                )
-                            )
-                    ]
-                        (recur mapping (next s))
-                    )
-                )
-            [this #_"{Block Node*}" block->nodes]
-                (loop-when [this (assoc this :node->block {}) block->nodes {} #_"seq" s (seq (:reversePostOrder (:cfg this)))] (some? s) => [this block->nodes]
-                    (let [
-                        #_"Block" block (first s)
-                        [this #_"Node*" nodes]
-                            (loop-when [this this nodes nil #_"seq" s' (seq (AbstractBeginNode''getBlockNodes-1 (:beginNode block)))] (some? s') => [this nodes]
-                                (let [
-                                    #_"FixedNode" node (first s')
-                                    [this nodes]
-                                        (loop-when-recur [this (assoc-in this [:node->block node] block) nodes (conj' nodes node) #_"NodeEntry" e (:head (get mapping node))]
-                                                         (some? e)
-                                                         [(assoc-in this [:node->block (:node e)] block) (conj' nodes (:node e)) (:next e)]
-                                                      => [this nodes]
-                                        )
-                                ]
-                                    (recur this nodes (next s'))
-                                )
-                            )
-                    ]
-                        (recur this (assoc block->nodes block nodes) (next s))
-                    )
-                )
-        ]
-            [this block->nodes]
-        )
-    )
-
-    (defn- #_"void" Schedule'fillKillSet-2 [#_"LocationSet" killed, #_"Node*" nodes]
-        (when-not (LocationSet''isAny-1 killed)
-            (loop-when [#_"seq" s (seq nodes)] (some? s)
-                (let [
-                    #_"Node" node (first s)
-                ]
-                    (or
-                        ;; Check if this node kills a node in the watch list.
-                        (condp satisfies? node
-                            Single
-                                (let [
-                                    _ (§ ass! killed (LocationSet''add-2 killed, (Single'''getLocationIdentity-1 node)))
-                                ]
-                                    (when (LocationSet''isAny-1 killed)
-                                        :done
-                                    )
-                                )
-                            Multi
-                                (loop-when [#_"seq" s (seq (Multi'''getLocationIdentities-1 node))] (some? s)
-                                    (§ ass! killed (LocationSet''add-2 killed, (first s)))
-                                    (when (LocationSet''isAny-1 killed) => (recur (next s))
-                                        :done
-                                    )
-                                )
-                            nil
-                        )
-                        (recur (next s))
-                    )
-                )
-            )
-        )
-        nil
-    )
-
-    (defn- #_"Block" Schedule''calcBlockForUsage-4 [#_"Schedule" this, #_"Node" node, #_"Node" usage, #_"Block" block]
-        (condp satisfies? usage
-            PhiNode
-                ;; An input to a PhiNode is used at the end of the predecessor block that
-                ;; corresponds to the PhiNode input. One PhiNode can use an input multiple times.
-                (let [
-                    #_"Block" mergeBlock (get (:node->block this) (:merge usage))
-                ]
-                    (loop-when-recur [block block #_"int" i 0]
-                                     (< i (count (:phiValues usage)))
-                                     [(if (= (nth (:phiValues usage) i) node) (ControlFlowGraph'commonDominator-2 block, (nth (:predecessors mergeBlock) i)) block) (inc i)]
-                                  => block
-                    )
-                )
-            AbstractBeginNode
-                (let [
-                    #_"Block" otherBlock (get (:node->block this) usage)
-                ]
-                    (ControlFlowGraph'commonDominator-2 block, (if (satisfies? StartNode usage) otherBlock (:dominator otherBlock)))
-                )
-            #_else
-                ;; All other types of usages: Put the input into the same block as the usage.
-                (let [
-                    #_"Block" otherBlock (get (:node->block this) (if (satisfies? ValueProxyNode usage) (:loopExit usage) usage))
-                ]
-                    (ControlFlowGraph'commonDominator-2 block, otherBlock)
-                )
-        )
-    )
-
-    (defn- #_"Block" Schedule'checkKillsBetween-3 [#_"Block" earliest, #_"Block" latest, #_"LocationIdentity" location]
-        (let [
-            ;; Collect dominator chain that needs checking.
-            #_"[Block]" dominators
-                (loop-when [dominators [ latest ] #_"Block" block (:dominator latest)] (not= block earliest) => dominators
-                    (let [
-                        ;; Current is an intermediate dominator between earliest and latest.
-                        dominators (if (Block''canKill-2 block, location) [] dominators)
-                    ]
-                        (recur (conj' dominators block) (:dominator block))
-                    )
-                )
-        ]
-            ;; The first element of dominators now contains the latest possible block.
-            (loop-when [earliest earliest #_"int" i (dec (count dominators))] (<= 0 i) => earliest
-                (let [
-                    #_"Block" block (nth dominators i)
-                    ;; We are entering a loop boundary. The new loops must not kill the location for the crossing to be safe.
-                    ? (or (and (< (Block''getLoopDepth-1 earliest) (Block''getLoopDepth-1 block)) (some? (:loop block)) (Loop''canKill-2 (:loop block), location)) (Block''canKillBetweenThisAndDominator-2 block, location))
-                ]
-                    (if ? earliest (recur block (dec i)))
-                )
-            )
-        )
-    )
-
-    (defn- #_"Node" Schedule'getUnproxifiedUncompressed-1 [#_"Node" node]
-        (loop [node node]
-            (condp satisfies? node
-                ValueProxy
-                    (recur (Proxy'''getOriginalNode-1 node))
-                ConvertNode
-                    (when (ConvertNode'''mayNullCheckSkipConversion-1 node) => node
-                        (recur (ConvertNode'''getValue-1 node))
-                    )
-                node
-            )
-        )
-    )
-
-    (defn- #_"boolean" Schedule'isImplicitNullOpportunity-2 [#_"FloatingReadNode" floatingRead, #_"Block" block]
-        (let [
-            #_"Node" pred (:predecessor (:beginNode block))
-        ]
-            (and (satisfies? IfNode pred) (satisfies? IsNullNode (:logic pred))
-                (= (Schedule'getUnproxifiedUncompressed-1 (AddressNode'''getBase-1 (Access'''getAddress-1 floatingRead)))
-                   (Schedule'getUnproxifiedUncompressed-1 (Unary'''getValue-1 (:logic pred)))
-                )
-            )
-        )
-    )
-
-    (defn- #_"[this {Block Node*}]" Schedule''selectLatestBlock-6 [#_"Schedule" this, #_"Node" node, #_"Block" earliest, #_"Block" latest, #_"{Block Node*}" block->nodes, #_"LocationIdentity" location]
-        (let [
-            this
-                (when-not (= earliest latest) => this
-                    (let [
-                        this (assoc-in this [:node->block node] latest)
-                    ]
-                        (when (and (some? location) (Block''canKill-2 latest, location)) => this
-                            (update-in this [:watchMap latest] conj' #_"FloatingReadNode" node)
-                        )
-                    )
-                )
-        ]
-            [this (update block->nodes latest conj' node)]
-        )
-    )
-
-    (defn- #_"[this {Block Node*}]" Schedule''calcLatestBlock-5 [#_"Schedule" this, #_"Node" node, #_"Block" earliest, #_"{Block Node*}" block->nodes, #_"LocationIdentity" location]
-        (let [
-            #_"Block" latest
-                (when (Node''hasUsages-1 node) => earliest
-                    (let [
-                        latest
-                            (loop-when-recur [latest nil #_"seq" s (seq (:nodeUsages node))] (some? s) [(Schedule''calcBlockForUsage-4 this, node, (first s), latest) (next s)] => latest)
-                        latest
-                            (when (any = (:strategy this) :SchedulingStrategy'FINAL_SCHEDULE :SchedulingStrategy'LATEST_OUT_OF_LOOPS) => latest
-                                (loop-when [latest latest #_"Block" block latest] (and (< (Block''getLoopDepth-1 earliest) (Block''getLoopDepth-1 block)) (not= block (:dominator earliest))) => latest
-                                    (let [
-                                        #_"Block" prior block
-                                        block (:dominator block)
-                                        ;; Only assign new latest block if frequency is actually lower or if loop proxies would be required otherwise.
-                                        ? (and (Block''isLoopHeader-1 prior) (or (< (:probability block) (:probability latest)) (:hasValueProxies (:graph node))))
-                                    ]
-                                        (recur (if ? block latest) block)
-                                    )
-                                )
-                            )
-                    ]
-                        (when (and (not= latest earliest) (not= latest (:dominator earliest)) (some? location)) => latest
-                            (Schedule'checkKillsBetween-3 earliest, latest, location)
-                        )
-                    )
-                )
-            ? (and (not= latest earliest) (satisfies? FloatingReadNode node) (Schedule'isImplicitNullOpportunity-2 node, earliest) (< (:probability earliest) (* (:probability latest) Schedule'IMPLICIT_NULL_CHECK_OPPORTUNITY_PROBABILITY_FACTOR)))
-        ]
-            (Schedule''selectLatestBlock-6 this, node, earliest, (if ? earliest latest), block->nodes, location)
-        )
-    )
-
-    (defn- #_"[this {Block Node*}]" Schedule''calcLatestBlocks-2 [#_"Schedule" this, #_"{Block Node*}" earliest]
-        (let [
-            this (assoc this :watchMap {})
-        ]
-            (loop-when [this this #_"{Block Node*}" latest {} #_"int" j (dec (count (:reversePostOrder (:cfg this))))] (<= 0 j) => [this latest]
-                (let [
-                    #_"Block" block (nth (:reversePostOrder (:cfg this)) j)
-                    #_"Node*" nodes (get earliest block)
-                    [this latest]
-                        (loop-when [this this latest latest #_"LocationSet" killed nil #_"int" i' (count nodes) #_"int" i (dec i')] (<= 0 i) => [this latest]
-                            (let [
-                                #_"Node" node (nth nodes i)
-                                [this latestkilled i']
-                                    (when-not (satisfies? FixedNode node) => [this latest killed i'] ;; For these nodes, the earliest is at the same time the latest block.
-                                        (let [
-                                            [killed i' #_"LocationIdentity" constrainingLocation #_"Block" latestBlock]
-                                                (when (satisfies? FloatingReadNode node) => [killed i' nil nil]
-                                                    ;; We are scheduling a floating read node => check memory anti-dependencies.
-                                                    (let [
-                                                        #_"LocationIdentity" location (Access'''getLocationIdentity-1 node)
-                                                    ]
-                                                        (when-not (:immutable location) => [killed i' nil nil]
-                                                            ;; Location can be killed.
-                                                            (let [
-                                                                constrainingLocation location
-                                                                [killed i' latestBlock]
-                                                                    (when (Block''canKill-2 block, location) => [killed i' nil]
-                                                                        (let [
-                                                                            killed (or killed (LocationSet'new-0))
-                                                                        ]
-                                                                            (Schedule'fillKillSet-2 killed, (subvec (vec nodes) (inc i) i'))
-                                                                            ;; Earliest block kills location => we need to stay within earliest block.
-                                                                            [killed i (when (LocationSet''contains-2 killed, location) block)]
-                                                                        )
-                                                                    )
-                                                            ]
-                                                                [killed i' constrainingLocation latestBlock]
-                                                            )
-                                                        )
-                                                    )
-                                                )
-                                            [this latest]
-                                                (if (nil? latestBlock)
-                                                    ;; We are not constraint within earliest block => calculate optimized schedule.
-                                                    (Schedule''calcLatestBlock-5 this, node, block, latest, constrainingLocation)
-                                                    (Schedule''selectLatestBlock-6 this, node, block, latestBlock, latest, constrainingLocation)
-                                                )
-                                        ]
-                                            [this latest killed i']
-                                        )
-                                    )
-                            ]
-                                (recur this latest killed i' (dec i))
-                            )
-                        )
-                ]
-                    (recur this latest (dec j))
-                )
-            )
-        )
-    )
-
-    (defn- #_"[this Node*]" Schedule''sortIntoList-5 [#_"Schedule" this, #_"Node*" nodes, #_"Node" node, #_"Block" block, #_"Node" exclude]
-        (when-not (satisfies? PhiNode node) => [this nodes]
-            (let [
-                this (update this :agenda disj node)
-                _
-                    (doseq [#_"Node" input (Node''inputs-1 node)]
-                        (when (and (= (get (:node->block this) input) block) (contains? (:agenda this) input) (not= input exclude))
-                            (§ ass! [this nodes] (Schedule''sortIntoList-5 this, nodes, input, block, exclude))
-                        )
-                    )
-                nodes
-                    (when-not (satisfies? ValueProxyNode node) => nodes ;; skip proxy nodes
-                        (conj' nodes node)
-                    )
-            ]
-                [this nodes]
-            )
-        )
-    )
-
-    (defn- #_"boolean" Schedule'isFixedEnd-1 [#_"FixedNode" end]
-        (or (satisfies? ControlSplitNode end) (satisfies? ControlSinkNode end) (satisfies? AbstractEndNode end))
-    )
-
-    (defn- #_"[this FloatingReadNode*]" Schedule''checkWatchList-5a [#_"Schedule" this, #_"FloatingReadNode*" watchList, #_"LocationIdentity" location, #_"Block" block, #_"Node*" nodes]
-        (cond
-            (:immutable location)
-                [this watchList] ;; Nothing to do. This can happen for an initialization write.
-            (LocationIdentity''isAny-1 location)
-                (let [
-                    _
-                        (doseq [#_"FloatingReadNode" r watchList]
-                            (when (contains? (:agenda this) r)
-                                (§ ass! [this nodes] (Schedule''sortIntoList-5 this, nodes, r, block, nil))
-                            )
-                        )
-                ]
-                    [this nil]
-                )
-            :else
-                (let [
-                    f'rofl #(pop' (assoc' %1 %2 (peek' %1)))
-                ]
-                    (loop-when [watchList (vec watchList) #_"int" i 0] (< i (count watchList)) => [this watchList]
-                        (let [
-                            #_"FloatingReadNode" r (nth watchList i)
-                            [watchList i]
-                                (when (contains? (:agenda this) r) => [(f'rofl watchList i) i]
-                                    (when (LocationIdentity''overlaps-2 location, (Access'''getLocationIdentity-1 r)) => [watchList (inc i)]
-                                        (§ ass! [this nodes] (Schedule''sortIntoList-5 this, nodes, r, block, nil))
-                                        [(f'rofl watchList i) i]
-                                    )
-                                )
-                        ]
-                            (recur watchList i)
-                        )
-                    )
-                )
-        )
-    )
-
-    (defn- #_"[this FloatingReadNode*]" Schedule''checkWatchList-5b [#_"Schedule" this, #_"FloatingReadNode*" watchList, #_"Block" block, #_"Node*" nodes, #_"Node" node]
-        (when (seq watchList) => [this nil]
-            ;; Check if this node kills a node in the watch list.
-            (condp satisfies? node
-                Single
-                    (let [
-                        #_"LocationIdentity" location (Single'''getLocationIdentity-1 node)
-                    ]
-                        (Schedule''checkWatchList-5a this, watchList, location, block, nodes)
-                    )
-                Multi
-                    (let [
-                        _
-                            (doseq [#_"LocationIdentity" location (Multi'''getLocationIdentities-1 node)]
-                                (§ ass! [this watchList] (Schedule''checkWatchList-5a this, watchList, location, block, nodes))
-                            )
-                    ]
-                        [this watchList]
-                    )
-                [this watchList]
-            )
-        )
-    )
-
-    (defn- #_"[this {Block Node*}]" Schedule''sortNodesLatestWithinBlock-4 [#_"Schedule" this, #_"Block" block, #_"{Block Node*}" earliest, #_"{Block Node*}" latest]
-        (let [
-            [this #_"Node*" nodes]
-                (when (satisfies? LoopExitNode (:beginNode block)) => [this nil]
-                    (loop-when [this this nodes nil #_"seq" s (seq (LoopExitNode''proxies-1 (:beginNode block)))] (some? s) => [this nodes]
-                        (let [
-                            #_"ValueProxyNode" proxy (first s)
-                            this (update this :agenda disj proxy)
-                            [this nodes]
-                                (let [
-                                    #_"ValueNode" value (:value proxy)
-                                ]
-                                    ;; if multiple proxies reference the same value, schedule the value of a proxy once
-                                    (when (and (some? value) (= (get (:node->block this) value) block) (contains? (:agenda this) value)) => [this nodes]
-                                        (Schedule''sortIntoList-5 this, nodes, value, block, nil)
-                                    )
-                                )
-                        ]
-                            (recur this nodes (next s))
-                        )
-                    )
-                )
-            #_"FixedNode" endNode (:endNode block)
-            ;; Only if the end node is either a control split or an end node,
-            ;; we need to force it to be the last node in the schedule.
-            #_"FixedNode" fixedEndNode (when (Schedule'isFixedEnd-1 endNode) endNode)
-            this
-                (loop-when [this this #_"FloatingReadNode*" watchList (get (:watchMap this) block) #_"seq" s (seq (get earliest block))] (some? s) => this
-                    (let [
-                        #_"Node" node (first s)
-                        [this watchList]
-                            (when-not (= node fixedEndNode) => [this watchList]
-                                (cond
-                                    (satisfies? FixedNode node)
-                                        (let [
-                                            _ (§ ass! [this watchList] (Schedule''checkWatchList-5b this, watchList, block, nodes, node))
-                                            _ (§ ass! [this nodes] (Schedule''sortIntoList-5 this, nodes, node, block, nil))
-                                        ]
-                                            [this watchList]
-                                        )
-                                    (and (= (get (:node->block this) node) block) (satisfies? FloatingReadNode node))
-                                        (if (Schedule'isImplicitNullOpportunity-2 node, block)
-                                            (let [
-                                                ;; Schedule at the beginning of the block.
-                                                _ (§ ass! [this nodes] (Schedule''sortIntoList-5 this, nodes, node, block, nil))
-                                            ]
-                                                [this watchList]
-                                            )
-                                            (when (Block''canKill-2 block, (Access'''getLocationIdentity-1 node)) => [this watchList]
-                                                ;; This read can be killed in this block, add to watch list.
-                                                [this (conj' watchList node)]
-                                            )
-                                        )
-                                    :else
-                                        [this watchList]
-                                )
-                            )
-                    ]
-                        (recur this watchList (next s))
-                    )
-                )
-            _
-                (doseq [#_"Node" node (get latest block)]
-                    (when (contains? (:agenda this) node)
-                        (§ ass! [this nodes] (Schedule''sortIntoList-5 this, nodes, node, block, fixedEndNode))
-                    )
-                )
-            [this nodes]
-                (when (and (some? endNode) (contains? (:agenda this) endNode)) => [this nodes]
-                    (Schedule''sortIntoList-5 this, nodes, endNode, block, nil)
-                )
-        ]
-            [this (assoc latest block nodes)]
-        )
-    )
-
-    (defn #_"Graph" Schedule''run-1 [#_"Schedule" this]
-        (let [
-            [this #_"{Block Node*}" earliest] (Schedule''scheduleEarliestIterative-1 this)
-            this
-                (when-not (= (:strategy this) :SchedulingStrategy'EARLIEST) => (assoc this :block->nodes earliest)
-                    ;; For non-earliest schedules, we need to do a second pass.
-                    (let [
-                        [this #_"{Block Node*}" latest] (Schedule''calcLatestBlocks-2 this, earliest)
-                        _
-                            (doseq [#_"Block" block (:reversePostOrder (:cfg this))]
-                                (§ ass! [this latest] (Schedule''sortNodesLatestWithinBlock-4 this, block, earliest, latest))
-                            )
-                    ]
-                        (assoc this :block->nodes latest)
-                    )
-                )
-            this (assoc-in this [:cfg :node->block] (:node->block this))
-        ]
-            (assoc (:graph this) :lastSchedule (select-keys this [:cfg :node->block :block->nodes]))
-        )
-    )
-)
-
-(value-ns SchedulePhase
-    (defn #_"Graph" SchedulePhase'run-2 [#_"Graph" graph, #_"SchedulingStrategy" strategy]
-        (Schedule''run-1 (Schedule'new-3 nil, graph, strategy))
-    )
-)
-
 (class-ns ScheduledNodeIterator []
     (defn #_"ScheduledNodeIterator" ScheduledNodeIterator'new-0 []
         (merge (ScheduledNodeIterator'class.)
@@ -42952,7 +41490,7 @@ ZeroExtendNode'new-4
         )
     )
 
-    (defn #_"this" ScheduledNodeIterator''processNodes-3 [#_"ScheduledNodeIterator" this, #_"Block" block, #_"Schedule" schedule]
+    (defn #_"this" ScheduledNodeIterator''processNodes-3 [#_"ScheduledNodeIterator" this, #_"Block" block, #_"Schedule" schedule]
         (let [
             this (assoc this :lastFixed (:beginNode block))
             this (assoc this :reconnect nil)
@@ -46896,7 +45434,6 @@ ZeroExtendNode'new-4
             (AddressLoweringPhase'run-1)
             (UseTrappingNullChecksPhase'run-1)
             (PropagateDeoptimizeProbabilityPhase'run-1)
-            (SchedulePhase'run-2 :SchedulingStrategy'FINAL_SCHEDULE)
         )
     )
 
@@ -46931,8 +45468,8 @@ ZeroExtendNode'new-4
 
     (defn- #_"LIRGenerationResult" Compiler'emitLIR-1 [#_"Graph" graph]
         (let [
-            #_"Schedule" schedule (:lastSchedule graph)
-            #_"Block" start (ControlFlowGraph''getStartBlock-1 (:cfg schedule))
+            #_"Schedule" schedule (ß :lastSchedule graph)
+            #_"Block" start (ß ControlFlowGraph''getStartBlock-1 (:cfg schedule))
             #_"LIR" lir (LIR'new-3 (:cfg schedule), (ComputeBlockOrder'computeLinearScanOrder-1 start), (ComputeBlockOrder'computeCodeEmittingOrder-1 start))
             #_"CallingConvention" callingConvention (Compiler'getCallingConvention-2 :CallingConventionType'JavaCallee, (:method graph))
             #_"LIRGenerationResult" res (LIRGenerationResult'new-2 lir, callingConvention)
